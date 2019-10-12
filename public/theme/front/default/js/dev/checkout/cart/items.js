@@ -29,7 +29,11 @@ function Items({items}) {
                     items.map((item, index) => {
                         return <tr key={index}>
                             <td>
-                                <A url={item.productUrl} text={item.product_name}/>
+                                <div className="cart-item-thumb shopping-cart-item-thumb">
+                                    {item.thumbnail && <img src={item.thumbnail} alt={item.product_name}/>}
+                                    {!item.thumbnail && <span uk-icon="icon: image; ratio: 5"></span>}
+                                </div>
+                                <A url={item.productUrl} text={item.product_name} classes="uk-link-muted"/>
                                 {
                                     item.error &&
                                     <p style={{color: "red"}}>{item.error}</p>

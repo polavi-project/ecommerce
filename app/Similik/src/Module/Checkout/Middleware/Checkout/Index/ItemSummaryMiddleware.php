@@ -6,22 +6,18 @@
 
 declare(strict_types=1);
 
-namespace Similik\Module\Checkout\Middleware\Cart\View;
+namespace Similik\Module\Checkout\Middleware\Checkout\Index;
+
 
 use function Similik\get_js_file_url;
+use Similik\Middleware\MiddlewareAbstract;
 use Similik\Module\Graphql\Services\GraphqlExecutor;
 use Similik\Services\Http\Request;
 use Similik\Services\Http\Response;
-use Similik\Middleware\MiddlewareAbstract;
 
-class ItemsMiddleware extends MiddlewareAbstract
+class ItemSummaryMiddleware extends MiddlewareAbstract
 {
-    /**
-     * @param Request $request
-     * @param Response $response
-     * @param null $delegate
-     * @return mixed
-     */
+
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
         $this->getContainer()
@@ -32,13 +28,10 @@ class ItemsMiddleware extends MiddlewareAbstract
                         items {
                             cart_item_id
                             product_id
-                            product_name
-                            thumbnail: product_thumbnail
+                            name: product_name
                             productUrl
                             qty
-                            final_price
                             total
-                            error
                         }
                     }
                 }"
@@ -47,10 +40,10 @@ class ItemsMiddleware extends MiddlewareAbstract
                 /**@var \GraphQL\Executor\ExecutionResult $result */
                 if(isset($result->data['items'])) {
                     $response->addWidget(
-                        'shopping_cart_items',
-                        'shopping-cart-page',
-                        10,
-                        get_js_file_url("production/checkout/cart/items.js"),
+                        'checkout_summary_items',
+                        'checkout_summary',
+                        20,
+                        get_js_file_url("production/checkout/checkout/summary/items.js"),
                         ["items" => $result->data['items']['items']]
                     );
                 }

@@ -34,6 +34,9 @@ class CartItemType extends ObjectType
                     'product_name' => [
                         'type' => Type::nonNull(Type::string())
                     ],
+                    'product_thumbnail' => [
+                        'type' => Type::string()
+                    ],
                     'product_sku' => [
                         'type' => Type::nonNull(Type::string())
                     ],
@@ -73,10 +76,6 @@ class CartItemType extends ObjectType
                     'productUrl' => [
                         'type' => Type::nonNull(Type::string()),
                         'resolve' => function($item, $args, Container $container, ResolveInfo $info) {
-                            if(!preg_match('/^[\.a-zA-Z0-9\-_+]+$/', $item['product_url_key']))
-                                return $container->get(Router::class)->generateUrl('product.view', ["id"=>$item['product_id']]);
-                            else
-                                return $container->get(Router::class)->generateUrl('product.view.pretty', ["slug"=>$item['product_url_key']]);
                         }
                     ],
                     'error' => [

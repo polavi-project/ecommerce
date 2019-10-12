@@ -5,7 +5,7 @@ import {ShippingAddressBlock} from "./shipping_address.js";
 function Shipment() {
     return <Area
         id={"checkout_shipment"}
-        className="uk-width-1-2"
+        className="uk-width-1-3"
         coreWidgets={[
             {
                 'component': ShippingAddressBlock,

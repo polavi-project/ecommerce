@@ -5,7 +5,7 @@ import {BillingAddressBlock} from "./billing_address.js";
 function Payment() {
     return <Area
         id={"checkout_payment"}
-        className="uk-width-1-2"
+        className="uk-width-1-3"
         coreWidgets={[
             {
                 'component': PaymentMethods,

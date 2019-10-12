@@ -1,5 +1,4 @@
 import Area from "../../../../../../../js/production/area.js";
-import {Fetch} from "../../../../../../../js/production/fetch.js";
 
 function Title() {
     return <div className="uk-width-1-1">
