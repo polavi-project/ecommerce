@@ -9,13 +9,6 @@ function Title() {
             "h1",
             { className: "uk-text-center" },
             "Shopping cart"
-        ),
-        React.createElement(
-            "a",
-            { href: "#", onClick: e => {
-                    e.preventDefault();Fetch('http://localhost/myapp/public/cart', false, 'get');
-                } },
-            "Check Fetch"
         )
     );
 }
