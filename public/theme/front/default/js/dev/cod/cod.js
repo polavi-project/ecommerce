@@ -34,7 +34,6 @@ export default function Cod(props) {
 
     return <div>
         <label htmlFor={"cod-payment-method"}>
-            {label}
             <input
                 type={"radio"}
                 name={"payment_method"}
@@ -44,6 +43,7 @@ export default function Cod(props) {
                 onChange={(e) => onChange(e)}
                 checked={checked}
             />
+             {label}
         </label>
     </div>
 }

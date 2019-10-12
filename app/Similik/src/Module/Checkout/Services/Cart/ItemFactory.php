@@ -12,11 +12,14 @@ namespace Similik\Module\Checkout\Services\Cart;
 use MJS\TopSort\Implementations\ArraySort;
 use function Similik\_mysql;
 use function Similik\dispatch_event;
+use function Similik\get_base_url_scheme_less;
 use function Similik\get_default_language_Id;
 use Similik\Module\Checkout\Services\PriceHelper;
 use Similik\Module\Discount\Services\CouponHelper;
 use Similik\Module\Tax\Services\TaxCalculator;
 use Similik\Services\Db\Processor;
+use Similik\Services\Routing\Router;
+use function Similik\str_replace_last;
 use function Similik\the_container;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -39,6 +42,7 @@ class ItemFactory
 
     public function __construct(Processor $processor)
     {
+        $fileSystem = new Filesystem();
         $this->fields = [
             'cart_item_id' => [
                 'resolver' => function(Item $item, $dataSource) {
@@ -56,11 +60,31 @@ class ItemFactory
                 },
                 'dependencies' => ['product_id']
             ],
+            'product_thumbnail' => [
+                'resolver' => function(Item $item, $dataSource) use($fileSystem) {
+                    if(!isset($dataSource['image']) or $dataSource['image'] == null)
+                        return null;
+                    if($fileSystem->exists(MEDIA_PATH . DS . str_replace_last('.', '_thumb.', $dataSource['image'])))
+                        return get_base_url_scheme_less(false) . "/media/" . str_replace_last('.', '_thumb.', $dataSource['image']);
+                    else
+                        return null;
+                },
+                'dependencies' => ['product_id']
+            ],
             'product_url_key' => [
                 'resolver' => function(Item $item, $dataSource) {
                     return $item->getData('product_url_key') ?? $dataSource['seo_key'] ?? "";
                 },
                 'dependencies' => ['product_id']
+            ],
+            'product_url' => [
+                'resolver' => function(Item $item, $dataSource) {
+                    if(!preg_match('/^[\.a-zA-Z0-9\-_+]+$/', $item->getData('product_url_key')))
+                        return the_container()->get(Router::class)->generateUrl('product.view', ["id"=>$item->getData('product_id')]);
+                    else
+                        return the_container()->get(Router::class)->generateUrl('product.view.pretty', ["slug"=>$item->getData('product_url_key')]);
+                },
+                'dependencies' => ['product_id', 'product_url_key']
             ],
             'product_sku' => [
                 'resolver' => function(Item $item, $dataSource) {

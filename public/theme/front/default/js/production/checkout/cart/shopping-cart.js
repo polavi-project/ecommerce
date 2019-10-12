@@ -1,5 +1,4 @@
 import Area from "../../../../../../../js/production/area.js";
-import { Fetch } from "../../../../../../../js/production/fetch.js";
 
 function Title() {
     return React.createElement(
@@ -9,13 +8,6 @@ function Title() {
             "h1",
             { className: "uk-text-center" },
             "Shopping cart"
-        ),
-        React.createElement(
-            "a",
-            { href: "#", onClick: e => {
-                    e.preventDefault();Fetch('http://localhost/myapp/public/cart', false, 'get');
-                } },
-            "Check Fetch"
         )
     );
 }

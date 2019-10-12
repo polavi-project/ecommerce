@@ -91,7 +91,13 @@ function Items({ items }) {
                         React.createElement(
                             "td",
                             null,
-                            React.createElement(A, { url: item.productUrl, text: item.product_name }),
+                            React.createElement(
+                                "div",
+                                { className: "cart-item-thumb shopping-cart-item-thumb" },
+                                item.thumbnail && React.createElement("img", { src: item.thumbnail, alt: item.product_name }),
+                                !item.thumbnail && React.createElement("span", { "uk-icon": "icon: image; ratio: 5" })
+                            ),
+                            React.createElement(A, { url: item.productUrl, text: item.product_name, classes: "uk-link-muted" }),
                             item.error && React.createElement(
                                 "p",
                                 { style: { color: "red" } },

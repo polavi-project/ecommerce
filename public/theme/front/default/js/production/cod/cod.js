@@ -25,7 +25,6 @@ export default function Cod(props) {
         React.createElement(
             'label',
             { htmlFor: "cod-payment-method" },
-            label,
             React.createElement('input', {
                 type: "radio",
                 name: "payment_method",
@@ -34,7 +33,8 @@ export default function Cod(props) {
                 className: 'uk-radio',
                 onChange: e => onChange(e),
                 checked: checked
-            })
+            }),
+            label
         )
     );
 }

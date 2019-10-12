@@ -69,6 +69,11 @@ class SaveCartMiddleware extends MiddlewareAbstract
             $request->getSession()->set('cart_id', $cartId);
             $promise = settle($cart->getPromises());
             $promise->wait();
+            $items = $cart->getItems();
+            $itemsList = [];
+            foreach ($items as $item) {
+                $itemsList[] = $item->toArray();
+            }
             $response->addState('cart', [
                 'subTotal' => $cart->getData('sub_total'),
                 'taxAmount' => $cart->getData('tax_amount'),
@@ -79,7 +84,8 @@ class SaveCartMiddleware extends MiddlewareAbstract
                 'totalWeight' => $cart->getData('total_weight'),
                 'count' => count($cart->getItems()),
                 'paymentMethod' => $cart->getData('payment_method'),
-                'shippingMethod' => $cart->getData('shipping_method')
+                'shippingMethod' => $cart->getData('shipping_method'),
+                'items' => $itemsList
             ]);
         } catch (\Exception $e) {
             $conn->rollback();

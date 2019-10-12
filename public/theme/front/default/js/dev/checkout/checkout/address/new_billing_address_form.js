@@ -42,7 +42,7 @@ export default function BillingAddressForm(props) {
     };
 
     return <div className="uk-width-1-1">
-        <h3>New address</h3>
+        <div><strong>New address</strong></div>
         <AddressForm
             action={_.get(props, 'action')}
             countries={_.get(props, 'countries')}

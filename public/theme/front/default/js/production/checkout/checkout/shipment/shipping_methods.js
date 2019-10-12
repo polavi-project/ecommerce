@@ -2,9 +2,13 @@ import Area from "../../../../../../../../js/production/area.js";
 
 function Title() {
     return React.createElement(
-        "h3",
+        "div",
         null,
-        "Shipping methods"
+        React.createElement(
+            "strong",
+            null,
+            "Shipping methods"
+        )
     );
 }
 

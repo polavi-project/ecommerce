@@ -22,10 +22,10 @@ export default function FlatRate(props) {
             React.createElement(
                 'label',
                 { htmlFor: "free-shipping" },
+                React.createElement('input', { type: "radio", className: 'uk-radio', checked: checked, onChange: e => onChange(e) }),
                 _.get(props, 'label', 'Flat rate'),
                 ' - ',
-                _.get(props, 'fee'),
-                React.createElement('input', { type: "radio", className: 'uk-radio', checked: checked, onChange: e => onChange(e) })
+                _.get(props, 'fee')
             )
         );
     } else return null;
