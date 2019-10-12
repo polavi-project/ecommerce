@@ -1,0 +1,95 @@
+html {
+    font-size: 14px !important;
+}
+#header {
+    background: cadetblue;
+    min-height: 45px;
+    margin-bottom: 20px;
+}
+#menu{
+    float: left;
+    width: 200px;
+    padding: 10px;
+    box-sizing: border-box;
+}
+#content {
+    overflow: hidden;
+    margin-left: 220px;
+}
+
+/**************************************** LOADING ICON *********************************************/
+.spinner {
+    margin: 100px auto;
+    width: 50px;
+    height: 40px;
+    text-align: center;
+    font-size: 10px;
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    margin-left:-25px;
+    margin-top: -20px;
+}
+
+.spinner > div {
+    background-color: #96efca;
+    height: 100%;
+    width: 6px;
+    display: inline-block;
+
+    -webkit-animation: sk-stretchdelay 1.2s infinite ease-in-out;
+    animation: sk-stretchdelay 1.2s infinite ease-in-out;
+}
+
+.spinner .rect2 {
+    -webkit-animation-delay: -1.1s;
+    animation-delay: -1.1s;
+}
+
+.spinner .rect3 {
+    -webkit-animation-delay: -1.0s;
+    animation-delay: -1.0s;
+}
+
+.spinner .rect4 {
+    -webkit-animation-delay: -0.9s;
+    animation-delay: -0.9s;
+}
+
+.spinner .rect5 {
+    -webkit-animation-delay: -0.8s;
+    animation-delay: -0.8s;
+}
+
+@-webkit-keyframes sk-stretchdelay {
+    0%, 40%, 100% { -webkit-transform: scaleY(0.4) }
+    20% { -webkit-transform: scaleY(1.0) }
+}
+
+@keyframes sk-stretchdelay {
+    0%, 40%, 100% {
+        transform: scaleY(0.4);
+        -webkit-transform: scaleY(0.4);
+    }  20% {
+           transform: scaleY(1.0);
+           -webkit-transform: scaleY(1.0);
+       }
+}
+
+/* FORM */
+.group-wrapper{
+    display: inline;
+}
+.group-form{float: left; width: 50%; box-sizing: border-box;padding: 10px}
+.uk-label{text-transform: capitalize!important; border-radius: 10px!important;}
+.product-thumbnail{max-width: 80px}
+
+/* Table */
+td, th {
+    border: 1px solid #999;
+}
+
+.row {
+    border-top: 1px solid #999;
+    min-height: 25px;
+}

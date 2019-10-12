@@ -1,0 +1,15 @@
+- Email and Email template
+- Product Images: 100%
+- Installation (migration)
+- Styling: Later
+- Paypal express payment: Later
+- Remove widgets from server: Later
+- Product list pagination: Later
+- Page metadata (SEO) : 100%
+- Product filter: 100%
+- 404 Page: 100%
+- CMS page: 100%
+- Widget: 100%
+- Order view Address
+- Order view customer info
+- Shipment method setting: 100%

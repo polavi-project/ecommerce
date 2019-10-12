@@ -1,0 +1,11 @@
+RewriteEngine On
+## never rewrite for existing files, directories and links
+
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-l
+    RewriteCond %{REQUEST_URI} !.*\.(ico|gif|jpg|jpeg|png|js|css)
+############################################
+## rewrite everything else to index.php
+
+    RewriteRule .* index.php [L]
