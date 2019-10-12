@@ -3,7 +3,7 @@ import {Items} from "./items.js";
 import {CartSummary} from "./cart.js";
 
 function Title() {
-    return <h2>Order summary</h2>
+    return <h3>Order summary</h3>
 }
 
 function Summary() {

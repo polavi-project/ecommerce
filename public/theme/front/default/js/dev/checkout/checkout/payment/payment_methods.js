@@ -1,7 +1,7 @@
 import Area from "../../../../../../../../js/production/area.js";
 
 function Title() {
-    return <h2>Payment methods</h2>
+    return <div><strong>Payment methods</strong></div>
 }
 
 export default function PaymentMethods() {

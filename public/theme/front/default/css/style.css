@@ -67,15 +67,9 @@ html {font-size: 14px !important;}
 
 /* CHECKOUT PAGE*/
 .checkout-shipping-address{
-    border: 1px solid #999;
     padding: 10px;
     box-sizing: border-box;
 }
-
-.checkout-shipping-address.selected{
-    border: 1px solid #1e87f0;
-}
-
 
 /* SHOPPING CART PAGE*/
 .cart-item-thumb{ float: left; padding-right: 10px}

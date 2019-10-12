@@ -26,8 +26,8 @@ export default function FlatRate(props) {
         props.areaProps.setNoMethod(false);
         return <div className="shipping-method flat-rate">
             <label htmlFor={"free-shipping"}>
-                {_.get(props, 'label', 'Flat rate')} - {_.get(props, 'fee')}
                 <input type={"radio"} className="uk-radio" checked={checked} onChange={(e)=>onChange(e)}/>
+                 {_.get(props, 'label', 'Flat rate')} - {_.get(props, 'fee')}
             </label>
         </div>;
     } else

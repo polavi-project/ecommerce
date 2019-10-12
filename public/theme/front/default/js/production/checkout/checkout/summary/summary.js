@@ -4,7 +4,7 @@ import { CartSummary } from "./cart.js";
 
 function Title() {
     return React.createElement(
-        "h2",
+        "h3",
         null,
         "Order summary"
     );

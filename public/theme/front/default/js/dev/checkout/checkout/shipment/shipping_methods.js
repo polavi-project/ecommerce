@@ -1,7 +1,7 @@
 import Area from "../../../../../../../../js/production/area.js";
 
 function Title() {
-    return <h3>Shipping methods</h3>
+    return <div><strong>Shipping methods</strong></div>
 }
 
 function NoMethod({areaProps}) {

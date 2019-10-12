@@ -25,7 +25,7 @@ class SubmitButtonMiddleware extends MiddlewareAbstract
     {
         $response->addWidget(
             'checkout_button',
-            'checkout_page',
+            'checkout_summary_cart',
             80,
             get_js_file_url("production/checkout/checkout/checkout_button.js"),
             [

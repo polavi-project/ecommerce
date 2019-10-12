@@ -46,9 +46,13 @@ export default function BillingAddressForm(props) {
         "div",
         { className: "uk-width-1-1" },
         React.createElement(
-            "h3",
+            "div",
             null,
-            "New address"
+            React.createElement(
+                "strong",
+                null,
+                "New address"
+            )
         ),
         React.createElement(AddressForm, {
             action: _.get(props, 'action'),

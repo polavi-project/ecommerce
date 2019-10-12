@@ -8,15 +8,24 @@ export default function CheckoutButton({ action, cartId }) {
     };
 
     return React.createElement(
-        "div",
-        { className: "checkout-button" },
+        "tr",
+        null,
+        React.createElement("td", null),
         React.createElement(
-            "a",
-            { href: "#", onClick: e => onClick(e), className: "uk-button uk-button-small" },
+            "td",
+            null,
             React.createElement(
-                "span",
-                null,
-                "Place order"
+                "div",
+                { className: "checkout-button" },
+                React.createElement(
+                    "a",
+                    { href: "#", onClick: e => onClick(e), className: "uk-button uk-button-small uk-button-primary" },
+                    React.createElement(
+                        "span",
+                        null,
+                        "Place order"
+                    )
+                )
             )
         )
     );
