@@ -1,2 +1,2 @@
-# similik
+# Similik
 A Simple eCommerce platform
