@@ -56,10 +56,11 @@ function Country({ country, setCountry, countries = [] }) {
 
 export default function Address(props) {
     const [selectedCountry, setSelectedCountry] = React.useState(_.get(props, 'address.country'));
+    const id = props.id !== undefined ? props.id : "customer_address_form";
     return React.createElement(
         Form,
         {
-            id: "customer_address_form",
+            id: id,
             onComplete: props.onComplete,
             onError: props.onError,
             action: props.action },
@@ -70,7 +71,7 @@ export default function Address(props) {
                 'props': {
                     name: "variables[address][full_name]",
                     value: _.get(props, 'address.full_name', ''),
-                    formId: "customer_address_form",
+                    formId: id,
                     label: "Full name",
                     validation_rules: ['notEmpty']
                 },
@@ -81,7 +82,7 @@ export default function Address(props) {
                 'props': {
                     name: "variables[address][telephone]",
                     value: _.get(props, 'address.telephone', ''),
-                    formId: "customer_address_form",
+                    formId: id,
                     label: "Telephone",
                     validation_rules: ['notEmpty']
                 },
@@ -92,7 +93,7 @@ export default function Address(props) {
                 'props': {
                     name: "variables[address][address_1]",
                     value: _.get(props, 'address.address_1', ''),
-                    formId: "customer_address_form",
+                    formId: id,
                     label: "Address 1",
                     validation_rules: ['notEmpty']
                 },
@@ -103,7 +104,7 @@ export default function Address(props) {
                 'props': {
                     name: "variables[address][address_2]",
                     value: _.get(props, 'address.address_2', ''),
-                    formId: "customer_address_form",
+                    formId: id,
                     label: "Address 2",
                     validation_rules: []
                 },
@@ -114,7 +115,7 @@ export default function Address(props) {
                 'props': {
                     name: "variables[address][postcode]",
                     value: _.get(props, 'address.postcode', ''),
-                    formId: "customer_address_form",
+                    formId: id,
                     label: "Postcode",
                     validation_rules: []
                 },
@@ -125,7 +126,7 @@ export default function Address(props) {
                 'props': {
                     name: "variables[address][city]",
                     value: _.get(props, 'address.city', ''),
-                    formId: "customer_address_form",
+                    formId: id,
                     label: "City",
                     validation_rules: []
                 },

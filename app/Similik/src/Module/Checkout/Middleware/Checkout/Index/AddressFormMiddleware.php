@@ -38,6 +38,18 @@ class AddressFormMiddleware extends MiddlewareAbstract
         );
 
         $response->addWidget(
+            'checkout_new_billing_address_form',
+            'checkout_billing_address_block',
+            30,
+            get_js_file_url("production/checkout/checkout/address/new_billing_address_form.js"),
+            [
+                "action" => generate_url('graphql.api', [], [
+                    "query" => "mutation AddBillingAddress(\$address: CustomerAddressInput!, \$cartId: Int!) { addBillingAddress (address: \$address, cartId: \$cartId) {status message address $outPut}}"
+                ]),
+                "countries" => get_config('general_allow_countries', ["US"]),
+            ]
+        );
+        $response->addWidget(
             'new_address_cartId_field',
             'customer_address_form_inner',
             15,

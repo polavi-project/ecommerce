@@ -25,12 +25,15 @@ const App = () => {
 };
 const Provider = ReactRedux.Provider;
 
-ReactDOM.render(React.createElement(
-    Provider,
-    { store: store },
-    React.createElement(App, null)
-), window.document.getElementById("app"));
-
+try {
+    ReactDOM.render(React.createElement(
+        Provider,
+        { store: store },
+        React.createElement(App, null)
+    ), window.document.getElementById("app"));
+} catch (e) {
+    console.log('error occurred');
+}
 window.onpopstate = function (event) {
     Fetch(document.location, false);
 };

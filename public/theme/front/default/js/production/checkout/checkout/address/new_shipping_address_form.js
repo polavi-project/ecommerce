@@ -41,6 +41,7 @@ export default function ShippingAddressForm(props) {
             )
         ),
         React.createElement(AddressForm, {
+            id: "billing_new_address_form",
             action: _.get(props, 'action'),
             countries: _.get(props, 'countries'),
             onComplete: onComplete,

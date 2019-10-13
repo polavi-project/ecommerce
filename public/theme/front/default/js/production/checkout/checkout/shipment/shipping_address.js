@@ -1,13 +1,5 @@
 import Area from "../../../../../../../../js/production/area.js";
 
-function Title() {
-    return React.createElement(
-        'h3',
-        null,
-        'Delivery to'
-    );
-}
-
 function ShippingAddress({ areaProps }) {
     const shippingAddress = ReactRedux.useSelector(state => _.get(state, 'appState.cart.shippingAddress'));
 
@@ -85,14 +77,9 @@ function ShippingAddressBlock() {
             needSelectAddress: needSelectAddress,
             setNeedSelectAddress: setNeedSelectAddress,
             coreWidgets: [{
-                component: Title,
-                props: {},
-                sort_order: 0,
-                id: "shipping_address_block_title"
-            }, {
                 'component': ShippingAddress,
                 'props': {},
-                'sort_order': 10,
+                'sort_order': 0,
                 'id': 'shipment_address'
             }]
         })

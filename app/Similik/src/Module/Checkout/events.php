@@ -86,7 +86,7 @@ $eventDispatcher->addListener(
 
         $fields['addBillingAddress'] = [
             'args' => [
-                'address' => Type::nonNull($container->get(\Similik\Module\Customer\Services\Type\AddressInputType::class)),
+                'address' => $container->get(\Similik\Module\Customer\Services\Type\AddressInputType::class),
                 'cartId' => Type::nonNull(Type::int())
             ],
             'type' => new ObjectType([
@@ -110,6 +110,10 @@ $eventDispatcher->addListener(
                 )
                     return ['status'=> false, 'address' => null, 'message' => 'Permission denied'];
 
+                if($address == null) {
+                    $container->get(\Similik\Module\Checkout\Services\Cart\Cart::class)->setData('billing_address_id', null);
+                    return ['status'=> true, 'address' => null];
+                }
                 if(
                     !isset($provinces[$address['country']]) ||
                     (
@@ -123,7 +127,6 @@ $eventDispatcher->addListener(
                     )
                 )
                     return ['status'=> false, 'address' => null, 'message' => 'Country or Province is invalid'];
-
 
                 $conn->getTable('cart_address')->insert($address);
                 $id = $conn->getLastID();

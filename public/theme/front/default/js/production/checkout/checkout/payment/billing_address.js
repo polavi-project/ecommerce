@@ -1,87 +1,155 @@
 import Area from "../../../../../../../../js/production/area.js";
+import { Fetch } from "../../../../../../../../js/production/fetch.js";
+import { ADD_ALERT, ADD_APP_STATE } from "../../../../../../../../js/production/event-types.js";
 
 function Title() {
     return React.createElement(
-        'h3',
+        "div",
         null,
-        'Billing address'
+        React.createElement(
+            "strong",
+            null,
+            "Billing address"
+        )
     );
 }
 
-function BillingAddress({ areaProps }) {
+function BillingAddress({ needSelectAddress, setNeedSelectAddress }) {
     const billingAddress = ReactRedux.useSelector(state => _.get(state, 'appState.cart.billingAddress'));
 
     const onClick = e => {
         e.preventDefault();
-        areaProps.setNeedSelectAddress(true);
+        setNeedSelectAddress(true);
     };
-    if (!billingAddress || areaProps.needSelectAddress === true) return null;else return React.createElement(
-        'div',
-        { className: 'checkout-shipping-address' },
+    if (!billingAddress || needSelectAddress === true) return null;else return React.createElement(
+        "div",
+        { className: "checkout-shipping-address" },
         React.createElement(
-            'div',
+            "div",
             null,
             React.createElement(
-                'strong',
+                "strong",
                 null,
                 billingAddress.full_name
             )
         ),
         React.createElement(
-            'div',
+            "div",
             null,
             billingAddress.address_1
         ),
         React.createElement(
-            'div',
+            "div",
             null,
             billingAddress.address_2
         ),
         React.createElement(
-            'div',
+            "div",
             null,
             billingAddress.city,
-            ', ',
+            ", ",
             billingAddress.province,
-            ', ',
+            ", ",
             billingAddress.postcode
         ),
         React.createElement(
-            'div',
+            "div",
             null,
             billingAddress.country
         ),
         React.createElement(
-            'div',
+            "div",
             null,
             React.createElement(
-                'span',
+                "span",
                 null,
-                'Phone'
+                "Phone"
             ),
-            ': ',
+            ": ",
             billingAddress.telephone
         ),
         React.createElement(
-            'a',
-            { href: '#', onClick: e => onClick(e) },
-            React.createElement('span', { 'uk-icon': 'icon: location; ratio: 1' }),
-            ' Change'
+            "a",
+            { href: "#", onClick: e => onClick(e) },
+            React.createElement("span", { "uk-icon": "icon: location; ratio: 1" }),
+            " Change"
+        )
+    );
+}
+
+function UseShippingOrAnother({ needSelectAddress, setNeedSelectAddress }) {
+    const billingAddress = ReactRedux.useSelector(state => _.get(state, 'appState.cart.billingAddress'));
+    const graphqlApi = ReactRedux.useSelector(state => _.get(state, 'appState.graphqlApi'));
+    const cartId = ReactRedux.useSelector(state => _.get(state, 'appState.cart.cartId'));
+    const dispatch = ReactRedux.useDispatch();
+
+    const set$UseShippping = e => {
+        e.preventDefault();
+        let formData = new FormData();
+        formData.append('query', `mutation  { addBillingAddress (address: null, cartId: ${cartId}) {status message}}`);
+        Fetch(graphqlApi, false, 'POST', formData, null, response => {
+            if (_.get(response, 'payload.data.addBillingAddress.status') === true) {
+                setNeedSelectAddress(false);
+                dispatch({
+                    'type': ADD_APP_STATE,
+                    'payload': {
+                        'appState': {
+                            'cart': {
+                                'billingAddress': null
+                            }
+                        }
+                    }
+                });
+            } else {
+                dispatch({ 'type': ADD_ALERT, 'payload': { alerts: [{ id: `checkout_billing_address_error`, message: _.get(response, 'payload.data.addBillingAddress.message', "Something wrong. Please try again"), type: "error" }] } });
+            }
+        }, () => {
+            dispatch({ 'type': ADD_ALERT, 'payload': { alerts: [{ id: `checkout_billing_address_error`, message: 'Something wrong. Please try again', type: "error" }] } });
+        });
+    };
+    return React.createElement(
+        "div",
+        { className: "checkout-billing-address-use-shipping" },
+        React.createElement(
+            "div",
+            null,
+            React.createElement(
+                "div",
+                null,
+                React.createElement(
+                    "label",
+                    null,
+                    React.createElement("input", { onChange: e => {
+                            set$UseShippping(e);
+                        }, type: "radio", className: "uk-radio", checked: billingAddress === false && needSelectAddress === false }),
+                    " Use shipping address"
+                )
+            ),
+            React.createElement(
+                "div",
+                null,
+                React.createElement(
+                    "label",
+                    null,
+                    React.createElement("input", { onChange: e => {
+                            setNeedSelectAddress(true);
+                        }, type: "radio", className: "uk-radio", checked: billingAddress !== false || needSelectAddress === true }),
+                    " Use another address"
+                )
+            )
         )
     );
 }
 
 function BillingAddressBlock() {
-    const billingAddress = ReactRedux.useSelector(state => _.get(state, 'appState.cart.billingAddress'));
-
-    const [needSelectAddress, setNeedSelectAddress] = React.useState(billingAddress !== null);
+    const [needSelectAddress, setNeedSelectAddress] = React.useState(false);
 
     return React.createElement(
-        'div',
-        { className: 'checkout-shipping-address' },
+        "div",
+        { className: "checkout-billing-address" },
         React.createElement(Area, {
             id: "checkout_billing_address_block",
-            className: 'uk-width-1-1',
+            className: "uk-width-1-1",
             needSelectAddress: needSelectAddress,
             setNeedSelectAddress: setNeedSelectAddress,
             coreWidgets: [{
@@ -90,9 +158,14 @@ function BillingAddressBlock() {
                 sort_order: 0,
                 id: "billing_address_block_title"
             }, {
+                component: UseShippingOrAnother,
+                props: { needSelectAddress, setNeedSelectAddress },
+                sort_order: 10,
+                id: "billing_address_block_use_shipping"
+            }, {
                 'component': BillingAddress,
-                'props': {},
-                'sort_order': 10,
+                'props': { needSelectAddress, setNeedSelectAddress },
+                'sort_order': 20,
                 'id': 'billing_address'
             }]
         })

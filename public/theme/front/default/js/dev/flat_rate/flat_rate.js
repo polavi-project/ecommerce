@@ -2,13 +2,9 @@ import {Fetch} from "../../../../../../js/production/fetch.js";
 
 export default function FlatRate(props) {
     const shippingAddress = ReactRedux.useSelector(state => _.get(state, 'appState.cart.shippingAddress'));
+    const shippingMethod = ReactRedux.useSelector(state => _.get(state, 'appState.cart.shippingMethod'));
     const allowCountries = _.get(props, 'countries');
-    const [checked, setChecked] = React.useState(false);
-
-    const onComplete = (response) => {
-        if(response.success === 1)
-            setChecked(true);
-    };
+    const [checked, setChecked] = React.useState(shippingMethod === 'flat_rate');
 
     const onChange = (e) => {
         e.preventDefault();
@@ -16,9 +12,7 @@ export default function FlatRate(props) {
             props.apiUrl,
             false,
             "POST",
-            {method_code: "flat_rate", method_name: _.get(props, 'label', 'Flat rate')},
-            null,
-            onComplete
+            {method_code: "flat_rate", method_name: _.get(props, 'label', 'Flat rate')}
         );
     };
 

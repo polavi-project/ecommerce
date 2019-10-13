@@ -75,6 +75,7 @@ class SaveCartMiddleware extends MiddlewareAbstract
                 $itemsList[] = $item->toArray();
             }
             $response->addState('cart', [
+                'cartId' => $cart->getData('cart_id'),
                 'subTotal' => $cart->getData('sub_total'),
                 'taxAmount' => $cart->getData('tax_amount'),
                 'shippingFee' => $cart->getData('shipping_fee_excl_tax'),
@@ -84,7 +85,9 @@ class SaveCartMiddleware extends MiddlewareAbstract
                 'totalWeight' => $cart->getData('total_weight'),
                 'count' => count($cart->getItems()),
                 'paymentMethod' => $cart->getData('payment_method'),
+                'billingAddress' => $conn->getTable('cart_address')->load($cart->getData('billing_address_id')),
                 'shippingMethod' => $cart->getData('shipping_method'),
+                'shippingAddress' => $conn->getTable('cart_address')->load($cart->getData('shipping_address_id')),
                 'items' => $itemsList
             ]);
         } catch (\Exception $e) {
