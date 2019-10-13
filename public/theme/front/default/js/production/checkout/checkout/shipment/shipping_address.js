@@ -1,13 +1,13 @@
 import Area from "../../../../../../../../js/production/area.js";
 
-function ShippingAddress({ areaProps }) {
+function ShippingAddress({ needSelectAddress, setNeedSelectAddress }) {
     const shippingAddress = ReactRedux.useSelector(state => _.get(state, 'appState.cart.shippingAddress'));
 
     const onClick = e => {
         e.preventDefault();
-        areaProps.setNeedSelectAddress(true);
+        setNeedSelectAddress(true);
     };
-    if (!shippingAddress || areaProps.needSelectAddress === true) return null;else return React.createElement(
+    if (!shippingAddress || needSelectAddress === true) return null;else return React.createElement(
         'div',
         { className: 'checkout-shipping-address' },
         React.createElement(
@@ -66,7 +66,7 @@ function ShippingAddress({ areaProps }) {
 function ShippingAddressBlock() {
     const shippingAddress = ReactRedux.useSelector(state => _.get(state, 'appState.cart.shippingAddress'));
 
-    const [needSelectAddress, setNeedSelectAddress] = React.useState(shippingAddress !== null);
+    const [needSelectAddress, setNeedSelectAddress] = React.useState(shippingAddress === false);
 
     return React.createElement(
         'div',
@@ -78,7 +78,7 @@ function ShippingAddressBlock() {
             setNeedSelectAddress: setNeedSelectAddress,
             coreWidgets: [{
                 'component': ShippingAddress,
-                'props': {},
+                'props': { needSelectAddress, setNeedSelectAddress },
                 'sort_order': 0,
                 'id': 'shipment_address'
             }]
