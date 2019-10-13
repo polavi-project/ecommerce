@@ -6,34 +6,19 @@ export default function BillingAddressForm(props) {
     const onComplete = (response) => {
         if(_.get(response, 'payload.data.addBillingAddress.status') === true) {
             let address = _.get(response, 'payload.data.addBillingAddress.address');
-            let setAddresses = _.get(props, 'setAddresses');
-            setAddresses(()=> {
-                let flag = false;
-                let newAddress = _.get(props, 'addresses').map((a, i) => {
-                    if(a.customer_address_id === address.customer_address_id) {
-                        flag = true;
-                        a = {...address, used: true};
-                    }
-                    return a;
-                });
-                if(flag === false)
-                    newAddress = newAddress.concat({...address, used: true});
-
-                return newAddress;
-            });
-            _.get(props, 'setShowForm')(false);
+            props.areaProps.setNeedSelectAddress(false);
             dispatch({
                 'type' : ADD_APP_STATE,
                 'payload': {
                     'appState': {
                         'cart': {
-                            'shippingAddress': address
+                            'billingAddress': address
                         }
                     }
                 }
             });
         } else {
-            dispatch({'type' : ADD_ALERT, 'payload': {alerts: [{id: "checkout_billing_address_error", message: _.get(response, 'payload.data.addBillingAddress.message'), type: "error"}]}});
+            dispatch({'type' : ADD_ALERT, 'payload': {alerts: [{id: "checkout_billing_address_error", message: _.get(response, 'payload.data.addBillingAddress.message', 'Something wrong. Please try again'), type: "error"}]}});
         }
     };
 
@@ -41,6 +26,8 @@ export default function BillingAddressForm(props) {
         dispatch({'type' : ADD_ALERT, 'payload': {alerts: [{id: "checkout_billing_address_error", message: 'Something wrong. Please try again', type: "error"}]}});
     };
 
+    if(props.areaProps.needSelectAddress === false)
+        return null;
     return <div className="uk-width-1-1">
         <div><strong>New address</strong></div>
         <AddressForm

@@ -1,17 +1,19 @@
 import Area from "../../../../../../../../js/production/area.js";
+import {Fetch} from "../../../../../../../../js/production/fetch.js";
+import {ADD_ALERT, ADD_APP_STATE} from "../../../../../../../../js/production/event-types.js";
 
 function Title() {
-    return <h3>Billing address</h3>
+    return <div><strong>Billing address</strong></div>
 }
 
-function BillingAddress({areaProps}) {
+function BillingAddress({needSelectAddress, setNeedSelectAddress}) {
     const billingAddress = ReactRedux.useSelector(state => _.get(state, 'appState.cart.billingAddress'));
 
     const onClick = (e) => {
         e.preventDefault();
-        areaProps.setNeedSelectAddress(true);
+        setNeedSelectAddress(true);
     };
-    if(!billingAddress || areaProps.needSelectAddress === true)
+    if(!billingAddress || needSelectAddress === true)
         return null;
     else
         return <div className='checkout-shipping-address'>
@@ -25,12 +27,55 @@ function BillingAddress({areaProps}) {
         </div>
 }
 
-function BillingAddressBlock() {
+function UseShippingOrAnother({needSelectAddress, setNeedSelectAddress}) {
     const billingAddress = ReactRedux.useSelector(state => _.get(state, 'appState.cart.billingAddress'));
+    const graphqlApi = ReactRedux.useSelector(state => _.get(state, 'appState.graphqlApi'));
+    const cartId = ReactRedux.useSelector(state => _.get(state, 'appState.cart.cartId'));
+    const dispatch = ReactRedux.useDispatch();
 
-    const [needSelectAddress, setNeedSelectAddress] = React.useState(billingAddress !== null);
+    const set$UseShippping = (e) => {
+        e.preventDefault();
+        let formData = new FormData();
+        formData.append('query', `mutation  { addBillingAddress (address: null, cartId: ${cartId}) {status message}}`);
+        Fetch(
+            graphqlApi,
+            false,
+            'POST',
+            formData,
+            null,
+            (response) => {
+                if(_.get(response, 'payload.data.addBillingAddress.status') === true) {
+                    setNeedSelectAddress(false);
+                    dispatch({
+                        'type' : ADD_APP_STATE,
+                        'payload': {
+                            'appState': {
+                                'cart': {
+                                    'billingAddress': null
+                                }
+                            }
+                        }
+                    });
+                } else {
+                    dispatch({'type' : ADD_ALERT, 'payload': {alerts: [{id: `checkout_billing_address_error`, message: _.get(response, 'payload.data.addBillingAddress.message', "Something wrong. Please try again"), type: "error"}]}});
+                }
+            },
+            () => {
+                dispatch({'type' : ADD_ALERT, 'payload': {alerts: [{id: `checkout_billing_address_error`, message: 'Something wrong. Please try again', type: "error"}]}});
+            });
+    };
+    return <div className="checkout-billing-address-use-shipping">
+        <div>
+            <div><label><input onChange={(e) => {set$UseShippping(e)}} type="radio" className="uk-radio" checked={billingAddress === false && needSelectAddress === false}/> Use shipping address</label></div>
+            <div><label><input onChange={(e) => {setNeedSelectAddress(true);}} type="radio" className="uk-radio" checked={billingAddress !== false || needSelectAddress === true}/> Use another address</label></div>
+        </div>
+    </div>
+}
 
-    return <div className="checkout-shipping-address">
+function BillingAddressBlock() {
+    const [needSelectAddress, setNeedSelectAddress] = React.useState(false);
+
+    return <div className="checkout-billing-address">
         <Area
             id={"checkout_billing_address_block"}
             className="uk-width-1-1"
@@ -44,9 +89,15 @@ function BillingAddressBlock() {
                     id: "billing_address_block_title"
                 },
                 {
+                    component: UseShippingOrAnother,
+                    props : {needSelectAddress, setNeedSelectAddress},
+                    sort_order: 10,
+                    id: "billing_address_block_use_shipping"
+                },
+                {
                     'component': BillingAddress,
-                    'props': {},
-                    'sort_order': 10,
+                    'props': {needSelectAddress, setNeedSelectAddress},
+                    'sort_order': 20,
                     'id': 'billing_address'
                 }
             ]}

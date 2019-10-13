@@ -32,6 +32,7 @@ export default function ShippingAddressForm(props) {
     return <div className="uk-width-1-1">
         <div><strong>New address</strong></div>
         <AddressForm
+            id="billing_new_address_form"
             action={_.get(props, 'action')}
             countries={_.get(props, 'countries')}
             onComplete={onComplete}

@@ -66,10 +66,6 @@ html {font-size: 14px !important;}
 .group-form{float: left; width: 50%; box-sizing: border-box;padding: 10px}
 
 /* CHECKOUT PAGE*/
-.checkout-shipping-address{
-    padding: 10px;
-    box-sizing: border-box;
-}
-
+.checkout-cart-summary-table td{text-align: right}
 /* SHOPPING CART PAGE*/
 .cart-item-thumb{ float: left; padding-right: 10px}

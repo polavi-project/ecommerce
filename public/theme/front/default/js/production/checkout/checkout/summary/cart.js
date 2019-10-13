@@ -116,7 +116,7 @@ function CartSummary() {
         { className: "checkout-summary-cart" },
         React.createElement(
             "table",
-            { className: "uk-table uk-table-small " },
+            { className: "uk-table uk-table-small checkout-cart-summary-table" },
             React.createElement(Area, {
                 id: "checkout_summary_cart",
                 reactcomponent: "tbody",

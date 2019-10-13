@@ -2,21 +2,18 @@ import { Fetch } from "../../../../../../js/production/fetch.js";
 
 export default function Cod(props) {
     const cartTotal = ReactRedux.useSelector(state => _.get(state, 'appState.cart.subTotal', 0));
+    const paymentMethod = ReactRedux.useSelector(state => _.get(state, 'appState.cart.paymentMethod'));
 
-    const [checked, setChecked] = React.useState(false);
+    const [checked, setChecked] = React.useState(paymentMethod === 'cod');
     let status = parseInt(_.get(props, 'status'));
     let label = _.get(props, 'label');
     let min = parseFloat(_.get(props, 'minTotal'));
     let max = parseFloat(_.get(props, 'maxTotal'));
     if (status === 0 || min > cartTotal || max < cartTotal) return null;
 
-    const onComplete = response => {
-        if (response.success === 1) setChecked(true);
-    };
-
     const onChange = e => {
         e.preventDefault();
-        Fetch(props.apiUrl, false, "POST", { method_code: "cod", method_name: _.get(props, 'label', 'Cash on delivery') }, null, onComplete);
+        Fetch(props.apiUrl, false, "POST", { method_code: "cod", method_name: _.get(props, 'label', 'Cash on delivery') });
     };
 
     return React.createElement(
