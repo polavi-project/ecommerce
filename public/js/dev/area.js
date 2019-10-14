@@ -15,7 +15,10 @@ function Area(props) {
 
         return items.map((c) => {
             let C = c.component;
-            return <C key={c.id} {...c.props} areaProps={props}/>
+            if(typeof C === 'string')
+                return <C key={c.id} {...c.props} />;
+            else
+                return <C key={c.id} {...c.props} areaProps={props}/>;
         });
     };
 
