@@ -9,19 +9,10 @@ function Status({ status }) {
     );
 }
 
-function Info({ order_id, payment_method, payment_status, grand_total }) {
+function Info({ orderId, method, methodName, status, grandTotal }) {
     return React.createElement(
         "div",
         { className: "payment-info" },
-        React.createElement(
-            "div",
-            null,
-            React.createElement(
-                "strong",
-                null,
-                "Information"
-            )
-        ),
         React.createElement(
             "table",
             { className: "uk-table uk-table-small" },
@@ -53,16 +44,26 @@ function Info({ order_id, payment_method, payment_status, grand_total }) {
                 null,
                 React.createElement(Area, {
                     id: "order_payment_block_info",
-                    order_id: order_id,
-                    payment_method: payment_method,
-                    grand_total: grand_total,
-                    payment_status: payment_status,
+                    orderId: orderId,
+                    method: method,
+                    methodName: methodName,
+                    grandTotal: grandTotal,
+                    status: status,
                     reactcomponent: "tr",
                     coreWidgets: [{
                         'component': Status,
-                        'props': { status: payment_status },
+                        'props': { status: status },
                         'sort_order': 10,
                         'id': 'order_payment_status'
+                    }, {
+                        'component': "td",
+                        'props': { children: React.createElement(
+                                "span",
+                                null,
+                                methodName
+                            ) },
+                        'sort_order': 20,
+                        'id': 'order_payment_method'
                     }]
                 })
             )
@@ -70,7 +71,9 @@ function Info({ order_id, payment_method, payment_status, grand_total }) {
     );
 }
 
-function Transaction({ transactions }) {
+export default function Transaction({ transactions }) {
+    const status = ReactRedux.useSelector(state => _.get(state, 'appState.orderData.payment_status'));
+    const currency = ReactRedux.useSelector(state => _.get(state, 'appState.orderData.currency', 'USD'));
     return React.createElement(
         "div",
         { className: "payment-transactions" },
@@ -146,7 +149,7 @@ function Transaction({ transactions }) {
                 null,
                 transactions.map((t, i) => {
                     let date = new Date(t.created_at);
-                    const amount = new Intl.NumberFormat(window.language, { style: 'currency', currency: window.currency }).format(t.amount);
+                    const amount = new Intl.NumberFormat('en', { style: 'currency', currency: currency }).format(t.amount);
                     return React.createElement(
                         "tr",
                         { key: i },
@@ -217,7 +220,12 @@ function Transaction({ transactions }) {
     );
 }
 
-export default function Payment({ order_id, payment_method, grand_total, payment_status, transactions }) {
+function Payment() {
+    const orderId = ReactRedux.useSelector(state => _.get(state, 'appState.orderData.order_id'));
+    const method = ReactRedux.useSelector(state => _.get(state, 'appState.orderData.payment_method'));
+    const methodName = ReactRedux.useSelector(state => _.get(state, 'appState.orderData.payment_method_name'));
+    const status = ReactRedux.useSelector(state => _.get(state, 'appState.orderData.payment_status'));
+    const grandTotal = ReactRedux.useSelector(state => _.get(state, 'appState.orderData.grand_total'));
     return React.createElement(
         "div",
         { className: "uk-width-1-1" },
@@ -235,23 +243,20 @@ export default function Payment({ order_id, payment_method, grand_total, payment
             { className: "uk-overflow-auto" },
             React.createElement(Area, {
                 id: "order_payment_block",
-                order_id: order_id,
-                payment_method: payment_method,
-                grand_total: grand_total,
-                payment_status: payment_status,
-                transactions: transactions,
+                orderId: orderId,
+                method: method,
+                methodName: methodName,
+                grandTotal: grandTotal,
+                status: status,
                 coreWidgets: [{
                     'component': Info,
-                    'props': { order_id, payment_method, payment_status, grand_total },
+                    'props': { orderId, method, methodName, status, grandTotal },
                     'sort_order': 10,
                     'id': 'order_payment_fo'
-                }, {
-                    'component': Transaction,
-                    'props': { transactions },
-                    'sort_order': 20,
-                    'id': 'order_payment_transaction'
                 }]
             })
         )
     );
 }
+
+export { Payment };

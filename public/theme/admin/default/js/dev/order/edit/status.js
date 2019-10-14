@@ -1,28 +1,28 @@
 import Area from "../../../../../../../js/production/area.js";
 
 function Pending({status}) {
-    if(status == 'pending')
+    if(status === 'pending')
         return <span className="uk-label uk-label-warning"><span uk-icon="icon: tag; ratio: 0.8"></span> Pending</span>;
     else
         return null;
 }
 
 function Processing({status}) {
-    if(status == 'processing')
+    if(status === 'processing')
         return <span className="uk-label"><span uk-icon="icon: tag; ratio: 0.8"></span> Processing</span>;
     else
         return null;
 }
 
 function Completed({status}) {
-    if(status == 'completed')
+    if(status === 'completed')
         return <span className="uk-label uk-label-success"><span uk-icon="icon: tag; ratio: 0.8"></span> Completed</span>;
     else
         return null;
 }
 
 function Cancelled({status}) {
-    if(status == 'cancelled')
+    if(status === 'cancelled')
         return <span className="uk-label uk-label-danger"><span uk-icon="icon: tag; ratio: 0.8"></span> Cancelled</span>;
     else
         return null;
@@ -30,7 +30,7 @@ function Cancelled({status}) {
 
 function Status({status}) {
     return <Area
-        id="order-status"
+        id="order_status"
         status={status}
         coreWidgets={[
             {

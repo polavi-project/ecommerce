@@ -56,7 +56,7 @@ function ProductColumn({ name, sku, options = [] }) {
     );
 }
 export default function Items({ items }) {
-    const currency = ReactRedux.useSelector(state => _.get(state, 'orderData.currency', 'USD'));
+    const currency = ReactRedux.useSelector(state => _.get(state, 'appState.orderData.currency', 'USD'));
     return React.createElement(
         "div",
         { className: "uk-width-1-1 uk-overflow-auto" },

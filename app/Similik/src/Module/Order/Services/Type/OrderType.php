@@ -120,15 +120,6 @@ class OrderType extends ObjectType
                                 ->fetchAllAssoc();
                         }
                     ],
-                    'payment_transaction' => [
-                        'type' => Type::listOf($container->get(PaymentTransactionType::class)),
-                        'resolve' => function($order, $args, Container $container, ResolveInfo $info) {
-                            return _mysql()
-                                ->getTable('payment_transaction')
-                                ->where('payment_transaction_order_id', '=', $order['order_id'])
-                                ->fetchAllAssoc();
-                        }
-                    ],
                     'activities' => [
                         'type' => Type::listOf($container->get(OrderActivityType::class)),
                         'resolve' => function($order, $args, Container $container, ResolveInfo $info) {

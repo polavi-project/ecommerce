@@ -1,7 +1,7 @@
 import Area from "../../../../../../../js/production/area.js";
 
 function Pending({ status }) {
-    if (status == 'pending') return React.createElement(
+    if (status === 'pending') return React.createElement(
         "span",
         { className: "uk-label uk-label-warning" },
         React.createElement("span", { "uk-icon": "icon: tag; ratio: 0.8" }),
@@ -10,7 +10,7 @@ function Pending({ status }) {
 }
 
 function Processing({ status }) {
-    if (status == 'processing') return React.createElement(
+    if (status === 'processing') return React.createElement(
         "span",
         { className: "uk-label" },
         React.createElement("span", { "uk-icon": "icon: tag; ratio: 0.8" }),
@@ -19,7 +19,7 @@ function Processing({ status }) {
 }
 
 function Completed({ status }) {
-    if (status == 'completed') return React.createElement(
+    if (status === 'completed') return React.createElement(
         "span",
         { className: "uk-label uk-label-success" },
         React.createElement("span", { "uk-icon": "icon: tag; ratio: 0.8" }),
@@ -28,7 +28,7 @@ function Completed({ status }) {
 }
 
 function Cancelled({ status }) {
-    if (status == 'cancelled') return React.createElement(
+    if (status === 'cancelled') return React.createElement(
         "span",
         { className: "uk-label uk-label-danger" },
         React.createElement("span", { "uk-icon": "icon: tag; ratio: 0.8" }),
@@ -38,7 +38,7 @@ function Cancelled({ status }) {
 
 function Status({ status }) {
     return React.createElement(Area, {
-        id: "order-status",
+        id: "order_status",
         status: status,
         coreWidgets: [{
             component: Pending,
