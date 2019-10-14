@@ -1,7 +1,7 @@
 import Area from "../../../../../../../js/production/area.js";
 
 export default function OrderEdit() {
-    return <div className='uk-grid uk-grid-small'>
+    return <div className='uk-grid uk-grid-small order-edit-page'>
         <Area
             id='order_edit_left'
             className='uk-width-2-3'

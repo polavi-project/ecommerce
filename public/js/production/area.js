@@ -5,7 +5,6 @@ import { ReducerRegistry } from "./reducer_registry.js";
 
 function Area(props) {
     let Wrapper$Component = props.reactcomponent === undefined ? "div" : props.reactcomponent;
-
     const getWidgets = widgets => {
         let coreWidgets = props.coreWidgets ? props.coreWidgets : [];
         let term = widgets !== undefined ? coreWidgets.concat(widgets.filter(e => {
@@ -18,18 +17,11 @@ function Area(props) {
 
         return items.map(c => {
             let C = c.component;
-            try {
-                return React.createElement(C, _extends({ key: c.id }, c.props, { areaProps: props }));
-            } catch (e) {
-                console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
-                return null;
-            }
+            if (typeof C === 'string') return React.createElement(C, _extends({ key: c.id }, c.props));else return React.createElement(C, _extends({ key: c.id }, c.props, { areaProps: props }));
         });
     };
 
-    const widgets = ReactRedux.useSelector(state => getWidgets(state.widgets).filter(c => {
-        return c !== null;
-    }));
+    const widgets = ReactRedux.useSelector(state => getWidgets(state.widgets));
     let args = [Wrapper$Component, { className: props.className ? props.className : "" }];
     widgets.forEach(w => {
         args.push(w);

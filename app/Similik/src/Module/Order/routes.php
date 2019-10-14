@@ -20,7 +20,7 @@ $router->addAdminRoute('order.grid', 'GET', '/orders', [
 /** @var \Similik\Services\Routing\Router $router */
 $router->addAdminRoute('order.edit', 'GET', '/order/edit/{id:\d+}', [
     \Similik\Module\Order\Middleware\Edit\InitMiddleware::class,
-    \Similik\Module\Order\Middleware\Edit\OrderInfoMiddleware::class,
+    \Similik\Module\Order\Middleware\Edit\ItemsMiddleware::class,
     \Similik\Module\Order\Middleware\Edit\PaymentMiddleware::class,
     \Similik\Module\Order\Middleware\Edit\ShipmentMiddleware::class,
     \Similik\Module\Order\Middleware\Edit\ActivityMiddleware::class,
