@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Similik\Services;
 
+use function Similik\array_find;
 use function Similik\dispatch_event;
 use Similik\Middleware\ConfigMiddleware;
 use Similik\Middleware\ResponseMiddleware;
@@ -52,6 +53,27 @@ class MiddlewareManager
 
         $this->middleware[$position][] = $middleware;
 
+        return $this;
+    }
+
+    public function registerMiddlewareBefore( $before, $middleware) : self
+    {
+        if($this->middlewareLocked == true)
+            throw new \Error('Can not add middleware once application is running');
+
+        if(is_string($middleware))
+            $middleware = new $middleware();
+        if(!$middleware instanceof MiddlewareAbstract)
+            throw new \InvalidArgumentException('Invalid middleware');
+
+        foreach ($this->middleware as $key => &$m) {
+            foreach ($m as $k=>$v) {
+                if($v == $before) {
+                    array_splice($m, $k, 0, $middleware);
+                    break;
+                }
+            }
+        }
         return $this;
     }
 
