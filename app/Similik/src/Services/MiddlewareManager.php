@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Similik\Services;
 
+use Monolog\Logger;
 use function Similik\array_find;
 use function Similik\dispatch_event;
 use Similik\Middleware\ConfigMiddleware;
@@ -66,10 +67,11 @@ class MiddlewareManager
         if(!$middleware instanceof MiddlewareAbstract)
             throw new \InvalidArgumentException('Invalid middleware');
 
-        foreach ($this->middleware as $key => &$m) {
+        foreach ($this->middleware as $key => $m) {
             foreach ($m as $k=>$v) {
-                if($v == $before) {
-                    array_splice($m, $k, 0, $middleware);
+                if(get_class($v) == $before) {
+                    array_splice($m, $k, 0, [$middleware]);
+                    $this->middleware[$key] = $m;
                     break;
                 }
             }
@@ -92,13 +94,15 @@ class MiddlewareManager
         $l = [];
         $m = [];
         krsort($this->middleware);
+        $log = [];
 
         foreach ($this->middleware as $middleware) {
             krsort($middleware);
-            foreach ($middleware as $v)
+            foreach ($middleware as $v) {
+                $log[] = get_class($v);
                 $l[] = $v;
+            }
         }
-
         foreach ($l as $callable) {
             $callable->setContainer($this->container);
             $next = end($m);
