@@ -10,11 +10,10 @@ namespace Similik\Module\Order\Middleware\Update;
 
 
 use Similik\Middleware\MiddlewareAbstract;
-use Similik\Middleware\ResponseMiddleware;
 use Similik\Module\Order\Services\OrderUpdatePromise;
 use Similik\Services\Http\Request;
 use Similik\Services\Http\Response;
-use function Similik\subscribe;
+use Similik\Services\PromiseWaiter;
 
 class InitPromiseMiddleware extends MiddlewareAbstract
 {
@@ -22,14 +21,11 @@ class InitPromiseMiddleware extends MiddlewareAbstract
     {
         try {
             $this->getContainer()->set(OrderUpdatePromise::class, new OrderUpdatePromise($request->attributes->getInt('id')));
+            $this->getContainer()->get(PromiseWaiter::class)->addPromise($this->getContainer()->get(OrderUpdatePromise::class));
         } catch (\Exception $e) {
             $response->setStatusCode(404);
             return $response;
         }
-
-        subscribe('route_middleware_ended', function() {
-            $this->getContainer()->get(OrderUpdatePromise::class)->wait();
-        });
 
         return $delegate;
     }

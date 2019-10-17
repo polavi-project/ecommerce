@@ -9,6 +9,14 @@ declare(strict_types=1);
 /** @var \Similik\Services\Event\EventDispatcher $eventDispatcher */
 
 $eventDispatcher->addListener(
+    'register_order_status_map',
+    function (array &$map) {
+        $map['cod/pending/pending'] = 'processing';
+    },
+    0
+);
+
+$eventDispatcher->addListener(
     'register.checkout.index.middleware',
     function (\Similik\Services\MiddlewareManager $middlewareManager) {
         $middlewareManager->registerMiddleware(\Similik\Module\Cod\Middleware\Checkout\CodPaymentMiddleware::class, 31);

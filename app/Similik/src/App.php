@@ -16,6 +16,8 @@ use Similik\Middleware\AdminNavigationMiddleware;
 use Similik\Middleware\CartInitMiddleware;
 use Similik\Middleware\FrontNavigationMiddleware;
 use Similik\Middleware\GraphQLExecuteMiddleware;
+use Similik\Middleware\PromiseWaiterMiddleware;
+use Similik\Middleware\ResolveOrderUpdatePromiseMiddleware;
 use Similik\Middleware\SaveCartMiddleware;
 use Similik\Module\Graphql\Services\ExecutionPromise;
 use Similik\Services\Db\Processor;
@@ -36,6 +38,7 @@ use Similik\Middleware\FrontLayoutMiddleware;
 use Similik\Middleware\AlertMiddleware;
 use Similik\Middleware\ResponseMiddleware;
 use Similik\Services\MiddlewareManager;
+use Similik\Services\PromiseWaiter;
 use Similik\Services\Routing\RouteParser;
 use Similik\Services\Routing\Router;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -98,6 +101,9 @@ class App
             return $promise;
         };
 
+        the_container()[PromiseWaiter::class] = function($c) {
+            return new PromiseWaiter();
+        };
         // Log
         the_container()[Logger::class] = function($c) {
             $logger = new Logger('logger');
@@ -167,6 +173,7 @@ class App
             40 => HandlerMiddleware::class,
             60 => InitHtmlMiddleware::class,
             70 => SaveCartMiddleware::class,
+            75 => PromiseWaiterMiddleware::class,
             80 => GraphQLExecuteMiddleware::class,
             90 => AdminLayoutMiddleware::class,
             100 => FrontLayoutMiddleware::class,

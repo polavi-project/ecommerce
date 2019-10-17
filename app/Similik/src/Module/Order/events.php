@@ -30,3 +30,13 @@ $eventDispatcher->addListener(
         },
         0
 );
+
+$eventDispatcher->addListener(
+    'register.core.middleware',
+    function (\Similik\Services\MiddlewareManager $middlewareManager) {
+        $middlewareManager->registerMiddlewareBefore(\Similik\Middleware\PromiseWaiterMiddleware::class, \Similik\Module\Order\Middleware\Update\Payment\AddActivityMiddleware::class);
+        $middlewareManager->registerMiddlewareBefore(\Similik\Middleware\PromiseWaiterMiddleware::class, \Similik\Module\Order\Middleware\Update\UpdateOrderStatusMiddleware::class);
+    },
+    0
+);
+

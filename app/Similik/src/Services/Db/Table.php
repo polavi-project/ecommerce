@@ -42,7 +42,7 @@ class Table
 
     public function __construct($table, Processor $processor)
     {
-        $this->table   = $table;
+        $this->table = $table;
         $this->processor = $processor;
         $this->describeTable();
 
