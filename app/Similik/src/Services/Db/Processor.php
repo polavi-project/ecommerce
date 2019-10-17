@@ -7,6 +7,7 @@
 
 namespace Similik\Services\Db;
 
+use function Similik\dispatch_event;
 use Similik\Services\Log\Logger;
 use Symfony\Component\EventDispatcher\GenericEvent;
 
@@ -237,10 +238,8 @@ class Processor extends \PDO
 
     public function insert(Table $table, array  $data = [])
     {
-        $event = new GenericEvent($this, [$table, $data]);
+        dispatch_event("before_insert_{$table->getTable()}", [&$data]);
         unset($data[$table->getPrimary()]);
-        $table = $event->getArgument(0);
-        $data = $event->getArgument(1);
         $binding = [];
         $insertColumns = [];
         foreach ($table->getColumns() as $column) {
@@ -267,8 +266,9 @@ class Processor extends \PDO
         try {
             $stmt = $this->prepare($query);
             $stmt->execute($binding);
-            $event = new GenericEvent($this, [$table, $data]);
-            return $stmt->rowCount();
+            $rowCount = $stmt->rowCount();
+            dispatch_event("after_insert_{$table->getTable()}", [$data, $rowCount]);
+            return $rowCount;
         } catch (\Exception $e) {
             $this->commit = false;
             throw $e;
@@ -277,6 +277,7 @@ class Processor extends \PDO
 
     public function update(Table $table, array $data = [])
     {
+        dispatch_event("before_update_{$table->getTable()}", [&$data]);
         $event = new GenericEvent($this, [$table, $data]);
         $table = $event->getArgument(0);
         $data = $event->getArgument(1);
@@ -308,7 +309,9 @@ class Processor extends \PDO
         try {
             $stmt = $this->prepare($query);
             $stmt->execute($binding);
-            return $stmt->rowCount();
+            $rowCount = $stmt->rowCount();
+            dispatch_event("after_update_{$table->getTable()}", [$data, $rowCount]);
+            return $rowCount;
         } catch (\Exception $e) {
             $this->commit = false;
             throw $e;
