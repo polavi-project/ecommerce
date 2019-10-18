@@ -23,7 +23,7 @@ class OrderUpdatePromise extends Promise
         if($order == false)
             throw new \Exception('Order is not existed');
 
-        parent::__construct(function() use ($order){
+        parent::__construct(function() use ($order) {
             $conn = _mysql();
             $orderNew = $conn->getTable('order')->load($order['order_id']);
             $diff = array_diff_assoc($orderNew, $order);

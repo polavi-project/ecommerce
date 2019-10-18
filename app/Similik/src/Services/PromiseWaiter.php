@@ -19,14 +19,25 @@ class PromiseWaiter
 
     protected $isDone = false;
 
-    public function addPromise(Promise $promise)
+    public function addPromise(string $key, Promise $promise)
     {
-        if($this->isDone == true) {
+        if($this->isDone == true || isset($this->promises[$key])) {
             return $this;
         }
-        $this->promises[] = $promise;
+
+        $this->promises[$key] = $promise;
 
         return $this;
+    }
+
+    /**/
+    /**
+     * @param string $key
+     * @return Promise|null
+     */
+    public function getPromise(string $key)
+    {
+        return isset($this->promises[$key]) ? $this->promises[$key] : null;
     }
 
     public function wait()

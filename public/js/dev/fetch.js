@@ -43,6 +43,14 @@ const Fetch = (url, pushState = false, method = "GET", data = {}, onStart = null
                     window.location.assign(response.redirectUrl);
                     return true;
                 }
+                // Alerts
+                if(response.alerts)
+                    store.dispatch({'type': ADD_ALERT, 'payload': {alerts: response.alerts}});
+
+                // App state
+                if(response.appState)
+                    store.dispatch({'type': ADD_APP_STATE, 'payload': {appState: response.appState}});
+
                 let promises = [];
                 let widgets = [];
                 if(response.widgets !== undefined) {
@@ -83,14 +91,6 @@ const Fetch = (url, pushState = false, method = "GET", data = {}, onStart = null
                             history.pushState(null, "", url);
                         }
                         PubSub.publishSync(REQUEST_END, {response});
-
-                        // Alerts
-                        if(response.alerts)
-                            store.dispatch({'type': ADD_ALERT, 'payload': {alerts: response.alerts}});
-
-                        // App state
-                        if(response.appState)
-                            store.dispatch({'type': ADD_APP_STATE, 'payload': {appState: response.appState}});
                     });
             }
         ).catch(

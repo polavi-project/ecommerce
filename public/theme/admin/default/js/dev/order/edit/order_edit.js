@@ -1,6 +1,7 @@
 import Area from "../../../../../../../js/production/area.js";
 import {OrderInfo} from "./info.js";
 import {Payment} from "./payment.js";
+import {OrderSummary} from "./summary.js";
 
 export default function OrderEdit() {
     return <div className='uk-grid uk-grid-small order-edit-page'>
@@ -25,6 +26,14 @@ export default function OrderEdit() {
         <Area
             id='order_edit_right'
             className='uk-width-1-3'
+            coreWidgets={[
+                {
+                    component: OrderSummary,
+                    props : {},
+                    sort_order: 5,
+                    id: "order_summary"
+                }
+            ]}
         />
     </div>
 }

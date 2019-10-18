@@ -14,7 +14,7 @@ use Similik\Services\Http\Request;
 use Similik\Services\Http\Response;
 use Similik\Middleware\MiddlewareAbstract;
 
-class ShipmentMiddleware extends MiddlewareAbstract
+class SummaryMiddleware extends MiddlewareAbstract
 {
     /**
      * @param Request $request

@@ -1,6 +1,7 @@
 import Area from "../../../../../../../js/production/area.js";
 import { OrderInfo } from "./info.js";
 import { Payment } from "./payment.js";
+import { OrderSummary } from "./summary.js";
 
 export default function OrderEdit() {
     return React.createElement(
@@ -23,7 +24,13 @@ export default function OrderEdit() {
         }),
         React.createElement(Area, {
             id: "order_edit_right",
-            className: "uk-width-1-3"
+            className: "uk-width-1-3",
+            coreWidgets: [{
+                component: OrderSummary,
+                props: {},
+                sort_order: 5,
+                id: "order_summary"
+            }]
         })
     );
 }
