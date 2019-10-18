@@ -29,6 +29,6 @@ export default function CodAction({areaProps, payOfflineUrl, refundOfflineUrl}) 
         };
         return <td>
             {_.get(areaProps, 'status') == 'pending' && <a href="#" onClick={(e)=>payOffline(e)}><span>Pay Offline</span></a>}
-            {_.get(areaProps, 'status') == 'paid' && <a href="#" onClick={(e)=>refundOffline(e)}><span>Pay Offline</span></a>}
+            {_.get(areaProps, 'status') == 'paid' && <a href="#" onClick={(e)=>refundOffline(e)}><span>Refund Offline</span></a>}
         </td>
 }
