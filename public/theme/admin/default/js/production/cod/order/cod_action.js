@@ -8,6 +8,13 @@ export default function CodAction({ areaProps, payOfflineUrl, refundOfflineUrl }
             location.reload();
         });
     };
+
+    const refundOffline = e => {
+        e.preventDefault();
+        Fetch(refundOfflineUrl, false, 'GET', {}, null, response => {
+            location.reload();
+        });
+    };
     return React.createElement(
         "td",
         null,
@@ -21,9 +28,13 @@ export default function CodAction({ areaProps, payOfflineUrl, refundOfflineUrl }
             )
         ),
         _.get(areaProps, 'status') == 'paid' && React.createElement(
-            A,
-            { url: refundOfflineUrl, pushState: false },
-            "Refund Offline"
+            "a",
+            { href: "#", onClick: e => refundOffline(e) },
+            React.createElement(
+                "span",
+                null,
+                "Pay Offline"
+            )
         )
     );
 }

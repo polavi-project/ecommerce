@@ -11,11 +11,35 @@ function Info({orderId, method, methodName, status, grandTotal}) {
     return <div className='payment-info'>
         <table className='uk-table uk-table-small'>
             <thead>
-            <tr>
-                <th>Status</th>
-                <th>Method</th>
-                <th>Actions</th>
-            </tr>
+            <Area
+                id={"order_payment_block_info_header"}
+                orderId={orderId}
+                method={method}
+                methodName={methodName}
+                grandTotal={grandTotal}
+                status={status}
+                reactcomponent={"tr"}
+                coreWidgets={[
+                    {
+                        'component': "th",
+                        'props': {children: <span>Status</span>},
+                        'sort_order': 10,
+                        'id': 'payment_status_header'
+                    },
+                    {
+                        'component': "th",
+                        'props': {children: <span>Method</span>},
+                        'sort_order': 20,
+                        'id': 'payment_method_header'
+                    },
+                    {
+                        'component': "th",
+                        'props': {children: <span>Actions</span>},
+                        'sort_order': 30,
+                        'id': 'payment_action_header'
+                    }
+                ]}
+            />
             </thead>
             <tbody>
             <Area

@@ -20,14 +20,6 @@ $eventDispatcher->addListener(
 );
 
 $eventDispatcher->addListener(
-    'register.order.edit.middleware',
-    function (\Similik\Services\MiddlewareManager $middlewareManager) {
-        $middlewareManager->registerMiddleware(\Similik\Module\FlatRate\Middleware\Order\FlatRateMiddleware::class, 31);
-    },
-    0
-);
-
-$eventDispatcher->addListener(
     'apply_shipping_method',
     function (Similik\Module\Checkout\Services\Cart\Cart $cart, $data) {
         if($cart->getData('shipping_address_id') == null)

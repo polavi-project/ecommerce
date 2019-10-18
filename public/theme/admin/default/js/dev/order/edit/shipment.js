@@ -1,6 +1,6 @@
 import Area from "../../../../../../../js/production/area.js";
 import {ShipmentStatus} from "./shipment-status.js";
-import A from "../../../../../../../js/production/a.js";
+import {Fetch} from "../../../../../../../js/production/fetch.js";
 
 function Status({status}) {
     return <td>
@@ -18,71 +18,134 @@ function Weight({weight}) {
     return <td>{weight}</td>
 }
 
-function Cost({cost}) {
-    return <td><span>Shipping cost:</span> {cost}</td>
-}
-
 function Actions({status, startShipUrl, completeShipUrl}) {
+    const startShipment = (e) => {
+        e.preventDefault();
+        Fetch(
+            startShipUrl,
+            false,
+            'GET',
+            {},
+            null,
+            (response)=>{
+                location.reload()
+            })
+    };
+
+    const completeShipment = (e) => {
+        e.preventDefault();
+        Fetch(
+            completeShipUrl,
+            false,
+            'GET',
+            {},
+            null,
+            (response)=>{
+                location.reload()
+            })
+    };
     return <td>
-        {status == 'pending' && <A pushState={false} url={startShipUrl}><span>Start shipment</span></A>}
-        {status == 'delivering' && <A pushState={false} url={completeShipUrl}><span>Complete shipment</span></A>}
+        {status == 'pending' && <a href="#" onClick={(e)=>startShipment(e)}><span>Start shipment</span></a>}
+        {status == 'delivering' && <a href="#" onClick={(e)=>completeShipment(e)}><span>Complete shipment</span></a>}
     </td>
 }
 
-export default function Shipment({order_id, shipping_fee, shipping_method, shipment_status, total_weight, shipping_note, grand_total, startShipUrl, completeShipUrl}) {
+export default function Shipment({startShipUrl, completeShipUrl}) {
+    const orderId = ReactRedux.useSelector(state => _.get(state, 'appState.orderData.order_id'));
+    const method = ReactRedux.useSelector(state => _.get(state, 'appState.orderData.shipping_method'));
+    const methodName = ReactRedux.useSelector(state => _.get(state, 'appState.orderData.shipping_method_name'));
+    const shippingNote = ReactRedux.useSelector(state => _.get(state, 'appState.orderData.shipping_note'));
+    const status = ReactRedux.useSelector(state => _.get(state, 'appState.orderData.shipment_status'));
+    const grandTotal = ReactRedux.useSelector(state => _.get(state, 'appState.orderData.grand_total'));
+    const weight = ReactRedux.useSelector(state => _.get(state, 'appState.orderData.total_weight'));
     return <div className='shipment-info uk-width-1-1'>
         <div><strong>Shipment</strong></div>
         <table className='uk-table uk-table-small'>
             <thead>
-            <tr>
-                <th>Status</th>
-                <th>Method</th>
-                <th>Total weight</th>
-                <th>Cost</th>
-                <th>Customer notes</th>
-                <th>Actions</th>
-            </tr>
+                <Area
+                    id={"order_shipment_block_info_header"}
+                    orderId={orderId}
+                    method={method}
+                    shippingNote={shippingNote}
+                    methodName={methodName}
+                    grandTotal={grandTotal}
+                    weight={weight}
+                    status={status}
+                    reactcomponent={"tr"}
+                    coreWidgets={[
+                        {
+                            'component': "th",
+                            'props': {children: <span>Status</span>},
+                            'sort_order': 10,
+                            'id': 'shipment_status_header'
+                        },
+                        {
+                            'component': "th",
+                            'props': {children: <span>Method</span>},
+                            'sort_order': 20,
+                            'id': 'shipment_method_header'
+                        },
+                        {
+                            'component': "th",
+                            'props': {children: <span>Total weight</span>},
+                            'sort_order': 30,
+                            'id': 'shipment_weight_header'
+                        },
+                        {
+                            'component': "th",
+                            'props': {children: <span>Customer notes</span>},
+                            'sort_order': 40,
+                            'id': 'shipment_notes_header'
+                        },
+                        {
+                            'component': "th",
+                            'props': {children: <span>Actions</span>},
+                            'sort_order': 50,
+                            'id': 'shipment_action_header'
+                        }
+                    ]}
+                />
             </thead>
             <tbody>
             <Area
                 id={"order_shipment_info"}
-                order_id={order_id}
-                shipping_method={shipping_method}
-                shipping_fee={shipping_fee}
-                grand_total={grand_total}
-                total_weight={total_weight}
-                shipping_note={shipping_note}
-                shipment_status={shipment_status}
+                orderId={orderId}
+                method={method}
+                shippingNote={shippingNote}
+                methodName={methodName}
+                grandTotal={grandTotal}
+                weight={weight}
+                status={status}
                 reactcomponent={"tr"}
                 coreWidgets={[
                     {
                         'component': Status,
-                        'props': {status: shipment_status},
+                        'props': {status: status},
                         'sort_order': 10,
                         'id': 'order_shipment_status'
                     },
                     {
+                        'component': "td",
+                        'props': {children: <span>{methodName}</span>},
+                        'sort_order': 20,
+                        'id': 'order_shipment_method'
+                    },
+                    {
                         'component': Weight,
-                        'props': {weight: total_weight},
+                        'props': {weight: weight},
                         'sort_order': 30,
                         'id': 'order_shipment_weight'
                     },
                     {
-                        'component': Cost,
-                        'props': {cost: shipping_fee},
-                        'sort_order': 40,
-                        'id': 'order_shipment_fee'
-                    },
-                    {
                         'component': Note,
-                        'props': {note: shipping_note},
-                        'sort_order': 50,
+                        'props': {note: shippingNote},
+                        'sort_order': 40,
                         'id': 'order_shipment_note'
                     },
                     {
                         'component': Actions,
-                        'props': {status: shipment_status, startShipUrl, completeShipUrl},
-                        'sort_order': 60,
+                        'props': {status: status, startShipUrl, completeShipUrl},
+                        'sort_order': 50,
                         'id': 'order_shipment_action'
                     }
                 ]}

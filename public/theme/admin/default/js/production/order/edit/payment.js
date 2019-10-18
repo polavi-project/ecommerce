@@ -19,25 +19,43 @@ function Info({ orderId, method, methodName, status, grandTotal }) {
             React.createElement(
                 "thead",
                 null,
-                React.createElement(
-                    "tr",
-                    null,
-                    React.createElement(
-                        "th",
-                        null,
-                        "Status"
-                    ),
-                    React.createElement(
-                        "th",
-                        null,
-                        "Method"
-                    ),
-                    React.createElement(
-                        "th",
-                        null,
-                        "Actions"
-                    )
-                )
+                React.createElement(Area, {
+                    id: "order_payment_block_info_header",
+                    orderId: orderId,
+                    method: method,
+                    methodName: methodName,
+                    grandTotal: grandTotal,
+                    status: status,
+                    reactcomponent: "tr",
+                    coreWidgets: [{
+                        'component': "th",
+                        'props': { children: React.createElement(
+                                "span",
+                                null,
+                                "Status"
+                            ) },
+                        'sort_order': 10,
+                        'id': 'payment_status_header'
+                    }, {
+                        'component': "th",
+                        'props': { children: React.createElement(
+                                "span",
+                                null,
+                                "Method"
+                            ) },
+                        'sort_order': 20,
+                        'id': 'payment_method_header'
+                    }, {
+                        'component': "th",
+                        'props': { children: React.createElement(
+                                "span",
+                                null,
+                                "Actions"
+                            ) },
+                        'sort_order': 30,
+                        'id': 'payment_action_header'
+                    }]
+                })
             ),
             React.createElement(
                 "tbody",
