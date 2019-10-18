@@ -6,7 +6,7 @@
 
 declare(strict_types=1);
 
-namespace Similik\Module\Order\Middleware\Update\Payment;
+namespace Similik\Module\Order\Middleware\Update\Shipment;
 
 
 use GuzzleHttp\Promise\Promise;
@@ -27,17 +27,17 @@ class AddActivityMiddleware extends MiddlewareAbstract
         $this->getContainer()->get(OrderUpdatePromise::class)->then(function(array $result) use($request) {
             $conn = _mysql();
             $changes = $result['changes'];
-            if(isset($changes['payment_status']) and $changes['payment_status'] == 'paid')
+            if(isset($changes['shipment_status']) and $changes['shipment_status'] == 'delivering')
                 $conn->getTable('order_activity')->insert([
                     'order_activity_order_id' => $changes['order_id'],
-                    'comment' => "Customer paid",
+                    'comment' => "Shipment is started",
                     'customer_notified' => $request->get('notify_customer') == 0 ? 0 : 1
                 ]);
 
-            if(isset($changes['payment_status']) and $changes['payment_status'] == 'refunded')
+            if(isset($changes['shipment_status']) and $changes['shipment_status'] == 'delivered')
                 $conn->getTable('order_activity')->insert([
                     'order_activity_order_id' => $changes['order_id'],
-                    'comment' => "Refunded",
+                    'comment' => "Shipment is completed",
                     'customer_notified' => $request->get('notify_customer') == 0 ? 0 : 1
                 ]);
         });
