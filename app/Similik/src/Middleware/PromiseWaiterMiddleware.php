@@ -10,6 +10,7 @@ namespace Similik\Middleware;
 
 use Similik\Services\Http\Request;
 use Similik\Services\Http\Response;
+use Similik\Services\Log\Logger;
 use Similik\Services\PromiseWaiter;
 
 class PromiseWaiterMiddleware extends MiddlewareAbstract

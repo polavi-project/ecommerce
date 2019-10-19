@@ -48,7 +48,6 @@ $router->addSiteRoute('checkout.set.shipment', 'POST', '/checkout/shipment/add',
 
 $router->addSiteRoute('checkout.order', 'POST', '/checkout/order', [
     \Similik\Module\Checkout\Middleware\Checkout\Order\CreateOrderMiddleware::class,
-    \Similik\Module\Order\Middleware\Update\UpdateOrderStatusMiddleware::class,
     \Similik\Module\Checkout\Middleware\Checkout\Order\ResponseMiddleware::class
 ]);
 

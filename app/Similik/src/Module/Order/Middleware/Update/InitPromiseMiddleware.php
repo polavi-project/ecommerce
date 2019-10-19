@@ -23,7 +23,7 @@ class InitPromiseMiddleware extends MiddlewareAbstract
     {
         try {
             $conn = _mysql();
-            $order = $conn->getTable('order')->load(10000);
+            $order = $conn->getTable('order')->load($request->attributes->getInt('id'));
             if($order == false)
                 throw new \Exception('Order is not existed');
             $promise = new Promise(function() use(&$promise, $order) {
