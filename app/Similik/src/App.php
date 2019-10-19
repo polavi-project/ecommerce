@@ -10,6 +10,7 @@ namespace Similik;
 
 use GraphQL\Executor\ExecutionResult;
 use GuzzleHttp\Promise\Promise;
+use function GuzzleHttp\Promise\settle;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Similik\Middleware\AdminNavigationMiddleware;
@@ -101,7 +102,15 @@ class App
         };
 
         the_container()[PromiseWaiter::class] = function($c) {
-            return new PromiseWaiter();
+            $promise = new PromiseWaiter(function() use(&$promise) {
+                $p = settle($promise->getPromises());
+                $p->wait();
+                $p->then(function($result) use (&$promise) {
+                    $promise->resolve($result);
+                });
+            });
+
+            return $promise;
         };
         // Log
         the_container()[Logger::class] = function($c) {
