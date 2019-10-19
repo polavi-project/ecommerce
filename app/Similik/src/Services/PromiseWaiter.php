@@ -10,18 +10,17 @@ namespace Similik\Services;
 
 
 use GuzzleHttp\Promise\Promise;
-use function GuzzleHttp\Promise\settle;
 
-class PromiseWaiter
+class PromiseWaiter extends Promise
 {
     /**@var Promise[] $promises*/
-    protected $promises;
+    protected $promises = [];
 
     protected $isDone = false;
 
     public function addPromise(string $key, Promise $promise)
     {
-        if($this->isDone == true || isset($this->promises[$key])) {
+        if($this->getState() == self::FULFILLED || $this->getState() == self::REJECTED || isset($this->promises[$key])) {
             return $this;
         }
 
@@ -40,12 +39,11 @@ class PromiseWaiter
         return isset($this->promises[$key]) ? $this->promises[$key] : null;
     }
 
-    public function wait()
+    /**
+     * @return Promise[]
+     */
+    public function getPromises(): array
     {
-        $promise = settle($this->promises);
-        $promise->wait();
-        $this->isDone = true;
-
-        return $promise;
+        return $this->promises;
     }
 }
