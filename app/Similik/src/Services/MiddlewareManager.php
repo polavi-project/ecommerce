@@ -115,9 +115,11 @@ class MiddlewareManager
                 };
             $m[] = function (Request $request, Response $response, $delegate = null) use ($callable, $next) {
                 if($delegate instanceof Response) {
-                    if($response->headers->get('Content-Type') == 'text/html')
+                    if(!$request->isAjax()) {
+                        $response->setContent($this->container->get(HtmlDocument::class)->getHtml());
+                        $response->headers->set('Content-Type', 'text/html');
                         $response->sendHtml();
-                    else
+                    } else
                         $response->send($response->getStatusCode());
                     exit();
                 } else {

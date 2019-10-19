@@ -6,7 +6,7 @@ function ProductColumn({ name, sku, options = []}) {
             <div><span>{name}</span></div>
             <div><span>Sku</span>: <span>{sku}</span></div>
             {options.map((o,i) => {
-                return <div><i><strong>{o.option_name}</strong></i> : <span>{o.option_value_text}</span></div>
+                return <div key={i}><i><strong>{o.option_name}</strong></i> : <span>{o.option_value_text}</span></div>
             })}
         </div>
     </td>

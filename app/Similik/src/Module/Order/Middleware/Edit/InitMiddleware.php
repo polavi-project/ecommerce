@@ -31,7 +31,7 @@ class InitMiddleware extends MiddlewareAbstract
         if($order === false) {
             $response->addData('success', 0);
             $response->addData('message', 'Requested order does not exist');
-
+            $response->setStatusCode(404);
             return $response;
         }
         $this->getContainer()->get(Helmet::class)->setTitle("Order #{$order['order_number']}");

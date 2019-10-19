@@ -17,7 +17,6 @@ use Similik\Middleware\CartInitMiddleware;
 use Similik\Middleware\FrontNavigationMiddleware;
 use Similik\Middleware\GraphQLExecuteMiddleware;
 use Similik\Middleware\PromiseWaiterMiddleware;
-use Similik\Middleware\ResolveOrderUpdatePromiseMiddleware;
 use Similik\Middleware\SaveCartMiddleware;
 use Similik\Module\Graphql\Services\ExecutionPromise;
 use Similik\Services\Db\Processor;
