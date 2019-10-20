@@ -16,8 +16,6 @@ class PromiseWaiter extends Promise
     /**@var Promise[] $promises*/
     protected $promises = [];
 
-    protected $isDone = false;
-
     public function addPromise(string $key, Promise $promise)
     {
         if($this->getState() == self::FULFILLED || $this->getState() == self::REJECTED || isset($this->promises[$key])) {
@@ -29,7 +27,6 @@ class PromiseWaiter extends Promise
         return $this;
     }
 
-    /**/
     /**
      * @param string $key
      * @return Promise|null

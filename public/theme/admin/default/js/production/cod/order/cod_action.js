@@ -33,7 +33,7 @@ export default function CodAction({ areaProps, payOfflineUrl, refundOfflineUrl }
             React.createElement(
                 "span",
                 null,
-                "Pay Offline"
+                "Refund Offline"
             )
         )
     );

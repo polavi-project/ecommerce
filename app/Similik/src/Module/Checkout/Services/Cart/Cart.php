@@ -496,7 +496,6 @@ class Cart
 
         $orderData = array_merge($this->data, $customerData, [
             'order_number' =>10000 + (int)$autoIncrement['AUTO_INCREMENT'],
-            'status' => 'pending',
             'shipment_status' => 'pending',
             'payment_status' => 'pending'
         ]);

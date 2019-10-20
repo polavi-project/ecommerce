@@ -13,7 +13,6 @@ use GuzzleHttp\Promise\Promise;
 use Similik\Middleware\MiddlewareAbstract;
 use Similik\Services\Http\Request;
 use Similik\Services\Http\Response;
-use Similik\Services\PromiseWaiter;
 use Similik\Services\Routing\Router;
 
 class ResponseMiddleware extends MiddlewareAbstract
@@ -21,15 +20,16 @@ class ResponseMiddleware extends MiddlewareAbstract
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
         /* IF THERE IS NO REDIRECT PROVIDED, WE REDIRECT USE TO EITHER SUCCESS PAGE OR FAILURE PAGE */
-        $this->getContainer()->get(PromiseWaiter::class)->then(function($result) use($request, $response) {
-            if(isset($result['orderCreated'])) {
-                if(!$response->isRedirect()) {
-                    $response->redirect($this->getContainer()->get(Router::class)->generateUrl('checkout.success'));
-                }
-            } else {
-                if(!$response->isRedirect()) {
-                    $response->redirect($this->getContainer()->get(Router::class)->generateUrl('checkout.failure'));
-                }
+        if(!$delegate instanceof Promise)
+            return $delegate;
+
+        $delegate->then(function($orderId) use($request, $response) {
+            if(!$response->isRedirect()) {
+                $response->redirect($this->getContainer()->get(Router::class)->generateUrl('checkout.success'));
+            }
+        })->otherwise(function($reason) use ($response) {
+            if(!$response->isRedirect()) {
+                $response->redirect($this->getContainer()->get(Router::class)->generateUrl('checkout.failure'));
             }
         });
 

@@ -22,11 +22,6 @@ export function OrderInfo() {
                 null,
                 date.toDateString()
             )
-        ),
-        React.createElement(
-            'div',
-            null,
-            React.createElement(Status, { status: status })
         )
     );
 }

@@ -58,15 +58,6 @@ class AddActivityMiddleware extends MiddlewareAbstract
                     'comment' => "Shipment is completed",
                     'customer_notified' => $request->get('notify_customer') == 0 ? 0 : 1
                 ]);
-
-            // Order status
-
-            if(isset($changes['status']) and $changes['status'] == 'completed')
-                $conn->getTable('order_activity')->insert([
-                    'order_activity_order_id' => $orderId,
-                    'comment' => "Order completed",
-                    'customer_notified' => $request->get('notify_customer') == 0 ? 0 : 1
-                ]);
         });
 
         return $delegate;

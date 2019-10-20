@@ -34,7 +34,7 @@ function ProductColumn({ name, sku, options = [] }) {
             options.map((o, i) => {
                 return React.createElement(
                     "div",
-                    null,
+                    { key: i },
                     React.createElement(
                         "i",
                         null,

@@ -38,7 +38,7 @@ class RefundOfflineMiddleware extends MiddlewareAbstract
 
             $response->addAlert("order_update", "success", "Order updated")->notNewPage();
 
-            return $this->getContainer()->get(OrderUpdatePromise::class);
+            return $delegate;
         } catch (\Exception $e) {
             $response->addAlert("order_update", "error", $e->getMessage())->notNewPage();
             return $response;

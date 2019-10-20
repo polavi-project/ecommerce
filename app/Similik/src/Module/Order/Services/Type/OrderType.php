@@ -60,9 +60,6 @@ class OrderType extends ObjectType
                     'user_agent' => [
                         'type' => Type::string()
                     ],
-                    'status' => [
-                        'type' => Type::nonNull(Type::string())
-                    ],
                     'coupon' => [
                         'type' => Type::string()
                     ],

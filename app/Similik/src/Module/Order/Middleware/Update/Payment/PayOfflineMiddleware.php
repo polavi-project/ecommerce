@@ -11,7 +11,6 @@ namespace Similik\Module\Order\Middleware\Update\Payment;
 
 use function Similik\_mysql;
 use Similik\Middleware\MiddlewareAbstract;
-use Similik\Module\Order\Services\OrderUpdatePromise;
 use Similik\Services\Http\Request;
 use Similik\Services\Http\Response;
 
@@ -38,7 +37,7 @@ class PayOfflineMiddleware extends MiddlewareAbstract
 
             $response->addAlert("order_update", "success", "Order updated")->notNewPage();
 
-            return $this->getContainer()->get(OrderUpdatePromise::class);
+            return $delegate;
         } catch (\Exception $e) {
             $response->addAlert("order_update", "error", $e->getMessage())->notNewPage();
             return $response;

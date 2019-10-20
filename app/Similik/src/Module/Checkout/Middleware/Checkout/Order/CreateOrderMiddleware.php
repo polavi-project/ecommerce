@@ -12,6 +12,7 @@ namespace Similik\Module\Checkout\Middleware\Checkout\Order;
 use function Similik\init_order_update_promise;
 use Similik\Middleware\MiddlewareAbstract;
 use Similik\Module\Checkout\Services\Cart\Cart;
+use Similik\Module\Order\Services\OrderUpdatePromise;
 use Similik\Services\Http\Request;
 use Similik\Services\Http\Response;
 use Similik\Services\Log\Logger;
@@ -24,7 +25,7 @@ class CreateOrderMiddleware extends MiddlewareAbstract
         $cart = $this->getContainer()->get(Cart::class);
         $promise = $cart->createOrder();
         $promise->then(function($orderId) {
-            $this->getContainer()->get(PromiseWaiter::class)->addPromise('orderCreated', init_order_update_promise($orderId));
+            $this->getContainer()->get(PromiseWaiter::class)->addPromise('orderCreated', new OrderUpdatePromise($orderId));
         });
         $promise->then(function($orderId) use ($request) {
             $request->getSession()->set('orderId', $orderId);

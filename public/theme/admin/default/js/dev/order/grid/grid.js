@@ -1,6 +1,5 @@
 import Area from "../../../../../../../js/production/area.js";
 import A from "../../../../../../../js/production/a.js";
-import {Status} from "../edit/status.js";
 import {PaymentStatus} from "../edit/payment-status.js";
 import {ShipmentStatus} from "../edit/shipment-status.js";
 
@@ -93,31 +92,6 @@ function ActionColumn({areaProps}) {
     </td>
 }
 
-function StatusColumn({areaProps})
-{
-    const filterInput = React.useRef(null);
-
-    React.useEffect(() => {
-        areaProps.addField("status");
-    }, []);
-
-    return <td className={"column"}>
-        <div className="header status-header">
-            <div className={"title"}><span>Status</span></div>
-            <div className={"filter"}>
-                <input type={"text"} ref={filterInput} onKeyPress={(e) => {
-                    if(e.key === 'Enter') areaProps.addFilter("status", "Equal", e.target.value);
-                }
-                }/>
-            </div>
-        </div>
-        {areaProps.rows.map((r, i) => {
-            return <div key={i} className={"row"}>
-                <Status status={_.get(r, "status")}/>
-            </div>
-        })}
-    </td>
-}
 function PaymentStatusColumn({areaProps})
 {
     const filterInput = React.useRef(null);
@@ -297,17 +271,10 @@ export default function OrderGrid({apiUrl})
                             id: "number"
                         },
                         {
-                            component: StatusColumn,
-                            props : {
-                            },
-                            sort_order: 30,
-                            id: "status"
-                        },
-                        {
                             component: PaymentStatusColumn,
                             props : {
                             },
-                            sort_order: 40,
+                            sort_order: 30,
                             id: "payment_status"
                         },
                         {
