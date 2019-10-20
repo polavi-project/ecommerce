@@ -377,7 +377,7 @@ class Processor extends \PDO
     {
         $default_setting = [
             'sort_by'=> "`{$table->getTable()}`." . $table->getPrimary(),
-            'sort_order'=> 'ASC',
+            'sort_order'=> 'DESC',
             'page'=> 1,
             'limit'=> null
         ];
