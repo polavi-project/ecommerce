@@ -28,16 +28,6 @@ $container[\Similik\Module\Graphql\Services\GraphqlExecutor::class] =  function(
     return new \Similik\Module\Graphql\Services\GraphqlExecutor($container[\GraphQL\Type\Schema::class], $container);
 };
 
-$container[\Overblog\DataLoader\Promise\Adapter\Webonyx\GraphQL\SyncPromiseAdapter::class] = $container->factory(function ($c) {
-    return new \Overblog\DataLoader\Promise\Adapter\Webonyx\GraphQL\SyncPromiseAdapter();
-});
-
-$container[\Overblog\PromiseAdapter\Adapter\WebonyxGraphQLSyncPromiseAdapter::class] = $container->factory(function ($c) {
-    return new \Overblog\PromiseAdapter\Adapter\WebonyxGraphQLSyncPromiseAdapter(
-        $c[\Overblog\DataLoader\Promise\Adapter\Webonyx\GraphQL\SyncPromiseAdapter::class]
-    );
-});
-
 $container[\Similik\Module\Graphql\Services\FilterFieldType::class] = function() use ($container){
     return new \Similik\Module\Graphql\Services\FilterFieldType($container);
 };

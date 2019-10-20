@@ -8,9 +8,9 @@ declare(strict_types=1);
 
 namespace Similik\Middleware;
 
+use Similik\Module\Graphql\Services\GraphqlExecutor;
 use Similik\Services\Http\Request;
 use Similik\Services\Http\Response;
-use Similik\Services\Log\Logger;
 use Similik\Services\PromiseWaiter;
 
 class PromiseWaiterMiddleware extends MiddlewareAbstract
