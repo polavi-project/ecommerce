@@ -25,9 +25,15 @@ class ActionColumn extends MiddlewareAbstract
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
         $response->addWidget(
-            'product-grid-action-column',
-            'product-grid',
-            60, get_js_file_url("production/catalog/product/grid/actionColumn.js", true),
+            'product-grid-action-column-header',
+            'product_grid_header',
+            60, get_js_file_url("production/catalog/product/grid/actionColumnHeader.js", true)
+        );
+
+        $response->addWidget(
+            'product-grid-action-column-row',
+            'product_grid_row',
+            60, get_js_file_url("production/catalog/product/grid/actionColumnRow.js", true),
             [
                 'deleteUrl' => generate_url('admin.graphql.api', ['type'=>'deleteProduct']),
             ]

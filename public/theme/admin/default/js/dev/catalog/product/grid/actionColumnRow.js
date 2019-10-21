@@ -1,11 +1,7 @@
 import A from "../../../../../../../../js/production/a.js";
 import {ADD_ALERT} from "../../../../../../../../js/production/event-types.js";
 
-export default function ActionColumn({areaProps, deleteUrl}) {
-    React.useEffect(() => {
-        areaProps.addField('product_id');
-        areaProps.addField('editUrl');
-    }, []);
+export default function ActionColumnRow({areaProps, deleteUrl}) {
     const dispatch = ReactRedux.useDispatch();
     const deleteProduct = (id) => {
         let formData = new FormData();
@@ -20,7 +16,7 @@ export default function ActionColumn({areaProps, deleteUrl}) {
                 throw new Error('Something wrong, please try again');
             if(parseInt(_.get(response, 'data.payload.data.deleteProduct.status')) === 1) {
                 dispatch({'type' : ADD_ALERT, 'payload': {alerts: [{id: "product_delete_ok", message: "Product deleted", type: "success"}]}});
-                areaProps.applyFilter();
+                location.reload();
             } else {
                 dispatch({'type' : ADD_ALERT, 'payload': {alerts: [{id: "product_delete_error", message: _.get(response, 'data.payload.data.deleteProduct.message'), type: "error"}]}});
             }
@@ -31,15 +27,8 @@ export default function ActionColumn({areaProps, deleteUrl}) {
         });
     };
 
-    return <td className={"column"}>
-        <div className="header">
-            <div className={"title"}><span>Action</span></div>
-        </div>
-        {areaProps.rows.map((r, i) => {
-            return <div className={"row"} key={i}>
-                <A url={_.get(r, 'editUrl' , '')} text={"Edit"}/>
-                <a href={"#"} onClick={() => deleteProduct(r.product_id)}>Delete</a>
-            </div>;
-        })}
-    </td>
+    return <td>
+        <A url={_.get(areaProps, 'row.editUrl' , '')} text={"Edit"}/>
+        <a href={"#"} onClick={() => deleteProduct(areaProps.row.product_id)}>Delete</a>
+    </td>;
 }
