@@ -17,10 +17,10 @@ use Similik\Middleware\MiddlewareAbstract;
 
 class CategoryMiddleware extends MiddlewareAbstract
 {
-    const FORM_ID = 'product-edit-form';
     /**
      * @param Request $request
      * @param Response $response
+     * @param null $delegate
      * @return mixed
      */
     public function __invoke(Request $request, Response $response, $delegate = null)
@@ -36,18 +36,22 @@ class CategoryMiddleware extends MiddlewareAbstract
                                 category_id
                             }
                         }
-                        categories {
-                            text: name
-                            value: category_id
+                        categoryCollection {
+                            categories {
+                                text: name
+                                value: category_id
+                            }
                         }
                     }
 QUERY;
         else
             $query = <<< QUERY
                     {
-                        categories {
-                            text: name
-                            value: category_id
+                        categoryCollection {
+                            categories {
+                                text: name
+                                value: category_id
+                            }
                         }
                     }
 QUERY;
@@ -64,16 +68,16 @@ QUERY;
                     foreach($result->data['assignedCategories']['categories'] as $cat)
                         $assignedCategories[] = $cat['category_id'];
                 }
-                if (isset($result->data['categories'])) {
-                    $categories = $result->data['categories'];
+                if (isset($result->data['categoryCollection']['categories'])) {
+                    $categories = $result->data['categoryCollection']['categories'];
                 }
 
                 $response->addWidget(
                     'product_edit_category',
                     'product-edit-general',
-                    31,
+                    41,
                     get_js_file_url("production/form/fields/multiselect.js", true),
-                    ["id"=> "categories", 'formId'=> self::FORM_ID, "name"=> "categories[]", "label"=> "Category", "options"=>$categories, "value"=>$assignedCategories]
+                    ["id"=> "categories", "formId"=> "product-edit-form", "name"=> "categories[]", "label"=> "Category", "options"=>$categories, "value"=>$assignedCategories]
                 );
             });
 

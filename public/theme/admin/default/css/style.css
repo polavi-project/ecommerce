@@ -1,6 +1,7 @@
 html {
     font-size: 14px !important;
 }
+.text-danger{color:#f0506e}
 #header {
     background: cadetblue;
     min-height: 45px;
@@ -88,10 +89,6 @@ html {
 /* GRID */
 table input{max-width: 95px}
 
-/* Table */
-td, th {
-    border: 1px solid #999;
-}
 
 .row {
     border-top: 1px solid #999;

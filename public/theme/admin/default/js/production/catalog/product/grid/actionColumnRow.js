@@ -28,11 +28,25 @@ export default function ActionColumnRow({ areaProps, deleteUrl }) {
     return React.createElement(
         "td",
         null,
-        React.createElement(A, { url: _.get(areaProps, 'row.editUrl', ''), text: "Edit" }),
         React.createElement(
-            "a",
-            { href: "#", onClick: () => deleteProduct(areaProps.row.product_id) },
-            "Delete"
+            "div",
+            null,
+            React.createElement(A, { url: _.get(areaProps, 'row.editUrl', ''), text: "Edit" })
+        ),
+        React.createElement(
+            "div",
+            null,
+            React.createElement(
+                "a",
+                { href: "#", onClick: e => {
+                        e.preventDefault();deleteProduct(areaProps.row.product_id);
+                    } },
+                React.createElement(
+                    "span",
+                    { className: "text-danger" },
+                    "Delete"
+                )
+            )
         )
     );
 }

@@ -27,6 +27,7 @@ class AttributeMiddleware extends MiddlewareAbstract
     {
         if($response->hasWidget('product_edit_attributes'))
             return $delegate;
+
         $this->getContainer()
             ->get(GraphqlExecutor::class)
             ->waitToExecute([
@@ -62,8 +63,8 @@ QUERY
                     }
                     $response->addWidget(
                         'product_edit_attributes',
-                        'admin_product_edit_inner',
-                        41,
+                        'admin_product_edit_inner_right',
+                        5,
                         get_js_file_url("production/catalog/product/edit/attribute.js", true),
                         $props
                     );
@@ -104,8 +105,8 @@ QUERY
 
                     $response->addWidget(
                         'product_edit_attributes',
-                        'admin_product_edit_inner',
-                        41,
+                        'admin_product_edit_inner_right',
+                        5,
                         get_js_file_url("production/catalog/product/edit/attribute.js", true),
                         $widget['props']
                     );

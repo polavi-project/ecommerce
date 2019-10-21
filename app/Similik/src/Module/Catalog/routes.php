@@ -14,7 +14,7 @@ $router->addAdminRoute('product.grid', 'GET', '/products', [
     \Similik\Module\Catalog\Middleware\Product\Grid\ActionColumn::class,
 ]);
 
-$ProductEditMiddleware = [
+$productEditMiddleware = [
     \Similik\Module\Catalog\Middleware\Product\Edit\InitMiddleware::class,
     \Similik\Module\Catalog\Middleware\Product\Edit\FormMiddleware::class,
     \Similik\Module\Catalog\Middleware\Product\Edit\GeneralInfoMiddleware::class,
@@ -25,9 +25,9 @@ $ProductEditMiddleware = [
     \Similik\Module\Catalog\Middleware\Product\Edit\AttributeMiddleware::class,
     \Similik\Module\Catalog\Middleware\Product\Edit\CustomOptionMiddleware::class,
 ];
-$router->addAdminRoute('product.create', 'GET', '/product/create', $ProductEditMiddleware);
+$router->addAdminRoute('product.create', 'GET', '/product/create', $productEditMiddleware);
 
-$router->addAdminRoute('product.edit', 'GET', '/product/edit/{id:\d+}', $ProductEditMiddleware);
+$router->addAdminRoute('product.edit', 'GET', '/product/edit/{id:\d+}', $productEditMiddleware);
 
 $router->addAdminRoute('product.save', 'POST', '/product/save[/{id:\d+}]', [
     \Similik\Module\Catalog\Middleware\Product\Save\ValidateMiddleware::class,

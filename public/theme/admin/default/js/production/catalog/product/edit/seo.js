@@ -1,7 +1,6 @@
 import Area from "../../../../../../../../js/production/area.js";
 import Text from "../../../../../../../../js/production/form/fields/text.js";
 import TextArea from "../../../../../../../../js/production/form/fields/textarea.js";
-import Select from "../../../../../../../../js/production/form/fields/select.js";
 let fields = [{
     component: Text,
     props: { id: 'seo_key', formId: "product-edit-form", name: "seo_key", label: "Url key", validation_rules: ["notEmpty"], isTranslateAble: true },
@@ -27,5 +26,18 @@ export default function Seo({ data }) {
         });
         return null;
     });
-    return React.createElement(Area, { id: "product-edit-seo", coreWidgets: fields });
+    return React.createElement(
+        "div",
+        { className: "product-edit-seo" },
+        React.createElement(
+            "div",
+            null,
+            React.createElement(
+                "strong",
+                null,
+                "SEO"
+            )
+        ),
+        React.createElement(Area, { id: "product-edit-seo", coreWidgets: fields })
+    );
 }

@@ -28,7 +28,7 @@ export default function ActionColumnRow({areaProps, deleteUrl}) {
     };
 
     return <td>
-        <A url={_.get(areaProps, 'row.editUrl' , '')} text={"Edit"}/>
-        <a href={"#"} onClick={() => deleteProduct(areaProps.row.product_id)}>Delete</a>
+        <div><A url={_.get(areaProps, 'row.editUrl' , '')} text={"Edit"}/></div>
+        <div><a href={"#"} onClick={(e) => {e.preventDefault(); deleteProduct(areaProps.row.product_id)}}><span className="text-danger">Delete</span></a></div>
     </td>;
 }

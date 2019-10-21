@@ -52,24 +52,28 @@ export default function CustomOption(props) {
 
     return React.createElement(
         "div",
-        null,
+        { className: "product-edit-custom-option" },
         React.createElement(
             "div",
             { className: "group-form-title" },
-            "Custom Options"
+            React.createElement(
+                "strong",
+                null,
+                "Custom Options"
+            )
         ),
         React.createElement(
             "ul",
-            null,
+            { className: "uk-list" },
             options.map((option, index) => {
                 let values = option['values'] === undefined ? [] : option['values'];
                 let { option_id, option_name, sort_order, option_type, is_required } = option;
                 return React.createElement(
                     "li",
-                    { key: index },
+                    { key: index, className: "uk-overflow-auto" },
                     React.createElement(
                         "table",
-                        { className: "table" },
+                        { className: "uk-table uk-table-small" },
                         React.createElement(
                             "thead",
                             null,

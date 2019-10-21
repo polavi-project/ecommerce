@@ -83,12 +83,12 @@ function Upload(props) {
         "div",
         null,
         React.createElement(
-            "h2",
+            "div",
             null,
             React.createElement("span", { "uk-icon": "image" }),
             " ",
             React.createElement(
-                "span",
+                "strong",
                 null,
                 "Images"
             )
@@ -145,7 +145,7 @@ export default function ImageUploadContainer(props) {
 
     return React.createElement(
         "div",
-        null,
+        { className: "product-edit-image" },
         React.createElement(Upload, {
             addImage: addImage
         }),

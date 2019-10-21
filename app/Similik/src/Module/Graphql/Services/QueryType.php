@@ -120,9 +120,6 @@ class QueryType extends ObjectType
                         ]
                     ],
                     'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
-//                        if($container->get(Request::class)->isAdmin() == false)
-//                            return [];
-//                        else
                         return $container->get(CategoryCollection::class)->getData($rootValue, $args, $container, $info);
                     }
                 ],

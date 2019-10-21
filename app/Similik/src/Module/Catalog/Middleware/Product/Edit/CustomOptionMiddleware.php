@@ -62,8 +62,8 @@ QUERY
                     }
                     $response->addWidget(
                         'product_edit_custom_options',
-                        'admin_product_edit_inner',
-                        41,
+                        'admin_product_edit_inner_right',
+                        20,
                         get_js_file_url("production/catalog/product/edit/option.js", true),
                         $props
                     );
@@ -71,8 +71,8 @@ QUERY
         else
             $response->addWidget(
                 'product_edit_custom_options',
-                'admin_product_edit_inner',
-                41,
+                'admin_product_edit_inner_right',
+                20,
                 get_js_file_url("production/catalog/product/edit/option.js", true),
                 $props
             );

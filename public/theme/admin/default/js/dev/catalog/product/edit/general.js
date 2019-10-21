@@ -29,7 +29,7 @@ let fields = [
         id: "description"
     },
     {
-        component: TextArea,
+        component: Text,
         props : {id : 'sku', formId: "product-edit-form", name: "sku", label: "SKU", validation_rules:["notEmpty"], isTranslateAble:false},
         sort_order: 50,
         id: "sku"
@@ -75,5 +75,8 @@ export default function General({data}) {
         });
         return null
     });
-    return <Area id="product-edit-general" coreWidgets={fields}/>
+    return <div className="product-edit-general">
+        <div><strong>General</strong></div>
+        <Area id="product-edit-general" coreWidgets={fields}/>
+    </div>
 }

@@ -50,14 +50,14 @@ export default function CustomOption(props) {
         }))
     };
 
-    return <div>
-        <div className="group-form-title">Custom Options</div>
-        <ul>
+    return <div className="product-edit-custom-option">
+        <div className="group-form-title"><strong>Custom Options</strong></div>
+        <ul className="uk-list">
             {options.map((option, index) => {
                 let values = option['values'] === undefined ? [] : option['values'];
                 let {option_id, option_name, sort_order, option_type, is_required} = option;
-                return <li key={index}>
-                    <table className="table">
+                return <li key={index} className="uk-overflow-auto">
+                    <table className="uk-table uk-table-small">
                         <thead>
                         <tr>
                             <td>Option name</td>
