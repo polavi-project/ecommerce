@@ -8,7 +8,7 @@ export default function ProductList({ categoryId, apiUrl }) {
             "div",
             { className: "group-form-title" },
             React.createElement(
-                "span",
+                "strong",
                 null,
                 "Products"
             )

@@ -40,7 +40,7 @@ class GeneralInfoMiddleware extends MiddlewareAbstract
                 if(isset($result->data['generalInfo'])) {
                     $response->addWidget(
                         'category_edit_general',
-                        'admin_category_edit_inner',
+                        'admin_category_edit_inner_left',
                         10,
                         get_js_file_url("production/catalog/category/edit/general.js", true),
                         ["id"=>"category_edit_general", "data" => $result->data['generalInfo']]
@@ -50,7 +50,7 @@ class GeneralInfoMiddleware extends MiddlewareAbstract
         else
             $response->addWidget(
                 'category_edit_general',
-                'admin_category_edit_inner',
+                'admin_category_edit_inner_left',
                 10,
                 get_js_file_url("production/catalog/category/edit/general.js", true),
                 ["id"=>"category_edit_general", "data" => []]

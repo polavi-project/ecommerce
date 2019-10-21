@@ -1,6 +1,5 @@
 import Area from "../../../../../../../../js/production/area.js";
 import Text from "../../../../../../../../js/production/form/fields/text.js";
-import TextArea from "../../../../../../../../js/production/form/fields/textarea.js";
 import Select from "../../../../../../../../js/production/form/fields/select.js";
 import Tinycme from "../../../../../../../../js/production/form/fields/tinycme.js";
 
@@ -39,5 +38,18 @@ export default function General({ data }) {
         });
         return null;
     });
-    return React.createElement(Area, { id: "category-edit-general", coreWidgets: fields });
+    return React.createElement(
+        "div",
+        { className: "category-edit-general" },
+        React.createElement(
+            "div",
+            null,
+            React.createElement(
+                "strong",
+                null,
+                "General"
+            )
+        ),
+        React.createElement(Area, { id: "category-edit-general", coreWidgets: fields })
+    );
 }

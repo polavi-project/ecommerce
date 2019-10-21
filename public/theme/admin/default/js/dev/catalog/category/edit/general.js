@@ -1,6 +1,5 @@
 import Area from "../../../../../../../../js/production/area.js";
 import Text from "../../../../../../../../js/production/form/fields/text.js";
-import TextArea from "../../../../../../../../js/production/form/fields/textarea.js";
 import Select from "../../../../../../../../js/production/form/fields/select.js";
 import Tinycme from "../../../../../../../../js/production/form/fields/tinycme.js";
 
@@ -46,5 +45,8 @@ export default function General({data}) {
         });
         return null
     });
-    return <Area id="category-edit-general" coreWidgets={fields}/>
+    return <div className="category-edit-general">
+        <div><strong>General</strong></div>
+        <Area id="category-edit-general" coreWidgets={fields}/>
+    </div>
 }
