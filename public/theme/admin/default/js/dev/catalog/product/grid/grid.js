@@ -160,10 +160,12 @@ function StatusColumnHeader({areaProps})
         <div className="header status-header">
             <div className={"title"}><span>Status</span></div>
             <div className={"filter"}>
-                <input type={"text"} ref={filterInput} onKeyPress={(e) => {
-                    if(e.key === 'Enter') areaProps.addFilter("status", "Equal", e.target.value);
-                }
-                }/>
+                <select ref={filterInput} onChange={(e)=> {
+                    areaProps.addFilter("status", "Equal", e.target.value);
+                }}>
+                    <option value={1}>Enabled</option>
+                    <option value={0}>Disabled</option>
+                </select>
             </div>
         </div>
     </td>
@@ -259,7 +261,7 @@ export default function ProductGrid({apiUrl, defaultFilter})
         applyFilter();
     }, [fields, filters]);
 
-    return <div className={""}>
+    return <div className={"uk-overflow-auto"}>
         <table className="uk-table uk-table-small">
             <thead>
             <Area

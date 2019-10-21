@@ -287,9 +287,22 @@ function StatusColumnHeader({ areaProps }) {
             React.createElement(
                 "div",
                 { className: "filter" },
-                React.createElement("input", { type: "text", ref: filterInput, onKeyPress: e => {
-                        if (e.key === 'Enter') areaProps.addFilter("status", "Equal", e.target.value);
-                    } })
+                React.createElement(
+                    "select",
+                    { ref: filterInput, onChange: e => {
+                            areaProps.addFilter("status", "Equal", e.target.value);
+                        } },
+                    React.createElement(
+                        "option",
+                        { value: 1 },
+                        "Enabled"
+                    ),
+                    React.createElement(
+                        "option",
+                        { value: 0 },
+                        "Disabled"
+                    )
+                )
             )
         )
     );
@@ -387,7 +400,7 @@ export default function ProductGrid({ apiUrl, defaultFilter }) {
 
     return React.createElement(
         "div",
-        { className: "" },
+        { className: "uk-overflow-auto" },
         React.createElement(
             "table",
             { className: "uk-table uk-table-small" },

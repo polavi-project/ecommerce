@@ -6,15 +6,16 @@ html {
     min-height: 45px;
     margin-bottom: 20px;
 }
-#menu{
+.admin-navigation{
     float: left;
     width: 200px;
     padding: 10px;
     box-sizing: border-box;
 }
-#content {
+.container .content {
     overflow: hidden;
     margin-left: 220px;
+    padding-right: 20px;
 }
 
 /**************************************** LOADING ICON *********************************************/
@@ -84,6 +85,9 @@ html {
 .uk-label{text-transform: capitalize!important; border-radius: 10px!important;}
 .product-thumbnail{max-width: 80px}
 
+/* GRID */
+table input{max-width: 95px}
+
 /* Table */
 td, th {
     border: 1px solid #999;
@@ -93,5 +97,4 @@ td, th {
     border-top: 1px solid #999;
     min-height: 25px;
 }
-
 .order-edit-info{margin-bottom: 20px}
