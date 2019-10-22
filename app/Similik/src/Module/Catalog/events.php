@@ -17,6 +17,7 @@ use Similik\Module\Catalog\Services\ProductCollection;
 use Similik\Module\Catalog\Services\Type\ProductCollectionFilterType;
 use Similik\Services\Di\Container;
 use Similik\Services\Http\Request;
+use Similik\Services\Routing\Router;
 
 $eventDispatcher->addListener(
         'register.core.middleware',
@@ -34,6 +35,7 @@ $eventDispatcher->addListener(
     },
     0
 );
+
 $eventDispatcher->addListener('register.widget.grid.middleware', function(\Similik\Services\MiddlewareManager $mm) {
     $mm->registerMiddleware(\Similik\Module\Catalog\Middleware\Widget\FeaturedProduct\EditMiddleware::class, 1);
     $mm->registerMiddleware(\Similik\Module\Catalog\Middleware\Widget\ProductFilter\EditMiddleware::class, 1);
@@ -43,7 +45,6 @@ $eventDispatcher->addListener('register.core.middleware', function(\Similik\Serv
     $mm->registerMiddleware(\Similik\Module\Catalog\Middleware\Widget\FeaturedProduct\FeaturedProductWidgetMiddleware::class, 21);
     $mm->registerMiddleware(\Similik\Module\Catalog\Middleware\Widget\ProductFilter\ProductFilterWidgetMiddleware::class, 21);
 });
-
 
 $eventDispatcher->addListener(
     'filter.query.type',
@@ -102,7 +103,6 @@ $eventDispatcher->addListener(
     5
 );
 
-
 $eventDispatcher->addListener(
     'filter.mutation.type',
     function (&$fields, Container $container) {
@@ -158,4 +158,19 @@ $eventDispatcher->addListener(
         ];
     },
     5
+);
+
+$eventDispatcher->addListener(
+    'before_execute_' . strtolower(str_replace('\\', '_', \Similik\Middleware\AdminNavigationMiddleware::class)),
+    function (\Similik\Services\Di\Container $container) {
+        $container->get(\Similik\Module\Cms\Services\NavigationManager::class)->addItem(
+            'product_attribute',
+            'Attribute',
+            \Similik\generate_url('attribute.grid'),
+            'tag',
+            'catalog',
+            100
+        );
+    },
+    0
 );

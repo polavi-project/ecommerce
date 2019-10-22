@@ -44,6 +44,18 @@ $container[\Similik\Module\Catalog\Services\Type\AttributeOptionType::class] =  
     return new \Similik\Module\Catalog\Services\Type\AttributeOptionType($container);
 };
 
+$container[\Similik\Module\Catalog\Services\Type\AttributeCollectionType::class] =  function() use ($container) {
+    return new \Similik\Module\Catalog\Services\Type\AttributeCollectionType($container);
+};
+
+$container[\Similik\Module\Catalog\Services\AttributeCollection::class] =  function() use ($container) {
+    return new \Similik\Module\Catalog\Services\AttributeCollection($container);
+};
+
+$container[\Similik\Module\Catalog\Services\Type\AttributeCollectionFilterType::class] =  function() use ($container) {
+    return new \Similik\Module\Catalog\Services\Type\AttributeCollectionFilterType($container);
+};
+
 $container[\Similik\Module\Catalog\Services\Type\ProductAttributeIndex::class] =  function() use ($container) {
     return new \Similik\Module\Catalog\Services\Type\ProductAttributeIndex($container);
 };

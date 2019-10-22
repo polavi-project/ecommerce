@@ -13,8 +13,11 @@ use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
 use function Similik\_mysql;
 use function Similik\dispatch_event;
+use Similik\Module\Catalog\Services\AttributeCollection;
 use Similik\Module\Catalog\Services\CategoryCollection;
 use Similik\Module\Catalog\Services\ProductCollection;
+use Similik\Module\Catalog\Services\Type\AttributeCollectionFilterType;
+use Similik\Module\Catalog\Services\Type\AttributeCollectionType;
 use Similik\Module\Catalog\Services\Type\CategoryCollectionFilterType;
 use Similik\Module\Catalog\Services\Type\CategoryCollectionType;
 use Similik\Module\Catalog\Services\Type\ProductCollectionFilterType;
@@ -123,14 +126,48 @@ class QueryType extends ObjectType
                         return $container->get(CategoryCollection::class)->getData($rootValue, $args, $container, $info);
                     }
                 ],
-                'attribute_groups' => [
+                'attributeGroups' => [
                     'type' => Type::listOf($container->get(AttributeGroupType::class)),
                     'description' => 'Return a list of product attribute group',
                     'resolve' => function($value, $args, Container $container, ResolveInfo $info) {
                         return $container->get(DataLoader::class)->getAllAttributeGroup($value, $args, $container, $info);
                     }
                 ],
-                'product_attribute_index' => [
+                'attribute' => [
+                    'type' => $container->get(CategoryType::class),
+                    'description' => 'Return a category',
+                    'args' => [
+                        'id' => Type::nonNull(Type::id()),
+                        'language' => Type::nonNull(Type::id())
+                    ],
+                    'resolve' => function($value, $args, Container $container, ResolveInfo $info) {
+                        $categoryTable = _mysql()->getTable('category');
+                        $categoryTable->leftJoin('category_description', null, [
+                            [
+                                'column'      => "category_description.language_id",
+                                'operator'    => "=",
+                                'value'       => $args['language'],
+                                'ao'          => 'and',
+                                'start_group' => null,
+                                'end_group'   => null
+                            ]
+                        ]);
+                        return $categoryTable->where('category.category_id', '=', $args['id'])->fetchOneAssoc();
+                    }
+                ],
+                'attributeCollection' => [
+                    'type' => $container->get(AttributeCollectionType::class),
+                    'description' => "Return list of attribute and total count",
+                    'args' => [
+                        'filter' =>  [
+                            'type' => $container->get(AttributeCollectionFilterType::class)
+                        ]
+                    ],
+                    'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
+                        return $container->get(AttributeCollection::class)->getData($rootValue, $args, $container, $info);
+                    }
+                ],
+                'productAttributeIndex' => [
                     'type' => Type::listOf($container->get(ProductAttributeIndex::class)),
                     'description' => 'Return attribute value of a specified product',
                     'args' => [

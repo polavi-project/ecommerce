@@ -10,33 +10,28 @@ namespace Similik\Module\Catalog\Services\Type;
 
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\ResolveInfo;
-use GraphQL\Type\Definition\Type;
 use function Similik\dispatch_event;
 use Similik\Services\Di\Container;
+use GraphQL\Type\Definition\Type;
 
-class AttributeOptionType extends ObjectType
+class AttributeCollectionType extends ObjectType
 {
     public function __construct(Container $container)
     {
         $config = [
-            'name' => 'AttributeOption',
-            'fields' => function() use ($container) {
+            'name' => 'AttributeCollection',
+            'fields' => function() use ($container){
                 $fields = [
-                    'attribute_option_id' => [
-                        'type' => Type::nonNull(Type::id())
+                    'attributes' => [
+                        'type' => Type::listOf($container->get(AttributeType::class))
                     ],
-                    'attribute_id' => [
+                    'total' => [
                         'type' => Type::nonNull(Type::int())
                     ],
-                    'attribute_code' => [
-                        'type' => Type::nonNull(Type::string())
-                    ],
-                    'option_text' => [
-                        'type' => Type::string()
-                    ]
+                    'currentFilter' => Type::string()
                 ];
 
-                dispatch_event('filter.attributeOption.type', [&$fields]);
+                dispatch_event('filter.attributeCollection.type', [&$fields]);
 
                 return $fields;
             },
@@ -44,6 +39,7 @@ class AttributeOptionType extends ObjectType
                 return isset($value[$info->fieldName]) ? $value[$info->fieldName] : null;
             }
         ];
+
         parent::__construct($config);
     }
 }

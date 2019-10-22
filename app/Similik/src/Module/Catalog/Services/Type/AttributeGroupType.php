@@ -20,7 +20,7 @@ class AttributeGroupType extends ObjectType
     public function __construct(Container $container)
     {
         $config = [
-            'name' => 'Attribute group',
+            'name' => 'AttributeGroup',
             'fields' => function() use ($container) {
                 $fields = [
                     'attribute_group_id' => [
@@ -44,7 +44,7 @@ class AttributeGroupType extends ObjectType
                     ]
                 ];
 
-                dispatch_event('filter.attribute_group.type', [&$fields]);
+                dispatch_event('filter.attributeGroup.type', [&$fields]);
 
                 return $fields;
             },

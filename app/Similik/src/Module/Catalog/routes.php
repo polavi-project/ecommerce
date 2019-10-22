@@ -70,6 +70,36 @@ $router->addAdminRoute('category.delete', 'GET', '/category/delete/{id:\d+}', [
 //    \Similik\Module\Catalog\Middleware\Category\Save\CreateMiddleware::class
 ]);
 
+//////////////// ATTRIBUTE ////////////////////
+///
+$router->addAdminRoute('attribute.grid', 'GET', '/attributes', [
+    \Similik\Module\Catalog\Middleware\Attribute\Grid\GridMiddleware::class,
+]);
+
+$attributeEditMiddleware = [
+    \Similik\Module\Catalog\Middleware\Attribute\Edit\InitMiddleware::class,
+    \Similik\Module\Catalog\Middleware\Attribute\Edit\FormMiddleware::class,
+    \Similik\Module\Catalog\Middleware\Attribute\Edit\GeneralInfoMiddleware::class,
+    \Similik\Module\Catalog\Middleware\Attribute\Edit\SeoMiddleware::class,
+    \Similik\Module\Catalog\Middleware\Attribute\Edit\ProductsMiddleware::class
+];
+$router->addAdminRoute('attribute.create', 'GET', '/attribute/create', $attributeEditMiddleware);
+
+$router->addAdminRoute('attribute.edit', 'GET', '/attribute/edit/{id:\d+}', $attributeEditMiddleware);
+
+$router->addAdminRoute('attribute.save', 'POST', '/attribute/save[/{id:\d+}]', [
+    \Similik\Module\Catalog\Middleware\Category\Save\ValidateMiddleware::class,
+    \Similik\Module\Catalog\Middleware\Category\Save\UpdateMiddleware::class,
+    \Similik\Module\Catalog\Middleware\Category\Save\CreateMiddleware::class
+]);
+
+$router->addAdminRoute('attribute.delete', 'GET', '/attribute/delete/{id:\d+}', [
+//    \Similik\Module\Catalog\Middleware\Category\Save\ValidateMiddleware::class,
+//    \Similik\Module\Catalog\Middleware\Category\Save\UpdateMiddleware::class,
+//    \Similik\Module\Catalog\Middleware\Category\Save\CreateMiddleware::class
+]);
+
+
 ////////////////////////////////////////////
 ///            SITE ROUTERS           //////
 ////////////////////////////////////////////

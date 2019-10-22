@@ -8,7 +8,7 @@ import Multiselect from "../../../../../../../../js/production/form/fields/multi
 export default function Attributes(props) {
     const [attributes, setAttributes] = React.useState(()=> {
         let value_index = props.product_attribute_index === undefined ? [] : props.product_attribute_index;
-        let attributes = props.selected_group === undefined ? props.attribute_groups[0]['attributes'] : props.attribute_groups.find((a)=> parseInt(a.attribute_group_id) === parseInt(props.selected_group))['attributes'];
+        let attributes = props.selected_group === undefined ? props.attributeGroups[0]['attributes'] : props.attributeGroups.find((a)=> parseInt(a.attribute_group_id) === parseInt(props.selected_group))['attributes'];
         return attributes.map((a, i) => {
             a['selected_option'] = '';
             a['value_text'] = '';
@@ -33,10 +33,10 @@ export default function Attributes(props) {
                     name="group_id"
                     formId={props.formId}
                     isTranslateAble={false}
-                    value={props.selected_group === undefined ? parseInt(props.attribute_groups[0]['attribute_group_id']) : parseInt(props.selected_group)}
+                    value={props.selected_group === undefined ? parseInt(props.attributeGroups[0]['attribute_group_id']) : parseInt(props.selected_group)}
                     handler={(e)=> {
                         let value_index = props.product_attribute_index === undefined ? [] : props.product_attribute_index;
-                        let attributes = props.attribute_groups.find((a)=> parseInt(a.attribute_group_id) === parseInt(e.target.value))['attributes'];
+                        let attributes = props.attributeGroups.find((a)=> parseInt(a.attribute_group_id) === parseInt(e.target.value))['attributes'];
                         setAttributes(attributes.map((a, i) => {
                             a['selected_option'] = '';
                             a['value_text'] = '';
@@ -51,7 +51,7 @@ export default function Attributes(props) {
                         }))
                     }}
                     options={(()=>{
-                        return props.attribute_groups.map((g,i)=> { return {value: parseInt(g.attribute_group_id), text: g.group_name}})
+                        return props.attributeGroups.map((g,i)=> { return {value: parseInt(g.attribute_group_id), text: g.group_name}})
                     })()}
                 />
             </div>
