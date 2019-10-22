@@ -34,6 +34,71 @@ function IdColumnRow({row}) {
     return <td><span>{row.attribute_id}</span></td>
 }
 
+function TypeColumnHeader({areaProps}) {
+    const filterInput = React.useRef(null);
+
+    React.useEffect(() => {
+        areaProps.addField("type");
+    }, []);
+
+    return <td>
+        <div className="header status-header">
+            <div className={"title"}><span>Type</span></div>
+            <div className={"filter"}>
+                <select className="uk-select" ref={filterInput} onChange={(e)=> {
+                    areaProps.addFilter("type", "Equal", e.target.value);
+                }}>
+                    <option value={"select"}>Select</option>
+                    <option value={"multiselect"}>Multi Select</option>
+                    <option value={"text"}>Text</option>
+                    <option value={"textarea"}>Textarea</option>
+                    <option value={"date"}>Date</option>
+                </select>
+            </div>
+        </div>
+    </td>
+}
+
+function TypeColumnRow({row}) {
+    return <td>
+        {row.type == 'text' && <span>Text</span>}
+        {row.type == 'select' && <span>Select</span>}
+        {row.type == 'multiselect' && <span>Multi select</span>}
+        {row.type == 'textarea' && <span>Textarea</span>}
+        {row.type == 'date' && <span>Date</span>}
+    </td>
+}
+
+function IsRequiredColumnHeader({areaProps}) {
+    const filterInput = React.useRef(null);
+
+    React.useEffect(() => {
+        areaProps.addField("is_required");
+    }, []);
+
+    return <td>
+        <div className="header status-header">
+            <div className={"title"}><span>Type</span></div>
+            <div className={"filter"}>
+                <select className="uk-select" ref={filterInput} onChange={(e)=> {
+                    areaProps.addFilter("is_required", "Equal", e.target.value);
+                }}>
+                    <option value={1}>Yes</option>
+                    <option value={0}>No</option>
+                </select>
+            </div>
+        </div>
+    </td>
+}
+
+function IsRequiredColumnRow({row}) {
+    if(row.is_required == 1) {
+        return <td><span>Yes</span></td>
+    } else {
+        return <td><span>No</span></td>
+    }
+}
+
 function NameColumnHeader({areaProps}) {
     const filterInput = React.useRef(null);
 
@@ -182,9 +247,21 @@ export default function AttributeGrid({apiUrl})
                         id: "name"
                     },
                     {
-                        component: ActionColumnHeader,
+                        component: TypeColumnHeader,
                         props : {},
                         sort_order: 30,
+                        id: "type"
+                    },
+                    {
+                        component: IsRequiredColumnHeader,
+                        props : {},
+                        sort_order: 40,
+                        id: "isRequired"
+                    },
+                    {
+                        component: ActionColumnHeader,
+                        props : {},
+                        sort_order: 50,
                         id: "action"
                     }
                 ]}
@@ -212,9 +289,21 @@ export default function AttributeGrid({apiUrl})
                             id: "name"
                         },
                         {
-                            component: ActionColumnRow,
+                            component: TypeColumnRow,
                             props : {row: c},
                             sort_order: 30,
+                            id: "type"
+                        },
+                        {
+                            component: IsRequiredColumnRow,
+                            props : {row: c},
+                            sort_order: 40,
+                            id: "isRequired"
+                        },
+                        {
+                            component: ActionColumnRow,
+                            props : {row: c},
+                            sort_order: 50,
                             id: "action"
                         }
                     ]}

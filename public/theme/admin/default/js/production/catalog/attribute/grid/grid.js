@@ -60,6 +60,169 @@ function IdColumnRow({ row }) {
     );
 }
 
+function TypeColumnHeader({ areaProps }) {
+    const filterInput = React.useRef(null);
+
+    React.useEffect(() => {
+        areaProps.addField("type");
+    }, []);
+
+    return React.createElement(
+        "td",
+        null,
+        React.createElement(
+            "div",
+            { className: "header status-header" },
+            React.createElement(
+                "div",
+                { className: "title" },
+                React.createElement(
+                    "span",
+                    null,
+                    "Type"
+                )
+            ),
+            React.createElement(
+                "div",
+                { className: "filter" },
+                React.createElement(
+                    "select",
+                    { className: "uk-select", ref: filterInput, onChange: e => {
+                            areaProps.addFilter("type", "Equal", e.target.value);
+                        } },
+                    React.createElement(
+                        "option",
+                        { value: "select" },
+                        "Select"
+                    ),
+                    React.createElement(
+                        "option",
+                        { value: "multiselect" },
+                        "Multi Select"
+                    ),
+                    React.createElement(
+                        "option",
+                        { value: "text" },
+                        "Text"
+                    ),
+                    React.createElement(
+                        "option",
+                        { value: "textarea" },
+                        "Textarea"
+                    ),
+                    React.createElement(
+                        "option",
+                        { value: "date" },
+                        "Date"
+                    )
+                )
+            )
+        )
+    );
+}
+
+function TypeColumnRow({ row }) {
+    return React.createElement(
+        "td",
+        null,
+        row.type == 'text' && React.createElement(
+            "span",
+            null,
+            "Text"
+        ),
+        row.type == 'select' && React.createElement(
+            "span",
+            null,
+            "Select"
+        ),
+        row.type == 'multiselect' && React.createElement(
+            "span",
+            null,
+            "Multi select"
+        ),
+        row.type == 'textarea' && React.createElement(
+            "span",
+            null,
+            "Textarea"
+        ),
+        row.type == 'date' && React.createElement(
+            "span",
+            null,
+            "Date"
+        )
+    );
+}
+
+function IsRequiredColumnHeader({ areaProps }) {
+    const filterInput = React.useRef(null);
+
+    React.useEffect(() => {
+        areaProps.addField("is_required");
+    }, []);
+
+    return React.createElement(
+        "td",
+        null,
+        React.createElement(
+            "div",
+            { className: "header status-header" },
+            React.createElement(
+                "div",
+                { className: "title" },
+                React.createElement(
+                    "span",
+                    null,
+                    "Type"
+                )
+            ),
+            React.createElement(
+                "div",
+                { className: "filter" },
+                React.createElement(
+                    "select",
+                    { className: "uk-select", ref: filterInput, onChange: e => {
+                            areaProps.addFilter("is_required", "Equal", e.target.value);
+                        } },
+                    React.createElement(
+                        "option",
+                        { value: 1 },
+                        "Yes"
+                    ),
+                    React.createElement(
+                        "option",
+                        { value: 0 },
+                        "No"
+                    )
+                )
+            )
+        )
+    );
+}
+
+function IsRequiredColumnRow({ row }) {
+    if (row.is_required == 1) {
+        return React.createElement(
+            "td",
+            null,
+            React.createElement(
+                "span",
+                null,
+                "Yes"
+            )
+        );
+    } else {
+        return React.createElement(
+            "td",
+            null,
+            React.createElement(
+                "span",
+                null,
+                "No"
+            )
+        );
+    }
+}
+
 function NameColumnHeader({ areaProps }) {
     const filterInput = React.useRef(null);
 
@@ -243,9 +406,19 @@ export default function AttributeGrid({ apiUrl }) {
                         sort_order: 20,
                         id: "name"
                     }, {
-                        component: ActionColumnHeader,
+                        component: TypeColumnHeader,
                         props: {},
                         sort_order: 30,
+                        id: "type"
+                    }, {
+                        component: IsRequiredColumnHeader,
+                        props: {},
+                        sort_order: 40,
+                        id: "isRequired"
+                    }, {
+                        component: ActionColumnHeader,
+                        props: {},
+                        sort_order: 50,
                         id: "action"
                     }]
                 })
@@ -271,9 +444,19 @@ export default function AttributeGrid({ apiUrl }) {
                             sort_order: 20,
                             id: "name"
                         }, {
-                            component: ActionColumnRow,
+                            component: TypeColumnRow,
                             props: { row: c },
                             sort_order: 30,
+                            id: "type"
+                        }, {
+                            component: IsRequiredColumnRow,
+                            props: { row: c },
+                            sort_order: 40,
+                            id: "isRequired"
+                        }, {
+                            component: ActionColumnRow,
+                            props: { row: c },
+                            sort_order: 50,
                             id: "action"
                         }]
                     });
