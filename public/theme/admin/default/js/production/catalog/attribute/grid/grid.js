@@ -31,7 +31,7 @@ function IdColumnHeader({ areaProps }) {
                     type: "text",
                     ref: filterFrom,
                     onKeyPress: e => {
-                        if (e.key === 'Enter') areaProps.addFilter("attribute_id", "BETWEEN", `${e.target.value} AND ${filterTo.current.value}`);
+                        if (e.key === 'Enter') areaProps.addFilter("id", "BETWEEN", `${e.target.value} AND ${filterTo.current.value}`);
                     },
                     placeholder: "From"
                 }),
@@ -39,7 +39,7 @@ function IdColumnHeader({ areaProps }) {
                     type: "text",
                     ref: filterTo,
                     onKeyPress: e => {
-                        if (e.key === 'Enter') areaProps.addFilter("attribute_id", "BETWEEN", `${filterFrom.current.value} AND ${e.target.value}`);
+                        if (e.key === 'Enter') areaProps.addFilter("id", "BETWEEN", `${filterFrom.current.value} AND ${e.target.value}`);
                     },
                     placeholder: "To"
                 })

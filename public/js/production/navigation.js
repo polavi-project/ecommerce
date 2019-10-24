@@ -30,7 +30,7 @@ export default function Navigation(props) {
                     React.createElement(
                         A,
                         { url: r.url },
-                        r.icon && React.createElement("span", { className: "uk-margin-small-right", "uk-icon": "icon: " + r.icon }),
+                        r.icon && React.createElement("span", { className: "uk-margin-small-right", "uk-icon": "icon: " + r.icon + "; ratio: 1" }),
                         r.title
                     ),
                     renderChildren(r.id)
@@ -52,7 +52,7 @@ export default function Navigation(props) {
                     React.createElement(
                         A,
                         { url: r.url },
-                        r.icon && React.createElement("span", { className: "uk-margin-small-right", "uk-icon": "icon: " + r.icon }),
+                        r.icon && React.createElement("span", { className: "uk-margin-small-right", "uk-icon": "icon: " + r.icon + "; ratio: 1" }),
                         r.title
                     ),
                     renderChildren(r.id)
