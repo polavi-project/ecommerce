@@ -18,6 +18,7 @@ use Similik\Module\Catalog\Services\CategoryCollection;
 use Similik\Module\Catalog\Services\ProductCollection;
 use Similik\Module\Catalog\Services\Type\AttributeCollectionFilterType;
 use Similik\Module\Catalog\Services\Type\AttributeCollectionType;
+use Similik\Module\Catalog\Services\Type\AttributeType;
 use Similik\Module\Catalog\Services\Type\CategoryCollectionFilterType;
 use Similik\Module\Catalog\Services\Type\CategoryCollectionType;
 use Similik\Module\Catalog\Services\Type\ProductCollectionFilterType;
@@ -134,25 +135,13 @@ class QueryType extends ObjectType
                     }
                 ],
                 'attribute' => [
-                    'type' => $container->get(CategoryType::class),
-                    'description' => 'Return a category',
+                    'type' => $container->get(AttributeType::class),
+                    'description' => 'Return an attribute',
                     'args' => [
-                        'id' => Type::nonNull(Type::id()),
-                        'language' => Type::nonNull(Type::id())
+                        'id' => Type::nonNull(Type::id())
                     ],
                     'resolve' => function($value, $args, Container $container, ResolveInfo $info) {
-                        $categoryTable = _mysql()->getTable('category');
-                        $categoryTable->leftJoin('category_description', null, [
-                            [
-                                'column'      => "category_description.language_id",
-                                'operator'    => "=",
-                                'value'       => $args['language'],
-                                'ao'          => 'and',
-                                'start_group' => null,
-                                'end_group'   => null
-                            ]
-                        ]);
-                        return $categoryTable->where('category.category_id', '=', $args['id'])->fetchOneAssoc();
+                        return _mysql()->getTable('attribute')->where('attribute_id', '=', $args['id'])->fetchOneAssoc();
                     }
                 ],
                 'attributeCollection' => [

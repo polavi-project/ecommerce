@@ -74,14 +74,12 @@ $router->addAdminRoute('category.delete', 'GET', '/category/delete/{id:\d+}', [
 ///
 $router->addAdminRoute('attribute.grid', 'GET', '/attributes', [
     \Similik\Module\Catalog\Middleware\Attribute\Grid\GridMiddleware::class,
+    \Similik\Module\Catalog\Middleware\Attribute\Grid\AddNewButtonMiddleware::class,
 ]);
 
 $attributeEditMiddleware = [
     \Similik\Module\Catalog\Middleware\Attribute\Edit\InitMiddleware::class,
-    \Similik\Module\Catalog\Middleware\Attribute\Edit\FormMiddleware::class,
-    \Similik\Module\Catalog\Middleware\Attribute\Edit\GeneralInfoMiddleware::class,
-    \Similik\Module\Catalog\Middleware\Attribute\Edit\SeoMiddleware::class,
-    \Similik\Module\Catalog\Middleware\Attribute\Edit\ProductsMiddleware::class
+    \Similik\Module\Catalog\Middleware\Attribute\Edit\EditFormMiddleware::class
 ];
 $router->addAdminRoute('attribute.create', 'GET', '/attribute/create', $attributeEditMiddleware);
 
