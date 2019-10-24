@@ -57,19 +57,19 @@ class EditFormMiddleware extends MiddlewareAbstract
                         get_js_file_url("production/catalog/attribute/edit/attribute_edit_form.js", true),
                         [
                             "attribute" => $result->data['attribute'],
-                            "action" => generate_url('attribute.save', ['id'=>$request->attributes->getInt('id')])
+                            "action" => generate_url('attribute.save', ['id'=>$request->attributes->getInt('id', null)])
                         ]
                     );
                 }
             });
         else
             $response->addWidget(
-                'attribute_edit',
+                'attribute_create',
                 'content',
                 10,
                 get_js_file_url("production/catalog/attribute/edit/attribute_edit_form.js", true),
                 [
-                    "action" => generate_url('attribute.save', ['id'=>$request->attributes->getInt('id')])
+                    "action" => generate_url('attribute.save')
                 ]
             );
         return $delegate;

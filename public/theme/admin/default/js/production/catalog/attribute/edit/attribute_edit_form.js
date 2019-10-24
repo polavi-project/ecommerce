@@ -71,7 +71,7 @@ function Options({ _options = [] }) {
                     let { attribute_option_id, option_text } = option;
                     return React.createElement(
                         "tr",
-                        { key: index },
+                        { key: attribute_option_id },
                         React.createElement(
                             "td",
                             null,
@@ -102,49 +102,45 @@ function Options({ _options = [] }) {
     );
 }
 
-let fields = [{
-    component: Text,
-    props: { id: 'attribute_name', formId: "attribute-edit-form", name: "attribute_name", label: "Name", validation_rules: ["notEmpty"] },
-    sort_order: 10,
-    id: "attribute_name"
-}, {
-    component: Text,
-    props: { id: 'attribute_code', formId: "attribute-edit-form", name: "attribute_code", label: "Code", validation_rules: ["notEmpty"] },
-    sort_order: 20,
-    id: "attribute_code"
-}, {
-    component: Type,
-    props: { id: 'type', formId: "attribute-edit-form", name: "type", label: "Type", options: [{ value: 'text', text: 'Text' }, { value: 'textarea', text: 'Textarea' }, { value: 'select', text: 'Select' }, { value: 'multiselect', text: 'Multi select' }, { value: 'date', text: 'Date' }] },
-    sort_order: 30,
-    id: "type"
-}, {
-    component: Select,
-    props: { id: "is_required", formId: "attribute-edit-form", name: "is_required", label: "Is required?", options: [{ value: 0, text: 'No' }, { value: 1, text: 'Yes' }] },
-    sort_order: 40,
-    id: "is_required"
-}, {
-    component: Select,
-    props: { id: "display_on_frontend", formId: "attribute-edit-form", name: "display_on_frontend", label: "Show to customer?", options: [{ value: 0, text: 'No' }, { value: 1, text: 'Yes' }] },
-    sort_order: 50,
-    id: "display_on_frontend"
-}, {
-    component: Text,
-    props: { id: "sort_order", formId: "attribute-edit-form", name: "sort_order", type: "text", label: "Sort order", validation_rules: ["integer"] },
-    sort_order: 60,
-    id: "sort_order"
-}];
-
 export default function AttributeEditForm(props) {
-
-    const [type, setType] = React.useState(_.get(props, 'attribute.type', null));
-
-    React.useState(function () {
-        fields.filter(f => {
+    let [fields, setFields] = React.useState(() => {
+        return [{
+            component: Text,
+            props: { id: 'attribute_name', formId: "attribute-edit-form", name: "attribute_name", label: "Name", validation_rules: ["notEmpty"] },
+            sort_order: 10,
+            id: "attribute_name"
+        }, {
+            component: Text,
+            props: { id: 'attribute_code', formId: "attribute-edit-form", name: "attribute_code", label: "Code", validation_rules: ["notEmpty"] },
+            sort_order: 20,
+            id: "attribute_code"
+        }, {
+            component: Type,
+            props: { id: 'type', formId: "attribute-edit-form", name: "type", label: "Type", options: [{ value: 'text', text: 'Text' }, { value: 'textarea', text: 'Textarea' }, { value: 'select', text: 'Select' }, { value: 'multiselect', text: 'Multi select' }, { value: 'date', text: 'Date' }] },
+            sort_order: 30,
+            id: "type"
+        }, {
+            component: Select,
+            props: { id: "is_required", formId: "attribute-edit-form", name: "is_required", label: "Is required?", options: [{ value: 0, text: 'No' }, { value: 1, text: 'Yes' }] },
+            sort_order: 40,
+            id: "is_required"
+        }, {
+            component: Select,
+            props: { id: "display_on_frontend", formId: "attribute-edit-form", name: "display_on_frontend", label: "Show to customer?", options: [{ value: 0, text: 'No' }, { value: 1, text: 'Yes' }] },
+            sort_order: 50,
+            id: "display_on_frontend"
+        }, {
+            component: Text,
+            props: { id: "sort_order", formId: "attribute-edit-form", name: "sort_order", type: "text", label: "Sort order", validation_rules: ["integer"] },
+            sort_order: 60,
+            id: "sort_order"
+        }].filter(f => {
             if (_.get(props, `attribute.${f.props.name}`) !== undefined) f.props.value = _.get(props, `attribute.${f.props.name}`);
             return f;
         });
-        return null;
-    }, []);
+    });
+
+    const [type, setType] = React.useState(_.get(props, 'attribute.type', null));
 
     return React.createElement(
         "div",
