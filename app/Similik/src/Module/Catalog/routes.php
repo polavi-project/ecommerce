@@ -71,7 +71,7 @@ $router->addAdminRoute('category.delete', 'GET', '/category/delete/{id:\d+}', [
 ]);
 
 //////////////// ATTRIBUTE ////////////////////
-///
+
 $router->addAdminRoute('attribute.grid', 'GET', '/attributes', [
     \Similik\Module\Catalog\Middleware\Attribute\Grid\GridMiddleware::class,
     \Similik\Module\Catalog\Middleware\Attribute\Grid\AddNewButtonMiddleware::class,
@@ -94,6 +94,32 @@ $router->addAdminRoute('attribute.delete', 'GET', '/attribute/delete/{id:\d+}', 
 //    \Similik\Module\Catalog\Middleware\Category\Save\ValidateMiddleware::class,
 //    \Similik\Module\Catalog\Middleware\Category\Save\UpdateMiddleware::class,
 //    \Similik\Module\Catalog\Middleware\Category\Save\CreateMiddleware::class
+]);
+
+//////////////// ATTRIBUTE GROUP ////////////////////
+
+$router->addAdminRoute('attribute.group.grid', 'GET', '/attribute/groups', [
+    \Similik\Module\Catalog\Middleware\AttributeGroup\Grid\GridMiddleware::class,
+    \Similik\Module\Catalog\Middleware\AttributeGroup\Grid\AddNewButtonMiddleware::class,
+]);
+
+$attributeEditMiddleware = [
+    \Similik\Module\Catalog\Middleware\AttributeGroup\Edit\InitMiddleware::class,
+    \Similik\Module\Catalog\Middleware\AttributeGroup\Edit\EditFormMiddleware::class
+];
+$router->addAdminRoute('attribute.group.create', 'GET', '/attribute/group/create', $attributeEditMiddleware);
+
+$router->addAdminRoute('attribute.group.edit', 'GET', '/attribute/group/edit/{id:\d+}', $attributeEditMiddleware);
+
+$router->addAdminRoute('attribute.group.save', 'POST', '/attribute/group/save[/{id:\d+}]', [
+    \Similik\Module\Catalog\Middleware\AttributeGroup\Save\UpdateMiddleware::class,
+    \Similik\Module\Catalog\Middleware\AttributeGroup\Save\CreateMiddleware::class
+]);
+
+$router->addAdminRoute('attribute.group.delete', 'GET', '/attribute/group/delete/{id:\d+}', [
+//    \Similik\Module\Catalog\Middleware\AttributeGroup\Save\ValidateMiddleware::class,
+//    \Similik\Module\Catalog\Middleware\AttributeGroup\Save\UpdateMiddleware::class,
+//    \Similik\Module\Catalog\Middleware\AttributeGroup\Save\CreateMiddleware::class
 ]);
 
 

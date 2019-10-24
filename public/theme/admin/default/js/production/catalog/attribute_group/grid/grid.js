@@ -6,7 +6,7 @@ function IdColumnHeader({ areaProps }) {
     const filterTo = React.useRef(null);
 
     React.useEffect(() => {
-        areaProps.addField("attribute_id");
+        areaProps.addField("attribute_group_id");
     }, []);
 
     return React.createElement(
@@ -31,7 +31,7 @@ function IdColumnHeader({ areaProps }) {
                     type: "text",
                     ref: filterFrom,
                     onKeyPress: e => {
-                        if (e.key === 'Enter') areaProps.addFilter("attribute_id", "BETWEEN", `${e.target.value} AND ${filterTo.current.value}`);
+                        if (e.key === 'Enter') areaProps.addFilter("attribute_group_id", "BETWEEN", `${e.target.value} AND ${filterTo.current.value}`);
                     },
                     placeholder: "From"
                 }),
@@ -39,7 +39,7 @@ function IdColumnHeader({ areaProps }) {
                     type: "text",
                     ref: filterTo,
                     onKeyPress: e => {
-                        if (e.key === 'Enter') areaProps.addFilter("attribute_id", "BETWEEN", `${filterFrom.current.value} AND ${e.target.value}`);
+                        if (e.key === 'Enter') areaProps.addFilter("attribute_group_id", "BETWEEN", `${filterFrom.current.value} AND ${e.target.value}`);
                     },
                     placeholder: "To"
                 })
@@ -55,179 +55,16 @@ function IdColumnRow({ row }) {
         React.createElement(
             "span",
             null,
-            row.attribute_id
+            row.attribute_group_id
         )
     );
-}
-
-function TypeColumnHeader({ areaProps }) {
-    const filterInput = React.useRef(null);
-
-    React.useEffect(() => {
-        areaProps.addField("type");
-    }, []);
-
-    return React.createElement(
-        "td",
-        null,
-        React.createElement(
-            "div",
-            { className: "header status-header" },
-            React.createElement(
-                "div",
-                { className: "title" },
-                React.createElement(
-                    "span",
-                    null,
-                    "Type"
-                )
-            ),
-            React.createElement(
-                "div",
-                { className: "filter" },
-                React.createElement(
-                    "select",
-                    { className: "uk-select", ref: filterInput, onChange: e => {
-                            areaProps.addFilter("type", "Equal", e.target.value);
-                        } },
-                    React.createElement(
-                        "option",
-                        { value: "select" },
-                        "Select"
-                    ),
-                    React.createElement(
-                        "option",
-                        { value: "multiselect" },
-                        "Multi Select"
-                    ),
-                    React.createElement(
-                        "option",
-                        { value: "text" },
-                        "Text"
-                    ),
-                    React.createElement(
-                        "option",
-                        { value: "textarea" },
-                        "Textarea"
-                    ),
-                    React.createElement(
-                        "option",
-                        { value: "date" },
-                        "Date"
-                    )
-                )
-            )
-        )
-    );
-}
-
-function TypeColumnRow({ row }) {
-    return React.createElement(
-        "td",
-        null,
-        row.type == 'text' && React.createElement(
-            "span",
-            null,
-            "Text"
-        ),
-        row.type == 'select' && React.createElement(
-            "span",
-            null,
-            "Select"
-        ),
-        row.type == 'multiselect' && React.createElement(
-            "span",
-            null,
-            "Multi select"
-        ),
-        row.type == 'textarea' && React.createElement(
-            "span",
-            null,
-            "Textarea"
-        ),
-        row.type == 'date' && React.createElement(
-            "span",
-            null,
-            "Date"
-        )
-    );
-}
-
-function IsRequiredColumnHeader({ areaProps }) {
-    const filterInput = React.useRef(null);
-
-    React.useEffect(() => {
-        areaProps.addField("is_required");
-    }, []);
-
-    return React.createElement(
-        "td",
-        null,
-        React.createElement(
-            "div",
-            { className: "header status-header" },
-            React.createElement(
-                "div",
-                { className: "title" },
-                React.createElement(
-                    "span",
-                    null,
-                    "Type"
-                )
-            ),
-            React.createElement(
-                "div",
-                { className: "filter" },
-                React.createElement(
-                    "select",
-                    { className: "uk-select", ref: filterInput, onChange: e => {
-                            areaProps.addFilter("is_required", "Equal", e.target.value);
-                        } },
-                    React.createElement(
-                        "option",
-                        { value: 1 },
-                        "Yes"
-                    ),
-                    React.createElement(
-                        "option",
-                        { value: 0 },
-                        "No"
-                    )
-                )
-            )
-        )
-    );
-}
-
-function IsRequiredColumnRow({ row }) {
-    if (row.is_required == 1) {
-        return React.createElement(
-            "td",
-            null,
-            React.createElement(
-                "span",
-                null,
-                "Yes"
-            )
-        );
-    } else {
-        return React.createElement(
-            "td",
-            null,
-            React.createElement(
-                "span",
-                null,
-                "No"
-            )
-        );
-    }
 }
 
 function NameColumnHeader({ areaProps }) {
     const filterInput = React.useRef(null);
 
     React.useEffect(() => {
-        areaProps.addField('attribute_name');
+        areaProps.addField('group_name');
     }, []);
 
     return React.createElement(
@@ -242,7 +79,7 @@ function NameColumnHeader({ areaProps }) {
                 React.createElement(
                     "span",
                     null,
-                    "Attribute name"
+                    "Group name"
                 )
             ),
             React.createElement(
@@ -252,7 +89,7 @@ function NameColumnHeader({ areaProps }) {
                     type: "text",
                     ref: filterInput,
                     onKeyPress: e => {
-                        if (e.key === 'Enter') areaProps.addFilter("name", "LIKE", `%${e.target.value}%`);
+                        if (e.key === 'Enter') areaProps.addFilter("group_name", "LIKE", `%${e.target.value}%`);
                     },
                     placeholder: "Attribute name"
                 })
@@ -268,7 +105,7 @@ function NameColumnRow({ row }) {
         React.createElement(
             "span",
             null,
-            row.attribute_name
+            row.group_name
         )
     );
 }
@@ -309,7 +146,7 @@ function ActionColumnRow({ row }) {
 }
 
 export default function AttributeGrid({ apiUrl }) {
-    const [attributes, setAttributes] = React.useState([]);
+    const [groups, setGroups] = React.useState([]);
     const [filters, setFilters] = React.useState([]);
     const [fields, setFields] = React.useState([]);
 
@@ -348,8 +185,8 @@ export default function AttributeGrid({ apiUrl }) {
             data: formData
         }).then(function (response) {
             if (response.headers['content-type'] !== "application/json") throw new Error('Something wrong, please try again');
-            if (_.get(response, 'data.payload.data.attributeCollection.attributes')) {
-                setAttributes(_.get(response, 'data.payload.data.attributeCollection.attributes'));
+            if (_.get(response, 'data.payload.data.attributeGroupCollection.groups')) {
+                setGroups(_.get(response, 'data.payload.data.attributeGroupCollection.groups'));
             }
         }).catch(function (error) {}).finally(function () {
             // e.target.value = null;
@@ -370,7 +207,7 @@ export default function AttributeGrid({ apiUrl }) {
             fieldStr += `${f} `;
         });
 
-        return `{attributeCollection ${filterStr} {attributes {${fieldStr}} total currentFilter}}`;
+        return `{attributeGroupCollection ${filterStr} {groups {${fieldStr}} total currentFilter}}`;
     };
 
     React.useEffect(() => {
@@ -389,7 +226,7 @@ export default function AttributeGrid({ apiUrl }) {
                 null,
                 React.createElement(Area, {
                     className: "",
-                    id: "attribute_grid_header",
+                    id: "attribute_group_grid_header",
                     addFilter: addFilter,
                     cleanFilter: cleanFilter,
                     addField: addField,
@@ -406,19 +243,9 @@ export default function AttributeGrid({ apiUrl }) {
                         sort_order: 20,
                         id: "name"
                     }, {
-                        component: TypeColumnHeader,
-                        props: {},
-                        sort_order: 30,
-                        id: "type"
-                    }, {
-                        component: IsRequiredColumnHeader,
-                        props: {},
-                        sort_order: 40,
-                        id: "isRequired"
-                    }, {
                         component: ActionColumnHeader,
                         props: {},
-                        sort_order: 50,
+                        sort_order: 30,
                         id: "action"
                     }]
                 })
@@ -426,47 +253,37 @@ export default function AttributeGrid({ apiUrl }) {
             React.createElement(
                 "tbody",
                 null,
-                attributes.map((a, i) => {
+                groups.map((g, i) => {
                     return React.createElement(Area, {
                         key: i,
                         className: "",
-                        id: "attribute_grid_row",
-                        row: a,
+                        id: "attribute_group_grid_row",
+                        row: g,
                         reactcomponent: "tr",
                         coreWidgets: [{
                             component: IdColumnRow,
-                            props: { row: a },
+                            props: { row: g },
                             sort_order: 10,
                             id: "id"
                         }, {
                             component: NameColumnRow,
-                            props: { row: a },
+                            props: { row: g },
                             sort_order: 20,
                             id: "name"
                         }, {
-                            component: TypeColumnRow,
-                            props: { row: a },
-                            sort_order: 30,
-                            id: "type"
-                        }, {
-                            component: IsRequiredColumnRow,
-                            props: { row: a },
-                            sort_order: 40,
-                            id: "isRequired"
-                        }, {
                             component: ActionColumnRow,
-                            props: { row: a },
-                            sort_order: 50,
+                            props: { row: g },
+                            sort_order: 30,
                             id: "action"
                         }]
                     });
                 })
             )
         ),
-        attributes.length === 0 && React.createElement(
+        groups.length === 0 && React.createElement(
             "div",
             null,
-            "There is no attribute to display"
+            "There is no group to display"
         )
     );
 }

@@ -164,6 +164,14 @@ $eventDispatcher->addListener(
     'before_execute_' . strtolower(str_replace('\\', '_', \Similik\Middleware\AdminNavigationMiddleware::class)),
     function (\Similik\Services\Di\Container $container) {
         $container->get(\Similik\Module\Cms\Services\NavigationManager::class)->addItem(
+            'product_attribute_group',
+            'Attribute groups',
+            \Similik\generate_url('attribute.group.grid'),
+            'file-text',
+            'catalog',
+            99
+        );
+        $container->get(\Similik\Module\Cms\Services\NavigationManager::class)->addItem(
             'product_attribute',
             'Attribute',
             \Similik\generate_url('attribute.grid'),

@@ -14,6 +14,8 @@ use GraphQL\Type\Definition\Type;
 use function Similik\dispatch_event;
 use Similik\Services\Di\Container;
 use Similik\Module\Catalog\Services\DataLoader;
+use Similik\Services\Http\Request;
+use Similik\Services\Routing\Router;
 
 class AttributeGroupType extends ObjectType
 {
@@ -41,6 +43,13 @@ class AttributeGroupType extends ObjectType
                         'resolve' => function($group, $args, Container $container, ResolveInfo $info) {
                             return $container->get(DataLoader::class)->getAttributeByGroup($group, $args, $container, $info);
                         }
+                    ],
+                    'editUrl' => [
+                        'type' => Type::string(),
+                        'resolve' => function($group, $args, Container $container, ResolveInfo $info) {
+                            if($container->get(Request::class)->isAdmin() == false)
+                                return null;
+                            return $container->get(Router::class)->generateUrl('attribute.group.edit', ["id"=>$group['attribute_group_id']]);                        }
                     ]
                 ];
 

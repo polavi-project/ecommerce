@@ -14,10 +14,13 @@ use GraphQL\Type\Definition\Type;
 use function Similik\_mysql;
 use function Similik\dispatch_event;
 use Similik\Module\Catalog\Services\AttributeCollection;
+use Similik\Module\Catalog\Services\AttributeGroupCollection;
 use Similik\Module\Catalog\Services\CategoryCollection;
 use Similik\Module\Catalog\Services\ProductCollection;
 use Similik\Module\Catalog\Services\Type\AttributeCollectionFilterType;
 use Similik\Module\Catalog\Services\Type\AttributeCollectionType;
+use Similik\Module\Catalog\Services\Type\AttributeGroupCollectionFilterType;
+use Similik\Module\Catalog\Services\Type\AttributeGroupCollectionType;
 use Similik\Module\Catalog\Services\Type\AttributeType;
 use Similik\Module\Catalog\Services\Type\CategoryCollectionFilterType;
 use Similik\Module\Catalog\Services\Type\CategoryCollectionType;
@@ -127,13 +130,6 @@ class QueryType extends ObjectType
                         return $container->get(CategoryCollection::class)->getData($rootValue, $args, $container, $info);
                     }
                 ],
-                'attributeGroups' => [
-                    'type' => Type::listOf($container->get(AttributeGroupType::class)),
-                    'description' => 'Return a list of product attribute group',
-                    'resolve' => function($value, $args, Container $container, ResolveInfo $info) {
-                        return $container->get(DataLoader::class)->getAllAttributeGroup($value, $args, $container, $info);
-                    }
-                ],
                 'attribute' => [
                     'type' => $container->get(AttributeType::class),
                     'description' => 'Return an attribute',
@@ -154,6 +150,28 @@ class QueryType extends ObjectType
                     ],
                     'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
                         return $container->get(AttributeCollection::class)->getData($rootValue, $args, $container, $info);
+                    }
+                ],
+                'attributeGroup' => [
+                    'type' => $container->get(AttributeGroupType::class),
+                    'description' => 'Return an attribute group',
+                    'args' => [
+                        'id' => Type::nonNull(Type::id())
+                    ],
+                    'resolve' => function($value, $args, Container $container, ResolveInfo $info) {
+                        return _mysql()->getTable('attribute_group')->where('group_id', '=', $args['id'])->fetchOneAssoc();
+                    }
+                ],
+                'attributeGroupCollection' => [
+                    'type' => $container->get(AttributeGroupCollectionType::class),
+                    'description' => "Return list of attribute group and total count",
+                    'args' => [
+                        'filter' =>  [
+                            'type' => $container->get(AttributeGroupCollectionFilterType::class)
+                        ]
+                    ],
+                    'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
+                        return $container->get(AttributeGroupCollection::class)->getData($rootValue, $args, $container, $info);
                     }
                 ],
                 'productAttributeIndex' => [

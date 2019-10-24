@@ -60,10 +60,10 @@ class AttributeType extends ObjectType
                     ],
                     'editUrl' => [
                         'type' => Type::string(),
-                        'resolve' => function($product, $args, Container $container, ResolveInfo $info) {
+                        'resolve' => function($attribute, $args, Container $container, ResolveInfo $info) {
                             if($container->get(Request::class)->isAdmin() == false)
                                 return null;
-                            return $container->get(Router::class)->generateUrl('attribute.edit', ["id"=>$product['attribute_id']]);                        }
+                            return $container->get(Router::class)->generateUrl('attribute.edit', ["id"=>$attribute['attribute_id']]);                        }
                     ]
                 ];
 

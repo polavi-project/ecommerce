@@ -6,7 +6,7 @@ function IdColumnHeader({areaProps}) {
     const filterTo = React.useRef(null);
 
     React.useEffect(() => {
-        areaProps.addField("attribute_id");
+        areaProps.addField("attribute_group_id");
     }, []);
 
     return <td>
@@ -16,13 +16,13 @@ function IdColumnHeader({areaProps}) {
                 <input
                     type={"text"}
                     ref={filterFrom}
-                    onKeyPress={(e) => { if(e.key === 'Enter') areaProps.addFilter("id", "BETWEEN", `${e.target.value} AND ${filterTo.current.value}`);}}
+                    onKeyPress={(e) => { if(e.key === 'Enter') areaProps.addFilter("attribute_group_id", "BETWEEN", `${e.target.value} AND ${filterTo.current.value}`);}}
                     placeholder={"From"}
                 />
                 <input
                     type={"text"}
                     ref={filterTo}
-                    onKeyPress={(e) => { if(e.key === 'Enter') areaProps.addFilter("id", "BETWEEN", `${filterFrom.current.value} AND ${e.target.value}`);}}
+                    onKeyPress={(e) => { if(e.key === 'Enter') areaProps.addFilter("attribute_group_id", "BETWEEN", `${filterFrom.current.value} AND ${e.target.value}`);}}
                     placeholder={"To"}
                 />
             </div>
@@ -31,89 +31,24 @@ function IdColumnHeader({areaProps}) {
 }
 
 function IdColumnRow({row}) {
-    return <td><span>{row.attribute_id}</span></td>
-}
-
-function TypeColumnHeader({areaProps}) {
-    const filterInput = React.useRef(null);
-
-    React.useEffect(() => {
-        areaProps.addField("type");
-    }, []);
-
-    return <td>
-        <div className="header status-header">
-            <div className={"title"}><span>Type</span></div>
-            <div className={"filter"}>
-                <select className="uk-select" ref={filterInput} onChange={(e)=> {
-                    areaProps.addFilter("type", "Equal", e.target.value);
-                }}>
-                    <option value={"select"}>Select</option>
-                    <option value={"multiselect"}>Multi Select</option>
-                    <option value={"text"}>Text</option>
-                    <option value={"textarea"}>Textarea</option>
-                    <option value={"date"}>Date</option>
-                </select>
-            </div>
-        </div>
-    </td>
-}
-
-function TypeColumnRow({row}) {
-    return <td>
-        {row.type == 'text' && <span>Text</span>}
-        {row.type == 'select' && <span>Select</span>}
-        {row.type == 'multiselect' && <span>Multi select</span>}
-        {row.type == 'textarea' && <span>Textarea</span>}
-        {row.type == 'date' && <span>Date</span>}
-    </td>
-}
-
-function IsRequiredColumnHeader({areaProps}) {
-    const filterInput = React.useRef(null);
-
-    React.useEffect(() => {
-        areaProps.addField("is_required");
-    }, []);
-
-    return <td>
-        <div className="header status-header">
-            <div className={"title"}><span>Type</span></div>
-            <div className={"filter"}>
-                <select className="uk-select" ref={filterInput} onChange={(e)=> {
-                    areaProps.addFilter("is_required", "Equal", e.target.value);
-                }}>
-                    <option value={1}>Yes</option>
-                    <option value={0}>No</option>
-                </select>
-            </div>
-        </div>
-    </td>
-}
-
-function IsRequiredColumnRow({row}) {
-    if(row.is_required == 1) {
-        return <td><span>Yes</span></td>
-    } else {
-        return <td><span>No</span></td>
-    }
+    return <td><span>{row.attribute_group_id}</span></td>
 }
 
 function NameColumnHeader({areaProps}) {
     const filterInput = React.useRef(null);
 
     React.useEffect(() => {
-        areaProps.addField('attribute_name');
+        areaProps.addField('group_name');
     }, []);
 
     return <td>
         <div className="header name-header">
-            <div className={"title"}><span>Attribute name</span></div>
+            <div className={"title"}><span>Group name</span></div>
             <div className={"filter"}>
                 <input
                     type={"text"}
                     ref={filterInput}
-                    onKeyPress={(e) => { if(e.key === 'Enter') areaProps.addFilter("name", "LIKE", `%${e.target.value}%`);}}
+                    onKeyPress={(e) => { if(e.key === 'Enter') areaProps.addFilter("group_name", "LIKE", `%${e.target.value}%`);}}
                     placeholder={"Attribute name"}
                 />
             </div>
@@ -122,7 +57,7 @@ function NameColumnHeader({areaProps}) {
 }
 
 function NameColumnRow({row}) {
-    return <td><span>{row.attribute_name}</span></td>
+    return <td><span>{row.group_name}</span></td>
 }
 
 function ActionColumnHeader({areaProps}) {
@@ -144,7 +79,7 @@ function ActionColumnRow({row}) {
 
 export default function AttributeGrid({apiUrl})
 {
-    const [attributes, setAttributes] = React.useState([]);
+    const [groups, setGroups] = React.useState([]);
     const [filters, setFilters] = React.useState([]);
     const [fields, setFields] = React.useState([]);
 
@@ -189,8 +124,8 @@ export default function AttributeGrid({apiUrl})
         }).then(function (response) {
             if(response.headers['content-type'] !== "application/json")
                 throw new Error('Something wrong, please try again');
-            if(_.get(response, 'data.payload.data.attributeCollection.attributes')) {
-                setAttributes(_.get(response, 'data.payload.data.attributeCollection.attributes'));
+            if(_.get(response, 'data.payload.data.attributeGroupCollection.groups')) {
+                setGroups(_.get(response, 'data.payload.data.attributeGroupCollection.groups'));
             }
         }).catch(function (error) {
         }).finally(function() {
@@ -213,7 +148,7 @@ export default function AttributeGrid({apiUrl})
             fieldStr +=`${f} `;
         });
 
-        return `{attributeCollection ${filterStr} {attributes {${fieldStr}} total currentFilter}}`
+        return `{attributeGroupCollection ${filterStr} {groups {${fieldStr}} total currentFilter}}`
     };
 
     React.useEffect(() => {
@@ -227,7 +162,7 @@ export default function AttributeGrid({apiUrl})
             <thead>
             <Area
                 className={""}
-                id={"attribute_grid_header"}
+                id={"attribute_group_grid_header"}
                 addFilter={addFilter}
                 cleanFilter={cleanFilter}
                 addField={addField}
@@ -247,63 +182,39 @@ export default function AttributeGrid({apiUrl})
                         id: "name"
                     },
                     {
-                        component: TypeColumnHeader,
-                        props : {},
-                        sort_order: 30,
-                        id: "type"
-                    },
-                    {
-                        component: IsRequiredColumnHeader,
-                        props : {},
-                        sort_order: 40,
-                        id: "isRequired"
-                    },
-                    {
                         component: ActionColumnHeader,
                         props : {},
-                        sort_order: 50,
+                        sort_order: 30,
                         id: "action"
                     }
                 ]}
             />
             </thead>
             <tbody>
-            {attributes.map((a, i)=> {
+            {groups.map((g, i)=> {
                 return <Area
                     key={i}
                     className={""}
-                    id={"attribute_grid_row"}
-                    row={a}
+                    id={"attribute_group_grid_row"}
+                    row={g}
                     reactcomponent={"tr"}
                     coreWidgets={[
                         {
                             component: IdColumnRow,
-                            props : {row: a},
+                            props : {row: g},
                             sort_order: 10,
                             id: "id"
                         },
                         {
                             component: NameColumnRow,
-                            props : {row: a},
+                            props : {row: g},
                             sort_order: 20,
                             id: "name"
                         },
                         {
-                            component: TypeColumnRow,
-                            props : {row: a},
-                            sort_order: 30,
-                            id: "type"
-                        },
-                        {
-                            component: IsRequiredColumnRow,
-                            props : {row: a},
-                            sort_order: 40,
-                            id: "isRequired"
-                        },
-                        {
                             component: ActionColumnRow,
-                            props : {row: a},
-                            sort_order: 50,
+                            props : {row: g},
+                            sort_order: 30,
                             id: "action"
                         }
                     ]}
@@ -311,8 +222,8 @@ export default function AttributeGrid({apiUrl})
             })}
             </tbody>
         </table>
-        {attributes.length === 0 &&
-        <div>There is no attribute to display</div>
+        {groups.length === 0 &&
+        <div>There is no group to display</div>
         }
     </div>
 }
