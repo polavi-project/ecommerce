@@ -33,7 +33,7 @@ class AttributeMiddleware extends MiddlewareAbstract
             ->waitToExecute([
                 "query"=> <<< QUERY
                     {
-                        attributeGroups {
+                        attributeGroupCollection {
                             attribute_group_id
                             group_name
                             attributes {
@@ -58,8 +58,8 @@ QUERY
                 $props = ['formId'=> self::FORM_ID, 'attributeGroups' => []];
                 /**@var \GraphQL\Executor\ExecutionResult $result */
                 if(!$result->errors) {
-                    if (isset($result->data['attributeGroups'])) {
-                        $props['attributeGroups'] = $result->data['attributeGroups'];
+                    if (isset($result->data['attributeGroupCollection'])) {
+                        $props['attributeGroups'] = $result->data['attributeGroupCollection'];
                     }
                     $response->addWidget(
                         'product_edit_attributes',

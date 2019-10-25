@@ -30,7 +30,7 @@ class AddNewButtonMiddleware extends MiddlewareAbstract
             5,
             get_js_file_url("production/catalog/attribute_group/grid/add_new_button.js", true),
             [
-                "url" => generate_url('attribute.create')
+                "url" => generate_url('attribute.group.create')
             ]
         );
 

@@ -26,16 +26,16 @@ class InitMiddleware extends MiddlewareAbstract
     {
         $id = (int) $request->attributes->get('id');
         if($id) {
-            if($this->getContainer()->get(Processor::class)->getTable('attribute')->load($id) === false) {
+            if($this->getContainer()->get(Processor::class)->getTable('attribute_group')->load($id) === false) {
                 $response->addData('success', 0)
-                        ->addData('message', 'Requested attribute does not exist')
+                        ->addData('message', 'Requested group does not exist')
                         ->setStatusCode(404);
 
                 return $response;
             }
-            $this->getContainer()->get(Helmet::class)->setTitle("Edit attribute");
+            $this->getContainer()->get(Helmet::class)->setTitle("Edit attribute group");
         } else {
-            $this->getContainer()->get(Helmet::class)->setTitle("Create new attribute");
+            $this->getContainer()->get(Helmet::class)->setTitle("Create new attribute group");
         }
 
         return $delegate;

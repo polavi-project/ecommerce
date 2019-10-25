@@ -23,7 +23,7 @@ class UpdateMiddleware extends MiddlewareAbstract
     /**
      * @param Request $request
      * @param Response $response
-     * @param array|null $data
+     * @param null $delegate
      * @return mixed
      */
     public function __invoke(Request $request, Response $response, $delegate = null)
@@ -34,58 +34,29 @@ class UpdateMiddleware extends MiddlewareAbstract
         $this->conn = _mysql();
         try {
             $conn = _mysql();
-            $conn->getTable('attribute')
-                ->where('attribute_id', '=', $request->attributes->get('id'))
+            $conn->startTransaction();
+
+            $conn->getTable('attribute_group')
+                ->where('attribute_group_id', '=', $request->attributes->get('id'))
                 ->update($request->request->all());
 
-            if(in_array($request->request->get('type'), ['select', 'multiselect']))
-                $this->saveOptions((int) $request->attributes->get('id'), $request->request->get('attribute_code'), $request->request->get('options'));
-            else
-                $this->conn->getTable('attribute_option')->where('attribute_id', '=', $request->attributes->get('id'))->delete();
+            $conn->getTable('attribute_group_link')->where('group_id', '=', $request->attributes->get('id'))->delete();
 
-            $response->addAlert('attribute_save_success', 'success', 'Attribute saved')
-                ->redirect($this->getContainer()->get(Router::class)->generateUrl('attribute.grid'));
+            if($attributes = $request->request->get('attributes'))
+                foreach ($attributes as $attribute) {
+                    if($conn->getTable('attribute')->load($attribute))
+                        $conn->getTable('attribute_group_link')->insert(['attribute_id'=>$attribute, 'group_id'=>$request->attributes->get('id')]);
+                }
+
+            $conn->commit();
+            $response->addAlert('attribute_group_save_success', 'success', 'Attribute group saved')
+                ->redirect($this->getContainer()->get(Router::class)->generateUrl('attribute.group.grid'));
 
             return $response;
         } catch(\Exception $e) {
-            $response->addAlert('attribute_save_error', 'error', $e->getMessage());
-
+            $conn->rollback();
+            $response->addAlert('attribute_group_save_error', 'error', $e->getMessage());
             return $response;
-        }
-    }
-
-    protected function saveOptions(int $attributeId, $attributeCode, array $options)
-    {
-        if(empty($options)) {
-            $this->conn->getTable('attribute_option')
-                ->where('attribute_id', '=', $attributeId)
-                ->delete();
-            return;
-        }
-        $oldOptions = [];
-        $optionTable = $this->conn->getTable('attribute_option')
-            ->where('attribute_id', '=', $attributeId);
-        while ($row = $optionTable->fetch()) {
-            $oldOptions[$row['attribute_option_id']] = $row['attribute_option_id'];
-        }
-        foreach ($oldOptions as $oId)
-            if(!array_key_exists($oId, $options))
-                $this->conn->getTable('attribute_option')
-                    ->where('attribute_option_id', '=', $oId)
-                    ->delete();
-        foreach ($options as $key=>$option) {
-            $optionData = [
-                'attribute_id'  => $attributeId,
-                'attribute_code' => $attributeCode,
-                'option_text' => $option['option_text']
-            ];
-            if(!array_key_exists($key, $oldOptions))
-                $this->conn->getTable('attribute_option')->insert($optionData);
-            else {
-                $this->conn->getTable('attribute_option')
-                    ->where('attribute_option_id', '=', $key)
-                    ->update($optionData);
-            }
         }
     }
 }

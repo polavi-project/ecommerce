@@ -103,13 +103,13 @@ $router->addAdminRoute('attribute.group.grid', 'GET', '/attribute/groups', [
     \Similik\Module\Catalog\Middleware\AttributeGroup\Grid\AddNewButtonMiddleware::class,
 ]);
 
-$attributeEditMiddleware = [
+$attributeGroupEditMiddleware = [
     \Similik\Module\Catalog\Middleware\AttributeGroup\Edit\InitMiddleware::class,
     \Similik\Module\Catalog\Middleware\AttributeGroup\Edit\EditFormMiddleware::class
 ];
-$router->addAdminRoute('attribute.group.create', 'GET', '/attribute/group/create', $attributeEditMiddleware);
+$router->addAdminRoute('attribute.group.create', 'GET', '/attribute/group/create', $attributeGroupEditMiddleware);
 
-$router->addAdminRoute('attribute.group.edit', 'GET', '/attribute/group/edit/{id:\d+}', $attributeEditMiddleware);
+$router->addAdminRoute('attribute.group.edit', 'GET', '/attribute/group/edit/{id:\d+}', $attributeGroupEditMiddleware);
 
 $router->addAdminRoute('attribute.group.save', 'POST', '/attribute/group/save[/{id:\d+}]', [
     \Similik\Module\Catalog\Middleware\AttributeGroup\Save\UpdateMiddleware::class,

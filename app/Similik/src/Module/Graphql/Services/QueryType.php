@@ -159,7 +159,7 @@ class QueryType extends ObjectType
                         'id' => Type::nonNull(Type::id())
                     ],
                     'resolve' => function($value, $args, Container $container, ResolveInfo $info) {
-                        return _mysql()->getTable('attribute_group')->where('group_id', '=', $args['id'])->fetchOneAssoc();
+                        return _mysql()->getTable('attribute_group')->where('attribute_group_id', '=', $args['id'])->fetchOneAssoc();
                     }
                 ],
                 'attributeGroupCollection' => [

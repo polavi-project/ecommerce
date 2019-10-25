@@ -11,6 +11,7 @@ namespace Similik\Module\Catalog\Services\Type;
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
+use function Similik\_mysql;
 use function Similik\dispatch_event;
 use Similik\Services\Di\Container;
 use Similik\Module\Catalog\Services\DataLoader;
@@ -41,7 +42,7 @@ class AttributeGroupType extends ObjectType
                         'type' => Type::listOf($container->get(AttributeType::class)),
                         'description' => 'List of attribute in the group',
                         'resolve' => function($group, $args, Container $container, ResolveInfo $info) {
-                            return $container->get(DataLoader::class)->getAttributeByGroup($group, $args, $container, $info);
+                            return _mysql()->getTable('attribute')->leftJoin('attribute_group_link')->where('attribute_group_link.group_id', '=', $group['attribute_group_id'])->fetchAllAssoc();
                         }
                     ],
                     'editUrl' => [

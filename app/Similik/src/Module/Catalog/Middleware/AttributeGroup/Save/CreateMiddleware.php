@@ -33,33 +33,24 @@ class CreateMiddleware extends MiddlewareAbstract
         $this->conn = _mysql();
         try {
             $conn = _mysql();
-            $conn->getTable('attribute')
+            $conn->getTable('attribute_group')
                 ->insert($request->request->all());
             $id = $conn->getLastID();
 
-            if(in_array($request->request->get('type'), ['select', 'multiselect']))
-                $this->saveOptions((int) $id, $request->request->get('attribute_code'), $request->request->get('options'));
+            if($attributes = $request->request->get('attributes'))
+                foreach ($attributes as $attribute) {
+                    if($conn->getTable('attribute')->load($attribute))
+                        $conn->getTable('attribute_group_link')->insert(['attribute_id'=>$attribute, 'group_id'=>$id]);
+                }
 
-            $response->addAlert('attribute_save_success', 'success', 'Attribute saved')
-                ->redirect($this->getContainer()->get(Router::class)->generateUrl('attribute.grid'));
+            $response->addAlert('attribute_group_save_success', 'success', 'Attribute group saved')
+                ->redirect($this->getContainer()->get(Router::class)->generateUrl('attribute.group.grid'));
 
             return $response;
         } catch(\Exception $e) {
-            $response->addAlert('attribute_save_error', 'error', $e->getMessage());
+            $response->addAlert('attribute_group_save_error', 'error', $e->getMessage());
 
             return $response;
-        }
-    }
-
-    protected function saveOptions(int $attributeId, string $attributeCode, array $options)
-    {
-        foreach ($options as $key=>$option) {
-            $optionData = [
-                'attribute_id'  => $attributeId,
-                'attribute_code' => $attributeCode,
-                'option_text' => $option['option_text']
-            ];
-            $this->conn->getTable('attribute_option')->insert($optionData);
         }
     }
 }
