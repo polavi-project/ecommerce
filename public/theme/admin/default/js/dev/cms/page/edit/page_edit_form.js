@@ -5,7 +5,7 @@ import Tinycme from "../../../../../../../../js/production/form/fields/tinycme.j
 import Select from "../../../../../../../../js/production/form/fields/select.js";
 import {ADD_ALERT} from "../../../../../../../../js/production/event-types.js";
 
-function General({id, name, content, layout, status}) {
+function General({pageId, name, content, layout, status}) {
     return <div>
         <Area id="admin-page-edit-general" coreWidgets={[
             {
@@ -33,7 +33,7 @@ function General({id, name, content, layout, status}) {
                 id: "layout"
             }
         ]}/>
-        {id && <input readOnly type="text" name="variables[page][id]" value={id} style={{
+        {pageId && <input readOnly type="text" name="variables[page][id]" value={pageId} style={{
             display: 'none'
         }}/> }
     </div>
