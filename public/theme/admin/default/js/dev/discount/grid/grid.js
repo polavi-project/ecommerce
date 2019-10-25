@@ -1,8 +1,7 @@
 import Area from "../../../../../../../js/production/area.js";
-import Text from "../../../../../../../js/production/form/fields/text.js";
 import A from "../../../../../../../js/production/a.js";
 
-function IdColumn({areaProps}) {
+function IdColumnHeader({areaProps}) {
     const filterFrom = React.useRef(null);
     const filterTo = React.useRef(null);
 
@@ -10,7 +9,7 @@ function IdColumn({areaProps}) {
         areaProps.addField("coupon_id");
     }, []);
 
-    return <div className={"column"}>
+    return <td>
         <div className="header id-header">
             <div className={"title"}><span>ID</span></div>
             <div className={"filter"}>
@@ -32,20 +31,20 @@ function IdColumn({areaProps}) {
                 </div>
             </div>
         </div>
-        {areaProps.rows.map((r, i) => {
-            return <div className={"row"} key={i}><span>{r.coupon_id}</span></div>;
-        })}
-    </div>
+    </td>
 }
 
-function DescriptionColumn({areaProps}) {
+function IdColumnRow({row}) {
+    return <td><span>{row.coupon_id}</span></td>;
+}
+function DescriptionColumnHeader({areaProps}) {
     const filterInput = React.useRef(null);
 
     React.useEffect(() => {
         areaProps.addField('description');
     }, []);
 
-    return <div className={"column"}>
+    return <td>
         <div className="header name-header">
             <div className={"title"}><span>Description</span></div>
             <div className={"filter"}>
@@ -57,40 +56,29 @@ function DescriptionColumn({areaProps}) {
                 />
             </div>
         </div>
-        {areaProps.rows.map((r, i) => {
-            return <div className={"row"} key={i}><span>{_.get(r, 'description' , '')}</span></div>;
-        })}
-    </div>
+    </td>
 }
 
-function GeneralColumn({index, title, areaProps}) {
-    React.useEffect(() => {
-        areaProps.addField(index);
-    }, []);
-    return <div className={"column"}>
-        <div className="header">
-            <div className={"title"}><span>{title}</span></div>
-        </div>
-        {areaProps.rows.map((r, i) => {
-            return <div className={"row"} key={i}><span>{_.get(r, index , '')}</span></div>;
-        })}
-    </div>
+function DescriptionColumnRow({row}) {
+    return <td><span>{_.get(row, 'description' , '')}</span></td>;
 }
-function ActionColumn({areaProps}) {
+
+function ActionColumnHeader({areaProps}) {
     React.useEffect(() => {
         areaProps.addField('editUrl');
     }, []);
-    return <div className={"column"}>
+    return <td>
         <div className="header">
             <div className={"title"}><span>Action</span></div>
         </div>
-        {areaProps.rows.map((r, i) => {
-            return <div className={"row"} key={i}><A url={_.get(r, 'editUrl' , '')} text={"Edit"}/></div>;
-        })}
-    </div>
+    </td>
 }
 
-function StatusColumn({areaProps})
+function ActionColumnRow({row}) {
+    return <td><A url={_.get(row, 'editUrl' , '')} text={"Edit"}/></td>;
+}
+
+function StatusColumnHeader({areaProps})
 {
     const filterInput = React.useRef(null);
 
@@ -98,23 +86,27 @@ function StatusColumn({areaProps})
         areaProps.addField("status");
     }, []);
 
-    return <div className={"column"}>
+    return <td>
         <div className="header status-header">
             <div className={"title"}><span>Status</span></div>
             <div className={"filter"}>
-                <input type={"text"} ref={filterInput} onKeyPress={(e) => {
-                    if(e.key === 'Enter') areaProps.addFilter("status", "Equal", e.target.value);
-                }
-                }/>
+                <select ref={filterInput} onChange={(e)=> {
+                    areaProps.addFilter("status", "Equal", e.target.value);
+                }}>
+                    <option value={1}>Enabled</option>
+                    <option value={0}>Disabled</option>
+                </select>
             </div>
         </div>
-        {areaProps.rows.map((r, i) => {
-            if(parseInt(_.get(r, "status")) === 1)
-                return <div key={i} className={"row"}><span className="uk-label uk-label-success">Enable</span></div>;
-            else
-                return <div key={i} className={"row"}><span className="uk-label uk-label-danger">Disabled</span></div>;
-        })}
-    </div>
+    </td>
+}
+
+function StatusColumnRow({row}) {
+    if(parseInt(_.get(row, "status")) === 1)
+        return <td><span className="uk-label uk-label-success">Enable</span></td>;
+    else
+        return <td><span className="uk-label uk-label-danger">Disabled</span></td>;
+
 }
 
 export default function CouponGrid({apiUrl})
@@ -197,44 +189,85 @@ export default function CouponGrid({apiUrl})
         applyFilter();
     }, [fields, filters]);
 
-    return <div className={"grid coupon-grid"}>
+    return <div className={"uk-overflow-auto"}>
+        <table className="uk-table uk-table-small">
+            <thead>
             <Area
-                className={"uk-grid uk-grid-small"}
-                id={"coupon-grid"}
-                rows={coupons}
+                className={""}
+                id={"coupon_grid_header"}
                 addFilter={addFilter}
                 cleanFilter={cleanFilter}
                 addField={addField}
+                applyFilter={applyFilter}
+                reactcomponent={"tr"}
                 coreWidgets={[
                     {
-                        component: IdColumn,
-                        props : {
-                        },
+                        component: IdColumnHeader,
+                        props : {addFilter, cleanFilter, addField, applyFilter},
                         sort_order: 10,
                         id: "id"
                     },
                     {
-                        component: DescriptionColumn,
-                        props : {
-                        },
-                        sort_order: 30,
+                        component: DescriptionColumnHeader,
+                        props : {},
+                        sort_order: 20,
                         id: "name"
                     },
                     {
-                        component: StatusColumn,
-                        props : {
-                        },
-                        sort_order: 40,
+                        component: StatusColumnHeader,
+                        props : {},
+                        sort_order: 30,
                         id: "status"
                     },
                     {
-                        component: ActionColumn,
-                        props : {
-                        },
-                        sort_order: 50,
-                        id: "editColumn"
+                        component: ActionColumnHeader,
+                        props : {},
+                        sort_order: 40,
+                        id: "action"
                     }
                 ]}
             />
+            </thead>
+            <tbody>
+            {coupons.map((c, i)=> {
+                return <Area
+                    key={i}
+                    className={""}
+                    id={"coupon_grid_row"}
+                    row={c}
+                    reactcomponent={"tr"}
+                    coreWidgets={[
+                        {
+                            component: IdColumnRow,
+                            props : {row: c},
+                            sort_order: 10,
+                            id: "id"
+                        },
+                        {
+                            component: DescriptionColumnRow,
+                            props : {row: c},
+                            sort_order: 20,
+                            id: "name"
+                        },
+                        {
+                            component: StatusColumnRow,
+                            props : {row: c},
+                            sort_order: 30,
+                            id: "status"
+                        },
+                        {
+                            component: ActionColumnRow,
+                            props : {row: c},
+                            sort_order: 40,
+                            id: "action"
+                        }
+                    ]}
+                />
+            })}
+            </tbody>
+        </table>
+        {coupons.length === 0 &&
+        <div>There is no coupon to display</div>
+        }
     </div>
 }

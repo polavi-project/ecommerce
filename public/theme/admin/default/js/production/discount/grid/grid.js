@@ -1,8 +1,7 @@
 import Area from "../../../../../../../js/production/area.js";
-import Text from "../../../../../../../js/production/form/fields/text.js";
 import A from "../../../../../../../js/production/a.js";
 
-function IdColumn({ areaProps }) {
+function IdColumnHeader({ areaProps }) {
     const filterFrom = React.useRef(null);
     const filterTo = React.useRef(null);
 
@@ -11,8 +10,8 @@ function IdColumn({ areaProps }) {
     }, []);
 
     return React.createElement(
-        "div",
-        { className: "column" },
+        "td",
+        null,
         React.createElement(
             "div",
             { className: "header id-header" },
@@ -53,22 +52,22 @@ function IdColumn({ areaProps }) {
                     })
                 )
             )
-        ),
-        areaProps.rows.map((r, i) => {
-            return React.createElement(
-                "div",
-                { className: "row", key: i },
-                React.createElement(
-                    "span",
-                    null,
-                    r.coupon_id
-                )
-            );
-        })
+        )
     );
 }
 
-function DescriptionColumn({ areaProps }) {
+function IdColumnRow({ row }) {
+    return React.createElement(
+        "td",
+        null,
+        React.createElement(
+            "span",
+            null,
+            row.coupon_id
+        )
+    );
+}
+function DescriptionColumnHeader({ areaProps }) {
     const filterInput = React.useRef(null);
 
     React.useEffect(() => {
@@ -76,8 +75,8 @@ function DescriptionColumn({ areaProps }) {
     }, []);
 
     return React.createElement(
-        "div",
-        { className: "column" },
+        "td",
+        null,
         React.createElement(
             "div",
             { className: "header name-header" },
@@ -102,61 +101,29 @@ function DescriptionColumn({ areaProps }) {
                     placeholder: "Description"
                 })
             )
-        ),
-        areaProps.rows.map((r, i) => {
-            return React.createElement(
-                "div",
-                { className: "row", key: i },
-                React.createElement(
-                    "span",
-                    null,
-                    _.get(r, 'description', '')
-                )
-            );
-        })
+        )
     );
 }
 
-function GeneralColumn({ index, title, areaProps }) {
-    React.useEffect(() => {
-        areaProps.addField(index);
-    }, []);
+function DescriptionColumnRow({ row }) {
     return React.createElement(
-        "div",
-        { className: "column" },
+        "td",
+        null,
         React.createElement(
-            "div",
-            { className: "header" },
-            React.createElement(
-                "div",
-                { className: "title" },
-                React.createElement(
-                    "span",
-                    null,
-                    title
-                )
-            )
-        ),
-        areaProps.rows.map((r, i) => {
-            return React.createElement(
-                "div",
-                { className: "row", key: i },
-                React.createElement(
-                    "span",
-                    null,
-                    _.get(r, index, '')
-                )
-            );
-        })
+            "span",
+            null,
+            _.get(row, 'description', '')
+        )
     );
 }
-function ActionColumn({ areaProps }) {
+
+function ActionColumnHeader({ areaProps }) {
     React.useEffect(() => {
         areaProps.addField('editUrl');
     }, []);
     return React.createElement(
-        "div",
-        { className: "column" },
+        "td",
+        null,
         React.createElement(
             "div",
             { className: "header" },
@@ -169,18 +136,19 @@ function ActionColumn({ areaProps }) {
                     "Action"
                 )
             )
-        ),
-        areaProps.rows.map((r, i) => {
-            return React.createElement(
-                "div",
-                { className: "row", key: i },
-                React.createElement(A, { url: _.get(r, 'editUrl', ''), text: "Edit" })
-            );
-        })
+        )
     );
 }
 
-function StatusColumn({ areaProps }) {
+function ActionColumnRow({ row }) {
+    return React.createElement(
+        "td",
+        null,
+        React.createElement(A, { url: _.get(row, 'editUrl', ''), text: "Edit" })
+    );
+}
+
+function StatusColumnHeader({ areaProps }) {
     const filterInput = React.useRef(null);
 
     React.useEffect(() => {
@@ -188,8 +156,8 @@ function StatusColumn({ areaProps }) {
     }, []);
 
     return React.createElement(
-        "div",
-        { className: "column" },
+        "td",
+        null,
         React.createElement(
             "div",
             { className: "header status-header" },
@@ -205,30 +173,44 @@ function StatusColumn({ areaProps }) {
             React.createElement(
                 "div",
                 { className: "filter" },
-                React.createElement("input", { type: "text", ref: filterInput, onKeyPress: e => {
-                        if (e.key === 'Enter') areaProps.addFilter("status", "Equal", e.target.value);
-                    } })
+                React.createElement(
+                    "select",
+                    { ref: filterInput, onChange: e => {
+                            areaProps.addFilter("status", "Equal", e.target.value);
+                        } },
+                    React.createElement(
+                        "option",
+                        { value: 1 },
+                        "Enabled"
+                    ),
+                    React.createElement(
+                        "option",
+                        { value: 0 },
+                        "Disabled"
+                    )
+                )
             )
-        ),
-        areaProps.rows.map((r, i) => {
-            if (parseInt(_.get(r, "status")) === 1) return React.createElement(
-                "div",
-                { key: i, className: "row" },
-                React.createElement(
-                    "span",
-                    { className: "uk-label uk-label-success" },
-                    "Enable"
-                )
-            );else return React.createElement(
-                "div",
-                { key: i, className: "row" },
-                React.createElement(
-                    "span",
-                    { className: "uk-label uk-label-danger" },
-                    "Disabled"
-                )
-            );
-        })
+        )
+    );
+}
+
+function StatusColumnRow({ row }) {
+    if (parseInt(_.get(row, "status")) === 1) return React.createElement(
+        "td",
+        null,
+        React.createElement(
+            "span",
+            { className: "uk-label uk-label-success" },
+            "Enable"
+        )
+    );else return React.createElement(
+        "td",
+        null,
+        React.createElement(
+            "span",
+            { className: "uk-label uk-label-danger" },
+            "Disabled"
+        )
     );
 }
 
@@ -304,35 +286,83 @@ export default function CouponGrid({ apiUrl }) {
 
     return React.createElement(
         "div",
-        { className: "grid coupon-grid" },
-        React.createElement(Area, {
-            className: "uk-grid uk-grid-small",
-            id: "coupon-grid",
-            rows: coupons,
-            addFilter: addFilter,
-            cleanFilter: cleanFilter,
-            addField: addField,
-            coreWidgets: [{
-                component: IdColumn,
-                props: {},
-                sort_order: 10,
-                id: "id"
-            }, {
-                component: DescriptionColumn,
-                props: {},
-                sort_order: 30,
-                id: "name"
-            }, {
-                component: StatusColumn,
-                props: {},
-                sort_order: 40,
-                id: "status"
-            }, {
-                component: ActionColumn,
-                props: {},
-                sort_order: 50,
-                id: "editColumn"
-            }]
-        })
+        { className: "uk-overflow-auto" },
+        React.createElement(
+            "table",
+            { className: "uk-table uk-table-small" },
+            React.createElement(
+                "thead",
+                null,
+                React.createElement(Area, {
+                    className: "",
+                    id: "coupon_grid_header",
+                    addFilter: addFilter,
+                    cleanFilter: cleanFilter,
+                    addField: addField,
+                    applyFilter: applyFilter,
+                    reactcomponent: "tr",
+                    coreWidgets: [{
+                        component: IdColumnHeader,
+                        props: { addFilter, cleanFilter, addField, applyFilter },
+                        sort_order: 10,
+                        id: "id"
+                    }, {
+                        component: DescriptionColumnHeader,
+                        props: {},
+                        sort_order: 20,
+                        id: "name"
+                    }, {
+                        component: StatusColumnHeader,
+                        props: {},
+                        sort_order: 30,
+                        id: "status"
+                    }, {
+                        component: ActionColumnHeader,
+                        props: {},
+                        sort_order: 40,
+                        id: "action"
+                    }]
+                })
+            ),
+            React.createElement(
+                "tbody",
+                null,
+                coupons.map((c, i) => {
+                    return React.createElement(Area, {
+                        key: i,
+                        className: "",
+                        id: "coupon_grid_row",
+                        row: c,
+                        reactcomponent: "tr",
+                        coreWidgets: [{
+                            component: IdColumnRow,
+                            props: { row: c },
+                            sort_order: 10,
+                            id: "id"
+                        }, {
+                            component: DescriptionColumnRow,
+                            props: { row: c },
+                            sort_order: 20,
+                            id: "name"
+                        }, {
+                            component: StatusColumnRow,
+                            props: { row: c },
+                            sort_order: 30,
+                            id: "status"
+                        }, {
+                            component: ActionColumnRow,
+                            props: { row: c },
+                            sort_order: 40,
+                            id: "action"
+                        }]
+                    });
+                })
+            )
+        ),
+        coupons.length === 0 && React.createElement(
+            "div",
+            null,
+            "There is no coupon to display"
+        )
     );
 }
