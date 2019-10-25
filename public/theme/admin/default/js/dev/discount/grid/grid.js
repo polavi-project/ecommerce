@@ -15,6 +15,7 @@ function IdColumnHeader({areaProps}) {
             <div className={"filter"}>
                 <div>
                     <input
+                        className="uk-input uk-form-small"
                         type={"text"}
                         ref={filterFrom}
                         onKeyPress={(e) => { if(e.key === 'Enter') areaProps.addFilter("id", "BETWEEN", `${e.target.value} AND ${filterTo.current.value}`);}}
@@ -23,6 +24,7 @@ function IdColumnHeader({areaProps}) {
                 </div>
                 <div>
                     <input
+                        className="uk-input uk-form-small"
                         type={"text"}
                         ref={filterTo}
                         onKeyPress={(e) => { if(e.key === 'Enter') areaProps.addFilter("id", "BETWEEN", `${filterFrom.current.value} AND ${e.target.value}`);}}
@@ -49,6 +51,7 @@ function DescriptionColumnHeader({areaProps}) {
             <div className={"title"}><span>Description</span></div>
             <div className={"filter"}>
                 <input
+                    className="uk-input uk-form-small"
                     type={"text"}
                     ref={filterInput}
                     onKeyPress={(e) => { if(e.key === 'Enter') areaProps.addFilter("description", "LIKE", `%${e.target.value}%`);}}
@@ -90,7 +93,7 @@ function StatusColumnHeader({areaProps})
         <div className="header status-header">
             <div className={"title"}><span>Status</span></div>
             <div className={"filter"}>
-                <select ref={filterInput} onChange={(e)=> {
+                <select className="uk-select uk-form-small" ref={filterInput} onChange={(e)=> {
                     areaProps.addFilter("status", "Equal", e.target.value);
                 }}>
                     <option value={1}>Enabled</option>
