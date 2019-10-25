@@ -1,8 +1,7 @@
 import Area from "../../../../../../../js/production/area.js";
 import A from "../../../../../../../js/production/a.js";
-import {REQUEST_END} from "../../../../../../../js/production/event-types.js";
 
-function IdColumn({areaProps}) {
+function IdColumnHeader({areaProps}) {
     const filterFrom = React.useRef(null);
     const filterTo = React.useRef(null);
 
@@ -10,17 +9,19 @@ function IdColumn({areaProps}) {
         areaProps.addField("cms_widget_id");
     }, []);
 
-    return <div className={"column"}>
+    return <td>
         <div className="header id-header">
             <div className={"title"}><span>ID</span></div>
             <div className={"filter"}>
                 <input
+                    className="uk-select uk-form-small"
                     type={"text"}
                     ref={filterFrom}
                     onKeyPress={(e) => { if(e.key === 'Enter') areaProps.addFilter("id", "BETWEEN", `${e.target.value} AND ${filterTo.current.value}`);}}
                     placeholder={"From"}
                 />
                 <input
+                    className="uk-select uk-form-small"
                     type={"text"}
                     ref={filterTo}
                     onKeyPress={(e) => { if(e.key === 'Enter') areaProps.addFilter("id", "BETWEEN", `${filterFrom.current.value} AND ${e.target.value}`);}}
@@ -28,24 +29,26 @@ function IdColumn({areaProps}) {
                 />
             </div>
         </div>
-        {areaProps.rows.map((r, i) => {
-            return <div className={"row"} key={i}><span>{r.widget_id}</span></div>;
-        })}
-    </div>
+    </td>
 }
 
-function NameColumn({areaProps}) {
+function IdColumnRow({row}) {
+    return <td><span>{row.cms_widget_id}</span></td>;
+}
+
+function NameColumnHeader({areaProps}) {
     const filterInput = React.useRef(null);
 
     React.useEffect(() => {
         areaProps.addField('name');
     }, []);
 
-    return <div className={"column"}>
+    return <td>
         <div className="header name-header">
             <div className={"title"}><span>Widget name</span></div>
             <div className={"filter"}>
                 <input
+                    className="uk-select uk-form-small"
                     type={"text"}
                     ref={filterInput}
                     onKeyPress={(e) => { if(e.key === 'Enter') areaProps.addFilter("name", "LIKE", `%${e.target.value}%`);}}
@@ -53,40 +56,14 @@ function NameColumn({areaProps}) {
                 />
             </div>
         </div>
-        {areaProps.rows.map((r, i) => {
-            return <div className={"row"} key={i}><span>{_.get(r, 'name' , '')}</span></div>;
-        })}
-    </div>
+    </td>
 }
 
-function GeneralColumn({index, title, areaProps}) {
-    React.useEffect(() => {
-        areaProps.addField(index);
-    }, []);
-    return <div className={"column"}>
-        <div className="header">
-            <div className={"title"}><span>{title}</span></div>
-        </div>
-        {areaProps.rows.map((r, i) => {
-            return <div className={"row"} key={i}><span>{_.get(r, index , '')}</span></div>;
-        })}
-    </div>
-}
-function ActionColumn({areaProps}) {
-    React.useEffect(() => {
-        areaProps.addField('editUrl');
-    }, []);
-    return <div className={"column"}>
-        <div className="header">
-            <div className={"title"}><span>Action</span></div>
-        </div>
-        {areaProps.rows.map((r, i) => {
-            return <div className={"row"} key={i}><A url={_.get(r, 'editUrl' , '')} text={"Edit"}/></div>;
-        })}
-    </div>
+function NameColumnRow({row}) {
+    return <td><span>{_.get(row, 'name' , '')}</span></td>;
 }
 
-function StatusColumn({areaProps})
+function StatusColumnHeader({areaProps})
 {
     const filterInput = React.useRef(null);
 
@@ -94,38 +71,46 @@ function StatusColumn({areaProps})
         areaProps.addField("status");
     }, []);
 
-    return <div className={"column"}>
+    return <td>
         <div className="header status-header">
             <div className={"title"}><span>Status</span></div>
             <div className={"filter"}>
-                <input type={"text"} ref={filterInput} onKeyPress={(e) => {
-                    if(e.key === 'Enter') areaProps.addFilter("status", "Equal", e.target.value);
-                }
-                }/>
+                <select className="uk-select uk-form-small" ref={filterInput} onChange={(e)=> {
+                    areaProps.addFilter("status", "Equal", e.target.value);
+                }}>
+                    <option value={1}>Enabled</option>
+                    <option value={0}>Disabled</option>
+                </select>
             </div>
         </div>
-        {areaProps.rows.map((r, i) => {
-            if(parseInt(_.get(r, "status")) === 1)
-                return <div key={i} className={"row"}><span className="uk-label uk-label-success">Enable</span></div>;
-            else
-                return <div key={i} className={"row"}><span className="uk-label uk-label-danger">Disabled</span></div>;
-        })}
-    </div>
+    </td>
+}
+
+function StatusColumnRow({row}) {
+    if(parseInt(_.get(row, "status")) === 1)
+        return <td><span className="uk-label uk-label-success">Enable</span></td>;
+    else
+        return <td><span className="uk-label uk-label-danger">Disabled</span></td>;
+}
+
+function ActionColumnHeader({areaProps}) {
+    React.useEffect(() => {
+        areaProps.addField('editUrl');
+    }, []);
+
+    return <td>
+        <div className="header">
+            <div className={"title"}><span>Action</span></div>
+        </div>
+    </td>
+}
+
+function ActionColumnRow({row}) {
+    return <td><A url={_.get(row, 'editUrl' , '')} text={"Edit"}/></td>;
 }
 
 function WidgetGrid({apiUrl, defaultFilter})
 {
-    // React.useEffect(() => {
-    //     let token = PubSub.subscribe(REQUEST_END, function(message, data) {
-    //         if(_.get(data, 'payload.data.createWidget.status') === true)
-    //             applyFilter();
-    //     });
-    //
-    //     return function cleanup() {
-    //         PubSub.unsubscribe(token);
-    //     };
-    // }, []);
-
     const [widgets, setWidgets] = React.useState([]);
     const [filters, setFilters] = React.useState(() => {
         if(defaultFilter !== undefined)
@@ -209,45 +194,86 @@ function WidgetGrid({apiUrl, defaultFilter})
         applyFilter();
     }, [fields, filters]);
 
-    return <div className={"grid widget-grid"}>
-        <Area
-            className={"uk-grid uk-grid-small"}
-            id={"widget-grid"}
-            rows={widgets}
-            addFilter={addFilter}
-            cleanFilter={cleanFilter}
-            addField={addField}
-            coreWidgets={[
-                {
-                    component: IdColumn,
-                    props : {
+    return <div className={"uk-overflow-auto"}>
+        <table className="uk-table uk-table-small">
+            <thead>
+            <Area
+                className={""}
+                id={"widget_grid_header"}
+                addFilter={addFilter}
+                cleanFilter={cleanFilter}
+                addField={addField}
+                applyFilter={applyFilter}
+                reactcomponent={"tr"}
+                coreWidgets={[
+                    {
+                        component: IdColumnHeader,
+                        props : {addFilter, cleanFilter, addField, applyFilter},
+                        sort_order: 10,
+                        id: "id"
                     },
-                    sort_order: 10,
-                    id: "id"
-                },
-                {
-                    component: NameColumn,
-                    props : {
+                    {
+                        component: NameColumnHeader,
+                        props : {},
+                        sort_order: 20,
+                        id: "name"
                     },
-                    sort_order: 30,
-                    id: "name"
-                },
-                {
-                    component: StatusColumn,
-                    props : {
+                    {
+                        component: StatusColumnHeader,
+                        props : {},
+                        sort_order: 30,
+                        id: "status"
                     },
-                    sort_order: 40,
-                    id: "status"
-                },
-                {
-                    component: ActionColumn,
-                    props : {
-                    },
-                    sort_order: 50,
-                    id: "editColumn"
-                }
-            ]}
-        />
+                    {
+                        component: ActionColumnHeader,
+                        props : {},
+                        sort_order: 40,
+                        id: "action"
+                    }
+                ]}
+            />
+            </thead>
+            <tbody>
+            {widgets.map((p, i)=> {
+                return <Area
+                    key={i}
+                    className={""}
+                    id={"widget_grid_row"}
+                    row={p}
+                    reactcomponent={"tr"}
+                    coreWidgets={[
+                        {
+                            component: IdColumnRow,
+                            props : {row: p},
+                            sort_order: 10,
+                            id: "id"
+                        },
+                        {
+                            component: NameColumnRow,
+                            props : {row: p},
+                            sort_order: 20,
+                            id: "name"
+                        },
+                        {
+                            component: StatusColumnRow,
+                            props : {row: p},
+                            sort_order: 30,
+                            id: "status"
+                        },
+                        {
+                            component: ActionColumnRow,
+                            props : {row: p},
+                            sort_order: 50,
+                            id: "action"
+                        }
+                    ]}
+                />
+            })}
+            </tbody>
+        </table>
+        {widgets.length === 0 &&
+        <div>There is no widget to display</div>
+        }
     </div>
 }
 
