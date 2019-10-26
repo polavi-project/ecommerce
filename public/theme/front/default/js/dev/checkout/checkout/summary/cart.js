@@ -1,39 +1,60 @@
 import Area from "../../../../../../../../js/production/area.js";
 
 function Subtotal({subTotal}) {
+    const currency = ReactRedux.useSelector(state => _.get(state, 'appState.currency', 'USD'));
+    const language = ReactRedux.useSelector(state => _.get(state, 'appState.language[0]', 'en'));
+    const _subTotal = new Intl.NumberFormat(language, { style: 'currency', currency: currency }).format(subTotal);
+
     return <tr>
         <td>Subtotal</td>
-        <td><span>{subTotal}</span></td>
+        <td><span>{_subTotal}</span></td>
     </tr>
 }
 
 function Discount({discountAmount}) {
     if(discountAmount === 0)
         return null;
+
+    const currency = ReactRedux.useSelector(state => _.get(state, 'appState.currency', 'USD'));
+    const language = ReactRedux.useSelector(state => _.get(state, 'appState.language[0]', 'en'));
+    const _discountAmount = new Intl.NumberFormat(language, { style: 'currency', currency: currency }).format(discountAmount);
+
     return <tr>
         <td>Discount</td>
-        <td><span>{discountAmount}</span></td>
+        <td><span>{_discountAmount}</span></td>
     </tr>
 }
 
 function ShippingFee({shippingFee}) {
+    const currency = ReactRedux.useSelector(state => _.get(state, 'appState.currency', 'USD'));
+    const language = ReactRedux.useSelector(state => _.get(state, 'appState.language[0]', 'en'));
+    const _shippingFee = new Intl.NumberFormat(language, { style: 'currency', currency: currency }).format(shippingFee);
+
     return <tr>
         <td>Shipping</td>
-        <td><span>{shippingFee === 0 && "Free"}{shippingFee !== 0 && shippingFee}</span></td>
+        <td><span>{shippingFee === 0 && "Free"}{shippingFee !== 0 && _shippingFee}</span></td>
     </tr>
 }
 
 function Tax({taxAmount}) {
+    const currency = ReactRedux.useSelector(state => _.get(state, 'appState.currency', 'USD'));
+    const language = ReactRedux.useSelector(state => _.get(state, 'appState.language[0]', 'en'));
+    const _taxAmount = new Intl.NumberFormat(language, { style: 'currency', currency: currency }).format(taxAmount);
+
     return <tr>
         <td>Tax</td>
-        <td><span>{taxAmount}</span></td>
+        <td><span>{_taxAmount}</span></td>
     </tr>
 }
 
 function GrandTotal({grandTotal}) {
+    const currency = ReactRedux.useSelector(state => _.get(state, 'appState.currency', 'USD'));
+    const language = ReactRedux.useSelector(state => _.get(state, 'appState.language[0]', 'en'));
+    const _grandTotal = new Intl.NumberFormat(language, { style: 'currency', currency: currency }).format(grandTotal);
+
     return <tr>
         <td>Grand total</td>
-        <td><span>{grandTotal}</span></td>
+        <td><span>{_grandTotal}</span></td>
     </tr>
 }
 
