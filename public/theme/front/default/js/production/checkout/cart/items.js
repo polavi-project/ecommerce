@@ -22,7 +22,11 @@ function Empty({ homeUrl }) {
 }
 
 function Items({ items }) {
-    if (items.length === 0) return React.createElement(Empty, { homeUrl: window.base_url });else return React.createElement(
+    const baseUrl = ReactRedux.useSelector(state => _.get(state, 'appState.base_url'));
+    const currency = ReactRedux.useSelector(state => _.get(state, 'appState.currency', 'USD'));
+    const language = ReactRedux.useSelector(state => _.get(state, 'appState.language[0]', 'en'));
+
+    if (items.length === 0) return React.createElement(Empty, { homeUrl: baseUrl });else return React.createElement(
         "div",
         { id: "shopping-cart-items", className: "uk-width-3-4" },
         React.createElement(
@@ -85,6 +89,8 @@ function Items({ items }) {
                 "tbody",
                 null,
                 items.map((item, index) => {
+                    const _finalPrice = new Intl.NumberFormat(language, { style: 'currency', currency: currency }).format(item.final_price);
+                    const _total = new Intl.NumberFormat(language, { style: 'currency', currency: currency }).format(item.total);
                     return React.createElement(
                         "tr",
                         { key: index },
@@ -110,7 +116,7 @@ function Items({ items }) {
                             React.createElement(
                                 "span",
                                 null,
-                                item.final_price
+                                _finalPrice
                             )
                         ),
                         React.createElement(
@@ -128,7 +134,7 @@ function Items({ items }) {
                             React.createElement(
                                 "span",
                                 null,
-                                item.total
+                                _total
                             )
                         ),
                         React.createElement(

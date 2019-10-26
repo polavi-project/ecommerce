@@ -10,8 +10,10 @@ namespace Similik\Services\Http;
 
 use function Similik\get_base_url;
 use function Similik\get_config;
+use function Similik\get_current_language_id;
 use Similik\Services\DataObject;
 use Similik\Services\Helmet;
+use Similik\Services\Locale\Language;
 use function Similik\the_container;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
