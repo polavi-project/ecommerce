@@ -1,76 +1,81 @@
 import A from "../../../../../../../../js/production/a.js";
 
 function Items() {
+    const currency = ReactRedux.useSelector(state => _.get(state, 'appState.currency', 'USD'));
+    const language = ReactRedux.useSelector(state => _.get(state, 'appState.language[0]', 'en'));
+
     const items = ReactRedux.useSelector(state => _.get(state, 'appState.cart.items', []));
     return React.createElement(
-        "div",
-        { id: "summary-items" },
+        'div',
+        { id: 'summary-items' },
         React.createElement(
-            "table",
-            { className: "uk-table uk-table-small" },
+            'table',
+            { className: 'uk-table uk-table-small' },
             React.createElement(
-                "thead",
+                'thead',
                 null,
                 React.createElement(
-                    "tr",
+                    'tr',
                     null,
                     React.createElement(
-                        "td",
+                        'td',
                         null,
                         React.createElement(
-                            "span",
+                            'span',
                             null,
-                            "Product"
+                            'Product'
                         )
                     ),
                     React.createElement(
-                        "td",
+                        'td',
                         null,
                         React.createElement(
-                            "span",
+                            'span',
                             null,
-                            "Quantity"
+                            'Quantity'
                         )
                     ),
                     React.createElement(
-                        "td",
+                        'td',
                         null,
                         React.createElement(
-                            "span",
+                            'span',
                             null,
-                            "Total"
+                            'Total'
                         )
                     )
                 )
             ),
             React.createElement(
-                "tbody",
+                'tbody',
                 null,
                 items.map((item, index) => {
+                    const _total = new Intl.NumberFormat(language, { style: 'currency', currency: currency }).format(item.total);
+
                     return React.createElement(
-                        "tr",
+                        'tr',
                         { key: index },
                         React.createElement(
-                            "td",
+                            'td',
                             null,
-                            React.createElement(A, { url: item.product_url, text: item.product_name, classes: "uk-link-muted" })
+                            React.createElement(A, { url: item.product_url, text: item.product_name, classes: 'uk-link-muted' })
                         ),
                         React.createElement(
-                            "td",
+                            'td',
                             null,
                             React.createElement(
-                                "span",
+                                'span',
                                 null,
                                 item.qty
                             )
                         ),
                         React.createElement(
-                            "td",
+                            'td',
                             null,
                             React.createElement(
-                                "span",
+                                'span',
                                 null,
-                                item.total
+                                _total
                             )
                         )
                     );
