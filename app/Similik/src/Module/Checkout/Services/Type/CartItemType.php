@@ -12,7 +12,9 @@ namespace Similik\Module\Checkout\Services\Type;
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
+use function Similik\_mysql;
 use function Similik\dispatch_event;
+use function Similik\get_default_language_Id;
 use Similik\Module\Catalog\Services\Type\Price;
 use Similik\Services\Di\Container;
 use Similik\Services\Routing\Router;
@@ -76,6 +78,14 @@ class CartItemType extends ObjectType
                     'productUrl' => [
                         'type' => Type::nonNull(Type::string()),
                         'resolve' => function($item, $args, Container $container, ResolveInfo $info) {
+                            $des = _mysql()->getTable('product_description')
+                                ->where('product_description_product_id', '=', $item['product_id'])
+                                ->andWhere('language_id', '=', get_default_language_Id())
+                                ->fetchOneAssoc();
+                            if(!preg_match('/^[\.a-zA-Z0-9\-_+]+$/', $des['seo_key']))
+                                return $container->get(Router::class)->generateUrl('product.view', ["id"=>$des['product_id']]);
+                            else
+                                return $container->get(Router::class)->generateUrl('product.view.pretty', ["slug"=>$des['seo_key']]);
                         }
                     ],
                     'error' => [

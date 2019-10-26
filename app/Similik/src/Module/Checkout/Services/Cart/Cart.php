@@ -116,7 +116,7 @@ class Cart
             ],
             'customer_group_id' => [
                 'resolver' => function(Cart $cart) {
-                    return $cart->request->getCustomer()->getData('group_id');
+                    return $cart->request->getCustomer()->getData('group_id') ?? 1;
                 },
                 'dependencies' => ['customer_id']
             ],

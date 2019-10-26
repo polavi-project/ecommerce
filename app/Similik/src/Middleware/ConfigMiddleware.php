@@ -33,8 +33,8 @@ EOT;
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
         if(!file_exists(CACHE_PATH . DS . 'config_cache.php')) {
-            $setting_table = new Table('setting', $this->getContainer()->get(Processor::class));
-            while ($row = $setting_table->fetch(['sort_by'=> 'language_id'])) {
+            $settingTable = new Table('setting', $this->getContainer()->get(Processor::class));
+            while ($row = $settingTable->fetch(['sort_by'=> 'language_id'])) {
                 if($row['json'] == 1)
                     $configuration[$row['language_id']][$row['name']] = json_decode($row['value'], true);
                 else

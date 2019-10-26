@@ -42,7 +42,7 @@ class PriceHelper
         else {
             $tmpPrice = $regularPrice;
             foreach ($tierPrice as $price)
-                if($qty > $price['qty']) {
+                if($qty >= $price['qty']) {
                     $tmpPrice = $price['price'];
                 }
             return $tmpPrice;

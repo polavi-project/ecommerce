@@ -122,7 +122,7 @@ $eventDispatcher->addListener(
                         ->andWhere('active_to', 'IS', null, '(')
                         ->orWhere('active_to', '>', date("Y-m-d H:i:s"), null, '))');
 
-                    $customerGroupId = $container->get(Request::class)->getCustomer() ? $container->get(Request::class)->getCustomer()->getData('group_id') ?? 3 : 3;
+                    $customerGroupId = $container->get(Request::class)->getCustomer() ? $container->get(Request::class)->getCustomer()->getData('group_id') ?? 1 : 1;
                     $query->andWhere('customer_group_id', '=', $customerGroupId);
                 }
 
