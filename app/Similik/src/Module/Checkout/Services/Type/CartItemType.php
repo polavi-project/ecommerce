@@ -88,6 +88,11 @@ class CartItemType extends ObjectType
                                 return $container->get(Router::class)->generateUrl('product.view.pretty', ["slug"=>$des['seo_key']]);
                         }
                     ],
+                    'removeUrl' => [
+                        'type' => Type::nonNull(Type::string()),
+                        'resolve' => function($item, $args, Container $container, ResolveInfo $info) {
+                            return $container->get(Router::class)->generateUrl('cart.remove', ["id"=>$item['cart_item_id']]);                        }
+                    ],
                     'error' => [
                         'type' => Type::string()
                     ]

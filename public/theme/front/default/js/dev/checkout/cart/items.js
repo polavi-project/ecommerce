@@ -48,7 +48,7 @@ function Items({items}) {
                             <td><span>{_finalPrice}</span></td>
                             <td><span>{item.qty}</span></td>
                             <td><span>{_total}</span></td>
-                            <td><A url={window.base_url  + "/cart/remove/" + item.cart_item_id} text=""><span uk-icon="close"></span></A></td>
+                            <td><A url={item.removeUrl} text=""><span uk-icon="close"></span></A></td>
                         </tr>
                     })
                 }

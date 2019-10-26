@@ -142,7 +142,7 @@ function Items({ items }) {
                             null,
                             React.createElement(
                                 A,
-                                { url: window.base_url + "/cart/remove/" + item.cart_item_id, text: "" },
+                                { url: item.removeUrl, text: "" },
                                 React.createElement("span", { "uk-icon": "close" })
                             )
                         )
