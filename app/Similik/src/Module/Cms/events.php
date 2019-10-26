@@ -293,7 +293,7 @@ $eventDispatcher->addListener(
             '',
             'copy',
             null,
-            50
+            20
         )->addItem(
             'page.grid',
             'All pages',
