@@ -40,7 +40,7 @@ function Rates(props) {
 
 
     return <div className="uk-overflow-auto">
-        <div><span>Tax rates</span></div>
+        <div><strong>Tax rates</strong></div>
         <table className="uk-table uk-table-divider uk-table-striped uk-table-small uk-table-justify">
             <thead>
             <tr>
@@ -105,7 +105,7 @@ function Rates(props) {
                         <Text name={'tax_rate[' + index + '][priority]'} value={rate.priority}/>
                     </td>
                     <td>
-                        <a onClick={() => removeRate(index)}><span>Remove rate</span></a>
+                        <a onClick={() => removeRate(index)}><span>Remove</span></a>
                     </td>
                 </tr>;
             })}
@@ -166,7 +166,9 @@ export default function Taxes({classes, saveAction}) {
         const newTaxes = taxes.filter((_, index) => index !== key);
         setTaxes(newTaxes);
     };
+
     return <div>
+        <div><strong>Tax class</strong></div>
         <ul uk-accordion="multiple: true">
             {taxes.map((t, i) => {
                     return <TaxClass key={i} action={saveAction} {...t}/>
