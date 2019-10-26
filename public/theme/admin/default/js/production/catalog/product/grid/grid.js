@@ -62,6 +62,7 @@ function IdColumnRow({ row }) {
         row.product_id
     );
 }
+
 function PriceColumnHeader({ areaProps }) {
     const filterFrom = React.useRef(null);
     const filterTo = React.useRef(null);
@@ -117,6 +118,7 @@ function PriceColumnHeader({ areaProps }) {
         )
     );
 }
+
 function PriceColumnRow({ row }) {
     return React.createElement(
         "td",
@@ -124,6 +126,7 @@ function PriceColumnRow({ row }) {
         row.price
     );
 }
+
 function NameColumnHeader({ areaProps }) {
     const filterInput = React.useRef(null);
 
@@ -161,6 +164,7 @@ function NameColumnHeader({ areaProps }) {
         )
     );
 }
+
 function NameColumnRow({ row }) {
     return React.createElement(
         "td",
@@ -168,6 +172,7 @@ function NameColumnRow({ row }) {
         row.name
     );
 }
+
 function QtyColumnHeader({ areaProps }) {
     const filterFrom = React.useRef(null);
     const filterTo = React.useRef(null);
@@ -222,6 +227,7 @@ function QtyColumnHeader({ areaProps }) {
         )
     );
 }
+
 function QtyColumnRow({ row }) {
     return React.createElement(
         "td",
@@ -229,6 +235,7 @@ function QtyColumnRow({ row }) {
         row.qty
     );
 }
+
 function ThumbColumnHeader({ areaProps }) {
     React.useEffect(() => {
         areaProps.addField("image { thumb }");
@@ -251,6 +258,7 @@ function ThumbColumnHeader({ areaProps }) {
         )
     );
 }
+
 function ThumbColumnRow({ row }) {
     if (_.get(row, "image.thumb")) return React.createElement(
         "td",
@@ -262,6 +270,7 @@ function ThumbColumnRow({ row }) {
         React.createElement("span", { "uk-icon": "icon: image; ratio: 3" })
     );
 }
+
 function StatusColumnHeader({ areaProps }) {
     const filterInput = React.useRef(null);
 
@@ -307,6 +316,7 @@ function StatusColumnHeader({ areaProps }) {
         )
     );
 }
+
 function StatusColumnRow({ row }) {
     if (parseInt(_.get(row, "status")) === 1) return React.createElement(
         "td",
@@ -326,6 +336,7 @@ function StatusColumnRow({ row }) {
         )
     );
 }
+
 export default function ProductGrid({ apiUrl, defaultFilter }) {
     const [products, setProducts] = React.useState([]);
     const [filters, setFilters] = React.useState(() => {

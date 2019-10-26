@@ -36,6 +36,7 @@ function IdColumnHeader({areaProps}) {
 function IdColumnRow({row}) {
     return <td>{row.product_id}</td>
 }
+
 function PriceColumnHeader({areaProps}) {
     const filterFrom = React.useRef(null);
     const filterTo = React.useRef(null);
@@ -69,9 +70,11 @@ function PriceColumnHeader({areaProps}) {
         </div>
     </td>
 }
+
 function PriceColumnRow({row}) {
     return <td>{row.price}</td>
 }
+
 function NameColumnHeader({areaProps}) {
     const filterInput = React.useRef(null);
 
@@ -93,9 +96,11 @@ function NameColumnHeader({areaProps}) {
         </div>
     </td>
 }
+
 function NameColumnRow({row}) {
     return <td>{row.name}</td>
 }
+
 function QtyColumnHeader({areaProps}) {
     const filterFrom = React.useRef(null);
     const filterTo = React.useRef(null);
@@ -128,9 +133,11 @@ function QtyColumnHeader({areaProps}) {
         </div>
     </td>
 }
+
 function QtyColumnRow({row}) {
     return <td>{row.qty}</td>
 }
+
 function ThumbColumnHeader({areaProps})
 {
     React.useEffect(() => {
@@ -142,12 +149,14 @@ function ThumbColumnHeader({areaProps})
         </div>
     </td>
 }
+
 function ThumbColumnRow({row}) {
     if(_.get(row, "image.thumb"))
         return <td><img className={'product-thumbnail'} src={row.image.thumb}/></td>;
     else
         return <td><span uk-icon="icon: image; ratio: 3"></span></td>;
 }
+
 function StatusColumnHeader({areaProps})
 {
     const filterInput = React.useRef(null);
@@ -170,12 +179,14 @@ function StatusColumnHeader({areaProps})
         </div>
     </td>
 }
+
 function StatusColumnRow({row}) {
     if(parseInt(_.get(row, "status")) === 1)
         return <td><span className="uk-label uk-label-success">Enable</span></td>;
     else
         return <td><span className="uk-label uk-label-danger">Disabled</span></td>;
 }
+
 export default function ProductGrid({apiUrl, defaultFilter})
 {
     const [products, setProducts] = React.useState([]);
