@@ -60,9 +60,9 @@ export default function FlatRateSettingForm(props) {
                         id: "shipment_flat_rate_name"
                     }, {
                         component: Text,
-                        props: { id: 'shipment_flat_rate_cost', value: _.get(props, 'shipment_flat_rate_fee', ''), formId: "flat_rate-setting-form", name: "shipment_flat_rate_fee", label: "Shipping cost", validation_rules: ["notEmpty"] },
+                        props: { id: 'shipment_flat_rate_fee', value: _.get(props, 'shipment_flat_rate_fee', ''), formId: "flat_rate-setting-form", name: "shipment_flat_rate_fee", label: "Shipping fee", validation_rules: ["notEmpty"] },
                         sort_order: 20,
-                        id: "shipment_flat_rate_cost"
+                        id: "shipment_flat_rate_fee"
                     }, {
                         component: Select,
                         props: { id: 'shipment_flat_rate_status', value: _.get(props, 'shipment_flat_rate_status', ''), formId: "flat_rate-setting-form", name: "shipment_flat_rate_status", label: "Status", options: [{ value: 0, text: 'Disabled' }, { value: 1, text: 'Enabled' }], isTranslateAble: false },

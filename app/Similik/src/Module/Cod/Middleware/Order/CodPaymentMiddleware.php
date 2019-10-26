@@ -28,18 +28,9 @@ class CodPaymentMiddleware extends MiddlewareAbstract
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
         $response->addWidget(
-            'cod_payment_name',
-            'order_payment_block_info',
-            11,
-            get_js_file_url("production/cod/order/cod_name.js", true),
-            [
-            ]
-        );
-
-        $response->addWidget(
             'cod_payment_action',
             'order_payment_block_info',
-            12,
+            30,
             get_js_file_url("production/cod/order/cod_action.js", true),
             [
                 'payOfflineUrl' => generate_url('order.offline.pay', ['id'=>$request->attributes->get('id')]),

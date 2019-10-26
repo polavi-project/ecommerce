@@ -14,7 +14,7 @@ $router->addAdminRoute('product.grid', 'GET', '/products', [
     \Similik\Module\Catalog\Middleware\Product\Grid\ActionColumn::class,
 ]);
 
-$ProductEditMiddleware = [
+$productEditMiddleware = [
     \Similik\Module\Catalog\Middleware\Product\Edit\InitMiddleware::class,
     \Similik\Module\Catalog\Middleware\Product\Edit\FormMiddleware::class,
     \Similik\Module\Catalog\Middleware\Product\Edit\GeneralInfoMiddleware::class,
@@ -25,9 +25,9 @@ $ProductEditMiddleware = [
     \Similik\Module\Catalog\Middleware\Product\Edit\AttributeMiddleware::class,
     \Similik\Module\Catalog\Middleware\Product\Edit\CustomOptionMiddleware::class,
 ];
-$router->addAdminRoute('product.create', 'GET', '/product/create', $ProductEditMiddleware);
+$router->addAdminRoute('product.create', 'GET', '/product/create', $productEditMiddleware);
 
-$router->addAdminRoute('product.edit', 'GET', '/product/edit/{id:\d+}', $ProductEditMiddleware);
+$router->addAdminRoute('product.edit', 'GET', '/product/edit/{id:\d+}', $productEditMiddleware);
 
 $router->addAdminRoute('product.save', 'POST', '/product/save[/{id:\d+}]', [
     \Similik\Module\Catalog\Middleware\Product\Save\ValidateMiddleware::class,
@@ -69,6 +69,59 @@ $router->addAdminRoute('category.delete', 'GET', '/category/delete/{id:\d+}', [
 //    \Similik\Module\Catalog\Middleware\Category\Save\UpdateMiddleware::class,
 //    \Similik\Module\Catalog\Middleware\Category\Save\CreateMiddleware::class
 ]);
+
+//////////////// ATTRIBUTE ////////////////////
+
+$router->addAdminRoute('attribute.grid', 'GET', '/attributes', [
+    \Similik\Module\Catalog\Middleware\Attribute\Grid\GridMiddleware::class,
+    \Similik\Module\Catalog\Middleware\Attribute\Grid\AddNewButtonMiddleware::class,
+]);
+
+$attributeEditMiddleware = [
+    \Similik\Module\Catalog\Middleware\Attribute\Edit\InitMiddleware::class,
+    \Similik\Module\Catalog\Middleware\Attribute\Edit\EditFormMiddleware::class
+];
+$router->addAdminRoute('attribute.create', 'GET', '/attribute/create', $attributeEditMiddleware);
+
+$router->addAdminRoute('attribute.edit', 'GET', '/attribute/edit/{id:\d+}', $attributeEditMiddleware);
+
+$router->addAdminRoute('attribute.save', 'POST', '/attribute/save[/{id:\d+}]', [
+    \Similik\Module\Catalog\Middleware\Attribute\Save\UpdateMiddleware::class,
+    \Similik\Module\Catalog\Middleware\Attribute\Save\CreateMiddleware::class
+]);
+
+$router->addAdminRoute('attribute.delete', 'GET', '/attribute/delete/{id:\d+}', [
+//    \Similik\Module\Catalog\Middleware\Category\Save\ValidateMiddleware::class,
+//    \Similik\Module\Catalog\Middleware\Category\Save\UpdateMiddleware::class,
+//    \Similik\Module\Catalog\Middleware\Category\Save\CreateMiddleware::class
+]);
+
+//////////////// ATTRIBUTE GROUP ////////////////////
+
+$router->addAdminRoute('attribute.group.grid', 'GET', '/attribute/groups', [
+    \Similik\Module\Catalog\Middleware\AttributeGroup\Grid\GridMiddleware::class,
+    \Similik\Module\Catalog\Middleware\AttributeGroup\Grid\AddNewButtonMiddleware::class,
+]);
+
+$attributeGroupEditMiddleware = [
+    \Similik\Module\Catalog\Middleware\AttributeGroup\Edit\InitMiddleware::class,
+    \Similik\Module\Catalog\Middleware\AttributeGroup\Edit\EditFormMiddleware::class
+];
+$router->addAdminRoute('attribute.group.create', 'GET', '/attribute/group/create', $attributeGroupEditMiddleware);
+
+$router->addAdminRoute('attribute.group.edit', 'GET', '/attribute/group/edit/{id:\d+}', $attributeGroupEditMiddleware);
+
+$router->addAdminRoute('attribute.group.save', 'POST', '/attribute/group/save[/{id:\d+}]', [
+    \Similik\Module\Catalog\Middleware\AttributeGroup\Save\UpdateMiddleware::class,
+    \Similik\Module\Catalog\Middleware\AttributeGroup\Save\CreateMiddleware::class
+]);
+
+$router->addAdminRoute('attribute.group.delete', 'GET', '/attribute/group/delete/{id:\d+}', [
+//    \Similik\Module\Catalog\Middleware\AttributeGroup\Save\ValidateMiddleware::class,
+//    \Similik\Module\Catalog\Middleware\AttributeGroup\Save\UpdateMiddleware::class,
+//    \Similik\Module\Catalog\Middleware\AttributeGroup\Save\CreateMiddleware::class
+]);
+
 
 ////////////////////////////////////////////
 ///            SITE ROUTERS           //////

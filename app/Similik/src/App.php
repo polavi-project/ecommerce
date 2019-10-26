@@ -10,12 +10,14 @@ namespace Similik;
 
 use GraphQL\Executor\ExecutionResult;
 use GuzzleHttp\Promise\Promise;
+use function GuzzleHttp\Promise\settle;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Similik\Middleware\AdminNavigationMiddleware;
 use Similik\Middleware\CartInitMiddleware;
 use Similik\Middleware\FrontNavigationMiddleware;
 use Similik\Middleware\GraphQLExecuteMiddleware;
+use Similik\Middleware\PromiseWaiterMiddleware;
 use Similik\Middleware\SaveCartMiddleware;
 use Similik\Module\Graphql\Services\ExecutionPromise;
 use Similik\Services\Db\Processor;
@@ -36,6 +38,7 @@ use Similik\Middleware\FrontLayoutMiddleware;
 use Similik\Middleware\AlertMiddleware;
 use Similik\Middleware\ResponseMiddleware;
 use Similik\Services\MiddlewareManager;
+use Similik\Services\PromiseWaiter;
 use Similik\Services\Routing\RouteParser;
 use Similik\Services\Routing\Router;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -98,6 +101,17 @@ class App
             return $promise;
         };
 
+        the_container()[PromiseWaiter::class] = function($c) {
+            $promise = new PromiseWaiter(function() use(&$promise) {
+                $p = settle($promise->getPromises());
+                $p->wait();
+                $p->then(function($result) use (&$promise) {
+                    $promise->resolve($result);
+                });
+            });
+
+            return $promise;
+        };
         // Log
         the_container()[Logger::class] = function($c) {
             $logger = new Logger('logger');
@@ -167,7 +181,7 @@ class App
             40 => HandlerMiddleware::class,
             60 => InitHtmlMiddleware::class,
             70 => SaveCartMiddleware::class,
-            80 => GraphQLExecuteMiddleware::class,
+            80 => PromiseWaiterMiddleware::class,
             90 => AdminLayoutMiddleware::class,
             100 => FrontLayoutMiddleware::class,
             110 => AdminNavigationMiddleware::class,

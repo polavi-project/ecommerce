@@ -1,18 +1,40 @@
 import A from "../../../../../../../js/production/a.js";
+import { Fetch } from "../../../../../../../js/production/fetch.js";
 
 export default function CodAction({ areaProps, payOfflineUrl, refundOfflineUrl }) {
+    const payOffline = e => {
+        e.preventDefault();
+        Fetch(payOfflineUrl, false, 'GET', {}, null, response => {
+            location.reload();
+        });
+    };
+
+    const refundOffline = e => {
+        e.preventDefault();
+        Fetch(refundOfflineUrl, false, 'GET', {}, null, response => {
+            location.reload();
+        });
+    };
     return React.createElement(
-        'td',
+        "td",
         null,
-        _.get(areaProps, 'payment_status') == 'pending' && React.createElement(
-            A,
-            { url: payOfflineUrl, pushState: false },
-            'Pay Offline'
+        _.get(areaProps, 'status') == 'pending' && React.createElement(
+            "a",
+            { href: "#", onClick: e => payOffline(e) },
+            React.createElement(
+                "span",
+                null,
+                "Pay Offline"
+            )
         ),
-        _.get(areaProps, 'payment_status') == 'paid' && React.createElement(
-            A,
-            { url: refundOfflineUrl, pushState: false },
-            'Refund Offline'
+        _.get(areaProps, 'status') == 'paid' && React.createElement(
+            "a",
+            { href: "#", onClick: e => refundOffline(e) },
+            React.createElement(
+                "span",
+                null,
+                "Refund Offline"
+            )
         )
     );
 }

@@ -1,8 +1,7 @@
 import Area from "../../../../../../../../js/production/area.js";
-import Text from "../../../../../../../../js/production/form/fields/text.js";
 import A from "../../../../../../../../js/production/a.js";
 
-function IdColumn({areaProps}) {
+function IdColumnHeader({areaProps}) {
     const filterFrom = React.useRef(null);
     const filterTo = React.useRef(null);
 
@@ -10,17 +9,19 @@ function IdColumn({areaProps}) {
         areaProps.addField("cms_page_id");
     }, []);
 
-    return <div className={"column"}>
+    return <td>
         <div className="header id-header">
             <div className={"title"}><span>ID</span></div>
             <div className={"filter"}>
                 <input
+                    className="uk-select uk-form-small"
                     type={"text"}
                     ref={filterFrom}
                     onKeyPress={(e) => { if(e.key === 'Enter') areaProps.addFilter("id", "BETWEEN", `${e.target.value} AND ${filterTo.current.value}`);}}
                     placeholder={"From"}
                 />
                 <input
+                    className="uk-select uk-form-small"
                     type={"text"}
                     ref={filterTo}
                     onKeyPress={(e) => { if(e.key === 'Enter') areaProps.addFilter("id", "BETWEEN", `${filterFrom.current.value} AND ${e.target.value}`);}}
@@ -28,24 +29,26 @@ function IdColumn({areaProps}) {
                 />
             </div>
         </div>
-        {areaProps.rows.map((r, i) => {
-            return <div className={"row"} key={i}><span>{r.cms_page_id}</span></div>;
-        })}
-    </div>
+    </td>
 }
 
-function NameColumn({areaProps}) {
+function IdColumnRow({row}) {
+    return <td><span>{row.cms_page_id}</span></td>;
+}
+
+function NameColumnHeader({areaProps}) {
     const filterInput = React.useRef(null);
 
     React.useEffect(() => {
         areaProps.addField('name');
     }, []);
 
-    return <div className={"column"}>
+    return <td>
         <div className="header name-header">
             <div className={"title"}><span>Page name</span></div>
             <div className={"filter"}>
                 <input
+                    className="uk-select uk-form-small"
                     type={"text"}
                     ref={filterInput}
                     onKeyPress={(e) => { if(e.key === 'Enter') areaProps.addFilter("name", "LIKE", `%${e.target.value}%`);}}
@@ -53,40 +56,29 @@ function NameColumn({areaProps}) {
                 />
             </div>
         </div>
-        {areaProps.rows.map((r, i) => {
-            return <div className={"row"} key={i}><span>{_.get(r, 'name' , '')}</span></div>;
-        })}
-    </div>
+    </td>
 }
 
-function GeneralColumn({index, title, areaProps}) {
-    React.useEffect(() => {
-        areaProps.addField(index);
-    }, []);
-    return <div className={"column"}>
-        <div className="header">
-            <div className={"title"}><span>{title}</span></div>
-        </div>
-        {areaProps.rows.map((r, i) => {
-            return <div className={"row"} key={i}><span>{_.get(r, index , '')}</span></div>;
-        })}
-    </div>
+function NameColumnRow({row}) {
+    return <td><span>{_.get(row, 'name' , '')}</span></td>;
 }
-function ActionColumn({areaProps}) {
+
+function ActionColumnHeader({areaProps}) {
     React.useEffect(() => {
         areaProps.addField('editUrl');
     }, []);
-    return <div className={"column"}>
+    return <td>
         <div className="header">
             <div className={"title"}><span>Action</span></div>
         </div>
-        {areaProps.rows.map((r, i) => {
-            return <div className={"row"} key={i}><A url={_.get(r, 'editUrl' , '')} text={"Edit"}/></div>;
-        })}
-    </div>
+    </td>
 }
 
-function StatusColumn({areaProps})
+function ActionColumnRow({row}) {
+    return <td><A url={_.get(row, 'editUrl' , '')} text={"Edit"}/></td>;
+}
+
+function StatusColumnHeader({areaProps})
 {
     const filterInput = React.useRef(null);
 
@@ -94,23 +86,26 @@ function StatusColumn({areaProps})
         areaProps.addField("status");
     }, []);
 
-    return <div className={"column"}>
+    return <td>
         <div className="header status-header">
             <div className={"title"}><span>Status</span></div>
             <div className={"filter"}>
-                <input type={"text"} ref={filterInput} onKeyPress={(e) => {
-                    if(e.key === 'Enter') areaProps.addFilter("status", "Equal", e.target.value);
-                }
-                }/>
+                <select className="uk-select uk-form-small" ref={filterInput} onChange={(e)=> {
+                    areaProps.addFilter("status", "Equal", e.target.value);
+                }}>
+                    <option value={1}>Enabled</option>
+                    <option value={0}>Disabled</option>
+                </select>
             </div>
         </div>
-        {areaProps.rows.map((r, i) => {
-            if(parseInt(_.get(r, "status")) === 1)
-                return <div key={i} className={"row"}><span className="uk-label uk-label-success">Enable</span></div>;
-            else
-                return <div key={i} className={"row"}><span className="uk-label uk-label-danger">Disabled</span></div>;
-        })}
-    </div>
+    </td>
+}
+
+function StatusColumnRow({row}) {
+    if(parseInt(_.get(row, "status")) === 1)
+        return <td><span className="uk-label uk-label-success">Enable</span></td>;
+    else
+        return <td><span className="uk-label uk-label-danger">Disabled</span></td>;
 }
 
 export default function CmsPageGrid({apiUrl})
@@ -193,44 +188,85 @@ export default function CmsPageGrid({apiUrl})
         applyFilter();
     }, [fields, filters]);
 
-    return <div className={"grid cms_page-grid"}>
+    return <div className={"uk-overflow-auto"}>
+        <table className="uk-table uk-table-small">
+            <thead>
             <Area
-                className={"uk-grid uk-grid-small"}
-                id={"cms_page-grid"}
-                rows={pages}
+                className={""}
+                id={"page_grid_header"}
                 addFilter={addFilter}
                 cleanFilter={cleanFilter}
                 addField={addField}
+                applyFilter={applyFilter}
+                reactcomponent={"tr"}
                 coreWidgets={[
                     {
-                        component: IdColumn,
-                        props : {
-                        },
+                        component: IdColumnHeader,
+                        props : {addFilter, cleanFilter, addField, applyFilter},
                         sort_order: 10,
                         id: "id"
                     },
                     {
-                        component: NameColumn,
-                        props : {
-                        },
-                        sort_order: 30,
+                        component: NameColumnHeader,
+                        props : {},
+                        sort_order: 20,
                         id: "name"
                     },
                     {
-                        component: StatusColumn,
-                        props : {
-                        },
-                        sort_order: 40,
+                        component: StatusColumnHeader,
+                        props : {},
+                        sort_order: 30,
                         id: "status"
                     },
                     {
-                        component: ActionColumn,
-                        props : {
-                        },
-                        sort_order: 50,
-                        id: "editColumn"
+                        component: ActionColumnHeader,
+                        props : {},
+                        sort_order: 40,
+                        id: "action"
                     }
                 ]}
             />
+            </thead>
+            <tbody>
+            {pages.map((p, i)=> {
+                return <Area
+                    key={i}
+                    className={""}
+                    id={"page_grid_row"}
+                    row={p}
+                    reactcomponent={"tr"}
+                    coreWidgets={[
+                        {
+                            component: IdColumnRow,
+                            props : {row: p},
+                            sort_order: 10,
+                            id: "id"
+                        },
+                        {
+                            component: NameColumnRow,
+                            props : {row: p},
+                            sort_order: 20,
+                            id: "name"
+                        },
+                        {
+                            component: StatusColumnRow,
+                            props : {row: p},
+                            sort_order: 30,
+                            id: "status"
+                        },
+                        {
+                            component: ActionColumnRow,
+                            props : {row: p},
+                            sort_order: 50,
+                            id: "action"
+                        }
+                    ]}
+                />
+            })}
+            </tbody>
+        </table>
+        {pages.length === 0 &&
+        <div>There is no page to display</div>
+        }
     </div>
 }

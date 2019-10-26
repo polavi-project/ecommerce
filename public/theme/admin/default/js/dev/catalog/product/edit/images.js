@@ -70,7 +70,7 @@ function Upload(props) {
     };
 
     return <div>
-        <h2><span uk-icon="image"></span> <span>Images</span></h2>
+        <div><span uk-icon="image"></span> <strong>Images</strong></div>
         <div className="js-upload uk-placeholder uk-text-center">
             {uploading && <div uk-spinner="ratio: 1"></div>}
             <span uk-icon="icon: cloud-upload"></span>
@@ -108,7 +108,7 @@ export default function ImageUploadContainer(props) {
         });
     };
 
-    return <div>
+    return <div className="product-edit-image">
         <Upload
             addImage={addImage}
         />

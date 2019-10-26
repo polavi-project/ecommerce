@@ -30,7 +30,7 @@ export default function AdvancedPrice(props) {
             "div",
             { className: "group-form-title" },
             React.createElement(
-                "span",
+                "strong",
                 null,
                 "Advance price"
             )

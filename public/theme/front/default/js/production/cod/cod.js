@@ -4,7 +4,6 @@ export default function Cod(props) {
     const cartTotal = ReactRedux.useSelector(state => _.get(state, 'appState.cart.subTotal', 0));
     const paymentMethod = ReactRedux.useSelector(state => _.get(state, 'appState.cart.paymentMethod'));
 
-    const [checked, setChecked] = React.useState(paymentMethod === 'cod');
     let status = parseInt(_.get(props, 'status'));
     let label = _.get(props, 'label');
     let min = parseFloat(_.get(props, 'minTotal'));
@@ -29,7 +28,7 @@ export default function Cod(props) {
                 value: "cod",
                 className: 'uk-radio',
                 onChange: e => onChange(e),
-                checked: checked
+                checked: paymentMethod === 'cod'
             }),
             label
         )

@@ -25,7 +25,7 @@ export default function AdvancedPrice(props) {
     };
     return (
         <div className="uk-overflow-auto">
-            <div className="group-form-title"><span>Advance price</span></div>
+            <div className="group-form-title"><strong>Advance price</strong></div>
             <table className="uk-table uk-table-divider uk-table-striped uk-table-small uk-table-justify">
                 <thead>
                 <tr>

@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace Similik\Module\Catalog\Middleware\Product\Edit;
 
-use function Similik\dispatch_event;
 use function Similik\get_default_language_Id;
 use function Similik\get_js_file_url;
 use Similik\Module\Graphql\Services\GraphqlExecutor;
@@ -78,7 +77,7 @@ class GeneralInfoMiddleware extends MiddlewareAbstract
                     if(isset($result->data['general_info'])) {
                         $response->addWidget(
                             'product_edit_general',
-                            'admin_product_edit_inner',
+                            'admin_product_edit_inner_left',
                             10,
                             get_js_file_url("production/catalog/product/edit/general.js", true),
                             ["id"=>"product_edit_general", "data" => $result->data['general_info']]
@@ -88,7 +87,7 @@ class GeneralInfoMiddleware extends MiddlewareAbstract
         else
             $response->addWidget(
                 'product_edit_general',
-                'admin_product_edit_inner',
+                'admin_product_edit_inner_left',
                 10,
                 get_js_file_url("production/catalog/product/edit/general.js", true),
                 ["id"=>"product_edit_general"]

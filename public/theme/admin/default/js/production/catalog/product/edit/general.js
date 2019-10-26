@@ -24,7 +24,7 @@ let fields = [{
     sort_order: 40,
     id: "description"
 }, {
-    component: TextArea,
+    component: Text,
     props: { id: 'sku', formId: "product-edit-form", name: "sku", label: "SKU", validation_rules: ["notEmpty"], isTranslateAble: false },
     sort_order: 50,
     id: "sku"
@@ -63,5 +63,18 @@ export default function General({ data }) {
         });
         return null;
     });
-    return React.createElement(Area, { id: "product-edit-general", coreWidgets: fields });
+    return React.createElement(
+        "div",
+        { className: "product-edit-general" },
+        React.createElement(
+            "div",
+            null,
+            React.createElement(
+                "strong",
+                null,
+                "General"
+            )
+        ),
+        React.createElement(Area, { id: "product-edit-general", coreWidgets: fields })
+    );
 }

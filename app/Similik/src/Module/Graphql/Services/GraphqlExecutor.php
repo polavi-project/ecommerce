@@ -22,7 +22,7 @@ use function GuzzleHttp\Promise\settle;
 use Similik\Services\Di\Container;
 
 
-class GraphqlExecutor
+class GraphqlExecutor extends Promise
 {
     /** @var OperationParams|OperationParams[] $operationParams */
     protected $operationParams = [];
@@ -43,6 +43,11 @@ class GraphqlExecutor
     {
         $this->schema = $schema;
         $this->container = $container;
+        parent::__construct(function() {
+            $this->execute();
+            $promise = settle($this->promises);
+            $promise->wait();
+        });
     }
 
     /**
@@ -87,8 +92,8 @@ class GraphqlExecutor
         $server = new StandardServer($config);
 
         $this->results = $server->executeRequest($this->operationParams);
-        $promise = settle($this->promises);
-        $promise->wait();
+
+        return $this;
     }
 
     /**

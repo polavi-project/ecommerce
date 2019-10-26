@@ -8,6 +8,8 @@ declare(strict_types=1);
 
 namespace Similik\Services;
 
+use Monolog\Logger;
+use function Similik\array_find;
 use function Similik\dispatch_event;
 use Similik\Middleware\ConfigMiddleware;
 use Similik\Middleware\ResponseMiddleware;
@@ -55,6 +57,28 @@ class MiddlewareManager
         return $this;
     }
 
+    public function registerMiddlewareBefore( $before, $middleware) : self
+    {
+        if($this->middlewareLocked == true)
+            throw new \Error('Can not add middleware once application is running');
+
+        if(is_string($middleware))
+            $middleware = new $middleware();
+        if(!$middleware instanceof MiddlewareAbstract)
+            throw new \InvalidArgumentException('Invalid middleware');
+
+        foreach ($this->middleware as $key => $m) {
+            foreach ($m as $k=>$v) {
+                if(get_class($v) == $before) {
+                    array_splice($m, $k, 0, [$middleware]);
+                    $this->middleware[$key] = $m;
+                    break;
+                }
+            }
+        }
+        return $this;
+    }
+
     public function removeMiddleware(string $className) : self
     {
         if($this->middlewareLocked == true)
@@ -70,13 +94,15 @@ class MiddlewareManager
         $l = [];
         $m = [];
         krsort($this->middleware);
+        $log = [];
 
         foreach ($this->middleware as $middleware) {
             krsort($middleware);
-            foreach ($middleware as $v)
+            foreach ($middleware as $v) {
+                $log[] = get_class($v);
                 $l[] = $v;
+            }
         }
-
         foreach ($l as $callable) {
             $callable->setContainer($this->container);
             $next = end($m);
@@ -89,9 +115,11 @@ class MiddlewareManager
                 };
             $m[] = function (Request $request, Response $response, $delegate = null) use ($callable, $next) {
                 if($delegate instanceof Response) {
-                    if($response->headers->get('Content-Type') == 'text/html')
+                    if(!$request->isAjax()) {
+                        $response->setContent($this->container->get(HtmlDocument::class)->getHtml());
+                        $response->headers->set('Content-Type', 'text/html');
                         $response->sendHtml();
-                    else
+                    } else
                         $response->send($response->getStatusCode());
                     exit();
                 } else {

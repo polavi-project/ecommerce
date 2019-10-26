@@ -58,8 +58,8 @@ class Response extends \Symfony\Component\HttpFoundation\Response
             $this->addData('widgets', $this->widgets);
         $this->addData('alerts', $this->alerts);
         $this->addData('isNewPage', $this->isNewPage);
-        $this->addData('appState', $this->appState);
         $this->addState('helmet', the_container()->get(Helmet::class)->getData());
+        $this->addData('appState', $this->appState);
 
         return $this->jsonData->toArray();
     }

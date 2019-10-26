@@ -1,7 +1,6 @@
 import Area from "../../../../../../../../js/production/area.js";
 import Text from "../../../../../../../../js/production/form/fields/text.js";
 import TextArea from "../../../../../../../../js/production/form/fields/textarea.js";
-import Select from "../../../../../../../../js/production/form/fields/select.js";
 let fields = [
     {
         component: Text,
@@ -32,5 +31,8 @@ export default function Seo({data}) {
         });
         return null
     });
-    return <Area id="product-edit-seo" coreWidgets={fields}/>
+    return <div className="product-edit-seo">
+        <div><strong>SEO</strong></div>
+        <Area id="product-edit-seo" coreWidgets={fields}/>
+    </div>
 }

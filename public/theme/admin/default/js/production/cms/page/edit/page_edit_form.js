@@ -7,7 +7,7 @@ import Tinycme from "../../../../../../../../js/production/form/fields/tinycme.j
 import Select from "../../../../../../../../js/production/form/fields/select.js";
 import { ADD_ALERT } from "../../../../../../../../js/production/event-types.js";
 
-function General({ id, name, content, layout, status }) {
+function General({ pageId, name, content, layout, status }) {
     return React.createElement(
         "div",
         null,
@@ -32,7 +32,7 @@ function General({ id, name, content, layout, status }) {
                 sort_order: 40,
                 id: "layout"
             }] }),
-        id && React.createElement("input", { readOnly: true, type: "text", name: "variables[page][id]", value: id, style: {
+        pageId && React.createElement("input", { readOnly: true, type: "text", name: "variables[page][id]", value: pageId, style: {
                 display: 'none'
             } })
     );

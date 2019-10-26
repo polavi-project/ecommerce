@@ -19,7 +19,7 @@ class ProductAttributeIndex extends ObjectType
     public function __construct(Container $container)
     {
         $config = [
-            'name' => 'Product attribute index',
+            'name' => 'ProductAttributeIndex',
             'fields' => function() use ($container) {
                 $fields = [
                     'product_attribute_value_index_id' => [
@@ -45,7 +45,7 @@ class ProductAttributeIndex extends ObjectType
                     ]
                 ];
 
-                dispatch_event('filter.product_attribute_index.type', [&$fields]);
+                dispatch_event('filter.productAttributeIndex.type', [&$fields]);
 
                 return $fields;
             },

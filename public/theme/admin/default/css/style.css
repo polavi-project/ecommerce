@@ -1,20 +1,22 @@
 html {
     font-size: 14px !important;
 }
+.text-danger{color:#f0506e}
 #header {
     background: cadetblue;
     min-height: 45px;
     margin-bottom: 20px;
 }
-#menu{
+.admin-navigation{
     float: left;
     width: 200px;
     padding: 10px;
     box-sizing: border-box;
 }
-#content {
+.container .content {
     overflow: hidden;
     margin-left: 220px;
+    padding-right: 20px;
 }
 
 /**************************************** LOADING ICON *********************************************/
@@ -84,12 +86,12 @@ html {
 .uk-label{text-transform: capitalize!important; border-radius: 10px!important;}
 .product-thumbnail{max-width: 80px}
 
-/* Table */
-td, th {
-    border: 1px solid #999;
-}
+/* GRID */
+table input{max-width: 95px}
+
 
 .row {
     border-top: 1px solid #999;
     min-height: 25px;
 }
+.order-edit-info{margin-bottom: 20px}

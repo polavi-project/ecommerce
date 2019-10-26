@@ -29,14 +29,6 @@ $eventDispatcher->addListener(
                 'discount',
                 10
             );
-            $container->get(\Similik\Module\Cms\Services\NavigationManager::class)->addItem(
-                'add.coupon',
-                'Add new coupon',
-                $container->get(Router::class)->generateUrl('coupon.create'),
-                'plus',
-                'discount',
-                20
-            );
         },
         0
 );

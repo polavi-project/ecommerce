@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 use Similik\Module\Order\Middleware\Update\Payment\Payoffline\AddActivityMiddleware;
 use Similik\Module\Order\Middleware\Update\Payment\Payoffline\AddTransactionMiddleware;
-use Similik\Module\Order\Middleware\Update\Payment\Payoffline\PayMiddleware;
+use Similik\Module\Order\Middleware\Update\Payment\Payoffline\PayOfflineMiddleware;
 
 $router->addAdminRoute('customer.grid', 'GET', '/customers', [
     \Similik\Module\Customer\Middleware\Grid\ColumnMiddleware::class,

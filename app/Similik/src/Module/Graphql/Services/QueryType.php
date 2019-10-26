@@ -13,8 +13,15 @@ use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
 use function Similik\_mysql;
 use function Similik\dispatch_event;
+use Similik\Module\Catalog\Services\AttributeCollection;
+use Similik\Module\Catalog\Services\AttributeGroupCollection;
 use Similik\Module\Catalog\Services\CategoryCollection;
 use Similik\Module\Catalog\Services\ProductCollection;
+use Similik\Module\Catalog\Services\Type\AttributeCollectionFilterType;
+use Similik\Module\Catalog\Services\Type\AttributeCollectionType;
+use Similik\Module\Catalog\Services\Type\AttributeGroupCollectionFilterType;
+use Similik\Module\Catalog\Services\Type\AttributeGroupCollectionType;
+use Similik\Module\Catalog\Services\Type\AttributeType;
 use Similik\Module\Catalog\Services\Type\CategoryCollectionFilterType;
 use Similik\Module\Catalog\Services\Type\CategoryCollectionType;
 use Similik\Module\Catalog\Services\Type\ProductCollectionFilterType;
@@ -34,6 +41,7 @@ use Similik\Module\Order\Services\OrderCollection;
 use Similik\Module\Order\Services\Type\OrderCollectionFilterType;
 use Similik\Module\Order\Services\Type\OrderCollectionType;
 use Similik\Module\Order\Services\Type\OrderType;
+use Similik\Module\Order\Services\Type\PaymentTransactionType;
 use Similik\Module\Tax\Services\Type\TaxClassType;
 use Similik\Services\Di\Container;
 use Similik\Services\Http\Request;
@@ -119,20 +127,54 @@ class QueryType extends ObjectType
                         ]
                     ],
                     'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
-//                        if($container->get(Request::class)->isAdmin() == false)
-//                            return [];
-//                        else
                         return $container->get(CategoryCollection::class)->getData($rootValue, $args, $container, $info);
                     }
                 ],
-                'attribute_groups' => [
-                    'type' => Type::listOf($container->get(AttributeGroupType::class)),
-                    'description' => 'Return a list of product attribute group',
+                'attribute' => [
+                    'type' => $container->get(AttributeType::class),
+                    'description' => 'Return an attribute',
+                    'args' => [
+                        'id' => Type::nonNull(Type::id())
+                    ],
                     'resolve' => function($value, $args, Container $container, ResolveInfo $info) {
-                        return $container->get(DataLoader::class)->getAllAttributeGroup($value, $args, $container, $info);
+                        return _mysql()->getTable('attribute')->where('attribute_id', '=', $args['id'])->fetchOneAssoc();
                     }
                 ],
-                'product_attribute_index' => [
+                'attributeCollection' => [
+                    'type' => $container->get(AttributeCollectionType::class),
+                    'description' => "Return list of attribute and total count",
+                    'args' => [
+                        'filter' =>  [
+                            'type' => $container->get(AttributeCollectionFilterType::class)
+                        ]
+                    ],
+                    'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
+                        return $container->get(AttributeCollection::class)->getData($rootValue, $args, $container, $info);
+                    }
+                ],
+                'attributeGroup' => [
+                    'type' => $container->get(AttributeGroupType::class),
+                    'description' => 'Return an attribute group',
+                    'args' => [
+                        'id' => Type::nonNull(Type::id())
+                    ],
+                    'resolve' => function($value, $args, Container $container, ResolveInfo $info) {
+                        return _mysql()->getTable('attribute_group')->where('attribute_group_id', '=', $args['id'])->fetchOneAssoc();
+                    }
+                ],
+                'attributeGroupCollection' => [
+                    'type' => $container->get(AttributeGroupCollectionType::class),
+                    'description' => "Return list of attribute group and total count",
+                    'args' => [
+                        'filter' =>  [
+                            'type' => $container->get(AttributeGroupCollectionFilterType::class)
+                        ]
+                    ],
+                    'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
+                        return $container->get(AttributeGroupCollection::class)->getData($rootValue, $args, $container, $info);
+                    }
+                ],
+                'productAttributeIndex' => [
                     'type' => Type::listOf($container->get(ProductAttributeIndex::class)),
                     'description' => 'Return attribute value of a specified product',
                     'args' => [
@@ -168,6 +210,18 @@ class QueryType extends ObjectType
                             return [];
                         else
                             return $container->get(OrderCollection::class)->getData($rootValue, $args, $container, $info);
+                    }
+                ],
+                'paymentTransactions' => [
+                    'type' => Type::listOf($container->get(PaymentTransactionType::class)),
+                    'args' => [
+                        'orderId' =>  Type::nonNull(Type::int())
+                    ],
+                    'resolve' => function($value, $args, Container $container, ResolveInfo $info) {
+                        return _mysql()
+                            ->getTable('payment_transaction')
+                            ->where('payment_transaction_order_id', '=', $args['orderId'])
+                            ->fetchAllAssoc();
                     }
                 ],
                 'cart' => [

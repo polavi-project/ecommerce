@@ -23,17 +23,16 @@ class OrderUpdatePromise extends Promise
         if($order == false)
             throw new \Exception('Order is not existed');
 
-        parent::__construct(function() use ($orderId, $order){
+        parent::__construct(function() use ($order) {
             $conn = _mysql();
-            $orderNew = $conn->getTable('order')->load($orderId);
+            $orderNew = $conn->getTable('order')->load($order['order_id']);
             $diff = array_diff_assoc($orderNew, $order);
-            $changes = [];
+            $changes = ['order_id' => $order['order_id']];
             foreach ($diff as $key=> $item) {
-                $changes[$key]['from'] = $order[$key];
-                $changes[$key]['to'] = $item;
+                $changes[$key] = $item;
             }
 
-            $this->resolve($changes);
+            $this->resolve(['orgOrder' => $order, 'changes' => $changes]);
         });
     }
 }

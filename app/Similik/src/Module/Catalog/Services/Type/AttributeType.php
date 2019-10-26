@@ -14,13 +14,15 @@ use GraphQL\Type\Definition\Type;
 use function Similik\dispatch_event;
 use Similik\Services\Di\Container;
 use Similik\Services\Db\Processor;
+use Similik\Services\Http\Request;
+use Similik\Services\Routing\Router;
 
 class AttributeType extends ObjectType
 {
     public function __construct(Container $container)
     {
         $config = [
-            'name' => 'Product attribute',
+            'name' => 'ProductAttribute',
             'fields' => function() use ($container) {
                 $fields = [
                     'attribute_id' => [
@@ -55,11 +57,17 @@ class AttributeType extends ObjectType
                                 ->where('attribute_id', '=', $attribute['attribute_id'])
                                 ->fetchAllAssoc();
                         }
+                    ],
+                    'editUrl' => [
+                        'type' => Type::string(),
+                        'resolve' => function($attribute, $args, Container $container, ResolveInfo $info) {
+                            if($container->get(Request::class)->isAdmin() == false)
+                                return null;
+                            return $container->get(Router::class)->generateUrl('attribute.edit', ["id"=>$attribute['attribute_id']]);                        }
                     ]
                 ];
 
-                dispatch_event('filter.attribute.type', [&$fields]);return $fields;
-
+                dispatch_event('filter.attribute.type', [&$fields]);
                 return $fields;
             },
             'resolveField' => function($value, $args, Container $container, ResolveInfo $info) {

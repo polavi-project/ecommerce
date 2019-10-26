@@ -13,15 +13,13 @@ use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
 use function Similik\dispatch_event;
 use Similik\Services\Di\Container;
-use Similik\Module\Catalog\Services\DataLoader;
-use Similik\Services\Event\Dispatcher;
 
 class AttributeOptionType extends ObjectType
 {
     public function __construct(Container $container)
     {
         $config = [
-            'name' => 'Attribute option',
+            'name' => 'AttributeOption',
             'fields' => function() use ($container) {
                 $fields = [
                     'attribute_option_id' => [
@@ -38,7 +36,7 @@ class AttributeOptionType extends ObjectType
                     ]
                 ];
 
-                dispatch_event('filter.attribute_option.type', [&$fields]);
+                dispatch_event('filter.attributeOption.type', [&$fields]);
 
                 return $fields;
             },

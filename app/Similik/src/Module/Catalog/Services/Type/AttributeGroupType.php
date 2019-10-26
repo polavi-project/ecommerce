@@ -11,16 +11,19 @@ namespace Similik\Module\Catalog\Services\Type;
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
+use function Similik\_mysql;
 use function Similik\dispatch_event;
 use Similik\Services\Di\Container;
 use Similik\Module\Catalog\Services\DataLoader;
+use Similik\Services\Http\Request;
+use Similik\Services\Routing\Router;
 
 class AttributeGroupType extends ObjectType
 {
     public function __construct(Container $container)
     {
         $config = [
-            'name' => 'Attribute group',
+            'name' => 'AttributeGroup',
             'fields' => function() use ($container) {
                 $fields = [
                     'attribute_group_id' => [
@@ -39,12 +42,19 @@ class AttributeGroupType extends ObjectType
                         'type' => Type::listOf($container->get(AttributeType::class)),
                         'description' => 'List of attribute in the group',
                         'resolve' => function($group, $args, Container $container, ResolveInfo $info) {
-                            return $container->get(DataLoader::class)->getAttributeByGroup($group, $args, $container, $info);
+                            return _mysql()->getTable('attribute')->leftJoin('attribute_group_link')->where('attribute_group_link.group_id', '=', $group['attribute_group_id'])->fetchAllAssoc();
                         }
+                    ],
+                    'editUrl' => [
+                        'type' => Type::string(),
+                        'resolve' => function($group, $args, Container $container, ResolveInfo $info) {
+                            if($container->get(Request::class)->isAdmin() == false)
+                                return null;
+                            return $container->get(Router::class)->generateUrl('attribute.group.edit', ["id"=>$group['attribute_group_id']]);                        }
                     ]
                 ];
 
-                dispatch_event('filter.attribute_group.type', [&$fields]);
+                dispatch_event('filter.attributeGroup.type', [&$fields]);
 
                 return $fields;
             },

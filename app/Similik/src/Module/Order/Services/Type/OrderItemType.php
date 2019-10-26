@@ -68,8 +68,14 @@ class OrderItemType extends ObjectType
                     'total' => [
                         'type' => Type::nonNull(Type::int())
                     ],
-                    'product_custom_options' => [
-                        'type' => Type::string()
+                    'item_options' => [
+                        'type' => Type::listOf($container->get(ItemOptionType::class)),
+                        'resolve' => function($item, $args, Container $container, ResolveInfo $info) {
+                            if($item['product_custom_options'])
+                                return json_decode($item['product_custom_options'], true);
+                            else
+                                return [];
+                        }
                     ],
                     'requested_data' => [
                         'type' => Type::string()

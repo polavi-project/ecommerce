@@ -21,6 +21,7 @@ use GraphQL\Type\Definition\ScalarType;
 use GraphQL\Type\Definition\Type;
 use GraphQL\Type\Definition\WrappingType;
 use GraphQL\Type\Schema;
+use GuzzleHttp\Promise\Promise;
 use Imagine\Image\Box;
 use Imagine\Imagick\Imagine;
 use Similik\Services\Db\Processor;
@@ -28,6 +29,7 @@ use Similik\Services\Db\Table;
 use Similik\Services\Di\Container;
 use Similik\Services\Event\EventDispatcher;
 use Similik\Services\Locale\Language;
+use Similik\Services\Log\Logger;
 use Similik\Services\Routing\Router;
 
 function the_container(Container $start = null) : Container

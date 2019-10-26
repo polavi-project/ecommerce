@@ -30,8 +30,8 @@ class ProductsMiddleware extends MiddlewareAbstract
         if($request->attributes->get('_matched_route') == 'category.edit')
             $response->addWidget(
                 'product_grid',
-                'content',
-                20, get_js_file_url("production/catalog/category/edit/products.js", true),
+                'admin_category_edit_inner_right',
+                10, get_js_file_url("production/catalog/category/edit/products.js", true),
                 [
                     "apiUrl" => generate_url('admin.graphql.api'),
                     "categoryId"=> $request->attributes->get('id')

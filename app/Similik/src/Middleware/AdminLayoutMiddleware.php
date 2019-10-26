@@ -26,14 +26,14 @@ class AdminLayoutMiddleware extends MiddlewareAbstract
             'container',
             0,
             get_js_file_url("production/area.js", true),
-            ["id"=> "header"]
+            ["id"=> "header", "className" => "header"]
         );
         $response->addWidget(
             'admin_menu',
             'container',
             10,
             get_js_file_url("production/area.js", true),
-            ["id"=> "menu"]
+            ["id"=> "menu", "className" => "admin-navigation"]
         );
         $response->addWidget(
             'admin_content',
@@ -41,7 +41,8 @@ class AdminLayoutMiddleware extends MiddlewareAbstract
             20,
             get_js_file_url("production/area.js", true),
             [
-                "id"=> "content"
+                "id"=> "content",
+                "className"=> "content"
             ]
         );
 

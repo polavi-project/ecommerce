@@ -8,7 +8,7 @@ import Multiselect from "../../../../../../../../js/production/form/fields/multi
 export default function Attributes(props) {
     const [attributes, setAttributes] = React.useState(() => {
         let value_index = props.product_attribute_index === undefined ? [] : props.product_attribute_index;
-        let attributes = props.selected_group === undefined ? props.attribute_groups[0]['attributes'] : props.attribute_groups.find(a => parseInt(a.attribute_group_id) === parseInt(props.selected_group))['attributes'];
+        let attributes = props.selected_group === undefined ? props.attributeGroups[0]['attributes'] : props.attributeGroups.find(a => parseInt(a.attribute_group_id) === parseInt(props.selected_group))['attributes'];
         return attributes.map((a, i) => {
             a['selected_option'] = '';
             a['value_text'] = '';
@@ -25,55 +25,56 @@ export default function Attributes(props) {
 
     return React.createElement(
         "div",
-        null,
+        { className: "product-edit-attribute uk-width-1-2" },
         React.createElement(
-            "table",
+            "div",
             null,
             React.createElement(
-                "thead",
+                "strong",
                 null,
-                React.createElement(
-                    "tr",
-                    null,
-                    React.createElement(
-                        "td",
-                        null,
-                        React.createElement(
-                            "span",
-                            null,
-                            "Attribute Group"
-                        ),
-                        React.createElement("br", null),
-                        React.createElement(Select, {
-                            name: "group_id",
-                            formId: props.formId,
-                            isTranslateAble: false,
-                            value: props.selected_group === undefined ? parseInt(props.attribute_groups[0]['attribute_group_id']) : parseInt(props.selected_group),
-                            handler: e => {
-                                let value_index = props.product_attribute_index === undefined ? [] : props.product_attribute_index;
-                                let attributes = props.attribute_groups.find(a => parseInt(a.attribute_group_id) === parseInt(e.target.value))['attributes'];
-                                setAttributes(attributes.map((a, i) => {
-                                    a['selected_option'] = '';
-                                    a['value_text'] = '';
-                                    value_index.forEach(function (v) {
-                                        if (parseInt(v['attribute_id']) === parseInt(e['attribute_id'])) {
-                                            a['selected_option'] = v['option_id'];
-                                            a['value_text'] = v['attribute_value_text'];
-                                        }
-                                    });
-
-                                    return a;
-                                }));
-                            },
-                            options: (() => {
-                                return props.attribute_groups.map((g, i) => {
-                                    return { value: parseInt(g.attribute_group_id), text: g.group_name };
-                                });
-                            })()
-                        })
-                    )
-                )
+                "Attribute"
+            )
+        ),
+        React.createElement(
+            "div",
+            null,
+            React.createElement(
+                "span",
+                null,
+                "Attribute Group"
             ),
+            React.createElement("br", null),
+            React.createElement(Select, {
+                name: "group_id",
+                formId: props.formId,
+                isTranslateAble: false,
+                value: props.selected_group === undefined ? parseInt(props.attributeGroups[0]['attribute_group_id']) : parseInt(props.selected_group),
+                handler: e => {
+                    let value_index = props.product_attribute_index === undefined ? [] : props.product_attribute_index;
+                    let attributes = props.attributeGroups.find(a => parseInt(a.attribute_group_id) === parseInt(e.target.value))['attributes'];
+                    setAttributes(attributes.map((a, i) => {
+                        a['selected_option'] = '';
+                        a['value_text'] = '';
+                        value_index.forEach(function (v) {
+                            if (parseInt(v['attribute_id']) === parseInt(e['attribute_id'])) {
+                                a['selected_option'] = v['option_id'];
+                                a['value_text'] = v['attribute_value_text'];
+                            }
+                        });
+
+                        return a;
+                    }));
+                },
+                options: (() => {
+                    return props.attributeGroups.map((g, i) => {
+                        return { value: parseInt(g.attribute_group_id), text: g.group_name };
+                    });
+                })()
+            })
+        ),
+        React.createElement(
+            "table",
+            { className: "uk-table uk-table-small" },
             React.createElement(
                 "tbody",
                 null,

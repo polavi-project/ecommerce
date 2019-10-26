@@ -496,7 +496,6 @@ class Cart
 
         $orderData = array_merge($this->data, $customerData, [
             'order_number' =>10000 + (int)$autoIncrement['AUTO_INCREMENT'],
-            'status' => 'pending',
             'shipment_status' => 'pending',
             'payment_status' => 'pending'
         ]);
@@ -534,7 +533,7 @@ class Cart
                 ->insert([
                     'order_activity_order_id' => $orderId,
                     'comment' => 'Order created',
-                    'customer_notified' => 0
+                    'customer_notified' => 0 //TODO: check config of SendGrid
                 ]);
             $this->isOrdered = $orderId;
 

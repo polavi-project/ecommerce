@@ -37,12 +37,6 @@ class OrderCollection extends CollectionBuilder
     {
         $isAdmin = $this->container->get(Request::class)->isAdmin();
 
-        $this->addFilter('status', function($args) use ($isAdmin) {
-            if($isAdmin == false)
-                return;
-            $this->collection->andWhere('order.status', $args['operator'], (int)$args['value']);
-        });
-
         $this->addFilter('payment_status', function($args) use ($isAdmin) {
             if($isAdmin == false)
                 return;
@@ -72,20 +66,5 @@ class OrderCollection extends CollectionBuilder
     public function getCollection()
     {
         return $this->collection;
-    }
-
-    public function getProductIdArray($rootValue, $args, Container $container, ResolveInfo $info)
-    {
-        $filters = $args['filter'] ?? [];
-        foreach ($filters as $key => $arg)
-            $this->applyFilter($key, $arg);
-
-        $collection = clone $this->collection;
-        $ids = [];
-        while ($row = $collection->addFieldToSelect("category.category_id")->fetch()) {
-            $ids[] = $row['category_id'];
-        }
-
-        return $ids;
     }
 }

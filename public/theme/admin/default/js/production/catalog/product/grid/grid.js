@@ -1,6 +1,6 @@
 import Area from "../../../../../../../../js/production/area.js";
 
-function IdColumn({ areaProps }) {
+function IdColumnHeader({ areaProps }) {
     const filterFrom = React.useRef(null);
     const filterTo = React.useRef(null);
 
@@ -51,24 +51,21 @@ function IdColumn({ areaProps }) {
                     })
                 )
             )
-        ),
-        areaProps.rows.map((r, i) => {
-            return React.createElement(
-                "div",
-                { className: "row", key: i },
-                React.createElement(
-                    "span",
-                    null,
-                    r.product_id
-                )
-            );
-        })
+        )
     );
 }
 
-function PriceColumn({ areaProps }) {
+function IdColumnRow({ row }) {
+    return React.createElement(
+        "td",
+        null,
+        row.product_id
+    );
+}
+function PriceColumnHeader({ areaProps }) {
     const filterFrom = React.useRef(null);
     const filterTo = React.useRef(null);
+    const currency = ReactRedux.useSelector(state => _.get(state, 'appState.currency', 'USD'));
 
     React.useEffect(() => {
         areaProps.addField("price");
@@ -117,23 +114,17 @@ function PriceColumn({ areaProps }) {
                     })
                 )
             )
-        ),
-        areaProps.rows.map((r, i) => {
-            const _price = new Intl.NumberFormat(window.language, { style: 'currency', currency: window.currency }).format(_.get(r, 'price', ''));
-            return React.createElement(
-                "div",
-                { className: "row", key: i },
-                React.createElement(
-                    "span",
-                    null,
-                    _price
-                )
-            );
-        })
+        )
     );
 }
-
-function NameColumn({ areaProps }) {
+function PriceColumnRow({ row }) {
+    return React.createElement(
+        "td",
+        null,
+        row.price
+    );
+}
+function NameColumnHeader({ areaProps }) {
     const filterInput = React.useRef(null);
 
     React.useEffect(() => {
@@ -167,22 +158,17 @@ function NameColumn({ areaProps }) {
                     placeholder: "Product name"
                 })
             )
-        ),
-        areaProps.rows.map((r, i) => {
-            return React.createElement(
-                "div",
-                { className: "row", key: i },
-                React.createElement(
-                    "span",
-                    null,
-                    _.get(r, 'name', '')
-                )
-            );
-        })
+        )
     );
 }
-
-function QtyColumn({ areaProps }) {
+function NameColumnRow({ row }) {
+    return React.createElement(
+        "td",
+        null,
+        row.name
+    );
+}
+function QtyColumnHeader({ areaProps }) {
     const filterFrom = React.useRef(null);
     const filterTo = React.useRef(null);
 
@@ -233,56 +219,17 @@ function QtyColumn({ areaProps }) {
                     })
                 )
             )
-        ),
-        areaProps.rows.map((r, i) => {
-            return React.createElement(
-                "div",
-                { className: "row", key: i },
-                React.createElement(
-                    "span",
-                    null,
-                    _.get(r, 'qty', '')
-                )
-            );
-        })
+        )
     );
 }
-
-function GeneralColumn({ index, title, areaProps }) {
-    React.useEffect(() => {
-        areaProps.addField(index);
-    }, []);
+function QtyColumnRow({ row }) {
     return React.createElement(
         "td",
-        { className: "column" },
-        React.createElement(
-            "div",
-            { className: "header" },
-            React.createElement(
-                "div",
-                { className: "title" },
-                React.createElement(
-                    "span",
-                    null,
-                    title
-                )
-            )
-        ),
-        areaProps.rows.map((r, i) => {
-            return React.createElement(
-                "div",
-                { className: "row", key: i },
-                React.createElement(
-                    "span",
-                    null,
-                    _.get(r, index, '')
-                )
-            );
-        })
+        null,
+        row.qty
     );
 }
-
-function ThumbColumn({ areaProps }) {
+function ThumbColumnHeader({ areaProps }) {
     React.useEffect(() => {
         areaProps.addField("image { thumb }");
     }, []);
@@ -301,22 +248,21 @@ function ThumbColumn({ areaProps }) {
                     "Thumbnail"
                 )
             )
-        ),
-        areaProps.rows.map((r, i) => {
-            if (_.get(r, "image.thumb")) return React.createElement(
-                "div",
-                { key: i, className: "row" },
-                React.createElement("img", { className: 'product-thumbnail', src: r.image.thumb })
-            );else return React.createElement(
-                "div",
-                { key: i, className: "row" },
-                React.createElement("span", { "uk-icon": "icon: image; ratio: 5" })
-            );
-        })
+        )
     );
 }
-
-function StatusColumn({ areaProps }) {
+function ThumbColumnRow({ row }) {
+    if (_.get(row, "image.thumb")) return React.createElement(
+        "td",
+        null,
+        React.createElement("img", { className: 'product-thumbnail', src: row.image.thumb })
+    );else return React.createElement(
+        "td",
+        null,
+        React.createElement("span", { "uk-icon": "icon: image; ratio: 3" })
+    );
+}
+function StatusColumnHeader({ areaProps }) {
     const filterInput = React.useRef(null);
 
     React.useEffect(() => {
@@ -341,33 +287,45 @@ function StatusColumn({ areaProps }) {
             React.createElement(
                 "div",
                 { className: "filter" },
-                React.createElement("input", { type: "text", ref: filterInput, onKeyPress: e => {
-                        if (e.key === 'Enter') areaProps.addFilter("status", "Equal", e.target.value);
-                    } })
+                React.createElement(
+                    "select",
+                    { ref: filterInput, onChange: e => {
+                            areaProps.addFilter("status", "Equal", e.target.value);
+                        } },
+                    React.createElement(
+                        "option",
+                        { value: 1 },
+                        "Enabled"
+                    ),
+                    React.createElement(
+                        "option",
+                        { value: 0 },
+                        "Disabled"
+                    )
+                )
             )
-        ),
-        areaProps.rows.map((r, i) => {
-            if (parseInt(_.get(r, "status")) === 1) return React.createElement(
-                "div",
-                { key: i, className: "row" },
-                React.createElement(
-                    "span",
-                    { className: "uk-label uk-label-success" },
-                    "Enable"
-                )
-            );else return React.createElement(
-                "div",
-                { key: i, className: "row" },
-                React.createElement(
-                    "span",
-                    { className: "uk-label uk-label-danger" },
-                    "Disabled"
-                )
-            );
-        })
+        )
     );
 }
-
+function StatusColumnRow({ row }) {
+    if (parseInt(_.get(row, "status")) === 1) return React.createElement(
+        "td",
+        null,
+        React.createElement(
+            "span",
+            { className: "uk-label uk-label-success" },
+            "Enable"
+        )
+    );else return React.createElement(
+        "td",
+        null,
+        React.createElement(
+            "span",
+            { className: "uk-label uk-label-danger" },
+            "Disabled"
+        )
+    );
+}
 export default function ProductGrid({ apiUrl, defaultFilter }) {
     const [products, setProducts] = React.useState([]);
     const [filters, setFilters] = React.useState(() => {
@@ -440,76 +398,98 @@ export default function ProductGrid({ apiUrl, defaultFilter }) {
         applyFilter();
     }, [fields, filters]);
 
-    React.useLayoutEffect(() => {
-        // Fix height of row
-        let maxHeightHeader = -1;
-        jQuery('.column .header').each(function (e) {
-            maxHeightHeader = maxHeightHeader > jQuery(this).height() ? maxHeightHeader : jQuery(this).height();
-        });
-
-        jQuery('.column .header').each(function () {
-            jQuery(this).height(maxHeightHeader);
-        });
-
-        let maxHeightRow = -1;
-        jQuery('.column .row').each(function (e) {
-            maxHeightRow = maxHeightRow > jQuery(this).height() ? maxHeightRow : jQuery(this).height();
-        });
-
-        jQuery('.column .row').each(function () {
-            jQuery(this).height(maxHeightRow);
-        });
-    });
-
     return React.createElement(
         "div",
-        { className: "" },
+        { className: "uk-overflow-auto" },
         React.createElement(
             "table",
-            { className: "" },
+            { className: "uk-table uk-table-small" },
             React.createElement(
-                "tbody",
+                "thead",
                 null,
                 React.createElement(Area, {
                     className: "",
-                    id: "product-grid",
-                    rows: products,
+                    id: "product_grid_header",
                     addFilter: addFilter,
                     cleanFilter: cleanFilter,
                     addField: addField,
                     applyFilter: applyFilter,
                     reactcomponent: "tr",
                     coreWidgets: [{
-                        component: IdColumn,
-                        props: {},
+                        component: IdColumnHeader,
+                        props: { addFilter, cleanFilter, addField, applyFilter },
                         sort_order: 10,
                         id: "id"
                     }, {
-                        component: ThumbColumn,
+                        component: ThumbColumnHeader,
                         props: {},
                         sort_order: 20,
                         id: "thumb"
                     }, {
-                        component: NameColumn,
+                        component: NameColumnHeader,
                         props: {},
                         sort_order: 30,
                         id: "name"
                     }, {
-                        component: StatusColumn,
+                        component: StatusColumnHeader,
                         props: {},
                         sort_order: 40,
                         id: "status"
                     }, {
-                        component: QtyColumn,
+                        component: QtyColumnHeader,
                         props: {},
                         sort_order: 50,
                         id: "qty"
                     }, {
-                        component: PriceColumn,
+                        component: PriceColumnHeader,
                         props: {},
                         sort_order: 60,
                         id: "price"
                     }]
+                })
+            ),
+            React.createElement(
+                "tbody",
+                null,
+                products.map((p, i) => {
+                    return React.createElement(Area, {
+                        key: i,
+                        className: "",
+                        id: "product_grid_row",
+                        row: p,
+                        reactcomponent: "tr",
+                        coreWidgets: [{
+                            component: IdColumnRow,
+                            props: { row: p },
+                            sort_order: 10,
+                            id: "id"
+                        }, {
+                            component: ThumbColumnRow,
+                            props: { row: p },
+                            sort_order: 20,
+                            id: "thumb"
+                        }, {
+                            component: NameColumnRow,
+                            props: { row: p },
+                            sort_order: 30,
+                            id: "name"
+                        }, {
+                            component: StatusColumnRow,
+                            props: { row: p },
+                            sort_order: 40,
+                            id: "status"
+                        }, {
+                            component: QtyColumnRow,
+                            props: { row: p },
+                            sort_order: 50,
+                            id: "qty"
+                        }, {
+                            component: PriceColumnRow,
+                            props: { row: p },
+                            sort_order: 60,
+                            id: "price"
+                        }]
+                    });
                 })
             )
         ),

@@ -26,7 +26,7 @@ export default function AdminMenu(props) {
                     return <li key={i} className="uk-parent">
                         <A url={r.url}>
                             {
-                                r.icon && <span className="uk-margin-small-right" uk-icon={"icon: " + r.icon}></span>
+                                r.icon && <span className="uk-margin-small-right" uk-icon={"icon: " + r.icon + "; ratio: 0.8"}></span>
                             }
                             {r.title}
                         </A>
@@ -48,7 +48,7 @@ export default function AdminMenu(props) {
                         {
                             <A url={r.url}>
                                 {
-                                    r.icon && <span className="uk-margin-small-right" uk-icon={"icon: " + r.icon}></span>
+                                    r.icon && <span className="uk-margin-small-right" uk-icon={"icon: " + r.icon + "; ratio: 0.8"}></span>
                                 }
                                 {r.title}
                             </A>

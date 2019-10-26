@@ -74,8 +74,8 @@ QUERY;
                 }
                 $response->addWidget(
                     'product_edit_advanced_price',
-                    'admin_product_edit_inner',
-                    30,
+                    'admin_product_edit_inner_right',
+                    10,
                     get_js_file_url("production/catalog/product/edit/advanced_price.js", true),
                     ['formId'=> self::FORM_ID, "prices"=> $advancedPrice, 'customerGroups'=>$customerGroups]
                 );

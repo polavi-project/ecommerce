@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace Similik\Module\Order\Middleware\Edit;
 
 use function Similik\_mysql;
+use function Similik\get_js_file_url;
 use Similik\Services\Helmet;
 use Similik\Services\Http\Response;
 use Similik\Services\Http\Request;
@@ -30,11 +31,17 @@ class InitMiddleware extends MiddlewareAbstract
         if($order === false) {
             $response->addData('success', 0);
             $response->addData('message', 'Requested order does not exist');
-
+            $response->setStatusCode(404);
             return $response;
         }
         $this->getContainer()->get(Helmet::class)->setTitle("Order #{$order['order_number']}");
-
+        $response->addState('orderData', $order);
+        $response->addWidget(
+            'order_information_container',
+            'content',
+            10,
+            get_js_file_url("production/order/edit/order_edit.js", true)
+        );
         return $delegate;
     }
 }

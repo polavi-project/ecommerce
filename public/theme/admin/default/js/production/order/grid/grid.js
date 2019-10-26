@@ -1,6 +1,5 @@
 import Area from "../../../../../../../js/production/area.js";
 import A from "../../../../../../../js/production/a.js";
-import { Status } from "../edit/status.js";
 import { PaymentStatus } from "../edit/payment-status.js";
 import { ShipmentStatus } from "../edit/shipment-status.js";
 
@@ -183,45 +182,6 @@ function ActionColumn({ areaProps }) {
     );
 }
 
-function StatusColumn({ areaProps }) {
-    const filterInput = React.useRef(null);
-
-    React.useEffect(() => {
-        areaProps.addField("status");
-    }, []);
-
-    return React.createElement(
-        "td",
-        { className: "column" },
-        React.createElement(
-            "div",
-            { className: "header status-header" },
-            React.createElement(
-                "div",
-                { className: "title" },
-                React.createElement(
-                    "span",
-                    null,
-                    "Status"
-                )
-            ),
-            React.createElement(
-                "div",
-                { className: "filter" },
-                React.createElement("input", { type: "text", ref: filterInput, onKeyPress: e => {
-                        if (e.key === 'Enter') areaProps.addFilter("status", "Equal", e.target.value);
-                    } })
-            )
-        ),
-        areaProps.rows.map((r, i) => {
-            return React.createElement(
-                "div",
-                { key: i, className: "row" },
-                React.createElement(Status, { status: _.get(r, "status") })
-            );
-        })
-    );
-}
 function PaymentStatusColumn({ areaProps }) {
     const filterInput = React.useRef(null);
 
@@ -420,14 +380,9 @@ export default function OrderGrid({ apiUrl }) {
                         sort_order: 20,
                         id: "number"
                     }, {
-                        component: StatusColumn,
-                        props: {},
-                        sort_order: 30,
-                        id: "status"
-                    }, {
                         component: PaymentStatusColumn,
                         props: {},
-                        sort_order: 40,
+                        sort_order: 30,
                         id: "payment_status"
                     }, {
                         component: ShipmentStatusColumn,

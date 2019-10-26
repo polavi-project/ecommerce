@@ -1,6 +1,6 @@
 import Area from "../../../../../../../../js/production/area.js";
 
-function IdColumn({areaProps}) {
+function IdColumnHeader({areaProps}) {
     const filterFrom = React.useRef(null);
     const filterTo = React.useRef(null);
 
@@ -30,15 +30,16 @@ function IdColumn({areaProps}) {
                 </div>
             </div>
         </div>
-        {areaProps.rows.map((r, i) => {
-            return <div className={"row"} key={i}><span>{r.product_id}</span></div>;
-        })}
     </td>
 }
 
-function PriceColumn({areaProps}) {
+function IdColumnRow({row}) {
+    return <td>{row.product_id}</td>
+}
+function PriceColumnHeader({areaProps}) {
     const filterFrom = React.useRef(null);
     const filterTo = React.useRef(null);
+    const currency = ReactRedux.useSelector(state => _.get(state, 'appState.currency', 'USD'));
 
     React.useEffect(() => {
         areaProps.addField("price");
@@ -66,14 +67,12 @@ function PriceColumn({areaProps}) {
                 </div>
             </div>
         </div>
-        {areaProps.rows.map((r, i) => {
-            const _price = new Intl.NumberFormat(window.language, { style: 'currency', currency: window.currency }).format(_.get(r, 'price' , ''));
-            return <div className={"row"} key={i}><span>{_price}</span></div>;
-        })}
     </td>
 }
-
-function NameColumn({areaProps}) {
+function PriceColumnRow({row}) {
+    return <td>{row.price}</td>
+}
+function NameColumnHeader({areaProps}) {
     const filterInput = React.useRef(null);
 
     React.useEffect(() => {
@@ -92,13 +91,12 @@ function NameColumn({areaProps}) {
                 />
             </div>
         </div>
-        {areaProps.rows.map((r, i) => {
-            return <div className={"row"} key={i}><span>{_.get(r, 'name' , '')}</span></div>;
-        })}
     </td>
 }
-
-function QtyColumn({areaProps}) {
+function NameColumnRow({row}) {
+    return <td>{row.name}</td>
+}
+function QtyColumnHeader({areaProps}) {
     const filterFrom = React.useRef(null);
     const filterTo = React.useRef(null);
 
@@ -128,27 +126,12 @@ function QtyColumn({areaProps}) {
                 </div>
             </div>
         </div>
-        {areaProps.rows.map((r, i) => {
-            return <div className={"row"} key={i}><span>{_.get(r, 'qty' , '')}</span></div>;
-        })}
     </td>
 }
-
-function GeneralColumn({index, title, areaProps}) {
-    React.useEffect(() => {
-        areaProps.addField(index);
-    }, []);
-    return <td className={"column"}>
-        <div className="header">
-            <div className={"title"}><span>{title}</span></div>
-        </div>
-        {areaProps.rows.map((r, i) => {
-            return <div className={"row"} key={i}><span>{_.get(r, index , '')}</span></div>;
-        })}
-    </td>
+function QtyColumnRow({row}) {
+    return <td>{row.qty}</td>
 }
-
-function ThumbColumn({areaProps})
+function ThumbColumnHeader({areaProps})
 {
     React.useEffect(() => {
         areaProps.addField("image { thumb }");
@@ -157,16 +140,15 @@ function ThumbColumn({areaProps})
         <div className="header thumb-header">
             <div className={"title"}><span>Thumbnail</span></div>
         </div>
-        {areaProps.rows.map((r, i) => {
-            if(_.get(r, "image.thumb"))
-                return <div key={i} className={"row"}><img className={'product-thumbnail'} src={r.image.thumb}/></div>;
-            else
-                return <div key={i} className={"row"}><span uk-icon="icon: image; ratio: 5"></span></div>;
-        })}
     </td>
 }
-
-function StatusColumn({areaProps})
+function ThumbColumnRow({row}) {
+    if(_.get(row, "image.thumb"))
+        return <td><img className={'product-thumbnail'} src={row.image.thumb}/></td>;
+    else
+        return <td><span uk-icon="icon: image; ratio: 3"></span></td>;
+}
+function StatusColumnHeader({areaProps})
 {
     const filterInput = React.useRef(null);
 
@@ -178,21 +160,22 @@ function StatusColumn({areaProps})
         <div className="header status-header">
             <div className={"title"}><span>Status</span></div>
             <div className={"filter"}>
-                <input type={"text"} ref={filterInput} onKeyPress={(e) => {
-                    if(e.key === 'Enter') areaProps.addFilter("status", "Equal", e.target.value);
-                }
-                }/>
+                <select ref={filterInput} onChange={(e)=> {
+                    areaProps.addFilter("status", "Equal", e.target.value);
+                }}>
+                    <option value={1}>Enabled</option>
+                    <option value={0}>Disabled</option>
+                </select>
             </div>
         </div>
-        {areaProps.rows.map((r, i) => {
-            if(parseInt(_.get(r, "status")) === 1)
-                return <div key={i} className={"row"}><span className="uk-label uk-label-success">Enable</span></div>;
-            else
-                return <div key={i} className={"row"}><span className="uk-label uk-label-danger">Disabled</span></div>;
-        })}
     </td>
 }
-
+function StatusColumnRow({row}) {
+    if(parseInt(_.get(row, "status")) === 1)
+        return <td><span className="uk-label uk-label-success">Enable</span></td>;
+    else
+        return <td><span className="uk-label uk-label-danger">Disabled</span></td>;
+}
 export default function ProductGrid({apiUrl, defaultFilter})
 {
     const [products, setProducts] = React.useState([]);
@@ -278,34 +261,12 @@ export default function ProductGrid({apiUrl, defaultFilter})
         applyFilter();
     }, [fields, filters]);
 
-    React.useLayoutEffect(() => {
-        // Fix height of row
-        let maxHeightHeader = -1;
-        jQuery('.column .header').each(function(e) {
-            maxHeightHeader = maxHeightHeader > jQuery(this).height() ? maxHeightHeader : jQuery(this).height();
-        });
-
-        jQuery('.column .header').each(function() {
-            jQuery(this).height(maxHeightHeader);
-        });
-
-        let maxHeightRow = -1;
-        jQuery('.column .row').each(function(e) {
-            maxHeightRow = maxHeightRow > jQuery(this).height() ? maxHeightRow : jQuery(this).height();
-        });
-
-        jQuery('.column .row').each(function() {
-            jQuery(this).height(maxHeightRow);
-        });
-    });
-
-    return <div className={""}>
-        <table className="">
-            <tbody>
+    return <div className={"uk-overflow-auto"}>
+        <table className="uk-table uk-table-small">
+            <thead>
             <Area
                 className={""}
-                id={"product-grid"}
-                rows={products}
+                id={"product_grid_header"}
                 addFilter={addFilter}
                 cleanFilter={cleanFilter}
                 addField={addField}
@@ -313,49 +274,92 @@ export default function ProductGrid({apiUrl, defaultFilter})
                 reactcomponent={"tr"}
                 coreWidgets={[
                     {
-                        component: IdColumn,
-                        props : {
-                        },
+                        component: IdColumnHeader,
+                        props : {addFilter, cleanFilter, addField, applyFilter},
                         sort_order: 10,
                         id: "id"
                     },
                     {
-                        component: ThumbColumn,
-                        props : {
-                        },
+                        component: ThumbColumnHeader,
+                        props : {},
                         sort_order: 20,
                         id: "thumb"
                     },
                     {
-                        component: NameColumn,
-                        props : {
-                        },
+                        component: NameColumnHeader,
+                        props : {},
                         sort_order: 30,
                         id: "name"
                     },
                     {
-                        component: StatusColumn,
-                        props : {
-                        },
+                        component: StatusColumnHeader,
+                        props : {},
                         sort_order: 40,
                         id: "status"
                     },
                     {
-                        component: QtyColumn,
-                        props : {
-                        },
+                        component: QtyColumnHeader,
+                        props : {},
                         sort_order: 50,
                         id: "qty"
                     },
                     {
-                        component: PriceColumn,
-                        props : {
-                        },
+                        component: PriceColumnHeader,
+                        props : {},
                         sort_order: 60,
                         id: "price"
                     }
                 ]}
             />
+            </thead>
+            <tbody>
+            {products.map((p, i)=> {
+                return <Area
+                    key={i}
+                    className={""}
+                    id={"product_grid_row"}
+                    row={p}
+                    reactcomponent={"tr"}
+                    coreWidgets={[
+                        {
+                            component: IdColumnRow,
+                            props : {row: p},
+                            sort_order: 10,
+                            id: "id"
+                        },
+                        {
+                            component: ThumbColumnRow,
+                            props : {row: p},
+                            sort_order: 20,
+                            id: "thumb"
+                        },
+                        {
+                            component: NameColumnRow,
+                            props : {row: p},
+                            sort_order: 30,
+                            id: "name"
+                        },
+                        {
+                            component: StatusColumnRow,
+                            props : {row: p},
+                            sort_order: 40,
+                            id: "status"
+                        },
+                        {
+                            component: QtyColumnRow,
+                            props : {row: p},
+                            sort_order: 50,
+                            id: "qty"
+                        },
+                        {
+                            component: PriceColumnRow,
+                            props : {row: p},
+                            sort_order: 60,
+                            id: "price"
+                        }
+                    ]}
+                />
+            })}
             </tbody>
         </table>
         {products.length === 0 &&
