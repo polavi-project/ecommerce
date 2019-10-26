@@ -3,16 +3,18 @@ import Text from "../../../../../../../../js/production/form/fields/text.js";
 import Select from "../../../../../../../../js/production/form/fields/select.js";
 import Multiselect from "../../../../../../../../js/production/form/fields/multiselect.js";
 
-export default function ProductForm({productId, customOptions}) {
-    return <Form id={"product-form"} action={window.base_url + "/cart/add"} method={"POST"}>
-        <input type="hidden" name="product_id" value={productId}/>
+export default function ProductForm(props) {
+    const currency = ReactRedux.useSelector(state => _.get(state, 'appState.orderData.currency', 'USD'));
+    const language = ReactRedux.useSelector(state => _.get(state, 'appState.orderData.language', 'en'));
+    return <Form id={"product-form"} action={props.action} method={"POST"} submitText={"Add to cart"}>
+        <input type="hidden" name="product_id" value={props.productId}/>
         {
-            customOptions &&
+            props.customOptions.length > 0 &&
             <div><span>Options</span></div>
         }
-        {customOptions.map((o,i) => {
+        {props.customOptions.map((o,i) => {
             let values = o.values.map((v) => {
-                let _price = new Intl.NumberFormat(window.language, { style: 'currency', currency: window.currency }).format(v.extra_price);
+                let _price = new Intl.NumberFormat(language, { style: 'currency', currency: currency }).format(v.extra_price);
                 return {
                     value: v.value_id,
                     text: v.value + ` (+ ${_price})`
@@ -59,6 +61,5 @@ export default function ProductForm({productId, customOptions}) {
             validation_rules={['notEmpty']}
             label="Quantity"
         />
-        <button type={"submit"} className={"uk-button uk-button-primary"}><span>Add To Cart</span></button>
     </Form>
 }

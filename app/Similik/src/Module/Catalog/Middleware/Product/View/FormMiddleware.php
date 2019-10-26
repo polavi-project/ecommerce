@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Similik\Module\Catalog\Middleware\Product\View;
 
+use function Similik\generate_url;
 use function Similik\get_default_language_Id;
 use function Similik\get_js_file_url;
 use Similik\Module\Graphql\Services\GraphqlExecutor;
@@ -61,8 +62,9 @@ class FormMiddleware extends MiddlewareAbstract
                     50,
                     get_js_file_url("production/catalog/product/view/form.js", false),
                     [
-                        "customOptions"=>$options,
-                        "productId" => $request->attributes->get('id')
+                        "customOptions" => $options,
+                        "productId" => $request->attributes->get('id'),
+                        "action" => generate_url("cart.add")
                     ]
                 );
             });

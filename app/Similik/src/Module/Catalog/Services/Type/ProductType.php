@@ -147,12 +147,6 @@ class ProductType extends ObjectType
                     'meta_keywords' => [
                         'type' => Type::string()
                     ],
-                    'advanced_price' => [
-                        'type' => Type::listOf($container->get(AdvancedPriceType::class)),
-                        'resolve' => function($product, $args, Container $container, ResolveInfo $info) {
-                            return $container->get(DataLoader::class)->getProductAdvancedPrice($product, $args, $container, $info);
-                        }
-                    ],
                     'group_id' => [
                         'type' => Type::nonNull(Type::int())
                     ],

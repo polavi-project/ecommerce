@@ -3,12 +3,14 @@ import Text from "../../../../../../../../js/production/form/fields/text.js";
 import Select from "../../../../../../../../js/production/form/fields/select.js";
 import Multiselect from "../../../../../../../../js/production/form/fields/multiselect.js";
 
-export default function ProductForm({ productId, customOptions }) {
+export default function ProductForm(props) {
+    const currency = ReactRedux.useSelector(state => _.get(state, 'appState.orderData.currency', 'USD'));
+    const language = ReactRedux.useSelector(state => _.get(state, 'appState.orderData.language', 'en'));
     return React.createElement(
         Form,
-        { id: "product-form", action: window.base_url + "/cart/add", method: "POST" },
-        React.createElement("input", { type: "hidden", name: "product_id", value: productId }),
-        customOptions && React.createElement(
+        { id: "product-form", action: props.action, method: "POST", submitText: "Add to cart" },
+        React.createElement("input", { type: "hidden", name: "product_id", value: props.productId }),
+        props.customOptions.length > 0 && React.createElement(
             "div",
             null,
             React.createElement(
@@ -17,9 +19,9 @@ export default function ProductForm({ productId, customOptions }) {
                 "Options"
             )
         ),
-        customOptions.map((o, i) => {
+        props.customOptions.map((o, i) => {
             let values = o.values.map(v => {
-                let _price = new Intl.NumberFormat(window.language, { style: 'currency', currency: window.currency }).format(v.extra_price);
+                let _price = new Intl.NumberFormat(language, { style: 'currency', currency: currency }).format(v.extra_price);
                 return {
                     value: v.value_id,
                     text: v.value + ` (+ ${_price})`
@@ -65,15 +67,6 @@ export default function ProductForm({ productId, customOptions }) {
             value: "",
             validation_rules: ['notEmpty'],
             label: "Quantity"
-        }),
-        React.createElement(
-            "button",
-            { type: "submit", className: "uk-button uk-button-primary" },
-            React.createElement(
-                "span",
-                null,
-                "Add To Cart"
-            )
-        )
+        })
     );
 }

@@ -26,45 +26,48 @@ class InitMiddleware extends MiddlewareAbstract
      */
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
-        if($request->attributes->get('slug'))
-            $product = _mysql()->getTable('product')
-            ->leftJoin('product_description', null, [
-                [
-                    'column'      => "product_description.language_id",
-                    'operator'    => "=",
-                    'value'       => $request->get('language', get_default_language_Id()),
-                    'ao'          => 'and',
-                    'start_group' => null,
-                    'end_group'   => null
-                ]
-            ])
-            ->where('product_description.seo_key', '=', $request->attributes->get('slug'))
-            ->fetchOneAssoc();
-        else
-            $product = _mysql()->getTable('product')
-                ->leftJoin('product_description', null, [
-                    [
-                        'column'      => "product_description.language_id",
-                        'operator'    => "=",
-                        'value'       => $request->get('language', get_default_language_Id()),
-                        'ao'          => 'and',
-                        'start_group' => null,
-                        'end_group'   => null
-                    ]
-                ])
-                ->where('product.product_id', '=', $request->attributes->get('id'))
+        $conn = _mysql();
+        $product = null;
+        if($request->attributes->get('slug')) {
+            $des = $conn->getTable('product_description')
+                ->where('seo_key', '=', $request->attributes->get('slug'))
+                ->andWhere('language_id', '=', get_default_language_Id())
+                ->fetchOneAssoc();
+            if($des)
+                $product = $conn->getTable('product')
+                    ->where('product_id', '=', $des['product_description_product_id'])
+                    ->andWhere('status', '=', 1)
+                    ->fetchOneAssoc();
+        } else
+            $product = $conn->getTable('product')
+                ->where('product_id', '=', $request->attributes->get('id'))
+                ->andWhere('status', '=', 1)
                 ->fetchOneAssoc();
 
-        if(!$product)
+        if(!$product) {
             $response->setStatusCode(404);
-        else {
-            $request->attributes->set('id', $product['product_id']);
-            $this->getContainer()->get(Helmet::class)->setTitle($product['name'])->addMeta([
-                'name'=> 'description',
-                'content' => $product['short_description']
-            ]);
+            return $delegate;
         }
 
-        return $delegate;
+        $request->attributes->set('id', $product['product_id']);
+        $des = $conn->getTable('product_description')
+            ->where('product_description_product_id', '=', $product['product_id'])
+            ->andWhere('language_id', '=', get_default_language_Id())
+            ->fetchOneAssoc();
+
+        $this->getContainer()->get(Helmet::class)->setTitle($des['name'])->addMeta([
+            'name'=> 'description',
+            'content' => $des['short_description']
+        ]);
+
+        $response->addState('product', [
+            'id' => $product['product_id'],
+            'regularPrice' => $product['price'],
+            'sku' => $product['sku'],
+            'weight' => $product['weight'],
+            'isInStock' => $product['manage_stock'] == 0 || ($product['qty'] > 0 && $product['stock_availability'] == 1)
+        ]);
+
+        return $product;
     }
 }

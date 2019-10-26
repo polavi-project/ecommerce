@@ -99,6 +99,32 @@ $eventDispatcher->addListener(
                 return $result;
             }
         ];
+
+        $fields['productTierPrice'] = [
+            'type' => Type::listOf(Type::listOf($container->get(\Similik\Module\Catalog\Services\Type\ProductTierPriceType::class))),
+            'description' => "Return a list of product tier price",
+            'args' => [
+                'productId' =>  Type::nonNull(Type::int()),
+                'customerGroupId' =>  Type::nonNull(Type::int()),
+                'qty' =>  Type::nonNull(Type::int()),
+            ],
+            'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
+                return _mysql()->getTable('product_price')
+                    ->addFieldToSelect("DISTINCT(qty)", "qty")
+                    ->addFieldToSelect("MIN(price)", "price")
+                    ->addFieldToSelect("active_from")
+                    ->addFieldToSelect("active_to")
+                    ->groupBy('qty')
+                    ->where('product_price_product_id', '=', $args['productId'])
+                    ->andWhere('customer_group_id', '=', $args['customerGroupId'])
+                    ->andWhere('qty', '>=', $args['qty'])
+                    ->andWhere('active_from', 'IS', null, '((')
+                    ->orWhere('active_from', '<', date("Y-m-d H:i:s"), null, ')')
+                    ->andWhere('active_to', 'IS', null, '(')
+                    ->orWhere('active_to', '>', date("Y-m-d H:i:s"), null, '))')
+                    ->fetchAllAssoc(['sort_by'=>'qty', 'sort_order'=>'ASC']);
+            }
+        ];
     },
     5
 );

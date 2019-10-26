@@ -12,8 +12,8 @@ $container[\Similik\Module\Catalog\Services\Type\Price::class] =  function() {
     return new \Similik\Module\Catalog\Services\Type\Price();
 };
 
-$container[\Similik\Module\Catalog\Services\Type\AdvancedPriceType::class] =  function() use ($container) {
-    return new \Similik\Module\Catalog\Services\Type\AdvancedPriceType($container);
+$container[\Similik\Module\Catalog\Services\Type\ProductTierPriceType::class] =  function() use ($container) {
+    return new \Similik\Module\Catalog\Services\Type\ProductTierPriceType($container);
 };
 
 $container[\Similik\Module\Catalog\Services\Type\CategoryType::class] =  function() use ($container) {
