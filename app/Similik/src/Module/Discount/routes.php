@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 $router->addAdminRoute('coupon.list', 'GET', '/coupons', [
     \Similik\Module\Discount\Middleware\Grid\GridMiddleware::class,
+    \Similik\Module\Discount\Middleware\Grid\AddNewButtonMiddleware::class,
 ]);
 
 $router->addAdminRoute('coupon.create', 'GET', '/coupon/create', [
