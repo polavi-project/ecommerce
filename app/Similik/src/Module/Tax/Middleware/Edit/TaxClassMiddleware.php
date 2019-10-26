@@ -46,31 +46,24 @@ class TaxClassMiddleware extends MiddlewareAbstract
                     }
                 }"
             ])
-            ->then(function($data) use ($response) {
-                /**@var \GraphQL\Executor\ExecutionResult[] $data */
-                if(is_array($data)) {
-                    foreach ($data as $item) {
-                        //var_dump($item->data);
-                        //var_dump($item->errors);
-                        if(isset($item->data['taxClasses'])) {
-                            array_walk($item->data['taxClasses'], function(&$tax) {
-                                $tax = array_merge($tax, [
-                                    'formId'=> 'tax_class_edit_' . $tax['tax_class_id']
-                                ]);
-                            });
-                            $response->addWidget(
-                                'tax_setting',
-                                'content',
-                                10,
-                                get_js_file_url("production/tax/form.js", true),
-                                [
-                                    'classes' => $item->data['taxClasses'],
-                                    'saveAction'=> $this->getContainer()->get(Router::class)->generateUrl('tax.class.save')
-                                ]
-                            );
-                            break;
-                        }
-                    }
+            ->then(function($result) use ($response) {
+                /**@var \GraphQL\Executor\ExecutionResult $result */
+                if(isset($result->data['taxClasses'])) {
+                    array_walk($result->data['taxClasses'], function(&$tax) {
+                        $tax = array_merge($tax, [
+                            'formId'=> 'tax_class_edit_' . $tax['tax_class_id']
+                        ]);
+                    });
+                    $response->addWidget(
+                        'tax_setting',
+                        'content',
+                        10,
+                        get_js_file_url("production/tax/form.js", true),
+                        [
+                            'classes' => $result->data['taxClasses'],
+                            'saveAction'=> $this->getContainer()->get(Router::class)->generateUrl('tax.class.save')
+                        ]
+                    );
                 }
             });
 
