@@ -31,16 +31,14 @@ class PriceMiddleware extends MiddlewareAbstract
         if($request->attributes->get('_matched_route') == 'product.edit')
             $query = <<< QUERY
                     {
-                        product (id: {$request->get('id')} language:1) {
-                            advanced_price {
+                        productTierPrice (productId: {$request->attributes->getInt('id')}) {
                                 product_price_id
-                                product_price_product_id
+                                product_id
                                 price
                                 customer_group_id       
                                 qty
                                 active_from
                                 active_to
-                            }
                         }
                         customerGroups {
                             value: customer_group_id
@@ -63,11 +61,11 @@ QUERY;
                 "query"=> $query
             ])
             ->then(function($result) use ($response) {
-                $advancedPrice = [];
+                $tierPrice = [];
                 $customerGroups = [];
                 /**@var \GraphQL\Executor\ExecutionResult $result */
-                if (isset($result->data['product'])) {
-                    $advancedPrice = $result->data['product']['advanced_price'];
+                if (isset($result->data['productTierPrice'])) {
+                    $tierPrice = $result->data['productTierPrice'];
                 }
                 if (isset($result->data['customerGroups'])) {
                     $customerGroups = $result->data['customerGroups'];
@@ -77,7 +75,7 @@ QUERY;
                     'admin_product_edit_inner_right',
                     10,
                     get_js_file_url("production/catalog/product/edit/advanced_price.js", true),
-                    ['formId'=> self::FORM_ID, "prices"=> $advancedPrice, 'customerGroups'=>$customerGroups]
+                    ['formId'=> self::FORM_ID, "prices"=> $tierPrice, 'customerGroups'=>$customerGroups]
                 );
             });
 

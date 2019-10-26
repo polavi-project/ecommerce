@@ -18,13 +18,11 @@ class PriceMiddleware extends MiddlewareAbstract
 {
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
-        $customerGroupId = $request->getCustomer() ? $request->getCustomer()->getData('group_id') ?? 3 : 3;
-
         $this->getContainer()
             ->get(GraphqlExecutor::class)
             ->waitToExecute([
                 "query"=>"{
-                    productTierPrice (productId: {$request->attributes->getInt('id')} customerGroupId: {$customerGroupId} qty: 1)
+                    productTierPrice (productId: {$request->attributes->getInt('id')})
                     {
                         qty
                         price

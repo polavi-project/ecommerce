@@ -33,6 +33,9 @@ class ProductTierPriceType extends ObjectType
             'name' => 'ProductTierPrice',
             'fields' => function() use ($container){
                 $fields = [
+                    'product_price_id' => [
+                        'type' => Type::nonNull(Type::id())
+                    ],
                     'product_id' => [
                         'type' => Type::nonNull(Type::id()),
                         'resolve' => function($value, $args, Container $container, ResolveInfo $info) {
