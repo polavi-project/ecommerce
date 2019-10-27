@@ -5,7 +5,7 @@ import {Price} from "../../../../production/catalog/product/list/item/price.js";
 import {AddToCart} from "../../../../production/catalog/product/list/item/buy_button.js";
 
 export default function ProductList({products, addItemApi}) {
-    return <div className="product-list uk-grid uk-grid-small">
+    return <div className="product-list uk-grid">
         {
             products.map((p, index) => {
                 return <Area
