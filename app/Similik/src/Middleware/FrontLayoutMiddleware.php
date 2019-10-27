@@ -65,8 +65,7 @@ class FrontLayoutMiddleware extends MiddlewareAbstract
             'content',
             'content_grid',
             20,
-            get_js_file_url("production/area.js"),
-            ["id"=> "content", "className"=> "uk-width-expand"]
+            get_js_file_url("production/cms/page/content_layout.js", false)
         );
 
         return $delegate;
