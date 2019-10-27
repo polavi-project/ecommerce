@@ -12,7 +12,7 @@ export default function Images({ images, productName }) {
     });
     return React.createElement(
         "div",
-        { className: "uk-width-1-2" },
+        { className: "uk-width-1-1" },
         mainImage && React.createElement(MainImage, { src: mainImage.main, alt: productName }),
         React.createElement(
             "ul",

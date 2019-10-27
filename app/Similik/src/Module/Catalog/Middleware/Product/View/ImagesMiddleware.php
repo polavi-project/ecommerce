@@ -57,7 +57,7 @@ class ImagesMiddleware extends MiddlewareAbstract
 //                        }
                     $response->addWidget(
                         'product_view_images',
-                        'content',
+                        'product_page_middle_left',
                         10,
                         get_js_file_url("production/catalog/product/view/images.js", false),
                         $result->data['productImages']

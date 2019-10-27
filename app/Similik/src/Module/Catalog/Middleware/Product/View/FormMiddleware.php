@@ -58,7 +58,7 @@ class FormMiddleware extends MiddlewareAbstract
                 }
                 $response->addWidget(
                     'product_view_form',
-                    'content',
+                    'product_page_middle_right',
                     50,
                     get_js_file_url("production/catalog/product/view/form.js", false),
                     [
