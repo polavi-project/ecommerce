@@ -34,7 +34,7 @@ class SaveMiddleware extends MiddlewareAbstract
         $processor->startTransaction();
         $language = $request->attributes->get('language', get_default_language_Id());
         $language = $language == get_default_language_Id() ? 0 : $language;
-        $availableLanguages = get_config('general_languages', []);
+        //$availableLanguages = get_config('general_languages', []);
         try {
             $data = $request->request->all();
             foreach ($data as $name=> $value) {
@@ -57,13 +57,13 @@ class SaveMiddleware extends MiddlewareAbstract
             }
 
             // Language update
-            $languages = $data['general_languages'];
-            $newLanguages = array_diff($languages, $availableLanguages);
-            if($newLanguages) {
-                $this->copyProductDescription($newLanguages, $processor);
-                $this->copyCategoryDescription($newLanguages, $processor);
-                $this->copyAttributeTextValue($newLanguages, $processor);
-            }
+//            $languages = $data['general_languages'];
+//            $newLanguages = array_diff($languages, $availableLanguages);
+//            if($newLanguages) {
+//                $this->copyProductDescription($newLanguages, $processor);
+//                $this->copyCategoryDescription($newLanguages, $processor);
+//                $this->copyAttributeTextValue($newLanguages, $processor);
+//            }
             $processor->commit();
             $this->getContainer()->get(Session::class)->getFlashBag()->add('success', 'Setting saved');
             $response->redirect($this->getContainer()->get(Router::class)->generateUrl('setting.general'));

@@ -1,28 +1,204 @@
 import { Form } from "../../../../../../../js/production/form/form.js";
 import Area from "../../../../../../../js/production/area.js";
+import Text from "../../../../../../../js/production/form/fields/text.js";
+import Select from "../../../../../../../js/production/form/fields/select.js";
+import { CountryOptions } from "../../../../../../../js/production/locale/country_option.js";
+import Multiselect from "../../../../../../../js/production/form/fields/multiselect.js";
+import { LanguageOptions } from "../../../../../../../js/production/locale/language_option.js";
+import { CurrencyOptions } from "../../../../../../../js/production/locale/currency_option.js";
+import { TimezoneOptions } from "../../../../../../../js/production/locale/timezone_option.js";
+import { Fetch } from "../../../../../../../js/production/fetch.js";
 
-export default function GeneralSettingForms(props) {
+function Logo({ value = null }) {
+    const uploadApi = ReactRedux.useSelector(state => _.get(state, 'appState.graphqlApi'));
+    const baseUrl = ReactRedux.useSelector(state => _.get(state, 'appState.baseUrl'));
+    const [logo, setLogo] = React.useState({ path: value, url: baseUrl + "/media/" + value });
+
+    const onChange = e => {
+        e.persist();
+        let formData = new FormData();
+        formData.append('file', e.target.files[0]);
+        formData.append('query', `mutation UploadProductImage { uploadMedia (targetPath: "upload") {files {status message file {url path}}}}`);
+
+        Fetch(uploadApi, false, "POST", formData, null, response => {
+            if (_.get(response, 'payload.data.uploadMedia.files')) {
+                _.get(response, 'payload.data.uploadMedia.files').forEach((e, i) => {
+                    if (e.status === true) setLogo(e.file);
+                });
+            }
+        }, null, () => {
+            e.target.value = null;
+        });
+    };
+
     return React.createElement(
         "div",
         null,
         React.createElement(
+            "div",
+            null,
+            React.createElement(
+                "span",
+                null,
+                "Logo"
+            )
+        ),
+        logo.path !== null && React.createElement(
+            "div",
+            null,
+            React.createElement("img", { src: logo.url, style: { width: '50px', height: '50px' } })
+        ),
+        logo.path !== null && React.createElement("input", { type: "hidden", name: "general_logo", value: logo.path, readOnly: true }),
+        React.createElement("input", { type: "file", onChange: onChange, title: "Upload" })
+    );
+}
+
+function Country({ value = [] }) {
+    return React.createElement(
+        "div",
+        null,
+        React.createElement(
+            CountryOptions,
+            null,
+            React.createElement(Multiselect, {
+                value: value,
+                label: "Allow countries",
+                name: "general_allow_countries[]",
+                className: "uk-form-small"
+            })
+        )
+    );
+}
+
+function Language({ value = 26 }) {
+    return React.createElement(
+        "div",
+        null,
+        React.createElement(
+            LanguageOptions,
+            null,
+            React.createElement(Select, {
+                value: value,
+                formId: "general_setting_form",
+                validation_rules: ['notEmpty'],
+                label: "Language",
+                name: "general_default_language",
+                className: "uk-form-small"
+            })
+        )
+    );
+}
+
+function Currency({ value = 'USD' }) {
+    return React.createElement(
+        "div",
+        null,
+        React.createElement(
+            CurrencyOptions,
+            null,
+            React.createElement(Select, {
+                value: value,
+                formId: "general_setting_form",
+                validation_rules: ['notEmpty'],
+                label: "Currency",
+                name: "general_currency",
+                className: "uk-form-small"
+            })
+        )
+    );
+}
+
+function Timezone({ value = 'Europe/London' }) {
+    return React.createElement(
+        "div",
+        null,
+        React.createElement(
+            TimezoneOptions,
+            null,
+            React.createElement(Select, {
+                value: value,
+                formId: "general_setting_form",
+                label: "Timezone",
+                name: "general_timezone",
+                className: "uk-form-small"
+            })
+        )
+    );
+}
+
+export default function GeneralSettingForms(props) {
+    const [fields] = React.useState(() => {
+        return [{
+            component: Text,
+            props: { id: 'general_store_name', formId: "general_setting_form", name: "general_store_name", label: "Store name", validation_rules: ["notEmpty"] },
+            sort_order: 10,
+            id: "general_store_name"
+        }, {
+            component: Logo,
+            props: { name: "general_logo" },
+            sort_order: 15,
+            id: "general_logo"
+        }, {
+            component: Text,
+            props: { id: 'general_logo_width', formId: "general_setting_form", name: "general_logo_width", label: "Logo width(pixel)" },
+            sort_order: 16,
+            id: "general_logo_width"
+        }, {
+            component: Text,
+            props: { id: 'general_logo_height', formId: "general_setting_form", name: "general_logo_height", label: "Logo height(pixel)" },
+            sort_order: 17,
+            id: "general_logo_height"
+        }, {
+            component: Text,
+            props: { id: 'general_store_contact_telephone', formId: "general_setting_form", name: "general_store_contact_telephone", label: "Contact phone", validation_rules: ["notEmpty"] },
+            sort_order: 20,
+            id: "general_store_contact_telephone"
+        }, {
+            component: Country,
+            props: { name: "general_allow_countries" },
+            sort_order: 30,
+            id: "general_allow_countries"
+        }, {
+            component: Language,
+            props: { name: "general_default_language" },
+            sort_order: 40,
+            id: "general_default_language"
+        }, {
+            component: Currency,
+            props: { name: "general_currency" },
+            sort_order: 50,
+            id: "general_currency"
+        }, {
+            component: Timezone,
+            props: { name: "general_timezone" },
+            sort_order: 60,
+            id: "general_timezone"
+        }].filter(f => {
+            if (_.get(props, `data.${f.props.name}`) !== undefined) f.props.value = _.get(props, `data.${f.props.name}`);
+            return f;
+        });
+    });
+
+    return React.createElement(
+        "div",
+        { className: "uk-flex-center" },
+        React.createElement(
             Form,
-            props,
+            { id: "general_setting_form", action: props.action },
             React.createElement(
                 "div",
                 null,
                 React.createElement(
-                    "h1",
+                    "div",
                     null,
-                    "General setting"
-                ),
-                React.createElement(
-                    "p",
-                    null,
-                    "This is where you configure store basic information"
+                    React.createElement(
+                        "strong",
+                        null,
+                        "General setting"
+                    )
                 )
             ),
-            React.createElement(Area, { id: "general_setting_form_inner", widgets: [] })
+            React.createElement(Area, { id: "general_setting_form_inner", coreWidgets: fields })
         )
     );
 }
