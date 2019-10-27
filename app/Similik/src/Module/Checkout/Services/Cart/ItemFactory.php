@@ -15,7 +15,6 @@ use function Similik\dispatch_event;
 use function Similik\get_base_url_scheme_less;
 use function Similik\get_default_language_Id;
 use Similik\Module\Checkout\Services\PriceHelper;
-use Similik\Module\Discount\Services\CouponHelper;
 use Similik\Module\Tax\Services\TaxCalculator;
 use Similik\Services\Db\Processor;
 use Similik\Services\Routing\Router;
@@ -336,6 +335,8 @@ class ItemFactory
         foreach ($this->items as $key => $item) {
             if($item->getData('cart_item_id') == $id) {
                 unset($this->items[$key]);
+                if(!$this->items)
+                    _mysql()->getTable('cart_item')->where('cart_item_id', '=', $id)->delete();
                 dispatch_event('cart_item_removed', [$item]);
 
                 return $item;
@@ -377,6 +378,14 @@ class ItemFactory
 
         foreach ($sorted as $key=>$value)
             $this->callbacks[$value] = $this->fields[$value]['resolver'];
+    }
+
+    /**
+     * @return Cart
+     */
+    public function getCart(): Cart
+    {
+        return $this->cart;
     }
 
     /**
