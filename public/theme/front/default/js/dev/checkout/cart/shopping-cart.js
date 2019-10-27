@@ -9,7 +9,7 @@ function Title() {
 function ShoppingCart() {
     return <Area
         id="shopping-cart-page"
-        className="uk-grid uk-grid-small"
+        className="uk-grid uk-grid-small uk-width-1-1"
         coreWidgets={[
             {
                 component: Title,
