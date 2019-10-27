@@ -27,8 +27,9 @@ function reducer(rootProductCollectionFilter = [], action = {}) {
 ReducerRegistry.register('rootProductCollectionFilter', reducer);
 
 
-export default function Products({ps, categoryId, apiUrl}) {
+export default function Products({ps, categoryId, addItemApi}) {
     const dispatch = ReactRedux.useDispatch();
+    const apiUrl = ReactRedux.useSelector(state => _.get(state, 'appState.graphqlApi'));
     const [products, setProducts] = React.useState(() => {
         dispatch({'type' : ROOT_PRODUCT_COLLECTION_FILTER_DEFINED, 'payload': {'rootProductCollectionFilter': [{key: "category", operator: "IN", value: [categoryId]}]}});
         return ps === undefined ? [] : ps;
@@ -38,7 +39,6 @@ export default function Products({ps, categoryId, apiUrl}) {
     const prevProductCollectionFilter = usePrevious(productCollectionFilter);
 
     React.useEffect(() => {
-        console.log(prevProductCollectionFilter);
         if(prevProductCollectionFilter === undefined || (productCollectionFilter.length === 0 && prevProductCollectionFilter.length === 0))
             return;
         applyFilter(productCollectionFilter);
@@ -80,5 +80,5 @@ export default function Products({ps, categoryId, apiUrl}) {
         // TODO: field need to be changeable without overwriting this file
         return `{productCollection ${filterStr} {products {product_id name price url image { list }} total currentFilter}}`
     };
-    return <ProductList products={products}/>
+    return <ProductList products={products} addItemApi={addItemApi}/>
 }

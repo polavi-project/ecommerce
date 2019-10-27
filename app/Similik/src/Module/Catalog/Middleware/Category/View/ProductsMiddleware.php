@@ -9,13 +9,11 @@ declare(strict_types=1);
 namespace Similik\Module\Catalog\Middleware\Category\View;
 
 use function Similik\generate_url;
-use function Similik\get_default_language_Id;
 use function Similik\get_js_file_url;
 use Similik\Module\Graphql\Services\GraphqlExecutor;
 use Similik\Services\Http\Request;
 use Similik\Services\Http\Response;
 use Similik\Middleware\MiddlewareAbstract;
-use Similik\Services\Routing\Router;
 
 class ProductsMiddleware extends MiddlewareAbstract
 {
@@ -62,7 +60,7 @@ QUERY
                         [
                             "ps" => $products,
                             "categoryId" => $request->get('id'),
-                            "apiUrl" => generate_url('graphql.api')
+                            "addItemApi" => generate_url('cart.add')
                         ]
                     );
                 }
