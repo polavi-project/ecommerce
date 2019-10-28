@@ -28,10 +28,6 @@ $container[\Similik\Module\Cms\Services\Type\PageCollectionType::class] = functi
     return new \Similik\Module\Cms\Services\Type\PageCollectionType($container);
 };
 
-$container[\Similik\Module\Cms\Services\PageCollection::class] = function() use ($container){
-    return new \Similik\Module\Cms\Services\PageCollection($container);
-};
-
 $container[\Similik\Module\Cms\Services\Type\CmsPageInputType::class] = function() use ($container){
     return new \Similik\Module\Cms\Services\Type\CmsPageInputType($container);
 };
@@ -46,10 +42,6 @@ $container[\Similik\Module\Cms\Services\Type\WidgetCollectionFilterType::class] 
 
 $container[\Similik\Module\Cms\Services\Type\WidgetCollectionType::class] = function() use ($container){
     return new \Similik\Module\Cms\Services\Type\WidgetCollectionType($container);
-};
-
-$container[\Similik\Module\Cms\Services\WidgetCollection::class] = function() use ($container){
-    return new \Similik\Module\Cms\Services\WidgetCollection($container);
 };
 
 $container[\Similik\Module\Cms\Services\Type\WidgetInputType::class] = function() use ($container){

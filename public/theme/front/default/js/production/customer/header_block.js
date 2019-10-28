@@ -51,38 +51,24 @@ function UserGreeting({ fullName, logoutUrl, myAccountUrl }) {
                 "!"
             )
         ),
+        " ",
         React.createElement(
-            "div",
-            { "uk-dropdown": "mode: hover" },
+            A,
+            { url: myAccountUrl },
             React.createElement(
-                "ul",
-                { className: "uk-list" },
-                React.createElement(
-                    "li",
-                    null,
-                    React.createElement(
-                        A,
-                        { url: myAccountUrl },
-                        React.createElement(
-                            "span",
-                            null,
-                            "My account"
-                        )
-                    )
-                ),
-                React.createElement(
-                    "li",
-                    null,
-                    React.createElement(
-                        A,
-                        { url: logoutUrl },
-                        React.createElement(
-                            "span",
-                            null,
-                            "Log out"
-                        )
-                    )
-                )
+                "span",
+                null,
+                "My account"
+            )
+        ),
+        " | ",
+        React.createElement(
+            A,
+            { url: logoutUrl },
+            React.createElement(
+                "span",
+                null,
+                "Log out"
             )
         )
     );

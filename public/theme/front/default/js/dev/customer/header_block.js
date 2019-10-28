@@ -11,13 +11,7 @@ const mapStateToProps = (state, ownProps) => {
 
 function UserGreeting({fullName, logoutUrl, myAccountUrl}) {
     return <div className="uk-inline">
-        <span><span>Hello </span> <span>{fullName}!</span></span>
-        <div uk-dropdown="mode: hover">
-            <ul className="uk-list">
-                <li><A url={myAccountUrl}><span>My account</span></A></li>
-                <li><A url={logoutUrl}><span>Log out</span></A></li>
-            </ul>
-        </div>
+        <span><span>Hello </span> <span>{fullName}!</span></span> <A url={myAccountUrl}><span>My account</span></A> | <A url={logoutUrl}><span>Log out</span></A>
     </div>
 }
 const UserGreetingComponent = ReactRedux.connect(mapStateToProps)(UserGreeting);

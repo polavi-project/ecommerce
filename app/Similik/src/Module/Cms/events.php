@@ -62,8 +62,8 @@ $eventDispatcher->addListener(
                     'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
                         if($container->get(\Similik\Services\Http\Request::class)->isAdmin() == false)
                             return [];
-                        else
-                            return $container->get(\Similik\Module\Cms\Services\PageCollection::class)->getData($rootValue, $args, $container, $info);
+                        $collection = new \Similik\Module\Cms\Services\PageCollection($container);
+                        return $collection->getData($rootValue, $args, $container, $info);
                     }
                 ]
             ];
@@ -97,7 +97,8 @@ $eventDispatcher->addListener(
                         ]
                     ],
                     'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
-                        return $container->get(\Similik\Module\Cms\Services\WidgetCollection::class)->getData($rootValue, $args, $container, $info);
+                        $collection = new \Similik\Module\Cms\Services\WidgetCollection($container);
+                        return $collection->getData($rootValue, $args, $container, $info);
                     }
                 ]
             ];
