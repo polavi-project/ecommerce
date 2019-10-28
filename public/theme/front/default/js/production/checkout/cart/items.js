@@ -22,7 +22,7 @@ function Empty({ homeUrl }) {
 }
 
 function Items({ items }) {
-    const baseUrl = ReactRedux.useSelector(state => _.get(state, 'appState.base_url'));
+    const baseUrl = ReactRedux.useSelector(state => _.get(state, 'appState.baseUrl'));
     const currency = ReactRedux.useSelector(state => _.get(state, 'appState.currency', 'USD'));
     const language = ReactRedux.useSelector(state => _.get(state, 'appState.language[0]', 'en'));
 
