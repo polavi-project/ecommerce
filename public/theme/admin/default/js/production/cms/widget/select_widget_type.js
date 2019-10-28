@@ -38,9 +38,10 @@ function WidgetTypeSelector({ types, selectedType = '', requestUrl, showEdit = 0
         React.createElement(
             "select",
             {
-                className: "uk-select",
+                className: "uk-select uk-form-small",
                 onChange: e => onSelect(e),
-                value: type
+                value: type,
+                style: { maxWidth: "200px" }
             },
             React.createElement(
                 "option",
@@ -66,12 +67,16 @@ function WidgetTypeSelector({ types, selectedType = '', requestUrl, showEdit = 0
         ),
         showEditForm === 1 && React.createElement(EditForm, { displayForm: displayForm, requestUrl: requestUrl }),
         showEditForm === 0 && React.createElement(
-            "a",
-            { href: "#", className: "uk-button-primary uk-button-small", onClick: e => displayForm(e) },
+            "div",
+            null,
             React.createElement(
-                "span",
-                null,
-                "Add new"
+                "a",
+                { href: "#", className: "uk-button-primary uk-button-small", onClick: e => displayForm(e) },
+                React.createElement(
+                    "span",
+                    null,
+                    "Add new"
+                )
             )
         )
     );

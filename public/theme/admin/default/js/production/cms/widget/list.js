@@ -29,7 +29,7 @@ function IdColumnHeader({ areaProps }) {
                 "div",
                 { className: "filter" },
                 React.createElement("input", {
-                    className: "uk-select uk-form-small",
+                    className: "uk-input uk-form-small",
                     type: "text",
                     ref: filterFrom,
                     onKeyPress: e => {
@@ -38,7 +38,7 @@ function IdColumnHeader({ areaProps }) {
                     placeholder: "From"
                 }),
                 React.createElement("input", {
-                    className: "uk-select uk-form-small",
+                    className: "uk-input uk-form-small",
                     type: "text",
                     ref: filterTo,
                     onKeyPress: e => {
@@ -89,7 +89,7 @@ function NameColumnHeader({ areaProps }) {
                 "div",
                 { className: "filter" },
                 React.createElement("input", {
-                    className: "uk-select uk-form-small",
+                    className: "uk-input uk-form-small",
                     type: "text",
                     ref: filterInput,
                     onKeyPress: e => {

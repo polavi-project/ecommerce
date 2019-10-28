@@ -15,14 +15,14 @@ function IdColumnHeader({areaProps}) {
             <div className={"title"}><span>ID</span></div>
             <div className={"filter"}>
                 <input
-                    className="uk-select uk-form-small"
+                    className="uk-input uk-form-small"
                     type={"text"}
                     ref={filterFrom}
                     onKeyPress={(e) => { if(e.key === 'Enter') areaProps.addFilter("id", "BETWEEN", `${e.target.value} AND ${filterTo.current.value}`);}}
                     placeholder={"From"}
                 />
                 <input
-                    className="uk-select uk-form-small"
+                    className="uk-input uk-form-small"
                     type={"text"}
                     ref={filterTo}
                     onKeyPress={(e) => { if(e.key === 'Enter') areaProps.addFilter("id", "BETWEEN", `${filterFrom.current.value} AND ${e.target.value}`);}}
@@ -49,7 +49,7 @@ function NameColumnHeader({areaProps}) {
             <div className={"title"}><span>Widget name</span></div>
             <div className={"filter"}>
                 <input
-                    className="uk-select uk-form-small"
+                    className="uk-input uk-form-small"
                     type={"text"}
                     ref={filterInput}
                     onKeyPress={(e) => { if(e.key === 'Enter') areaProps.addFilter("name", "LIKE", `%${e.target.value}%`);}}
