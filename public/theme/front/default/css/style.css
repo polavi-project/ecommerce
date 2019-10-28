@@ -69,3 +69,8 @@ html {font-size: 14px !important;}
 .checkout-cart-summary-table td{text-align: right}
 /* SHOPPING CART PAGE*/
 .cart-item-thumb{ float: left; padding-right: 10px}
+
+/* HEADER */
+.header{overflow: hidden; padding-top: 20px}
+.logo{float: left;}
+.customer-area-header{float: right}

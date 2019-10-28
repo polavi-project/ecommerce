@@ -2,14 +2,28 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 import A from "../../../../../../js/production/a.js";
 
-function GuestGreeting({ loginUrl }) {
+function GuestGreeting({ loginUrl, registerUrl }) {
     return React.createElement(
         "div",
         { className: "uk-inline" },
         React.createElement(
             A,
+            { url: registerUrl },
+            React.createElement(
+                "span",
+                null,
+                "Create account"
+            )
+        ),
+        " | ",
+        React.createElement(
+            A,
             { url: loginUrl },
-            React.createElement("span", { "uk-icon": "user" })
+            React.createElement(
+                "span",
+                null,
+                "Login"
+            )
         )
     );
 }
@@ -17,7 +31,7 @@ const mapStateToProps = (state, ownProps) => {
     return state.customerInfo && state.customerInfo.email ? _extends({}, state.customerInfo) : ownProps;
 };
 
-function UserGreeting({ full_name, logoutUrl, myAccountUrl }) {
+function UserGreeting({ fullName, logoutUrl, myAccountUrl }) {
     return React.createElement(
         "div",
         { className: "uk-inline" },
@@ -33,7 +47,7 @@ function UserGreeting({ full_name, logoutUrl, myAccountUrl }) {
             React.createElement(
                 "span",
                 null,
-                full_name,
+                fullName,
                 "!"
             )
         ),
@@ -77,8 +91,11 @@ const UserGreetingComponent = ReactRedux.connect(mapStateToProps)(UserGreeting);
 
 export default function HeaderBlock(props) {
     const isLoggedIn = props.isLoggedIn;
-    if (isLoggedIn) {
-        return React.createElement(UserGreetingComponent, props);
-    }
-    return React.createElement(GuestGreeting, props);
+
+    return React.createElement(
+        "div",
+        { className: "customer-area-header" },
+        isLoggedIn && React.createElement(UserGreetingComponent, props),
+        !isLoggedIn && React.createElement(GuestGreeting, props)
+    );
 }

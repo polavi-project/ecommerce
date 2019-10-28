@@ -1,17 +1,17 @@
 import A from "../../../../../../js/production/a.js";
 
-function GuestGreeting({loginUrl}) {
+function GuestGreeting({loginUrl, registerUrl}) {
     return <div className="uk-inline">
-        <A url={loginUrl}><span uk-icon="user"></span></A>
+        <A url={registerUrl}><span>Create account</span></A> | <A url={loginUrl}><span>Login</span></A>
     </div>
 }
 const mapStateToProps = (state, ownProps) => {
     return state.customerInfo && state.customerInfo.email ? {...state.customerInfo} : ownProps;
 };
 
-function UserGreeting({full_name, logoutUrl, myAccountUrl}) {
+function UserGreeting({fullName, logoutUrl, myAccountUrl}) {
     return <div className="uk-inline">
-        <span><span>Hello </span> <span>{full_name}!</span></span>
+        <span><span>Hello </span> <span>{fullName}!</span></span>
         <div uk-dropdown="mode: hover">
             <ul className="uk-list">
                 <li><A url={myAccountUrl}><span>My account</span></A></li>
@@ -24,8 +24,9 @@ const UserGreetingComponent = ReactRedux.connect(mapStateToProps)(UserGreeting);
 
 export default function HeaderBlock(props) {
     const isLoggedIn = props.isLoggedIn;
-    if (isLoggedIn) {
-        return <UserGreetingComponent {...props}/>;
-    }
-    return <GuestGreeting {...props}/>;
+
+    return <div className="customer-area-header">
+        {isLoggedIn && <UserGreetingComponent {...props}/>}
+        {!isLoggedIn && <GuestGreeting {...props}/>}
+    </div>
 }

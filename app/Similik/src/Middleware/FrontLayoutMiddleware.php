@@ -30,7 +30,7 @@ class FrontLayoutMiddleware extends MiddlewareAbstract
             'container',
             0,
             get_js_file_url("production/area.js"),
-            ["id"=> "header", "className" => "uk-width-1-1"]
+            ["id"=> "header", "className" => "uk-width-1-1 header"]
         );
 
         $response->addWidget(
