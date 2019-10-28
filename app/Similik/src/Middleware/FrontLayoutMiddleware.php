@@ -50,22 +50,29 @@ class FrontLayoutMiddleware extends MiddlewareAbstract
         $response->addWidget(
             'leftColumn',
             'content_grid',
-            11,
+            10,
             get_js_file_url("production/area.js"),
             ["id"=> "leftColumn", "className"=> "uk-width-1-6"]
-        );
-        $response->addWidget(
-            'rightColumn',
-            'content_grid',
-            1000,
-            get_js_file_url("production/area.js"),
-            ["id"=> "rightColumn", "className"=> "uk-width-1-6"]
         );
         $response->addWidget(
             'content',
             'content_grid',
             20,
             get_js_file_url("production/cms/page/content_layout.js", false)
+        );
+        $response->addWidget(
+            'rightColumn',
+            'content_grid',
+            30,
+            get_js_file_url("production/area.js"),
+            ["id"=> "rightColumn", "className"=> "uk-width-1-6"]
+        );
+        $response->addWidget(
+            'footer',
+            'content',
+            30,
+            get_js_file_url("production/area.js"),
+            ["id"=>"footer", "className" => "uk-grid uk-grid-small footer"]
         );
 
         return $delegate;

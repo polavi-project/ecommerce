@@ -260,6 +260,7 @@ $eventDispatcher->addListener(
                 //var_dump($args);
                 $conn = _mysql();
                 $data = $args['widget'];
+                $data['sort_order'] = (int)$data['sort_order'];
                 $data['setting'] = json_encode($data['setting'], JSON_NUMERIC_CHECK);
                 $data['display_setting'] = json_encode($data['display_setting'], JSON_NUMERIC_CHECK);
                 if(isset($data['id']) and $data['id']) {
