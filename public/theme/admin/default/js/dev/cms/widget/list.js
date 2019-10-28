@@ -1,5 +1,6 @@
 import Area from "../../../../../../../js/production/area.js";
 import A from "../../../../../../../js/production/a.js";
+import {Fetch} from "../../../../../../../js/production/fetch.js";
 
 function IdColumnHeader({areaProps}) {
     const filterFrom = React.useRef(null);
@@ -153,22 +154,19 @@ function WidgetGrid({apiUrl, defaultFilter})
     const applyFilter = () => {
         let formData = new FormData();
         formData.append('query', buildQuery());
-        axios({
-            method: 'post',
-            url: apiUrl,
-            headers: { 'content-type': 'multipart/form-data' },
-            data: formData
-        }).then(function (response) {
-            if(response.headers['content-type'] !== "application/json")
-                throw new Error('Something wrong, please try again');
-            if(_.get(response, 'data.payload.data.widgetCollection.widgets')) {
-                setWidgets(_.get(response, 'data.payload.data.widgetCollection.widgets'));
+
+        Fetch(
+            apiUrl,
+            false,
+            'POST',
+            formData,
+            null,
+            (response) => {
+                if(_.get(response, 'payload.data.widgetCollection.widgets')) {
+                    setWidgets(_.get(response, 'payload.data.widgetCollection.widgets'));
+                }
             }
-        }).catch(function (error) {
-        }).finally(function() {
-            // e.target.value = null;
-            // setUploading(false);
-        });
+        );
     };
 
     const buildQuery = () => {

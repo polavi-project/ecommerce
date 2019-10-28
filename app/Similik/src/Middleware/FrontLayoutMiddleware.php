@@ -72,7 +72,7 @@ class FrontLayoutMiddleware extends MiddlewareAbstract
             'content',
             30,
             get_js_file_url("production/area.js"),
-            ["id"=>"footer", "className" => "uk-grid uk-grid-small footer"]
+            ["id"=>"footer", "className" => "uk-width-1-1 uk-grid uk-grid-small footer"]
         );
 
         return $delegate;

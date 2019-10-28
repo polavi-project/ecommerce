@@ -55,6 +55,13 @@ export default function TextWidget({id, name, status, setting, displaySetting, s
                 label={"Content"}
                 formId="text-widget-edit-form"
             />
+            <input type='text' name="variables[widget][setting][1][key]" value="container_class" readOnly style={{display:'none'}}/>
+            <Text
+                name="variables[widget][setting][1][value]"
+                value={_.find(setting, {key:'container_class'}) !== undefined ? _.get(_.find(setting, {key:'container_class'}), 'value', '') : ''}
+                formId="text-widget-edit-form"
+                label={"Container class"}
+            />
             <div>Select page layout</div>
             <LayoutList formId={"text-widget-edit-form"} selectedLayouts={layout}/>
             <div>Select area</div>
