@@ -18,7 +18,8 @@ $eventDispatcher->addListener(
                 'Tax',
                 $container->get(Router::class)->generateUrl('tax.class.list'),
                 'print',
-                'setting'
+                'setting',
+                10
             );
         },
         0
