@@ -37,7 +37,22 @@ class TextWidgetMiddleware extends MiddlewareAbstract
                                 return json_decode($value['value'], true);
                             return null;
                         }, []);
-                        return empty($layouts) || in_array($matchedRoute, $layouts);
+                        if(empty($layouts))
+                            return true;
+                        $match = false;
+                        foreach ($layouts as $layout) {
+                            if($matchedRoute == $layout) {
+                                $match = true;
+                                break;
+                            }
+                            if (strpos($layout, '|') !== false) {
+                                if(in_array($matchedRoute, explode('|', $layout))) {
+                                    $match = true;
+                                    break;
+                                }
+                            }
+                        }
+                        return $match;
                     }, ARRAY_FILTER_USE_BOTH);
                     foreach ($widgets as $widget) {
                         $content = array_find($widget['setting'], function($value, $key) {

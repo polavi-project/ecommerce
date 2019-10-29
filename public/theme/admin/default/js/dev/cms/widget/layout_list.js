@@ -9,7 +9,7 @@ function LayoutList({selectedLayouts = [], formId = '', }) {
                 'component': Checkbox,
                 'props': {
                     name: "layout[homepage]",
-                    isChecked: selectedLayouts.find((e) => e === 'homepage') === undefined ? false : true,
+                    isChecked: selectedLayouts.find((e) => e === 'homepage') !== undefined,
                     formId: formId,
                     label: "Home page"
                 },
@@ -20,7 +20,7 @@ function LayoutList({selectedLayouts = [], formId = '', }) {
                 'component': Checkbox,
                 'props': {
                     name: "layout[category.view]",
-                    isChecked: selectedLayouts.find((e) => e === 'category.view') === undefined ? false : true,
+                    isChecked: selectedLayouts.find((e) => e === 'category.view') !== undefined,
                     formId: formId,
                     label: "Category page"
                 },
@@ -30,8 +30,8 @@ function LayoutList({selectedLayouts = [], formId = '', }) {
             {
                 'component': Checkbox,
                 'props': {
-                    name: "layout[product.view]",
-                    isChecked: selectedLayouts.find((e) => e === 'product.view') === undefined ? false : true,
+                    name: "layout[product.view|product.view.pretty]",
+                    isChecked: selectedLayouts.find((e) => e === 'product.view|product.view.pretty') !== undefined,
                     formId: formId,
                     label: "Product page"
                 },
@@ -42,7 +42,7 @@ function LayoutList({selectedLayouts = [], formId = '', }) {
                 'component': Checkbox,
                 'props': {
                     name: "layout[checkout.cart]",
-                    isChecked: selectedLayouts.find((e) => e === 'checkout.cart') === undefined ? false : true,
+                    isChecked: selectedLayouts.find((e) => e === 'checkout.cart') !== undefined,
                     formId: formId,
                     label: "Shopping cart page"
                 },
@@ -53,7 +53,7 @@ function LayoutList({selectedLayouts = [], formId = '', }) {
                 'component': Checkbox,
                 'props': {
                     name: "layout[checkout.index]",
-                    isChecked: selectedLayouts.find((e) => e === 'checkout.index') === undefined ? false : true,
+                    isChecked: selectedLayouts.find((e) => e === 'checkout.index') !== undefined,
                     formId: formId,
                     label: "Checkout page"
                 },
@@ -64,7 +64,7 @@ function LayoutList({selectedLayouts = [], formId = '', }) {
                 'component': Checkbox,
                 'props': {
                     name: "layout[catalog.search]",
-                    isChecked: selectedLayouts.find((e) => e === 'catalog.search') === undefined ? false : true,
+                    isChecked: selectedLayouts.find((e) => e === 'catalog.search') !== undefined,
                     formId: formId,
                     label: "Search page"
                 },

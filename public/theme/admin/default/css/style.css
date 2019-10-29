@@ -105,3 +105,6 @@ table input{max-width: 95px}
 }
 .order-edit-info{margin-bottom: 20px}
 .admin-login-form{margin-top: 60px}
+
+/* TABLE */
+html .uk-table-small td, html .uk-table-small th{padding: 5px}
