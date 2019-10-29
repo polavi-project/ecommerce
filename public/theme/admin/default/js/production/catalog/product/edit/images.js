@@ -137,7 +137,7 @@ export default function ImageUploadContainer(props) {
 
     return React.createElement(
         "div",
-        { className: "product-edit-image" },
+        { className: "product-edit-image border-block" },
         React.createElement(Upload, {
             addImage: addImage,
             uploadApi: props.uploadApi

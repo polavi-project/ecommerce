@@ -24,7 +24,7 @@ export default function Attributes(props) {
     });
 
     return (
-        <div className="product-edit-attribute uk-width-1-2">
+        <div className="product-edit-attribute border-block">
             <div><strong>Attribute</strong></div>
             <div>
                 <span>Attribute Group</span>

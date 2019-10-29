@@ -25,7 +25,7 @@ export default function Attributes(props) {
 
     return React.createElement(
         "div",
-        { className: "product-edit-attribute uk-width-1-2" },
+        { className: "product-edit-attribute border-block" },
         React.createElement(
             "div",
             null,

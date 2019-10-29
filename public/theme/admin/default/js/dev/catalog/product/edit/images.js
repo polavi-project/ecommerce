@@ -107,7 +107,7 @@ export default function ImageUploadContainer(props) {
         });
     };
 
-    return <div className="product-edit-image">
+    return <div className="product-edit-image border-block">
         <Upload
             addImage={addImage}
             uploadApi={props.uploadApi}

@@ -50,7 +50,7 @@ export default function CustomOption(props) {
         }))
     };
 
-    return <div className="product-edit-custom-option">
+    return <div className="product-edit-custom-option border-block">
         <div className="group-form-title"><strong>Custom Options</strong></div>
         <ul className="uk-list">
             {options.map((option, index) => {

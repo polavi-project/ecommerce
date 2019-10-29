@@ -1,3 +1,12 @@
+/* COLOR VARIABLES */
+:root {
+    --primary: brown;
+    --secondary: red;
+    --borderColor: #e5e5e5;
+}
+.border-block {border: 1px solid var(--borderColor); box-sizing: border-box; padding: 10px; margin-bottom: 20px}
+
+
 html {
     font-size: 14px !important;
 }

@@ -5,7 +5,7 @@ import Area from "../../../../../../../js/production/area.js";
 export default function AdminLoginForm(props) {
     return React.createElement(
         "div",
-        { className: "admin-login-form uk-flex uk-flex-center" },
+        { className: "admin-login-form uk-flex uk-flex-center uk-border-pill" },
         React.createElement(Area, { id: "admin_login_before", widgets: [] }),
         React.createElement(
             Form,

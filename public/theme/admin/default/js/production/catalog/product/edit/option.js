@@ -52,7 +52,7 @@ export default function CustomOption(props) {
 
     return React.createElement(
         "div",
-        { className: "product-edit-custom-option" },
+        { className: "product-edit-custom-option border-block" },
         React.createElement(
             "div",
             { className: "group-form-title" },
