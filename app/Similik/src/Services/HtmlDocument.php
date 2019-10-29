@@ -242,6 +242,7 @@ class HtmlDocument
         foreach ($this->getCssFiles() as $file) {
             echo "<link rel=\"stylesheet\" href=\"{$file}\"/>";
         }
+        echo "<script src=\"https://unpkg.com/axios/dist/axios.min.js\"></script>";
         if($this->request->isAdmin())
             echo "<script crossorigin src=\"".get_js_file_url('production/tinymce/tinymce.min.js')."\"></script>";
         echo "<script crossorigin src=\"".get_js_file_url('production/lodash.js')."\"></script>";

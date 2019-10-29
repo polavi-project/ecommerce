@@ -13,7 +13,7 @@ html {
     padding: 10px;
     box-sizing: border-box;
 }
-.container .content {
+.admin-navigation + .content {
     overflow: hidden;
     margin-left: 220px;
     padding-right: 20px;
@@ -85,7 +85,7 @@ html {
 .group-form{float: left; width: 50%; box-sizing: border-box;padding: 10px}
 .uk-label{text-transform: capitalize!important; border-radius: 10px!important;}
 .product-thumbnail{max-width: 80px}
-
+.similik-form-button{margin-top: 15px}
 /* GRID */
 table input{max-width: 95px}
 
@@ -95,3 +95,4 @@ table input{max-width: 95px}
     min-height: 25px;
 }
 .order-edit-info{margin-bottom: 20px}
+.admin-login-form{margin-top: 60px}

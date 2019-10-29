@@ -25,6 +25,7 @@ class FrontLayoutMiddleware extends MiddlewareAbstract
             $request->attributes->get('_matched_route') == 'graphql.api'
         )
             return $delegate;
+
         $response->addWidget(
             'header',
             'container',
@@ -69,7 +70,7 @@ class FrontLayoutMiddleware extends MiddlewareAbstract
         );
         $response->addWidget(
             'footer',
-            'content',
+            'container',
             30,
             get_js_file_url("production/area.js"),
             ["id"=>"footer", "className" => "uk-width-1-1 uk-grid uk-grid-small footer"]
