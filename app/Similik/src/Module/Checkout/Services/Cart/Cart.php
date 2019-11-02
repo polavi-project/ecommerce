@@ -279,7 +279,6 @@ class Cart
                             ->fetchAllAssoc();
                         foreach ($rows as $row) {
                             $selectedOptions = $row['product_custom_options'] ? json_decode($row['product_custom_options'], true) : [];
-//                            var_dump($selectedOptions);
                             $_selectedOptions = [];
                             foreach ($selectedOptions as $id=> $option) {
                                 $values = $option['values'];
