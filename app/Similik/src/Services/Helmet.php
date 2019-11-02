@@ -74,7 +74,7 @@ class Helmet
     public function render()
     {
         ob_start();
-        echo "<title>{$this->title}</title>";
+        echo "<title data-react-helmet=\"true\">{$this->title}</title>";
         foreach ($this->metas as $meta) {
             $m = "<meta ";
             foreach ($meta as $key=>$value)
@@ -104,6 +104,6 @@ class Helmet
 
     public function getData()
     {
-        return json_encode((array) $this, JSON_NUMERIC_CHECK);
+        return (array) $this;
     }
 }
