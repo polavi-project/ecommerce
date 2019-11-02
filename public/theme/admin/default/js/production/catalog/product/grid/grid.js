@@ -1,4 +1,5 @@
 import Area from "../../../../../../../../js/production/area.js";
+import { Fetch } from "../../../../../../../../js/production/fetch.js";
 
 function IdColumnHeader({ areaProps }) {
     const filterFrom = React.useRef(null);
@@ -62,10 +63,10 @@ function IdColumnRow({ row }) {
         row.product_id
     );
 }
+
 function PriceColumnHeader({ areaProps }) {
     const filterFrom = React.useRef(null);
     const filterTo = React.useRef(null);
-    const currency = ReactRedux.useSelector(state => _.get(state, 'appState.currency', 'USD'));
 
     React.useEffect(() => {
         areaProps.addField("price");
@@ -73,7 +74,7 @@ function PriceColumnHeader({ areaProps }) {
 
     return React.createElement(
         "td",
-        { className: "row" },
+        null,
         React.createElement(
             "div",
             { className: "header price-header" },
@@ -117,13 +118,17 @@ function PriceColumnHeader({ areaProps }) {
         )
     );
 }
+
 function PriceColumnRow({ row }) {
+    const currency = ReactRedux.useSelector(state => _.get(state, 'appState.currency', 'USD'));
+    const price = new Intl.NumberFormat('en', { style: 'currency', currency: currency }).format(row.price);
     return React.createElement(
         "td",
         null,
-        row.price
+        price
     );
 }
+
 function NameColumnHeader({ areaProps }) {
     const filterInput = React.useRef(null);
 
@@ -161,6 +166,7 @@ function NameColumnHeader({ areaProps }) {
         )
     );
 }
+
 function NameColumnRow({ row }) {
     return React.createElement(
         "td",
@@ -168,6 +174,7 @@ function NameColumnRow({ row }) {
         row.name
     );
 }
+
 function QtyColumnHeader({ areaProps }) {
     const filterFrom = React.useRef(null);
     const filterTo = React.useRef(null);
@@ -222,6 +229,7 @@ function QtyColumnHeader({ areaProps }) {
         )
     );
 }
+
 function QtyColumnRow({ row }) {
     return React.createElement(
         "td",
@@ -229,6 +237,7 @@ function QtyColumnRow({ row }) {
         row.qty
     );
 }
+
 function ThumbColumnHeader({ areaProps }) {
     React.useEffect(() => {
         areaProps.addField("image { thumb }");
@@ -251,6 +260,7 @@ function ThumbColumnHeader({ areaProps }) {
         )
     );
 }
+
 function ThumbColumnRow({ row }) {
     if (_.get(row, "image.thumb")) return React.createElement(
         "td",
@@ -262,6 +272,7 @@ function ThumbColumnRow({ row }) {
         React.createElement("span", { "uk-icon": "icon: image; ratio: 3" })
     );
 }
+
 function StatusColumnHeader({ areaProps }) {
     const filterInput = React.useRef(null);
 
@@ -307,6 +318,7 @@ function StatusColumnHeader({ areaProps }) {
         )
     );
 }
+
 function StatusColumnRow({ row }) {
     if (parseInt(_.get(row, "status")) === 1) return React.createElement(
         "td",
@@ -326,6 +338,7 @@ function StatusColumnRow({ row }) {
         )
     );
 }
+
 export default function ProductGrid({ apiUrl, defaultFilter }) {
     const [products, setProducts] = React.useState([]);
     const [filters, setFilters] = React.useState(() => {
@@ -361,19 +374,11 @@ export default function ProductGrid({ apiUrl, defaultFilter }) {
     const applyFilter = () => {
         let formData = new FormData();
         formData.append('query', buildQuery());
-        axios({
-            method: 'post',
-            url: apiUrl,
-            headers: { 'content-type': 'multipart/form-data' },
-            data: formData
-        }).then(function (response) {
-            if (response.headers['content-type'] !== "application/json") throw new Error('Something wrong, please try again');
-            if (_.get(response, 'data.payload.data.productCollection.products')) {
-                setProducts(_.get(response, 'data.payload.data.productCollection.products'));
+
+        Fetch(apiUrl, false, 'POST', formData, null, response => {
+            if (_.get(response, 'payload.data.productCollection.products')) {
+                setProducts(_.get(response, 'payload.data.productCollection.products'));
             }
-        }).catch(function (error) {}).finally(function () {
-            // e.target.value = null;
-            // setUploading(false);
         });
     };
 

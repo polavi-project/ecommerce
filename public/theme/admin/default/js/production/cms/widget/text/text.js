@@ -53,6 +53,13 @@ export default function TextWidget({ id, name, status, setting, displaySetting, 
                 label: "Content",
                 formId: "text-widget-edit-form"
             }),
+            React.createElement("input", { type: "text", name: "variables[widget][setting][1][key]", value: "container_class", readOnly: true, style: { display: 'none' } }),
+            React.createElement(Text, {
+                name: "variables[widget][setting][1][value]",
+                value: _.find(setting, { key: 'container_class' }) !== undefined ? _.get(_.find(setting, { key: 'container_class' }), 'value', '') : '',
+                formId: "text-widget-edit-form",
+                label: "Container class"
+            }),
             React.createElement(
                 "div",
                 null,

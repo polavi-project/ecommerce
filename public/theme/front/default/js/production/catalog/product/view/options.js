@@ -1,75 +1,65 @@
-import Select from "../../../../../../../../js/production/formelements/select.js";
-import MultiSelect from "../../../../../../../../js/production/formelements/multiselect.js";
+import Select from "../../../../../../../../js/production/form/fields/select.js";
+import Multiselect from "../../../../../../../../js/production/form/fields/multiselect.js";
 
-class Options extends React.Component {
-    constructor(props) {
-        super(props);
-        const { options } = this.props;
-        // options.forEach((option) => {
-        //     if(option.is_required === "1")
-        //         this.props.dispatch({
-        //             type: "ADD_VALIDATION_RULE",
-        //             field_name: "option[" + option.product_custom_option_id + "]",
-        //             callback: function(value) {
-        //                 if(value === '')
-        //                     return false;
-        //             },
-        //             message: "This is required field"
-        //         });
-        // });
-    }
+export default function Options({ options = [] }) {
+    if (options.length === 0) return null;
 
-    render() {
-        const { options, error } = this.props;
-        return React.createElement(
+    const currency = ReactRedux.useSelector(state => _.get(state, 'appState.orderData.currency', 'USD'));
+    const language = ReactRedux.useSelector(state => _.get(state, 'appState.orderData.language', 'en'));
+
+    return React.createElement(
+        "div",
+        { className: "product-single-options" },
+        React.createElement(
             "div",
-            { className: "options custom-options" },
+            { className: "product-single-options-title" },
             React.createElement(
-                "strong",
+                "span",
                 null,
                 "Options"
-            ),
-            React.createElement("br", null),
-            React.createElement(
-                "ul",
-                { className: "option-list" },
-                options.map((option, index) => {
-                    let data = {
-                        id: "custom_option_" + index,
-                        name: "custom_options[" + option.product_custom_option_id + "]",
-                        label: option.option_name,
-                        options: option.values
-                    };
-                    if (option.is_required === "1") data.validation_rules = ["required"];
-                    switch (option.option_type) {
-                        case 'select':
-                            return React.createElement(
-                                "li",
-                                { key: index },
-                                React.createElement(Select, data)
-                            );
-                        case 'multiselect':
-                            return React.createElement(
-                                "li",
-                                { key: index },
-                                React.createElement(MultiSelect, data)
-                            );
-                        default:
-                            return React.createElement(
-                                "li",
-                                { key: index },
-                                React.createElement(Select, data)
-                            );
-                    }
-                })
             )
-        );
-    }
+        ),
+        options.map((o, i) => {
+            let values = o.values.map(v => {
+                let _price = new Intl.NumberFormat(language, { style: 'currency', currency: currency }).format(v.extra_price);
+                return {
+                    value: v.value_id,
+                    text: v.value + ` (+ ${_price})`
+                };
+            });
+            let FieldComponent = "";
+            switch (o.option_type) {
+                case "select":
+                    FieldComponent = React.createElement(Select, {
+                        key: i,
+                        name: `custom_options[${o.option_id}][]`,
+                        options: values,
+                        validation_rules: parseInt(o.is_required) === 1 ? ['notEmpty'] : [],
+                        formId: "product-form",
+                        label: o.option_name
+                    });
+                    break;
+                case "multiselect":
+                    FieldComponent = React.createElement(Multiselect, {
+                        key: i,
+                        name: `custom_options[${o.option_id}][]`,
+                        options: values,
+                        validation_rules: parseInt(o.is_required) === 1 ? ['notEmpty'] : [],
+                        formId: "product-form",
+                        label: o.option_name
+                    });
+                    break;
+                default:
+                    FieldComponent = React.createElement(Select, {
+                        key: i,
+                        name: `custom_options[${o.option_id}][]`,
+                        options: values,
+                        validation_rules: parseInt(o.is_required) === 1 ? ['notEmpty'] : [],
+                        formId: "product-form",
+                        label: o.option_name
+                    });
+            }
+            return FieldComponent;
+        })
+    );
 }
-// TODO: show validation error for option
-const mapStateToProps = (state, ownProps) => {
-    return {
-        error: state.form_validation_errors['qty']
-    };
-};
-export default ReactRedux.connect(mapStateToProps)(Options);

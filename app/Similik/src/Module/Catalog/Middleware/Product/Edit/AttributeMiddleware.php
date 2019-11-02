@@ -17,7 +17,6 @@ use Similik\Middleware\MiddlewareAbstract;
 
 class AttributeMiddleware extends MiddlewareAbstract
 {
-    const FORM_ID = 'product-edit-form';
     /**
      * @param Request $request
      * @param Response $response
@@ -34,19 +33,21 @@ class AttributeMiddleware extends MiddlewareAbstract
                 "query"=> <<< QUERY
                     {
                         attributeGroupCollection {
-                            attribute_group_id
-                            group_name
-                            attributes {
-                                attribute_id
-                                attribute_code
-                                attribute_name
-                                type
-                                is_required
-                                display_on_frontend
-                                sort_order
-                                options {
-                                    option_id: attribute_option_id
-                                    option_text
+                            groups {
+                                attribute_group_id
+                                group_name
+                                attributes {
+                                    attribute_id
+                                    attribute_code
+                                    attribute_name
+                                    type
+                                    is_required
+                                    display_on_frontend
+                                    sort_order
+                                    options {
+                                        option_id: attribute_option_id
+                                        option_text
+                                    }
                                 }
                             }
                         }
@@ -55,11 +56,11 @@ QUERY
 
             ])
             ->then(function($result) use ($response) {
-                $props = ['formId'=> self::FORM_ID, 'attributeGroups' => []];
+                $props = ['attributeGroups' => []];
                 /**@var \GraphQL\Executor\ExecutionResult $result */
                 if(!$result->errors) {
                     if (isset($result->data['attributeGroupCollection'])) {
-                        $props['attributeGroups'] = $result->data['attributeGroupCollection'];
+                        $props['attributeGroups'] = $result->data['attributeGroupCollection']['groups'];
                     }
                     $response->addWidget(
                         'product_edit_attributes',

@@ -1,3 +1,12 @@
+/* COLOR VARIABLES */
+:root {
+    --primary: brown;
+    --secondary: red;
+    --borderColor: #e5e5e5;
+}
+.border-block {border: 1px solid var(--borderColor); box-sizing: border-box; padding: 10px; margin-bottom: 20px}
+
+
 html {
     font-size: 14px !important;
 }
@@ -13,7 +22,7 @@ html {
     padding: 10px;
     box-sizing: border-box;
 }
-.container .content {
+.admin-navigation + .content {
     overflow: hidden;
     margin-left: 220px;
     padding-right: 20px;
@@ -85,13 +94,16 @@ html {
 .group-form{float: left; width: 50%; box-sizing: border-box;padding: 10px}
 .uk-label{text-transform: capitalize!important; border-radius: 10px!important;}
 .product-thumbnail{max-width: 80px}
-
+.similik-form-button{margin-top: 15px}
 /* GRID */
 table input{max-width: 95px}
-
 
 .row {
     border-top: 1px solid #999;
     min-height: 25px;
 }
 .order-edit-info{margin-bottom: 20px}
+.admin-login-form{margin-top: 60px}
+
+/* TABLE */
+html .uk-table-small td, html .uk-table-small th{padding: 5px}

@@ -28,8 +28,9 @@ class HeaderIconMiddleware extends MiddlewareAbstract
             20,
             get_js_file_url("production/customer/header_block.js", false),
             [
-                'full_name' => $request->getCustomer()->getData('full_name'),
+                'fullName' => $request->getCustomer()->getData('full_name'),
                 'isLoggedIn' => $request->getCustomer()->isLoggedIn(),
+                'registerUrl' => $this->getContainer()->get(Router::class)->generateUrl('customer.register'),
                 'loginUrl' => $this->getContainer()->get(Router::class)->generateUrl('customer.login'),
                 'logoutUrl' => $this->getContainer()->get(Router::class)->generateUrl('customer.logout'),
                 'myAccountUrl' => $this->getContainer()->get(Router::class)->generateUrl('customer.dashboard')

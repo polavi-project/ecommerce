@@ -30,9 +30,10 @@ function WidgetTypeSelector({types, selectedType = '', requestUrl, showEdit = 0}
     return <div>
         <div>Please select widget type</div>
         <select
-            className="uk-select"
+            className="uk-select uk-form-small"
             onChange={(e) => onSelect(e)}
             value={type}
+            style={{maxWidth: "200px"}}
         ><option value={''}>Select widget type</option>
             {types.map((w, i) => {
                 return <option key={i} value={w.code}>{w.name}</option>
@@ -40,7 +41,7 @@ function WidgetTypeSelector({types, selectedType = '', requestUrl, showEdit = 0}
         </select>
         {showError && <div><span>Please select widget type</span></div>}
         {showEditForm === 1 && <EditForm displayForm={displayForm} requestUrl={requestUrl}/>}
-        {showEditForm === 0 && <a href="#" className="uk-button-primary uk-button-small" onClick={(e) => displayForm(e)}><span>Add new</span></a>}
+        {showEditForm === 0 && <div><a href="#" className="uk-button-primary uk-button-small" onClick={(e) => displayForm(e)}><span>Add new</span></a></div>}
     </div>
 }
 

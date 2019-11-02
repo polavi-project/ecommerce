@@ -1,3 +1,10 @@
+/* COLOR VARIABLES */
+:root {
+    --primary: brown;
+    --secondary: red;
+    --borderColor: #e5e5e5;
+}
+.text-danger{color:#f0506e}
 /**************************************** LOADING ICON *********************************************/
 .spinner {
     margin: 100px auto;
@@ -64,8 +71,21 @@ html {font-size: 14px !important;}
     display: inline;
 }
 .group-form{float: left; width: 50%; box-sizing: border-box;padding: 10px}
+.similik-form-button{margin-top: 15px}
 
 /* CHECKOUT PAGE*/
 .checkout-cart-summary-table td{text-align: right}
 /* SHOPPING CART PAGE*/
 .cart-item-thumb{ float: left; padding-right: 10px}
+.cart-tem-info{overflow: hidden}
+
+/* HEADER */
+.header{overflow: hidden; padding-top: 20px}
+.logo{float: left;}
+.customer-area-header{float: right}
+
+/* FOOTER */
+.container .footer{padding-top: 50px; padding-bottom: 20px}
+
+/* PRODUCT SINGLE PAGE */
+.product-single-name{font-size: 19px; font-weight: bold}

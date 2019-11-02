@@ -1,79 +1,34 @@
 import { Form } from "../../../../../../../../js/production/form/form.js";
 import Text from "../../../../../../../../js/production/form/fields/text.js";
-import Select from "../../../../../../../../js/production/form/fields/select.js";
-import Multiselect from "../../../../../../../../js/production/form/fields/multiselect.js";
+import Options from "./options.js";
+import Area from "../../../../../../../../js/production/area.js";
 
-export default function ProductForm({ productId, customOptions }) {
+export default function ProductForm(props) {
     return React.createElement(
         Form,
-        { id: "product-form", action: window.base_url + "/cart/add", method: "POST" },
-        React.createElement("input", { type: "hidden", name: "product_id", value: productId }),
-        customOptions && React.createElement(
-            "div",
-            null,
-            React.createElement(
-                "span",
-                null,
-                "Options"
-            )
-        ),
-        customOptions.map((o, i) => {
-            let values = o.values.map(v => {
-                let _price = new Intl.NumberFormat(window.language, { style: 'currency', currency: window.currency }).format(v.extra_price);
-                return {
-                    value: v.value_id,
-                    text: v.value + ` (+ ${_price})`
-                };
-            });
-            let FieldComponent = "";
-            switch (o.option_type) {
-                case "select":
-                    FieldComponent = React.createElement(Select, {
-                        key: i,
-                        name: `custom_options[${o.option_id}]`,
-                        options: values,
-                        validation_rules: parseInt(o.is_required) === 1 ? ['notEmpty'] : [],
-                        formId: "product-form",
-                        label: o.option_name
-                    });
-                    break;
-                case "multiselect":
-                    FieldComponent = React.createElement(Multiselect, {
-                        key: i,
-                        name: `custom_options[${o.option_id}]`,
-                        options: values,
-                        validation_rules: parseInt(o.is_required) === 1 ? ['notEmpty'] : [],
-                        formId: "product-form",
-                        label: o.option_name
-                    });
-                    break;
-                default:
-                    FieldComponent = React.createElement(Select, {
-                        key: i,
-                        name: `custom_options[${o.option_id}]`,
-                        options: values,
-                        validation_rules: parseInt(o.is_required) === 1 ? ['notEmpty'] : [],
-                        formId: "product-form",
-                        label: o.option_name
-                    });
-            }
-            return FieldComponent;
-        }),
-        React.createElement(Text, {
-            formId: "product-form",
-            name: "qty",
-            value: "",
-            validation_rules: ['notEmpty'],
-            label: "Quantity"
-        }),
-        React.createElement(
-            "button",
-            { type: "submit", className: "uk-button uk-button-primary" },
-            React.createElement(
-                "span",
-                null,
-                "Add To Cart"
-            )
-        )
+        { id: "product-form", action: props.action, method: "POST", submitText: "Add to cart" },
+        React.createElement("input", { type: "hidden", name: "product_id", value: props.productId }),
+        React.createElement(Area, {
+            id: "product_single_page_form",
+            coreWidgets: [{
+                'component': Options,
+                'props': {
+                    options: props.customOptions ? props.customOptions : []
+                },
+                'sort_order': 10,
+                'id': 'product-single-custom-options'
+            }, {
+                'component': Text,
+                'props': {
+                    formId: "product-form",
+                    name: "qty",
+                    value: "",
+                    validation_rules: ['notEmpty', 'number'],
+                    label: "Quantity"
+                },
+                'sort_order': 20,
+                'id': 'product-single-quantity'
+            }]
+        })
     );
 }

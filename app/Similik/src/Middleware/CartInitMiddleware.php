@@ -60,7 +60,7 @@ class CartInitMiddleware extends MiddlewareAbstract
                 $this->getContainer()->get(CouponHelper::class),
                 (int)$cartId
             );
-            $this->getContainer()->get(ItemFactory::class)->setCart($cart);
+            //$this->getContainer()->get(ItemFactory::class)->setCart($cart);
             $this->getContainer()->set(Cart::class, $cart);
         } catch (\Exception $e) {
             $response->addAlert('cart_init_error', 'error', $e->getMessage());

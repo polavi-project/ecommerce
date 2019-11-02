@@ -46,7 +46,7 @@ function Rates(props) {
             "div",
             null,
             React.createElement(
-                "span",
+                "strong",
                 null,
                 "Tax rates"
             )
@@ -179,7 +179,7 @@ function Rates(props) {
                                 React.createElement(
                                     "span",
                                     null,
-                                    "Remove rate"
+                                    "Remove"
                                 )
                             )
                         )
@@ -265,9 +265,19 @@ export default function Taxes({ classes, saveAction }) {
         const newTaxes = taxes.filter((_, index) => index !== key);
         setTaxes(newTaxes);
     };
+
     return React.createElement(
         "div",
         null,
+        React.createElement(
+            "div",
+            null,
+            React.createElement(
+                "strong",
+                null,
+                "Tax class"
+            )
+        ),
         React.createElement(
             "ul",
             { "uk-accordion": "multiple: true" },

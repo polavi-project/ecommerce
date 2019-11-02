@@ -66,10 +66,14 @@ function Form(props) {
         "form",
         { id: props.id, method: "POST", onSubmit: e => onSubmit(e) },
         props.children,
-        React.createElement(
-            "button",
-            { type: "submit", className: "uk-button uk-button-small uk-button-primary" },
-            props.submitText ? props.submitText : 'Submit'
+        props.submitText !== null && React.createElement(
+            "div",
+            { className: "similik-form-button form-submit-button" },
+            React.createElement(
+                "button",
+                { type: "submit", className: "uk-button uk-button-small uk-button-primary" },
+                props.submitText ? props.submitText : 'Submit'
+            )
         )
     );
 }

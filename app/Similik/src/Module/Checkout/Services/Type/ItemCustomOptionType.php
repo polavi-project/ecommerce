@@ -20,24 +20,21 @@ class ItemCustomOptionType extends ObjectType
     public function __construct(Container $container)
     {
         $config = [
-            'name' => 'Cart item custom option',
+            'name' => 'CartItemCustomOption',
             'fields' => function() use ($container) {
                 $fields = [
                     'option_id' => [
                         'type' => Type::nonNull(Type::id())
                     ],
-                    'value_id' => [
-                        'type' => Type::nonNull(Type::int())
+                    'option_name' => [
+                        'type' => Type::nonNull(Type::id())
                     ],
-                    'value_text' => [
-                        'type' => Type::nonNull(Type::string())
-                    ],
-                    'extra_price' => [
-                        'type' => Type::nonNull(Type::string())
+                    'values' => [
+                        'type' => Type::listOf($container->get(ItemCustomOptionValueType::class))
                     ]
                 ];
 
-                dispatch_event('filter.cart_item_custom_option.type', [&$fields]);
+                dispatch_event('filter.cartItemCustomOption.type', [&$fields]);
 
                 return $fields;
             },

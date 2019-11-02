@@ -7,10 +7,10 @@ import { AddToCart } from "../../../../production/catalog/product/list/item/buy_
 export default function ProductList({ products, addItemApi }) {
     return React.createElement(
         "div",
-        { className: "product-list", "uk-grid": "true" },
+        { className: "product-list uk-grid" },
         products.map((p, index) => {
             return React.createElement(Area, {
-                id: "product-item-" + p.product_id,
+                id: "product_item_" + p.product_id,
                 product: p,
                 key: index,
                 coreWidgets: [{

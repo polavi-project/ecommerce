@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Similik\Module\Checkout\Middleware\Cart\View;
 
+use function Similik\generate_url;
 use function Similik\get_js_file_url;
 use Similik\Module\Graphql\Services\GraphqlExecutor;
 use Similik\Services\Http\Request;
@@ -33,11 +34,21 @@ class ItemsMiddleware extends MiddlewareAbstract
                             cart_item_id
                             product_id
                             product_name
+                            options : product_custom_options {
+                                option_id
+                                option_name
+                                values {
+                                    value_id
+                                    value_text
+                                    extra_price
+                                }
+                            }
                             thumbnail: product_thumbnail
                             productUrl
                             qty
                             final_price
                             total
+                            removeUrl
                             error
                         }
                     }
@@ -51,10 +62,12 @@ class ItemsMiddleware extends MiddlewareAbstract
                         'shopping-cart-page',
                         10,
                         get_js_file_url("production/checkout/cart/items.js"),
-                        ["items" => $result->data['items']['items']]
+                        [
+                            "items" => $result->data['items']['items']
+                        ]
                     );
                 }
-            });
+            }, function($reason) { var_dump($reason);});
 
         return $delegate;
     }

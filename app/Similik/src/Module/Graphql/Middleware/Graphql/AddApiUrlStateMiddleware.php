@@ -19,7 +19,10 @@ class AddApiUrlStateMiddleware extends MiddlewareAbstract
 
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
-        $response->addState('graphqlApi', generate_url('graphql.api'));
+        if($request->isAdmin())
+            $response->addState('graphqlApi', generate_url('admin.graphql.api'));
+        else
+            $response->addState('graphqlApi', generate_url('graphql.api'));
 
         return $delegate;
     }

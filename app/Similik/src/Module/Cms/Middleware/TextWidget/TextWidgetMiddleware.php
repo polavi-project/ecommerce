@@ -37,7 +37,22 @@ class TextWidgetMiddleware extends MiddlewareAbstract
                                 return json_decode($value['value'], true);
                             return null;
                         }, []);
-                        return empty($layouts) || in_array($matchedRoute, $layouts);
+                        if(empty($layouts))
+                            return true;
+                        $match = false;
+                        foreach ($layouts as $layout) {
+                            if($matchedRoute == $layout) {
+                                $match = true;
+                                break;
+                            }
+                            if (strpos($layout, '|') !== false) {
+                                if(in_array($matchedRoute, explode('|', $layout))) {
+                                    $match = true;
+                                    break;
+                                }
+                            }
+                        }
+                        return $match;
                     }, ARRAY_FILTER_USE_BOTH);
                     foreach ($widgets as $widget) {
                         $content = array_find($widget['setting'], function($value, $key) {
@@ -45,6 +60,13 @@ class TextWidgetMiddleware extends MiddlewareAbstract
                                 return $value['value'];
                             return null;
                         });
+
+                        $containerClass = array_find($widget['setting'], function($value, $key) {
+                            if($value['key'] == 'container_class')
+                                return $value['value'];
+                            return null;
+                        });
+
                         $areas = array_find($widget['displaySetting'], function($value, $key) {
                             if($value['key'] == 'area')
                                 return json_decode($value['value'], true);
@@ -59,7 +81,8 @@ class TextWidgetMiddleware extends MiddlewareAbstract
                                 [
                                     "id" => $widget['cms_widget_id'] . '-text-widget',
                                     "name" => $widget['name'],
-                                    "content" => $content
+                                    "content" => $content,
+                                    "containerClass" => $containerClass
                                 ]
                             );
                     }

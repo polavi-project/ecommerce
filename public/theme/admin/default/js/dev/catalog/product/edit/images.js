@@ -1,3 +1,5 @@
+import {Fetch} from "../../../../../../../../js/production/fetch.js";
+
 function Image(props) {
     const isMainStyle = {
         color: "blue"
@@ -37,42 +39,39 @@ function Images({images, removeImage, setMainImage}) {
 }
 
 function Upload(props) {
-    const [uploading, setUploading] = React.useState(false);
-
     const onChange = (e) => {
         e.persist();
-        setUploading(true);
         let formData = new FormData();
         for (var i = 0; i < e.target.files.length; i++) {
             formData.append('files' + i, e.target.files[i]);
         }
-        formData.append('targetPath', 'catalog/' + (Math.floor(Math.random() * (9999 - 1000)) + 1000) + '/' + (Math.floor(Math.random() * (9999 - 1000)) + 1000));
-        axios({
-            method: 'post',
-            url: props.uploadApi,
-            headers: { 'content-type': 'multipart/form-data' },
-            data: formData
-        }).then(function (response) {
-            if(response.headers['content-type'] !== "application/json")
-                throw new Error('Something wrong, please try again');
-            if(_.get(response, 'data.payload.data.uploadMedia.files')) {
-                let files = [];
-                _.get(response, 'data.payload.data.uploadMedia.files').forEach((e,i) => {
-                    files.push(e.file);
-                });
-                props.addImage(files);
+        formData.append('query', `mutation UploadProductImage { uploadMedia (targetPath: "${'catalog/' + (Math.floor(Math.random() * (9999 - 1000)) + 1000) + '/' + (Math.floor(Math.random() * (9999 - 1000)) + 1000)}") {files {status message file {url path}}}}`);
+
+        Fetch(
+            props.uploadApi,
+            false,
+            "POST",
+            formData,
+            null,
+            (response) => {
+                if(_.get(response, 'payload.data.uploadMedia.files')) {
+                    let files = [];
+                    _.get(response, 'payload.data.uploadMedia.files').forEach((e,i) => {
+                        files.push(e.file);
+                    });
+                    props.addImage(files);
+                }
+            },
+            null,
+            () => {
+                e.target.value = null;
             }
-        }).catch(function (error) {
-        }).finally(function() {
-            e.target.value = null;
-            setUploading(false);
-        });
+        );
     };
 
     return <div>
         <div><span uk-icon="image"></span> <strong>Images</strong></div>
         <div className="js-upload uk-placeholder uk-text-center">
-            {uploading && <div uk-spinner="ratio: 1"></div>}
             <span uk-icon="icon: cloud-upload"></span>
             <span className="uk-text-middle"><label htmlFor={"product-image"}><a className="uk-link">Select files</a></label></span>
             <div uk-form-custom="true">
@@ -108,9 +107,10 @@ export default function ImageUploadContainer(props) {
         });
     };
 
-    return <div className="product-edit-image">
+    return <div className="product-edit-image border-block">
         <Upload
             addImage={addImage}
+            uploadApi={props.uploadApi}
         />
         <Images
             images={images}

@@ -116,7 +116,7 @@ class Cart
             ],
             'customer_group_id' => [
                 'resolver' => function(Cart $cart) {
-                    return $cart->request->getCustomer()->getData('group_id');
+                    return $cart->request->getCustomer()->getData('group_id') ?? 1;
                 },
                 'dependencies' => ['customer_id']
             ],
@@ -278,10 +278,17 @@ class Cart
                             ->where('cart_id', '=', $cart->getData('cart_id'))
                             ->fetchAllAssoc();
                         foreach ($rows as $row) {
+                            $selectedOptions = $row['product_custom_options'] ? json_decode($row['product_custom_options'], true) : [];
+                            $_selectedOptions = [];
+                            foreach ($selectedOptions as $id=> $option) {
+                                $values = $option['values'];
+                                foreach ($values as $value)
+                                $_selectedOptions[$id][] = $value['value_id'];
+                            }
                             $items[] = $this->itemFactory->createItem(
                                 (int) $row['product_id'],
                                 (int) $row['qty'],
-                                $row['product_custom_options'] ? json_decode($row['product_custom_options'], true) : [],
+                                $_selectedOptions,
                                 (int) $this->request->getSession()->get('language', get_default_language_Id()),
                                 $row['requested_data'] ? json_decode($row['requested_data'], true) : [],
                                 (int) $row['cart_item_id']

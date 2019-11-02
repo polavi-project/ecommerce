@@ -3,7 +3,7 @@ import A from "../../../../../../../js/production/a.js";
 import {PaymentStatus} from "../edit/payment-status.js";
 import {ShipmentStatus} from "../edit/shipment-status.js";
 
-function IdColumn({areaProps}) {
+function IdColumnHeader({areaProps}) {
     const filterFrom = React.useRef(null);
     const filterTo = React.useRef(null);
 
@@ -11,7 +11,7 @@ function IdColumn({areaProps}) {
         areaProps.addField("order_id");
     }, []);
 
-    return <td className={"column"}>
+    return <td>
         <div className="header id-header">
             <div className={"title"}><span>ID</span></div>
             <div className={"filter"}>
@@ -33,20 +33,21 @@ function IdColumn({areaProps}) {
                 </div>
             </div>
         </div>
-        {areaProps.rows.map((r, i) => {
-            return <div className={"row"} key={i}><span>{r.order_id}</span></div>;
-        })}
     </td>
 }
 
-function NumberColumn({areaProps}) {
+function IdColumnRow({row}) {
+    return <td><span>{row.order_id}</span></td>;
+}
+
+function NumberColumnHeader({areaProps}) {
     const filterInput = React.useRef(null);
 
     React.useEffect(() => {
         areaProps.addField('order_number');
     }, []);
 
-    return <td className={"column"}>
+    return <td>
         <div className="header name-header">
             <div className={"title"}><span>Order number</span></div>
             <div className={"filter"}>
@@ -58,41 +59,54 @@ function NumberColumn({areaProps}) {
                 />
             </div>
         </div>
-        {areaProps.rows.map((r, i) => {
-            return <div className={"row"} key={i}><span>{_.get(r, 'order_number' , '')}</span></div>;
-        })}
     </td>
 }
 
-function GeneralColumn({index, title, areaProps}) {
+function NumberColumnRow({row}) {
+    return <td><span>#{_.get(row, 'order_number' , '')}</span></td>;
+}
+
+function TotalColumnHeader({areaProps})
+{
+    const filterFrom = React.useRef(null);
+    const filterTo = React.useRef(null);
+
     React.useEffect(() => {
-        areaProps.addField(index);
+        areaProps.addField("grand_total");
     }, []);
-    return <td className={"column"}>
-        <div className="header">
-            <div className={"title"}><span>{title}</span></div>
+
+    return <td>
+        <div className="header id-header">
+            <div className={"title"}><span>Total</span></div>
+            <div className={"filter"}>
+                <div>
+                    <input
+                        type={"text"}
+                        ref={filterFrom}
+                        onKeyPress={(e) => { if(e.key === 'Enter') areaProps.addFilter("grand_total", "BETWEEN", `${e.target.value} AND ${filterTo.current.value}`);}}
+                        placeholder={"From"}
+                    />
+                </div>
+                <div>
+                    <input
+                        type={"text"}
+                        ref={filterTo}
+                        onKeyPress={(e) => { if(e.key === 'Enter') areaProps.addFilter("grand_total", "BETWEEN", `${filterFrom.current.value} AND ${e.target.value}`);}}
+                        placeholder={"To"}
+                    />
+                </div>
+            </div>
         </div>
-        {areaProps.rows.map((r, i) => {
-            return <div className={"row"} key={i}><span>{_.get(r, index , '')}</span></div>;
-        })}
     </td>
 }
 
-function ActionColumn({areaProps}) {
-    React.useEffect(() => {
-        areaProps.addField('editUrl');
-    }, []);
-    return <td className={"column"}>
-        <div className="header">
-            <div className={"title"}><span>Action</span></div>
-        </div>
-        {areaProps.rows.map((r, i) => {
-            return <div className={"row"} key={i}><A url={_.get(r, 'editUrl' , '')} text={"Edit"}/></div>;
-        })}
+function TotalColumnRow({row}) {
+    return <td>
+        <span>{_.get(row, "grand_total")}</span>
     </td>
 }
 
-function PaymentStatusColumn({areaProps})
+function PaymentStatusColumnHeader({areaProps})
 {
     const filterInput = React.useRef(null);
 
@@ -100,24 +114,28 @@ function PaymentStatusColumn({areaProps})
         areaProps.addField("payment_status");
     }, []);
 
-    return <td className={"column"}>
+    return <td>
         <div className="header status-header">
             <div className={"title"}><span>Payment status</span></div>
             <div className={"filter"}>
-                <input type={"text"} ref={filterInput} onKeyPress={(e) => {
-                    if(e.key === 'Enter') areaProps.addFilter("payment_status", "Equal", e.target.value);
-                }
-                }/>
+                <select ref={filterInput} onChange={(e)=> {
+                    areaProps.addFilter("status", "Equal", e.target.value);
+                }}>
+                    <option value={1}>Enabled</option>
+                    <option value={0}>Disabled</option>
+                </select>
             </div>
         </div>
-        {areaProps.rows.map((r, i) => {
-            return <div key={i} className={"row"}>
-                <PaymentStatus status={_.get(r, "payment_status")}/>
-            </div>
-        })}
     </td>
 }
-function ShipmentStatusColumn({areaProps})
+
+function PaymentStatusColumnRow({row}) {
+    return <td>
+        <PaymentStatus status={_.get(row, "payment_status")}/>
+    </td>
+}
+
+function ShipmentStatusColumnHeader({areaProps})
 {
     const filterInput = React.useRef(null);
 
@@ -125,7 +143,7 @@ function ShipmentStatusColumn({areaProps})
         areaProps.addField("shipment_status");
     }, []);
 
-    return <td className={"column"}>
+    return <td>
         <div className="header status-header">
             <div className={"title"}><span>Shipment status</span></div>
             <div className={"filter"}>
@@ -135,12 +153,29 @@ function ShipmentStatusColumn({areaProps})
                 }/>
             </div>
         </div>
-        {areaProps.rows.map((r, i) => {
-            return <div key={i} className={"row"}>
-                <ShipmentStatus status={_.get(r, "shipment_status")}/>
-            </div>
-        })}
     </td>
+}
+
+function ShipmentStatusColumnRow({row}) {
+    return <td>
+        <ShipmentStatus status={_.get(row, "shipment_status")}/>
+    </td>
+}
+
+function ActionColumnHeader({areaProps}) {
+    React.useEffect(() => {
+        areaProps.addField('editUrl');
+    }, []);
+
+    return <td>
+        <div className="header">
+            <div className={"title"}><span>Action</span></div>
+        </div>
+    </td>
+}
+
+function ActionColumnRow({row}) {
+    return <td><A url={_.get(row, 'editUrl' , '')} text={"Edit"}/></td>;
 }
 
 export default function OrderGrid({apiUrl})
@@ -223,77 +258,109 @@ export default function OrderGrid({apiUrl})
         applyFilter();
     }, [fields, filters]);
 
-    React.useLayoutEffect(() => {
-        // Fix height of row
-        let maxHeightHeader = -1;
-        jQuery('.column .header').each(function(e) {
-            maxHeightHeader = maxHeightHeader > jQuery(this).height() ? maxHeightHeader : jQuery(this).height();
-        });
-
-        jQuery('.column .header').each(function() {
-            jQuery(this).height(maxHeightHeader);
-        });
-
-        let maxHeightRow = -1;
-        jQuery('.column .row').each(function(e) {
-            maxHeightRow = maxHeightRow > jQuery(this).height() ? maxHeightRow : jQuery(this).height();
-        });
-
-        jQuery('.column .row').each(function() {
-            jQuery(this).height(maxHeightRow);
-        });
-    });
-
-    return <div className={""}>
-            <table className="uk-table uk-table-small">
-                <tbody>
-                <Area
+    return <div className={"uk-overflow-auto"}>
+        <table className="uk-table uk-table-small">
+            <thead>
+            <Area
+                className={""}
+                id={"order_grid_header"}
+                addFilter={addFilter}
+                cleanFilter={cleanFilter}
+                addField={addField}
+                applyFilter={applyFilter}
+                reactcomponent={"tr"}
+                coreWidgets={[
+                    {
+                        component: IdColumnHeader,
+                        props : {addFilter, cleanFilter, addField, applyFilter},
+                        sort_order: 10,
+                        id: "id"
+                    },
+                    {
+                        component: NumberColumnHeader,
+                        props : {},
+                        sort_order: 20,
+                        id: "number"
+                    },
+                    {
+                        component: TotalColumnHeader,
+                        props : {},
+                        sort_order: 30,
+                        id: "grand_total"
+                    },
+                    {
+                        component: PaymentStatusColumnHeader,
+                        props : {},
+                        sort_order: 40,
+                        id: "payment_status"
+                    },
+                    {
+                        component: ShipmentStatusColumnHeader,
+                        props : {},
+                        sort_order: 50,
+                        id: "shipment_status"
+                    },
+                    {
+                        component: ActionColumnHeader,
+                        props : {},
+                        sort_order: 60,
+                        id: "action"
+                    }
+                ]}
+            />
+            </thead>
+            <tbody>
+            {orders.map((o, i)=> {
+                return <Area
+                    key={i}
                     className={""}
-                    id={"order-grid"}
-                    rows={orders}
-                    addFilter={addFilter}
-                    cleanFilter={cleanFilter}
-                    addField={addField}
+                    id={"order_grid_row"}
+                    row={o}
                     reactcomponent={"tr"}
                     coreWidgets={[
                         {
-                            component: IdColumn,
-                            props : {
-                            },
+                            component: IdColumnRow,
+                            props : {row: o},
                             sort_order: 10,
                             id: "id"
                         },
                         {
-                            component: NumberColumn,
-                            props : {
-                            },
+                            component: NumberColumnRow,
+                            props : {row: o},
                             sort_order: 20,
                             id: "number"
                         },
                         {
-                            component: PaymentStatusColumn,
-                            props : {
-                            },
+                            component: TotalColumnRow,
+                            props : {row: o},
                             sort_order: 30,
+                            id: "grand_total"
+                        },
+                        {
+                            component: PaymentStatusColumnRow,
+                            props : {row: o},
+                            sort_order: 40,
                             id: "payment_status"
                         },
                         {
-                            component: ShipmentStatusColumn,
-                            props : {
-                            },
-                            sort_order: 40,
+                            component: ShipmentStatusColumnRow,
+                            props : {row: o},
+                            sort_order: 50,
                             id: "shipment_status"
                         },
                         {
-                            component: ActionColumn,
-                            props : {
-                            },
-                            sort_order: 50,
-                            id: "actionColumn"
+                            component: ActionColumnRow,
+                            props : {row: o},
+                            sort_order: 60,
+                            id: "action"
                         }
                     ]}
                 />
-                </tbody>
-            </table>
+            })}
+            </tbody>
+        </table>
+        {orders.length === 0 &&
+        <div>There is no order to display</div>
+        }
     </div>
 }

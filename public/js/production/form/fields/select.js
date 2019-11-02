@@ -36,13 +36,21 @@ export default function Select(props) {
         if (props.handler) props.handler.call(window, e, props);
     };
 
+    const width = {
+        maxWidth: props.width ? props.width : '200px'
+    };
+
     return React.createElement(
         "div",
         { className: "form-group" },
         React.createElement(
-            "label",
-            { htmlFor: name },
-            props.label
+            "div",
+            null,
+            React.createElement(
+                "label",
+                { htmlFor: name },
+                props.label
+            )
         ),
         React.createElement(
             "select",
@@ -52,7 +60,8 @@ export default function Select(props) {
                 name: props.name,
                 value: value,
                 onChange: onChange,
-                disabled: isDisabled
+                disabled: isDisabled,
+                style: width
             },
             React.createElement(
                 "option",

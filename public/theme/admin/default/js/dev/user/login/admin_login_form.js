@@ -3,16 +3,18 @@ import {Text, Password} from "../../../../../../../js/production/form/fields.js"
 import Area from "../../../../../../../js/production/area.js";
 
 export default function AdminLoginForm(props) {
-    return <div>
+    return <div className="admin-login-form uk-flex uk-flex-center uk-border-pill">
         <Area id="admin_login_before" widgets={[]}/>
         <Form {...props}>
             <Text
                 name="email"
                 formId="admin_login_form"
+                label="Email"
                 validation_rules={['notEmpty']}
             />
             <Password
                 name="password"
+                label="Password"
                 validation_rules={['notEmpty']}
             />
         </Form>

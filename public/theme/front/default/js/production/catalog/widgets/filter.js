@@ -1,6 +1,7 @@
 import Area from "../../../../../../../js/production/area.js";
 import { ReducerRegistry } from "../../../../../../../js/production/reducer_registry.js";
 import { PRODUCT_COLLECTION_FILTER_CHANGED } from "../../../../../../../js/production/action.js";
+import { Fetch } from "../../../../../../../js/production/fetch.js";
 
 function Price({ minPrice, maxPrice, maxSteps = 3, minRange = 50, areaProps }) {
     const getSteps = () => {
@@ -154,19 +155,11 @@ export default function Filter({ apiUrl }) {
     React.useLayoutEffect(() => {
         let formData = new FormData();
         formData.append('query', buildQuery(rootProductCollectionFilter));
-        axios({
-            method: 'post',
-            url: apiUrl,
-            headers: { 'content-type': 'multipart/form-data' },
-            data: formData
-        }).then(function (response) {
-            if (response.headers['content-type'] !== "application/json") throw new Error('Something wrong, please try again');
-            if (_.get(response, 'data.payload.data.productFilterTool')) {
-                setData(_.get(response, 'data.payload.data.productFilterTool'));
+
+        Fetch(apiUrl, false, 'POST', formData, null, response => {
+            if (_.get(response, 'payload.data.productFilterTool')) {
+                setData(_.get(response, 'payload.data.productFilterTool'));
             }
-        }).catch(function (error) {}).finally(function () {
-            // e.target.value = null;
-            // setUploading(false);
         });
     }, [rootProductCollectionFilter]);
 

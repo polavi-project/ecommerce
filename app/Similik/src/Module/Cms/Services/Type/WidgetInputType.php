@@ -29,7 +29,7 @@ class WidgetInputType extends InputObjectType
                     'status' => Type::nonNull(Type::int()),
                     'setting' => Type::listOf($container->get(KeyValuePairFieldTypeInput::class)),
                     'display_setting' => Type::listOf($container->get(KeyValuePairFieldTypeInput::class)),
-                    'sort_order' => Type::int(),
+                    'sort_order' => Type::string(),
                     'language_id' => Type::int()
                 ];
                 dispatch_event('filter.widgetInput.input', [&$fields]);

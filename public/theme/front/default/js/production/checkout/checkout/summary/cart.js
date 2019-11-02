@@ -3,21 +3,25 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 import Area from "../../../../../../../../js/production/area.js";
 
 function Subtotal({ subTotal }) {
+    const currency = ReactRedux.useSelector(state => _.get(state, 'appState.currency', 'USD'));
+    const language = ReactRedux.useSelector(state => _.get(state, 'appState.language[0]', 'en'));
+    const _subTotal = new Intl.NumberFormat(language, { style: 'currency', currency: currency }).format(subTotal);
+
     return React.createElement(
-        "tr",
+        'tr',
         null,
         React.createElement(
-            "td",
+            'td',
             null,
-            "Subtotal"
+            'Subtotal'
         ),
         React.createElement(
-            "td",
+            'td',
             null,
             React.createElement(
-                "span",
+                'span',
                 null,
-                subTotal
+                _subTotal
             )
         )
     );
@@ -25,85 +29,102 @@ function Subtotal({ subTotal }) {
 
 function Discount({ discountAmount }) {
     if (discountAmount === 0) return null;
+
+    const currency = ReactRedux.useSelector(state => _.get(state, 'appState.currency', 'USD'));
+    const language = ReactRedux.useSelector(state => _.get(state, 'appState.language[0]', 'en'));
+    const _discountAmount = new Intl.NumberFormat(language, { style: 'currency', currency: currency }).format(discountAmount);
+
     return React.createElement(
-        "tr",
+        'tr',
         null,
         React.createElement(
-            "td",
+            'td',
             null,
-            "Discount"
+            'Discount'
         ),
         React.createElement(
-            "td",
+            'td',
             null,
             React.createElement(
-                "span",
+                'span',
                 null,
-                discountAmount
+                _discountAmount
             )
         )
     );
 }
 
 function ShippingFee({ shippingFee }) {
+    const currency = ReactRedux.useSelector(state => _.get(state, 'appState.currency', 'USD'));
+    const language = ReactRedux.useSelector(state => _.get(state, 'appState.language[0]', 'en'));
+    const _shippingFee = new Intl.NumberFormat(language, { style: 'currency', currency: currency }).format(shippingFee);
+
     return React.createElement(
-        "tr",
+        'tr',
         null,
         React.createElement(
-            "td",
+            'td',
             null,
-            "Shipping"
+            'Shipping'
         ),
         React.createElement(
-            "td",
+            'td',
             null,
             React.createElement(
-                "span",
+                'span',
                 null,
                 shippingFee === 0 && "Free",
-                shippingFee !== 0 && shippingFee
+                shippingFee !== 0 && _shippingFee
             )
         )
     );
 }
 
 function Tax({ taxAmount }) {
+    const currency = ReactRedux.useSelector(state => _.get(state, 'appState.currency', 'USD'));
+    const language = ReactRedux.useSelector(state => _.get(state, 'appState.language[0]', 'en'));
+    const _taxAmount = new Intl.NumberFormat(language, { style: 'currency', currency: currency }).format(taxAmount);
+
     return React.createElement(
-        "tr",
+        'tr',
         null,
         React.createElement(
-            "td",
+            'td',
             null,
-            "Tax"
+            'Tax'
         ),
         React.createElement(
-            "td",
+            'td',
             null,
             React.createElement(
-                "span",
+                'span',
                 null,
-                taxAmount
+                _taxAmount
             )
         )
     );
 }
 
 function GrandTotal({ grandTotal }) {
+    const currency = ReactRedux.useSelector(state => _.get(state, 'appState.currency', 'USD'));
+    const language = ReactRedux.useSelector(state => _.get(state, 'appState.language[0]', 'en'));
+    const _grandTotal = new Intl.NumberFormat(language, { style: 'currency', currency: currency }).format(grandTotal);
+
     return React.createElement(
-        "tr",
+        'tr',
         null,
         React.createElement(
-            "td",
+            'td',
             null,
-            "Grand total"
+            'Grand total'
         ),
         React.createElement(
-            "td",
+            'td',
             null,
             React.createElement(
-                "span",
+                'span',
                 null,
-                grandTotal
+                _grandTotal
             )
         )
     );
@@ -112,14 +133,14 @@ function GrandTotal({ grandTotal }) {
 function CartSummary() {
     const cart = ReactRedux.useSelector(state => _.get(state, 'appState.cart', {}));
     return React.createElement(
-        "div",
-        { className: "checkout-summary-cart" },
+        'div',
+        { className: 'checkout-summary-cart' },
         React.createElement(
-            "table",
-            { className: "uk-table uk-table-small checkout-cart-summary-table" },
+            'table',
+            { className: 'uk-table uk-table-small checkout-cart-summary-table' },
             React.createElement(Area, {
                 id: "checkout_summary_cart",
-                reactcomponent: "tbody",
+                reactcomponent: 'tbody',
                 coreWidgets: [{
                     'component': Subtotal,
                     'props': _extends({}, cart),

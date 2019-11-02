@@ -15,7 +15,6 @@ use function Similik\dispatch_event;
 use function Similik\get_base_url_scheme_less;
 use function Similik\get_default_language_Id;
 use Similik\Module\Checkout\Services\PriceHelper;
-use Similik\Module\Discount\Services\CouponHelper;
 use Similik\Module\Tax\Services\TaxCalculator;
 use Similik\Services\Db\Processor;
 use Similik\Services\Routing\Router;
@@ -122,8 +121,9 @@ class ItemFactory
                     $priceHelper = the_container()->get(PriceHelper::class);
                     $selectedOptions = $item->getData('product_custom_options');
                     $extraPrice = 0;
-                    foreach ($selectedOptions as $optionId => $optionValueId) {
-                        $extraPrice += $selectedOptions[$optionId]['extra_price'];
+                    foreach ($selectedOptions as $id => $option) {
+                        foreach ($option['values'] as $value)
+                            $extraPrice += floatval($value['extra_price']);
                     }
                     return $priceHelper->getProductSalePrice(
                             $item->getData('product_id'),
@@ -187,18 +187,27 @@ class ItemFactory
                 'resolver' => function(Item $item, $dataSource) {
                     $selectedOptions = $dataSource['selected_custom_options'];
                     $availableOptions = $dataSource['custom_options'];
-
+                    $validatedOptions = [];
                     foreach ($selectedOptions as $id => $value) {
-                        if(is_array($value))
-                            $value = $value['value_id'];
-                        if (!in_array($id, array_keys($availableOptions)) || !in_array($value, array_keys($availableOptions[$id]['values'])))
+                        if (!in_array($id, array_keys($availableOptions)))
                             unset($selectedOptions[$id]);
-                        else
-                            $selectedOptions[$id] = [
-                                'value_id'=> $value,
-                                'value_text'=> $availableOptions[$id]['values'][$value]['value'],
-                                'extra_price' => $availableOptions[$id]['values'][$value]['extra_price']
-                            ];
+
+                        $validatedOptions[$id] = [
+                            'option_id' => $id,
+                            'option_name' => $availableOptions[$id]['option_name']
+                        ];
+
+                        $values = [];
+                        $value = (array) $value;
+                        foreach ($value as $val) {
+                            if(in_array((int) $val, array_keys($availableOptions[$id]['values'])))
+                                $values[(int) $val] = [
+                                    'value_id' => (int) $val,
+                                    'value_text' => $availableOptions[$id]['values'][(int) $val]['value'],
+                                    'extra_price' => $availableOptions[$id]['values'][(int) $val]['extra_price']
+                                ];
+                        }
+                        $validatedOptions[$id]['values'] = $values;
                     }
                     $flag = true;
                     foreach ($availableOptions as $id => $option)
@@ -207,7 +216,7 @@ class ItemFactory
                     if($flag == false)
                         $item->setError("You need to select some required option to purchase this product");
 
-                    return $selectedOptions;
+                    return $validatedOptions;
                 }
             ],
             'total' => [
@@ -271,8 +280,15 @@ class ItemFactory
         foreach ($items as $id=>$item) {
             if($productId == $item->getData('product_id')) {
                 $addedQty += $item->getData('qty');
-                if($item->getData('product_custom_options') == $selectedCustomOptions) {
-                    $value = $item->setData('qty', (int)$addedQty + (int)$qty);
+                $itemOptions = $item->getData('product_custom_options');
+                $_itemOptions = [];
+                foreach ($itemOptions as $_id=> $option) {
+                    $values = $option['values'];
+                    foreach ($values as $value)
+                        $_itemOptions[$_id][] = $value['value_id'];
+                }
+                if($_itemOptions == $selectedCustomOptions) {
+                    $item->setData('qty', (int)$addedQty + (int)$qty);
                     return $item;
                     break;
                 }
@@ -336,6 +352,8 @@ class ItemFactory
         foreach ($this->items as $key => $item) {
             if($item->getData('cart_item_id') == $id) {
                 unset($this->items[$key]);
+                if(!$this->items)
+                    _mysql()->getTable('cart_item')->where('cart_item_id', '=', $id)->delete();
                 dispatch_event('cart_item_removed', [$item]);
 
                 return $item;
@@ -377,6 +395,14 @@ class ItemFactory
 
         foreach ($sorted as $key=>$value)
             $this->callbacks[$value] = $this->fields[$value]['resolver'];
+    }
+
+    /**
+     * @return Cart
+     */
+    public function getCart(): Cart
+    {
+        return $this->cart;
     }
 
     /**

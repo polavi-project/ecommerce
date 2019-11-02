@@ -50,7 +50,7 @@ export default function CustomOption(props) {
         }))
     };
 
-    return <div className="product-edit-custom-option">
+    return <div className="product-edit-custom-option border-block">
         <div className="group-form-title"><strong>Custom Options</strong></div>
         <ul className="uk-list">
             {options.map((option, index) => {
@@ -78,8 +78,7 @@ export default function CustomOption(props) {
                                     value={option_type}
                                     options={[
                                         {value: 'select', text: 'Single choice'},
-                                        {value: 'multiselect', text: 'Multiple choice'},
-                                        {value: 'freetext', text: 'Free text'}
+                                        {value: 'multiselect', text: 'Multiple choice'}
                                     ]}
                                 />
                             </td>

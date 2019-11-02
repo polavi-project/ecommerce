@@ -62,8 +62,8 @@ $eventDispatcher->addListener(
                     'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
                         if($container->get(\Similik\Services\Http\Request::class)->isAdmin() == false)
                             return [];
-                        else
-                            return $container->get(\Similik\Module\Cms\Services\PageCollection::class)->getData($rootValue, $args, $container, $info);
+                        $collection = new \Similik\Module\Cms\Services\PageCollection($container);
+                        return $collection->getData($rootValue, $args, $container, $info);
                     }
                 ]
             ];
@@ -97,7 +97,8 @@ $eventDispatcher->addListener(
                         ]
                     ],
                     'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
-                        return $container->get(\Similik\Module\Cms\Services\WidgetCollection::class)->getData($rootValue, $args, $container, $info);
+                        $collection = new \Similik\Module\Cms\Services\WidgetCollection($container);
+                        return $collection->getData($rootValue, $args, $container, $info);
                     }
                 ]
             ];
@@ -161,7 +162,7 @@ $eventDispatcher->addListener(
                                 'type'=> $file->getMimeType(),
                                 'size'=> $file->getSize(),
                                 'path'=> $args['targetPath'] . '/' . $file->getFilename(),
-                                'url'=> \Similik\get_base_url() . '/media/' . $args['targetPath'] . '/' . $file->getFilename()
+                                'url'=> \Similik\get_base_url_scheme_less() . '/media/' . $args['targetPath'] . '/' . $file->getFilename()
                             ]
                         ];
                     } catch (Exception $e) {
@@ -259,6 +260,7 @@ $eventDispatcher->addListener(
                 //var_dump($args);
                 $conn = _mysql();
                 $data = $args['widget'];
+                $data['sort_order'] = (int)$data['sort_order'];
                 $data['setting'] = json_encode($data['setting'], JSON_NUMERIC_CHECK);
                 $data['display_setting'] = json_encode($data['display_setting'], JSON_NUMERIC_CHECK);
                 if(isset($data['id']) and $data['id']) {
@@ -293,7 +295,7 @@ $eventDispatcher->addListener(
             '',
             'copy',
             null,
-            50
+            20
         )->addItem(
             'page.grid',
             'All pages',
@@ -321,6 +323,7 @@ $eventDispatcher->addListener(
     'register.core.middleware',
     function (\Similik\Services\MiddlewareManager $middlewareManager) {
         $middlewareManager->registerMiddleware(\Similik\Module\Cms\Middleware\TextWidget\TextWidgetMiddleware::class, 21);
+        $middlewareManager->registerMiddleware(\Similik\Module\Cms\Middleware\Page\View\LogoMiddleware::class, 22);
     },
     5
 );

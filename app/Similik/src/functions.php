@@ -31,6 +31,7 @@ use Similik\Services\Event\EventDispatcher;
 use Similik\Services\Locale\Language;
 use Similik\Services\Log\Logger;
 use Similik\Services\Routing\Router;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 function the_container(Container $start = null) : Container
 {
@@ -185,6 +186,10 @@ function get_default_language_Id() {
 
 function get_default_language_code() {
     return Language::listLanguagesV2()[get_default_language_Id()][0];
+}
+
+function get_current_language_id() {
+    return the_container()->get(Session::class)->get('languageId', get_default_language_Id());
 }
 
 function get_display_languages() {

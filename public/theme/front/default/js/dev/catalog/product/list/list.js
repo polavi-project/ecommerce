@@ -5,11 +5,11 @@ import {Price} from "../../../../production/catalog/product/list/item/price.js";
 import {AddToCart} from "../../../../production/catalog/product/list/item/buy_button.js";
 
 export default function ProductList({products, addItemApi}) {
-    return <div className="product-list" uk-grid="true">
+    return <div className="product-list uk-grid">
         {
             products.map((p, index) => {
                 return <Area
-                    id={"product-item-" + p.product_id}
+                    id={"product_item_" + p.product_id}
                     product={p}
                     key={index}
                     coreWidgets={[

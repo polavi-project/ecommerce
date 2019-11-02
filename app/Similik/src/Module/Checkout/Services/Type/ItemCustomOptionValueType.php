@@ -6,7 +6,7 @@
 
 declare(strict_types=1);
 
-namespace Similik\Module\Catalog\Services\Type;
+namespace Similik\Module\Checkout\Services\Type;
 
 
 use GraphQL\Type\Definition\ObjectType;
@@ -15,38 +15,26 @@ use GraphQL\Type\Definition\Type;
 use function Similik\dispatch_event;
 use Similik\Services\Di\Container;
 
-class AdvancedPriceType extends ObjectType
+class ItemCustomOptionValueType extends ObjectType
 {
     public function __construct(Container $container)
     {
         $config = [
-            'name' => 'Advanced price',
+            'name' => 'CartItemOptionValue',
             'fields' => function() use ($container) {
                 $fields = [
-                    'product_price_id' => [
-                        'type' => Type::nonNull(Type::id())
-                    ],
-                    'product_price_product_id' => [
+                    'value_id' => [
                         'type' => Type::nonNull(Type::int())
                     ],
-                    'price' => [
-                        'type' => $container->get(Price::class)
+                    'value_text' => [
+                        'type' => Type::nonNull(Type::string())
                     ],
-                    'customer_group_id' => [
-                        'type' => Type::nonNull(Type::int())
-                    ],
-                    'qty' => [
-                        'type' => Type::nonNull(Type::int())
-                    ],
-                    'active_from' => [
-                        'type' => Type::string()
-                    ],
-                    'active_to' => [
-                        'type' => Type::string()
+                    'extra_price' => [
+                        'type' => Type::nonNull(Type::string())
                     ]
                 ];
 
-                dispatch_event('filter.advanced_price.type', [&$fields]);
+                dispatch_event('filter.cartItemCustomOptionValue.type', [&$fields]);
 
                 return $fields;
             },

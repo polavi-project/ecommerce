@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Similik\Module\Checkout\Middleware\Cart\View;
 
+use function Similik\generate_url;
 use function Similik\get_js_file_url;
 use Similik\Module\Checkout\Services\Cart\Cart;
 use Similik\Services\Http\Request;
@@ -33,10 +34,7 @@ class SummaryMiddleware extends MiddlewareAbstract
             20,
             get_js_file_url("production/checkout/cart/summary.js"),
             [
-                "sub_total"=> $this->getContainer()->get(Cart::class)->getData('sub_total'),
-                "discount_amount"=> $this->getContainer()->get(Cart::class)->getData('discount_amount'),
-                "tax_amount"=> $this->getContainer()->get(Cart::class)->getData('tax_amount'),
-                "grand_total"=> $this->getContainer()->get(Cart::class)->getData('grand_total')
+                "checkoutUrl"=> generate_url('checkout.index'),
             ]
         );
 

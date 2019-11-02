@@ -209,8 +209,8 @@ class Processor extends \PDO
         $query = $query . " {$sortBy} {$sortOrder} {$limit}";
         try {
             $stmt = $this->prepare($query);
-            Logger::write($query);
-            Logger::write($table->getBinding());
+            //Logger::write($query);
+            //Logger::write($table->getBinding());
             $stmt->execute($table->getBinding());
             return $stmt;
         } catch (\PDOException $e) {

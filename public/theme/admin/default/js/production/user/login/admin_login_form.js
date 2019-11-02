@@ -5,7 +5,7 @@ import Area from "../../../../../../../js/production/area.js";
 export default function AdminLoginForm(props) {
     return React.createElement(
         "div",
-        null,
+        { className: "admin-login-form uk-flex uk-flex-center uk-border-pill" },
         React.createElement(Area, { id: "admin_login_before", widgets: [] }),
         React.createElement(
             Form,
@@ -13,10 +13,12 @@ export default function AdminLoginForm(props) {
             React.createElement(Text, {
                 name: "email",
                 formId: "admin_login_form",
+                label: "Email",
                 validation_rules: ['notEmpty']
             }),
             React.createElement(Password, {
                 name: "password",
+                label: "Password",
                 validation_rules: ['notEmpty']
             })
         ),

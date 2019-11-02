@@ -1,7 +1,10 @@
 import A from "../../../../../../../js/production/a.js";
 import Area from "../../../../../../../js/production/area.js";
 
-function Subtotal({ sub_total }) {
+function Subtotal({ subTotal }) {
+    const currency = ReactRedux.useSelector(state => _.get(state, 'appState.currency', 'USD'));
+    const language = ReactRedux.useSelector(state => _.get(state, 'appState.language[0]', 'en'));
+    const _subTotal = new Intl.NumberFormat(language, { style: 'currency', currency: currency }).format(subTotal);
     return React.createElement(
         "tr",
         null,
@@ -13,11 +16,15 @@ function Subtotal({ sub_total }) {
         React.createElement(
             "td",
             null,
-            sub_total
+            _subTotal
         )
     );
 }
-function Discount({ discount_amount }) {
+function Discount({ discountAmount }) {
+    const currency = ReactRedux.useSelector(state => _.get(state, 'appState.currency', 'USD'));
+    const language = ReactRedux.useSelector(state => _.get(state, 'appState.language[0]', 'en'));
+    const _discountAmount = new Intl.NumberFormat(language, { style: 'currency', currency: currency }).format(discountAmount);
+
     return React.createElement(
         "tr",
         null,
@@ -29,11 +36,15 @@ function Discount({ discount_amount }) {
         React.createElement(
             "td",
             null,
-            discount_amount
+            _discountAmount
         )
     );
 }
-function Tax({ tax_amount }) {
+function Tax({ taxAmount }) {
+    const currency = ReactRedux.useSelector(state => _.get(state, 'appState.currency', 'USD'));
+    const language = ReactRedux.useSelector(state => _.get(state, 'appState.language[0]', 'en'));
+    const _taxAmount = new Intl.NumberFormat(language, { style: 'currency', currency: currency }).format(taxAmount);
+
     return React.createElement(
         "tr",
         null,
@@ -45,12 +56,16 @@ function Tax({ tax_amount }) {
         React.createElement(
             "td",
             null,
-            tax_amount
+            _taxAmount
         )
     );
 }
 
-function GrandTotal({ grand_total }) {
+function GrandTotal({ grandTotal }) {
+    const currency = ReactRedux.useSelector(state => _.get(state, 'appState.currency', 'USD'));
+    const language = ReactRedux.useSelector(state => _.get(state, 'appState.language[0]', 'en'));
+    const _grandTotal = new Intl.NumberFormat(language, { style: 'currency', currency: currency }).format(grandTotal);
+
     return React.createElement(
         "tr",
         null,
@@ -62,12 +77,13 @@ function GrandTotal({ grand_total }) {
         React.createElement(
             "td",
             null,
-            grand_total
+            _grandTotal
         )
     );
 }
 
 function Summary(props) {
+    const cart = ReactRedux.useSelector(state => _.get(state, 'appState.cart', {}));
     return React.createElement(
         "div",
         { className: "uk-width-1-4" },
@@ -85,24 +101,35 @@ function Summary(props) {
             { className: "uk-table" },
             React.createElement(Area, {
                 id: "shopping-cart-summary",
+                reactcomponent: "tbody",
+                cart: cart,
                 coreWidgets: [{
                     component: Subtotal,
-                    props: { sub_total: props.sub_total },
+                    props: { subTotal: cart.subTotal },
                     sort_order: 10,
                     id: "shopping-cart-subtotal"
                 }, {
                     component: Discount,
-                    props: { discount_amount: props.discount_amount },
+                    props: { discountAmount: cart.discountAmount },
                     sort_order: 20,
                     id: "shopping-cart-discount"
-                }],
-                reactcomponent: "tbody"
+                }, {
+                    component: Tax,
+                    props: { taxAmount: cart.taxAmount },
+                    sort_order: 30,
+                    id: "shopping-cart-tax"
+                }, {
+                    component: GrandTotal,
+                    props: { grandTotal: cart.grandTotal },
+                    sort_order: 40,
+                    id: "shopping-cart-grand-total"
+                }]
             })
         ),
         React.createElement(
             "p",
             null,
-            React.createElement(A, { classes: "uk-button uk-button-primary", url: window.base_url + "/checkout", text: "Checkout" })
+            React.createElement(A, { classes: "uk-button uk-button-primary", url: props.checkoutUrl, text: "Checkout" })
         )
     );
 }

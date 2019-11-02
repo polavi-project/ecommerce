@@ -10,8 +10,10 @@ namespace Similik\Services\Http;
 
 use function Similik\get_base_url;
 use function Similik\get_config;
+use function Similik\get_current_language_id;
 use Similik\Services\DataObject;
 use Similik\Services\Helmet;
+use Similik\Services\Locale\Language;
 use function Similik\the_container;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -32,7 +34,8 @@ class Response extends \Symfony\Component\HttpFoundation\Response
         parent::__construct('', 200, []);
         $this->jsonData = new DataObject();
         $this->addState('currency', get_config('general_currency', 'USD'));
-        $this->addState('base_url', get_base_url(get_config('use_https', 0) == 0 ? false : true, the_container()->get(Request::class)->isAdmin()));
+        $this->addState('baseUrl', get_base_url(get_config('use_https', 0) == 0 ? false : true, false));
+        $this->addState('baseUrlAdmin', get_base_url(get_config('use_https', 0) == 0 ? false : true, true));
     }
 
     public function sendHtml()

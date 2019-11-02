@@ -18,7 +18,8 @@ $eventDispatcher->addListener(
                 'Setting',
                 '',
                 'cog',
-                null
+                null,
+                30
             )->addItem(
                 'setting.general',
                 'General',

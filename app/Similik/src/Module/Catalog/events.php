@@ -99,6 +99,41 @@ $eventDispatcher->addListener(
                 return $result;
             }
         ];
+
+        $fields['productTierPrice'] = [
+            'type' => Type::listOf($container->get(\Similik\Module\Catalog\Services\Type\ProductTierPriceType::class)),
+            'description' => "Return a list of product tier price",
+            'args' => [
+                'productId' =>  Type::nonNull(Type::int()),
+                'qty' =>  Type::int(),
+            ],
+            'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
+                $query = _mysql()->getTable('product_price')
+                    //->addFieldToSelect("DISTINCT(qty)", "qty")
+                    //->addFieldToSelect("MIN(price)", "price")
+                    //->addFieldToSelect("active_from")
+                    //->addFieldToSelect("active_to")
+                    //->groupBy('qty')
+                    ->where('product_price_product_id', '=', $args['productId']);
+
+                if(!$container->get(Request::class)->isAdmin()) {
+                    $query->andWhere('active_from', 'IS', null, '((')
+                        ->orWhere('active_from', '<', date("Y-m-d H:i:s"), null, ')')
+                        ->andWhere('active_to', 'IS', null, '(')
+                        ->orWhere('active_to', '>', date("Y-m-d H:i:s"), null, '))');
+
+                    $customerGroupId = $container->get(Request::class)->getCustomer() ? $container->get(Request::class)->getCustomer()->getData('group_id') ?? 1 : 1;
+                    $query->andWhere('customer_group_id', '=', $customerGroupId);
+                }
+
+                if(isset($args['qty']))
+                    $query->andWhere('qty', '>=', $args['qty']);
+                else
+                    $query->andWhere('qty', '>=', 1);
+
+                return $query->fetchAllAssoc(['sort_by'=>'qty', 'sort_order'=>'ASC']);
+            }
+        ];
     },
     5
 );

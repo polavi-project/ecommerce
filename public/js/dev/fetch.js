@@ -1,7 +1,7 @@
 import {REQUEST_START, REQUEST_END, ADD_ALERT, UPDATE_WIDGETS, ADD_APP_STATE} from "./event-types.js"
 import {store} from "./redux_store.js"
 
-const Fetch = (url, pushState = false, method = "GET", data = {}, onStart = null, onComplete = null, onError = null) => {
+const Fetch = (url, pushState = false, method = "GET", data = {}, onStart = null, onComplete = null, onError = null, onFinally=null) => {
     if(url instanceof URL === false)
         url = new URL(url);
     url.searchParams.set('ajax', 1);
@@ -101,7 +101,10 @@ const Fetch = (url, pushState = false, method = "GET", data = {}, onStart = null
                 store.dispatch({'type': ADD_ALERT, 'payload': {alerts: [{id: "server_error", message: 'Something wrong. Please try again', type: "error"}]}});
                 PubSub.publishSync(REQUEST_END);
             }
-        );
+        ).finally(() =>{
+            if(typeof onFinally === 'function')
+                onFinally();
+        });
 };
 
 export {Fetch};

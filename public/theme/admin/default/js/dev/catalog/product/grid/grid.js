@@ -1,4 +1,5 @@
 import Area from "../../../../../../../../js/production/area.js";
+import {Fetch} from "../../../../../../../../js/production/fetch.js";
 
 function IdColumnHeader({areaProps}) {
     const filterFrom = React.useRef(null);
@@ -36,16 +37,16 @@ function IdColumnHeader({areaProps}) {
 function IdColumnRow({row}) {
     return <td>{row.product_id}</td>
 }
+
 function PriceColumnHeader({areaProps}) {
     const filterFrom = React.useRef(null);
     const filterTo = React.useRef(null);
-    const currency = ReactRedux.useSelector(state => _.get(state, 'appState.currency', 'USD'));
 
     React.useEffect(() => {
         areaProps.addField("price");
     }, []);
 
-    return <td className={"row"}>
+    return <td>
         <div className="header price-header">
             <div className={"title"}><span>Price</span></div>
             <div className={"filter"}>
@@ -69,9 +70,13 @@ function PriceColumnHeader({areaProps}) {
         </div>
     </td>
 }
+
 function PriceColumnRow({row}) {
-    return <td>{row.price}</td>
+    const currency = ReactRedux.useSelector(state => _.get(state, 'appState.currency', 'USD'));
+    const price = new Intl.NumberFormat('en', { style: 'currency', currency: currency }).format(row.price);
+    return <td>{price}</td>
 }
+
 function NameColumnHeader({areaProps}) {
     const filterInput = React.useRef(null);
 
@@ -93,9 +98,11 @@ function NameColumnHeader({areaProps}) {
         </div>
     </td>
 }
+
 function NameColumnRow({row}) {
     return <td>{row.name}</td>
 }
+
 function QtyColumnHeader({areaProps}) {
     const filterFrom = React.useRef(null);
     const filterTo = React.useRef(null);
@@ -128,9 +135,11 @@ function QtyColumnHeader({areaProps}) {
         </div>
     </td>
 }
+
 function QtyColumnRow({row}) {
     return <td>{row.qty}</td>
 }
+
 function ThumbColumnHeader({areaProps})
 {
     React.useEffect(() => {
@@ -142,12 +151,14 @@ function ThumbColumnHeader({areaProps})
         </div>
     </td>
 }
+
 function ThumbColumnRow({row}) {
     if(_.get(row, "image.thumb"))
         return <td><img className={'product-thumbnail'} src={row.image.thumb}/></td>;
     else
         return <td><span uk-icon="icon: image; ratio: 3"></span></td>;
 }
+
 function StatusColumnHeader({areaProps})
 {
     const filterInput = React.useRef(null);
@@ -170,12 +181,14 @@ function StatusColumnHeader({areaProps})
         </div>
     </td>
 }
+
 function StatusColumnRow({row}) {
     if(parseInt(_.get(row, "status")) === 1)
         return <td><span className="uk-label uk-label-success">Enable</span></td>;
     else
         return <td><span className="uk-label uk-label-danger">Disabled</span></td>;
 }
+
 export default function ProductGrid({apiUrl, defaultFilter})
 {
     const [products, setProducts] = React.useState([]);
@@ -220,22 +233,19 @@ export default function ProductGrid({apiUrl, defaultFilter})
     const applyFilter = () => {
         let formData = new FormData();
         formData.append('query', buildQuery());
-        axios({
-            method: 'post',
-            url: apiUrl,
-            headers: { 'content-type': 'multipart/form-data' },
-            data: formData
-        }).then(function (response) {
-            if(response.headers['content-type'] !== "application/json")
-                throw new Error('Something wrong, please try again');
-            if(_.get(response, 'data.payload.data.productCollection.products')) {
-                setProducts(_.get(response, 'data.payload.data.productCollection.products'));
+
+        Fetch(
+            apiUrl,
+            false,
+            'POST',
+            formData,
+            null,
+            (response) => {
+                if(_.get(response, 'payload.data.productCollection.products')) {
+                    setProducts(_.get(response, 'payload.data.productCollection.products'));
+                }
             }
-        }).catch(function (error) {
-        }).finally(function() {
-            // e.target.value = null;
-            // setUploading(false);
-        });
+        );
     };
 
     const buildQuery = () => {

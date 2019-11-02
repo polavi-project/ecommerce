@@ -249,7 +249,6 @@ class HtmlDocument
         echo "<script crossorigin src=\"".get_js_file_url('production/react.js')."\"></script>";
         echo "<script crossorigin src=\"https://unpkg.com/react-dom@16/umd/react-dom.development.js\"></script>";
         echo "<script crossorigin src=\"https://unpkg.com/prop-types@15.6/prop-types.js\"></script>";
-        echo "<script crossorigin src=\"".get_js_file_url('production/react-router-dom.js')."\"></script>";
         echo "<script crossorigin src=\"".get_js_file_url('production/redux.js')."\"></script>";
         echo "<script crossorigin src=\"https://cdnjs.cloudflare.com/ajax/libs/react-redux/7.1.0/react-redux.js\"></script>";
 

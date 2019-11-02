@@ -25,7 +25,7 @@ export default function AdvancedPrice(props) {
     };
     return React.createElement(
         "div",
-        { className: "uk-overflow-auto" },
+        { className: "uk-overflow-auto border-block" },
         React.createElement(
             "div",
             { className: "group-form-title" },
