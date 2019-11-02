@@ -15,26 +15,26 @@ use GraphQL\Type\Definition\Type;
 use function Similik\dispatch_event;
 use Similik\Services\Di\Container;
 
-class ItemCustomOptionType extends ObjectType
+class ItemCustomOptionValueType extends ObjectType
 {
     public function __construct(Container $container)
     {
         $config = [
-            'name' => 'CartItemCustomOption',
+            'name' => 'CartItemOptionValue',
             'fields' => function() use ($container) {
                 $fields = [
-                    'option_id' => [
-                        'type' => Type::nonNull(Type::id())
+                    'value_id' => [
+                        'type' => Type::nonNull(Type::int())
                     ],
-                    'option_name' => [
-                        'type' => Type::nonNull(Type::id())
+                    'value_text' => [
+                        'type' => Type::nonNull(Type::string())
                     ],
-                    'values' => [
-                        'type' => Type::listOf($container->get(ItemCustomOptionValueType::class))
+                    'extra_price' => [
+                        'type' => Type::nonNull(Type::string())
                     ]
                 ];
 
-                dispatch_event('filter.cartItemCustomOption.type', [&$fields]);
+                dispatch_event('filter.cartItemCustomOptionValue.type', [&$fields]);
 
                 return $fields;
             },

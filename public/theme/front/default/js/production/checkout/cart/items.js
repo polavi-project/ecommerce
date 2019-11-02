@@ -21,6 +21,57 @@ function Empty({ homeUrl }) {
     );
 }
 
+function ItemOptions({ options = [] }) {
+    if (options.length === 0) return null;
+    const currency = ReactRedux.useSelector(state => _.get(state, 'appState.currency', 'USD'));
+    const language = ReactRedux.useSelector(state => _.get(state, 'appState.language[0]', 'en'));
+
+    return React.createElement(
+        "div",
+        { className: "cart-item-options" },
+        React.createElement(
+            "ul",
+            { className: "uk-list" },
+            options.map((o, i) => {
+                return React.createElement(
+                    "li",
+                    { key: i },
+                    React.createElement(
+                        "span",
+                        { className: "option-name" },
+                        React.createElement(
+                            "strong",
+                            null,
+                            o.option_name,
+                            " : "
+                        )
+                    ),
+                    o.values.map((v, k) => {
+                        const _extraPrice = new Intl.NumberFormat(language, { style: 'currency', currency: currency }).format(v.extra_price);
+                        return React.createElement(
+                            "span",
+                            { key: k },
+                            React.createElement(
+                                "i",
+                                { className: "value-text" },
+                                v.value_text
+                            ),
+                            React.createElement(
+                                "span",
+                                { className: "extra-price" },
+                                "(",
+                                _extraPrice,
+                                ")"
+                            ),
+                            " "
+                        );
+                    })
+                );
+            })
+        )
+    );
+}
+
 function Items({ items }) {
     const baseUrl = ReactRedux.useSelector(state => _.get(state, 'appState.baseUrl'));
     const currency = ReactRedux.useSelector(state => _.get(state, 'appState.currency', 'USD'));
@@ -103,11 +154,16 @@ function Items({ items }) {
                                 item.thumbnail && React.createElement("img", { src: item.thumbnail, alt: item.product_name }),
                                 !item.thumbnail && React.createElement("span", { "uk-icon": "icon: image; ratio: 5" })
                             ),
-                            React.createElement(A, { url: item.productUrl, text: item.product_name, classes: "uk-link-muted" }),
-                            item.error && React.createElement(
-                                "p",
-                                { style: { color: "red" } },
-                                item.error
+                            React.createElement(
+                                "div",
+                                { className: "cart-tem-info" },
+                                React.createElement(A, { url: item.productUrl, text: item.product_name, classes: "uk-link-muted" }),
+                                item.error && React.createElement(
+                                    "div",
+                                    { className: "text-danger" },
+                                    item.error
+                                ),
+                                React.createElement(ItemOptions, { options: item.options })
                             )
                         ),
                         React.createElement(

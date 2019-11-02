@@ -34,6 +34,15 @@ class ItemsMiddleware extends MiddlewareAbstract
                             cart_item_id
                             product_id
                             product_name
+                            options : product_custom_options {
+                                option_id
+                                option_name
+                                values {
+                                    value_id
+                                    value_text
+                                    extra_price
+                                }
+                            }
                             thumbnail: product_thumbnail
                             productUrl
                             qty
@@ -58,7 +67,7 @@ class ItemsMiddleware extends MiddlewareAbstract
                         ]
                     );
                 }
-            });
+            }, function($reason) { var_dump($reason);});
 
         return $delegate;
     }

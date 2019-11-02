@@ -28,3 +28,7 @@ $container[\Similik\Module\Checkout\Services\Type\CartItemType::class] =  functi
 $container[\Similik\Module\Checkout\Services\Type\ItemCustomOptionType::class] =  function() use ($container) {
     return new \Similik\Module\Checkout\Services\Type\ItemCustomOptionType($container);
 };
+
+$container[\Similik\Module\Checkout\Services\Type\ItemCustomOptionValueType::class] =  function() use ($container) {
+    return new \Similik\Module\Checkout\Services\Type\ItemCustomOptionValueType($container);
+};
