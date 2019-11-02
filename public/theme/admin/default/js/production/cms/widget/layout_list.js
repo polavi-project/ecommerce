@@ -18,7 +18,7 @@ function LayoutList({ selectedLayouts = [], formId = '' }) {
             'component': Checkbox,
             'props': {
                 name: "layout[category.view]",
-                isChecked: selectedLayouts.find(e => e === 'category.view') !== undefined,
+                isChecked: selectedLayouts.find(e => e === 'category.view|category.view.pretty') !== undefined,
                 formId: formId,
                 label: "Category page"
             },

@@ -1,16 +1,35 @@
 import Area from "../../../../../../../js/production/area.js";
 
+function ItemOptions({options = []}) {
+    if(options.length === 0)
+        return null;
+    const currency = ReactRedux.useSelector(state => _.get(state, 'appState.orderData.currency', 'USD'));
+
+    return <div className="cart-item-options">
+        <ul className="uk-list">
+            {options.map((o, i) => {
+                return <li key={i}>
+                    <span className="option-name"><strong>{o.option_name} : </strong></span>
+                    {o.values.map((v, k) => {
+                        const _extraPrice = new Intl.NumberFormat('en', { style: 'currency', currency: currency }).format(v.extra_price);
+                        return <span key={k}><i className="value-text">{v.value_text}</i><span className="extra-price">({_extraPrice})</span> </span>
+                    })}
+                </li>
+            })}
+        </ul>
+    </div>
+}
+
 function ProductColumn({ name, sku, options = []}) {
     return <td>
         <div className="product-column">
             <div><span>{name}</span></div>
             <div><span>Sku</span>: <span>{sku}</span></div>
-            {options.map((o,i) => {
-                return <div key={i}><i><strong>{o.option_name}</strong></i> : <span>{o.option_value_text}</span></div>
-            })}
+            <ItemOptions options={options}/>
         </div>
     </td>
 }
+
 export default function Items({items}) {
     const currency = ReactRedux.useSelector(state => _.get(state, 'appState.orderData.currency', 'USD'));
     return <div className={"uk-width-1-1 uk-overflow-auto"}>
@@ -60,7 +79,7 @@ export default function Items({items}) {
                     coreWidgets={[
                         {
                             component: ProductColumn,
-                            props : {name: i.product_name, sku: i.product_sku, options: i.item_options},
+                            props : {name: i.product_name, sku: i.product_sku, options: i.options},
                             sort_order: 10,
                             id: "product"
                         },

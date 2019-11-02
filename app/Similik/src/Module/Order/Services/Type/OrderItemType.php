@@ -15,6 +15,7 @@ use GraphQL\Type\Definition\Type;
 use function Similik\_mysql;
 use function Similik\dispatch_event;
 use Similik\Module\Catalog\Services\Type\Price;
+use Similik\Module\Checkout\Services\Type\ItemCustomOptionType;
 use Similik\Services\Di\Container;
 use Similik\Services\Routing\Router;
 
@@ -68,8 +69,8 @@ class OrderItemType extends ObjectType
                     'total' => [
                         'type' => Type::nonNull(Type::int())
                     ],
-                    'item_options' => [
-                        'type' => Type::listOf($container->get(ItemOptionType::class)),
+                    'options' => [
+                        'type' => Type::listOf($container->get(ItemCustomOptionType::class)),
                         'resolve' => function($item, $args, Container $container, ResolveInfo $info) {
                             if($item['product_custom_options'])
                                 return json_decode($item['product_custom_options'], true);
