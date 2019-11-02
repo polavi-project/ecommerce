@@ -78,8 +78,7 @@ export default function CustomOption(props) {
                                     value={option_type}
                                     options={[
                                         {value: 'select', text: 'Single choice'},
-                                        {value: 'multiselect', text: 'Multiple choice'},
-                                        {value: 'freetext', text: 'Free text'}
+                                        {value: 'multiselect', text: 'Multiple choice'}
                                     ]}
                                 />
                             </td>
