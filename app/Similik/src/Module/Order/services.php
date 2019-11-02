@@ -16,10 +16,6 @@ $container[\Similik\Module\Order\Services\Type\OrderItemType::class] = function(
     return new \Similik\Module\Order\Services\Type\OrderItemType($container);
 };
 
-$container[\Similik\Module\Order\Services\Type\ItemOptionType::class] = function() use ($container){
-    return new \Similik\Module\Order\Services\Type\ItemOptionType($container);
-};
-
 $container[\Similik\Module\Order\Services\Type\PaymentTransactionType::class] = function() use ($container){
     return new \Similik\Module\Order\Services\Type\PaymentTransactionType($container);
 };
