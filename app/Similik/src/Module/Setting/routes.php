@@ -14,6 +14,10 @@ $router->addAdminRoute('setting.general', ["POST", "GET"], '/setting/general', [
     \Similik\Module\Setting\Middleware\General\SaveMiddleware::class
 ]);
 
+$router->addAdminRoute('setting.catalog', ["POST", "GET"], '/setting/catalog', [
+    \Similik\Module\Setting\Middleware\Catalog\FormMiddleware::class,
+    \Similik\Module\Setting\Middleware\Catalog\SaveMiddleware::class
+]);
 
 $router->addAdminRoute('setting.payment', ["POST", "GET"], '/setting/payment[/{method}]', [
     \Similik\Module\Setting\Middleware\Payment\PaymentSettingMiddleware::class,

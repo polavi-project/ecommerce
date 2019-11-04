@@ -27,6 +27,12 @@ $eventDispatcher->addListener(
                 'settings',
                 'setting'
             )->addItem(
+                'setting.catalog',
+                'Catalog',
+                $container->get(Router::class)->generateUrl('setting.catalog'),
+                'thumbnails',
+                'setting'
+            )->addItem(
                 'setting.payment',
                 'Payment',
                 $container->get(Router::class)->generateUrl('setting.payment'),

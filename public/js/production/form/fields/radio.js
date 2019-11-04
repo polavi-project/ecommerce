@@ -44,7 +44,7 @@ export default function Radio(props) {
 
     return React.createElement(
         "div",
-        { className: "form-element form-element-text" },
+        { className: "form-field form-radio" },
         options.map((o, i) => {
             return React.createElement(
                 "label",

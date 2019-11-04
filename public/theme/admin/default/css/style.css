@@ -3,6 +3,7 @@
     --primary: brown;
     --secondary: red;
     --borderColor: #e5e5e5;
+    --dangerColor: #f0506e;
 }
 .border-block {border: 1px solid var(--borderColor); box-sizing: border-box; padding: 10px; margin-bottom: 20px}
 
@@ -88,6 +89,9 @@ html {
 }
 
 /* FORM */
+.form-field{margin-top: 10px}
+td .form-field{margin-top: 0px}
+.form-field-error span {color: var(--dangerColor)}
 .group-wrapper{
     display: inline;
 }

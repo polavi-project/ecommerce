@@ -42,13 +42,13 @@ export default function Select(props) {
 
     return React.createElement(
         "div",
-        { className: "form-group" },
+        { className: "form-field form-select" },
         React.createElement(
             "div",
-            null,
+            { className: "field-label" },
             React.createElement(
                 "label",
-                { htmlFor: name },
+                { htmlFor: props.name },
                 props.label
             )
         ),

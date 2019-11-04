@@ -38,8 +38,8 @@ export default function Select (props) {
         maxWidth: props.width ? props.width : '200px',
     };
 
-    return <div className="form-group">
-        <div><label htmlFor={name}>{props.label}</label></div>
+    return <div className="form-field form-select">
+        <div className="field-label"><label htmlFor={props.name}>{props.label}</label></div>
         <select
             className="uk-select uk-form-small"
             id={props.name}

@@ -37,11 +37,15 @@ export default function TextArea(props) {
 
     return React.createElement(
         "div",
-        { className: "form-group" },
+        { className: "form-field form-textarea" },
         React.createElement(
-            "label",
-            { htmlFor: props.name },
-            props.label
+            "div",
+            { className: "field-label" },
+            React.createElement(
+                "label",
+                { htmlFor: props.name },
+                props.label
+            )
         ),
         React.createElement("textarea", {
             className: "uk-textarea uk-form-small",

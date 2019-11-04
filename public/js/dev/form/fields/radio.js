@@ -41,7 +41,7 @@ export default function Radio (props) {
 
     const options = props.options ? props.options : [];
 
-    return <div className="form-element form-element-text">
+    return <div className="form-field form-radio">
         {
             options.map((o,i) => {
                 return <label style={{display: 'block'}} key={i} htmlFor={name}><input

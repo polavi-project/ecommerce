@@ -9,14 +9,9 @@ declare(strict_types=1);
 namespace Similik\Module\Setting\Middleware\General;
 
 use function Similik\_mysql;
-use function Similik\dispatch_event;
 use function Similik\get_default_language_Id;
 use function Similik\get_js_file_url;
 use Similik\Services\Http\Request;
-use Similik\Services\Locale\Country;
-use Similik\Services\Locale\Currency;
-use Similik\Services\Locale\Language;
-use Similik\Services\Locale\Timezone;
 use Similik\Middleware\MiddlewareAbstract;
 use Similik\Services\Http\Response;
 use Similik\Services\Routing\Router;

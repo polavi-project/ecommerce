@@ -37,11 +37,15 @@ export default function DateTime(props) {
 
     return React.createElement(
         "div",
-        { className: "form-element form-element-text" },
+        { className: "form-field form-date-time" },
         React.createElement(
-            "label",
-            { htmlFor: name },
-            props.label
+            "div",
+            { className: "field-label" },
+            React.createElement(
+                "label",
+                { htmlFor: props.name },
+                props.label
+            )
         ),
         React.createElement("input", {
             type: "datetime-local",

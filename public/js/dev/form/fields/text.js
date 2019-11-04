@@ -40,8 +40,8 @@ export default function Text (props) {
         maxWidth: props.width ? props.width : '200px',
     };
 
-    return <div className="form-element form-element-text">
-        <div><label htmlFor={name}>{props.label}</label></div>
+    return <div className="form-field form-text">
+        <div className="field-label"><label htmlFor={props.name}>{props.label}</label></div>
         <input
             type="text"
             className="uk-input uk-form-small"
