@@ -28,6 +28,7 @@ class SaveMiddleware extends MiddlewareAbstract
     {
         if($request->getMethod() == 'GET')
             return $delegate;
+
         $processor = _mysql();
         $processor->startTransaction();
         $language = $request->attributes->get('language', get_default_language_Id());
@@ -63,7 +64,7 @@ class SaveMiddleware extends MiddlewareAbstract
 //                $this->copyAttributeTextValue($newLanguages, $processor);
 //            }
             $processor->commit();
-            $this->getContainer()->get(Session::class)->getFlashBag()->add('success', 'Setting saved');
+            $response->addAlert('catalog_setting_update_success', 'success', 'Setting saved');
             $response->redirect($this->getContainer()->get(Router::class)->generateUrl('setting.catalog'));
         } catch (\Exception $e) {
             $processor->rollback();

@@ -1,10 +1,9 @@
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 import { Form } from "../../../../../../../js/production/form/form.js";
 import Area from "../../../../../../../js/production/area.js";
 import Text from "../../../../../../../js/production/form/fields/text.js";
 import Select from "../../../../../../../js/production/form/fields/select.js";
-import { CountryOptions } from "../../../../../../../js/production/locale/country_option.js";
-import Multiselect from "../../../../../../../js/production/form/fields/multiselect.js";
-import { LanguageOptions } from "../../../../../../../js/production/locale/language_option.js";
 import { Fetch } from "../../../../../../../js/production/fetch.js";
 
 function NoImagePlaceHolder({ value = null }) {
@@ -51,110 +50,188 @@ function NoImagePlaceHolder({ value = null }) {
     );
 }
 
-function Country({ value = [] }) {
+function ListingPage(props) {
     return React.createElement(
         "div",
-        null,
+        { className: "uk-width-1-3" },
         React.createElement(
-            CountryOptions,
-            null,
-            React.createElement(Multiselect, {
-                value: value,
-                label: "Allow countries",
-                name: "catalog_allow_countries[]",
-                className: "uk-form-small"
+            "div",
+            { className: "border-block" },
+            React.createElement(
+                "div",
+                null,
+                React.createElement(
+                    "strong",
+                    null,
+                    "Listing page"
+                )
+            ),
+            React.createElement(Area, {
+                id: "catalog_setting_form_listing",
+                coreWidgets: [{
+                    component: Select,
+                    props: {
+                        id: "catalog_display_mode",
+                        formId: "catalog_setting_form",
+                        name: "catalog_display_mode",
+                        label: "Product listing mode",
+                        options: [{ value: 'list', text: 'List' }, { value: 'grid', text: 'Grid' }],
+                        value: props.catalog_display_mode,
+                        validation_rules: ["notEmpty"] },
+                    sort_order: 10,
+                    id: "catalog_display_mode"
+                }, {
+                    component: Text,
+                    props: {
+                        id: "catalog_product_list_limit",
+                        formId: "catalog_setting_form",
+                        name: "catalog_product_list_limit",
+                        label: "Number of product in listing page",
+                        value: props.catalog_product_list_limit
+                    },
+                    sort_order: 20,
+                    id: "catalog_product_list_limit"
+                }, {
+                    component: Text,
+                    props: {
+                        id: "catalog_product_list_image_width",
+                        formId: "catalog_setting_form",
+                        name: "catalog_product_list_image_width",
+                        label: "Product image width in listing page",
+                        value: props.catalog_product_list_image_width
+                    },
+                    sort_order: 30,
+                    id: "catalog_product_list_image_width"
+                }, {
+                    component: Text,
+                    props: {
+                        id: "catalog_product_list_image_height",
+                        formId: "catalog_setting_form",
+                        name: "catalog_product_list_image_height",
+                        label: "Product image height in listing page",
+                        value: props.catalog_product_list_image_height
+                    },
+                    sort_order: 40,
+                    id: "catalog_product_list_image_height"
+                }]
             })
         )
     );
 }
 
-function Language({ value = 26 }) {
+function DetailPage(props) {
     return React.createElement(
         "div",
-        null,
+        { className: "uk-width-1-3" },
         React.createElement(
-            LanguageOptions,
-            null,
-            React.createElement(Select, {
-                value: value,
-                formId: "catalog_setting_form",
-                validation_rules: ['notEmpty'],
-                label: "Language",
-                name: "catalog_default_language",
-                className: "uk-form-small"
+            "div",
+            { className: "border-block" },
+            React.createElement(
+                "div",
+                null,
+                React.createElement(
+                    "strong",
+                    null,
+                    "Detail page"
+                )
+            ),
+            React.createElement(Area, {
+                id: "catalog_setting_form_detail",
+                coreWidgets: [{
+                    component: Text,
+                    props: {
+                        id: "catalog_product_detail_image_width",
+                        formId: "catalog_setting_form",
+                        name: "catalog_product_detail_image_width",
+                        label: "Product image width in detail page",
+                        value: props.catalog_product_detail_image_width
+                    },
+                    sort_order: 10,
+                    id: "catalog_product_detail_image_width"
+                }, {
+                    component: Text,
+                    props: {
+                        id: "catalog_product_detail_image_height",
+                        formId: "catalog_setting_form",
+                        name: "catalog_product_detail_image_height",
+                        label: "Product image height in detail page",
+                        value: props.catalog_product_detail_image_height
+                    },
+                    sort_order: 20,
+                    id: "catalog_product_detail_image_height"
+                }]
+            })
+        )
+    );
+}
+
+function General(props) {
+    return React.createElement(
+        "div",
+        { className: "uk-width-1-3" },
+        React.createElement(
+            "div",
+            { className: "border-block" },
+            React.createElement(
+                "div",
+                null,
+                React.createElement(
+                    "strong",
+                    null,
+                    "General"
+                )
+            ),
+            React.createElement(Area, {
+                id: "catalog_setting_form_general",
+                coreWidgets: [{
+                    component: Select,
+                    props: {
+                        id: 'catalog_out_of_stock_display',
+                        formId: "catalog_setting_form",
+                        name: "catalog_out_of_stock_display",
+                        label: "Display out of stock product?",
+                        options: [{ value: 0, text: 'No' }, { value: 1, text: 'Yes' }],
+                        validation_rules: ["notEmpty"],
+                        value: props.catalog_out_of_stock_display
+                    },
+                    sort_order: 10,
+                    id: "catalog_out_of_stock_display"
+                }, {
+                    component: NoImagePlaceHolder,
+                    props: {
+                        name: "catalog_no_image_placeholder"
+                    },
+                    sort_order: 20,
+                    id: "catalog_no_image_placeholder"
+                }]
             })
         )
     );
 }
 
 export default function CatalogSettingForms(props) {
-    const [fields] = React.useState(() => {
-        return [{
-            component: Text,
-            props: { id: 'catalog_display_mode', formId: "catalog_setting_form", name: "catalog_display_mode", label: "Product listing mode", validation_rules: ["notEmpty"] },
-            sort_order: 10,
-            id: "catalog_display_mode"
-        }, {
-            component: Text,
-            props: { id: 'catalog_product_list_limit', formId: "catalog_setting_form", name: "catalog_product_list_limit", label: "Number of product in listing page" },
-            sort_order: 20,
-            id: "catalog_product_list_limit"
-        }, {
-            component: NoImagePlaceHolder,
-            props: { name: "catalog_no_image_placeholder" },
-            sort_order: 30,
-            id: "catalog_no_image_placeholder"
-        }, {
-            component: Select,
-            props: { id: 'catalog_out_of_stock_display', formId: "catalog_setting_form", name: "catalog_out_of_stock_display", label: "Display out of stock product?", options: [{ value: 0, text: 'No' }, { value: 1, text: 'Yes' }], validation_rules: ["notEmpty"] },
-            sort_order: 40,
-            id: "catalog_out_of_stock_display"
-        }, {
-            component: Text,
-            props: { id: 'catalog_product_list_image_width', formId: "catalog_setting_form", name: "catalog_product_list_image_width", label: "Product image width in listing page" },
-            sort_order: 50,
-            id: "catalog_product_list_image_width"
-        }, {
-            component: Text,
-            props: { id: 'catalog_product_list_image_height', formId: "catalog_setting_form", name: "catalog_product_list_image_height", label: "Product image height in listing page" },
-            sort_order: 60,
-            id: "catalog_product_list_image_height"
-        }, {
-            component: Text,
-            props: { id: 'catalog_product_detail_image_width', formId: "catalog_setting_form", name: "catalog_product_detail_image_width", label: "Product image width in detail page" },
-            sort_order: 70,
-            id: "catalog_product_detail_image_width"
-        }, {
-            component: Text,
-            props: { id: 'catalog_product_detail_image_height', formId: "catalog_setting_form", name: "catalog_product_detail_image_height", label: "Product image height in detail page" },
-            sort_order: 80,
-            id: "catalog_product_detail_image_height"
-        }].filter(f => {
-            if (_.get(props, `data.${f.props.name}`) !== undefined) f.props.value = _.get(props, `data.${f.props.name}`);
-            return f;
-        });
-    });
-
     return React.createElement(
         "div",
         { className: "uk-flex-center" },
         React.createElement(
             Form,
             { id: "catalog_setting_form", action: props.action },
-            React.createElement(
-                "div",
-                null,
-                React.createElement(
-                    "div",
-                    null,
-                    React.createElement(
-                        "strong",
-                        null,
-                        "Catalog setting"
-                    )
-                )
-            ),
-            React.createElement(Area, { id: "catalog_setting_form_inner", coreWidgets: fields })
+            React.createElement(Area, { id: "catalog_setting_form_inner", className: "uk-grid uk-grid-small", coreWidgets: [{
+                    component: General,
+                    props: _extends({}, props.data),
+                    sort_order: 10,
+                    id: "catalog_setting_general"
+                }, {
+                    component: ListingPage,
+                    props: _extends({}, props.data),
+                    sort_order: 20,
+                    id: "catalog_setting_listing"
+                }, {
+                    component: DetailPage,
+                    props: _extends({}, props.data),
+                    sort_order: 30,
+                    id: "catalog_setting_detail"
+                }] })
         )
     );
 }
