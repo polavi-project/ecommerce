@@ -30,3 +30,8 @@ $router->addAdminRoute('setting.shipment', ["POST", "GET"], '/setting/shipment[/
     \Similik\Module\Setting\Middleware\Shipment\FlatRateFormMiddleware::class,
     \Similik\Module\Setting\Middleware\Shipment\FlatRateSaveMiddleware::class,
 ]);
+
+/* MIGRATION */
+$router->addAdminRoute('setting.install', ["POST", "GET"], '/setting/install', [
+    \Similik\Module\Setting\Middleware\Migrate\InstallMiddleware::class
+]);

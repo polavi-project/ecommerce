@@ -132,13 +132,13 @@ class App
             'FlatRate',
             'PaypalExpress',
             'Tax',
-            'ShippingLocation',
             'Discount',
             'Order',
             'User',
             'Setting',
             'SendGrid',
-            'Graphql'
+            'Graphql',
+            'Install'
         ];
 
         // TODO: Refactor this
@@ -169,30 +169,40 @@ class App
     public function run()
     {
         $this->loadModule();
-        $middleware = [
-            0 => ConfigMiddleware::class,
-            10 => SessionMiddleware::class,
-            20 => RoutingMiddleware::class,
-            30 => AuthenticateMiddleware::class,
+        if(file_exists(CONFIG_PATH . DS . 'config.php'))
+            $middleware = [
+                0 => ConfigMiddleware::class,
+                10 => SessionMiddleware::class,
+                20 => RoutingMiddleware::class,
+                30 => AuthenticateMiddleware::class,
 
-            //WidgetMiddleware::class,
-            35 => CartInitMiddleware::class,
-            //MiniCartMiddleware::class,
-            40 => HandlerMiddleware::class,
-            60 => InitHtmlMiddleware::class,
-            70 => SaveCartMiddleware::class,
-            80 => PromiseWaiterMiddleware::class,
-            90 => AdminLayoutMiddleware::class,
-            100 => FrontLayoutMiddleware::class,
-            110 => AdminNavigationMiddleware::class,
-            120 => FrontNavigationMiddleware::class,
-            140 => AlertMiddleware::class,
-            150 => ResponseMiddleware::class
-        ];
+                //WidgetMiddleware::class,
+                35 => CartInitMiddleware::class,
+                //MiniCartMiddleware::class,
+                40 => HandlerMiddleware::class,
+                60 => InitHtmlMiddleware::class,
+                70 => SaveCartMiddleware::class,
+                80 => PromiseWaiterMiddleware::class,
+                90 => AdminLayoutMiddleware::class,
+                100 => FrontLayoutMiddleware::class,
+                110 => AdminNavigationMiddleware::class,
+                120 => FrontNavigationMiddleware::class,
+                140 => AlertMiddleware::class,
+                150 => ResponseMiddleware::class
+            ];
+        else
+            $middleware = [
+                SessionMiddleware::class,
+                RoutingMiddleware::class,
+                HandlerMiddleware::class,
+                InitHtmlMiddleware::class,
+                FrontLayoutMiddleware::class,
+                ResponseMiddleware::class
+            ];
 
         $mm = new MiddlewareManager($this->container, $middleware);
-
-        dispatch_event('register.core.middleware', [$mm]);
+        if(file_exists(CONFIG_PATH . DS . 'config.php'))
+            dispatch_event('register.core.middleware', [$mm]);
         $mm->run();
     }
 }

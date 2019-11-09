@@ -27,6 +27,9 @@ $router->addAdminRoute('widget.grid', 'GET', '/widgets[/{type}]', [
     \Similik\Module\Cms\Middleware\Widget\WidgetManagerMiddleware::class
 ]);
 
+$router->addAdminRoute('cms.install', ["POST", "GET"], '/cms/migrate/install', [
+    \Similik\Module\Cms\Middleware\Migrate\Install\InstallMiddleware::class
+]);
 ////////////////////////////////////////////
 ///            SITE ROUTERS           //////
 ////////////////////////////////////////////

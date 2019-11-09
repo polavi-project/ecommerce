@@ -14,7 +14,6 @@ use Similik\Services\Http\Request;
 use Similik\Services\Http\Response;
 use Similik\Middleware\MiddlewareAbstract;
 use Similik\Services\Routing\Router;
-use Symfony\Component\HttpFoundation\Session\Session;
 
 class SaveMiddleware extends MiddlewareAbstract
 {

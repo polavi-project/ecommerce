@@ -83,6 +83,8 @@ function subscribe(string $eventName, callable $callback, int $priority = 0, Eve
 
 function get_config(string $name, $defaultValue = null, int $languageId = 0)
 {
+    if(!file_exists(CONFIG_PATH . DS . 'config.php'))
+        return $defaultValue;
     $config = [];
     if(file_exists(CACHE_PATH . DS . 'config_cache.php')) {
         $config = include_once (CACHE_PATH . DS . 'config_cache.php');

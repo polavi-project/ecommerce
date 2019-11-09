@@ -15,3 +15,7 @@ $router->addAdminRoute('admin.login', 'GET', '/login', [
 $router->addAdminRoute('admin.authenticate', 'POST', '/authenticate', [
     \Similik\Module\User\Middleware\Authenticate\AuthenticateMiddleware::class
 ]);
+
+$router->addAdminRoute('user.install', 'POST', '/user/migrate/install', [
+    \Similik\Module\User\Middleware\Migrate\Install\InstallMiddleware::class
+]);
