@@ -32,6 +32,6 @@ $router->addAdminRoute('setting.shipment', ["POST", "GET"], '/setting/shipment[/
 ]);
 
 /* MIGRATION */
-$router->addAdminRoute('setting.install', ["POST", "GET"], '/setting/install', [
+$router->addAdminRoute('setting.install', ["POST", "GET"], '/setting/migrate/install', [
     \Similik\Module\Setting\Middleware\Migrate\InstallMiddleware::class
 ]);

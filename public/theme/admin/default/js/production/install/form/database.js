@@ -6,7 +6,7 @@ import Text from "../../../../../../../js/production/form/fields/text.js";
 
 export default function DatabaseForm(props) {
     const [isSuccess, setIsSuccess] = React.useState(true);
-    if (props.step !== 'database') return null;
+    if (props.areaProps.step !== 'database') return null;
     return React.createElement(
         "div",
         null,
@@ -33,9 +33,10 @@ export default function DatabaseForm(props) {
             Form,
             _extends({
                 id: "database-form",
+                action: props.action,
                 submitText: "Next",
                 onComplete: response => {
-                    if (response.success === 1) props.setStep('adminUser');else setIsSuccess(false);
+                    if (response.success === 1) props.areaProps.setStep('adminUser');else setIsSuccess(false);
                 }
             }, props),
             React.createElement(
@@ -75,7 +76,7 @@ export default function DatabaseForm(props) {
                             name: "db_password",
                             label: "Database password",
                             value: '',
-                            validation_rules: ['notEmpty']
+                            validation_rules: []
                         },
                         sort_order: 30,
                         id: "db_password"

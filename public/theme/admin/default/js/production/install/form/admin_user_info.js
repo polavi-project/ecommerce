@@ -7,7 +7,8 @@ import Password from "../../../../../../../js/production/form/fields/password.js
 
 export default function FirstUserForm(props) {
     const [isSuccess, setIsSuccess] = React.useState(true);
-    if (props.step !== 'adminUser') return null;
+    if (props.areaProps.step !== 'adminUser') return null;
+
     return React.createElement(
         "div",
         null,
@@ -29,9 +30,10 @@ export default function FirstUserForm(props) {
             Form,
             _extends({
                 id: "admin-user-form",
+                action: props.action,
                 submitText: "Let's go",
                 onComplete: response => {
-                    if (response.success === 1) props.setStep('go');else setIsSuccess(_.get(response, 'message', 'Can not create admin user'));
+                    if (response.success === 1) props.areaProps.setStep('go');else setIsSuccess(_.get(response, 'message', 'Can not create admin user'));
                 }
             }, props),
             React.createElement(

@@ -12,6 +12,7 @@ html {
     font-size: 14px !important;
 }
 .text-danger{color:#f0506e}
+.text-success{color:#32d296}
 #header {
     background: cadetblue;
     min-height: 45px;

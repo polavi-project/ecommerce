@@ -8,6 +8,10 @@ declare(strict_types=1);
 
 /** @var \Similik\Services\Routing\Router $router */
 
+$router->addAdminRoute('checkout.install', 'POST', '/checkout/migrate/install', [
+    \Similik\Module\Checkout\Middleware\Migrate\Install\InstallMiddleware::class
+]);
+
 $router->addSiteRoute('checkout.cart', 'GET', '/cart', [
     \Similik\Module\Checkout\Middleware\Cart\View\ShoppingCartMiddleware::class,
     \Similik\Module\Checkout\Middleware\Cart\View\ItemsMiddleware::class,

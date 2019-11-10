@@ -5,17 +5,19 @@ import Password from "../../../../../../../js/production/form/fields/password.js
 
 export default function FirstUserForm(props) {
     const [isSuccess, setIsSuccess] = React.useState(true);
-    if(props.step !== 'adminUser')
+    if(props.areaProps.step !== 'adminUser')
         return null;
+
     return <div>
         <div><strong>Admin user information</strong></div>
         {isSuccess !== true && <p className="text-danger">{isSuccess}</p>}
         <Form
             id={"admin-user-form"}
+            action={props.action}
             submitText="Let's go"
             onComplete={(response)=> {
                 if(response.success === 1)
-                    props.setStep('go');
+                    props.areaProps.setStep('go');
                 else
                     setIsSuccess(_.get(response, 'message', 'Can not create admin user'));
             }}

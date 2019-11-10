@@ -4,7 +4,7 @@ import Text from "../../../../../../../js/production/form/fields/text.js";
 
 export default function DatabaseForm(props) {
     const [isSuccess, setIsSuccess] = React.useState(true);
-    if(props.step !== 'database')
+    if(props.areaProps.step !== 'database')
         return null;
     return <div>
         <div><strong>Database information</strong></div>
@@ -12,10 +12,11 @@ export default function DatabaseForm(props) {
         {isSuccess === false && <p className="text-danger">Can not connect to database. Please check again your information.</p>}
         <Form
             id={"database-form"}
+            action={props.action}
             submitText="Next"
             onComplete={(response)=> {
                 if(response.success === 1)
-                    props.setStep('adminUser');
+                    props.areaProps.setStep('adminUser');
                 else
                     setIsSuccess(false);
             }}
@@ -59,7 +60,7 @@ export default function DatabaseForm(props) {
                                 name: "db_password",
                                 label: "Database password",
                                 value: '',
-                                validation_rules: ['notEmpty']
+                                validation_rules: []
                             },
                             sort_order: 30,
                             id: "db_password"

@@ -13,6 +13,8 @@ use Similik\Middleware\MiddlewareAbstract;
 use Similik\Services\Db\Processor;
 use Similik\Services\Http\Request;
 use Similik\Services\Http\Response;
+use Similik\Services\Routing\Router;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class InstallMiddleware extends MiddlewareAbstract
 {
@@ -21,6 +23,11 @@ class InstallMiddleware extends MiddlewareAbstract
 
     public function __invoke(Request $request, Response $response)
     {
+        if(!file_exists(CONFIG_PATH . DS . 'config.tmp.php')) {
+            $redirect = new RedirectResponse($this->getContainer()->get(Router::class)->generateUrl('homepage'));
+            return $redirect->send();
+        }
+        require_once CONFIG_PATH . DS . 'config.tmp.php';
         $this->processor = new Processor();
         $taxClassTable = $this->processor->executeQuery("SELECT TABLE_NAME FROM information_schema.tables WHERE table_schema = :dbName AND TABLE_NAME = \"tax_class\" LIMIT 0,1", ['dbName'=> DB_DATABASE])->fetch(\PDO::FETCH_ASSOC);
         if($taxClassTable !== false) {

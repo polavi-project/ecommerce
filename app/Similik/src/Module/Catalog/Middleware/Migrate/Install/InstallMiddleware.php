@@ -13,6 +13,8 @@ use Similik\Middleware\MiddlewareAbstract;
 use Similik\Services\Db\Processor;
 use Similik\Services\Http\Request;
 use Similik\Services\Http\Response;
+use Similik\Services\Routing\Router;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class InstallMiddleware extends MiddlewareAbstract
 {
@@ -21,6 +23,11 @@ class InstallMiddleware extends MiddlewareAbstract
 
     public function __invoke(Request $request, Response $response)
     {
+        if(!file_exists(CONFIG_PATH . DS . 'config.tmp.php')) {
+            $redirect = new RedirectResponse($this->getContainer()->get(Router::class)->generateUrl('homepage'));
+            return $redirect->send();
+        }
+        require_once CONFIG_PATH . DS . 'config.tmp.php';
         $this->processor = new Processor();
         $productTable = $this->processor->executeQuery("SELECT TABLE_NAME FROM information_schema.tables WHERE table_schema = :dbName AND TABLE_NAME = \"product\" LIMIT 0,1", ['dbName'=> DB_DATABASE])->fetch(\PDO::FETCH_ASSOC);
         if($productTable !== false) {
@@ -62,6 +69,7 @@ class InstallMiddleware extends MiddlewareAbstract
               `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
               PRIMARY KEY (`attribute_group_id`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Product attribute group'");
+
             $this->processor->getTable('attribute_group')->insert([
                 'group_name'=> 'Default'
             ]);
@@ -105,7 +113,7 @@ class InstallMiddleware extends MiddlewareAbstract
               PRIMARY KEY (`category_description_id`),
               UNIQUE KEY `CATEGORY_DESCRIPTION_LANGUAGE_UNIQUE` (`category_description_category_id`,`language_id`),
               CONSTRAINT `FK_CATEGORY_DESCRIPTION` FOREIGN KEY (`category_description_category_id`) REFERENCES `category` (`category_id`) ON DELETE CASCADE
-            ) ENGINE=InnoDB AUTO_INCREMENT=110 DEFAULT CHARSET=utf8 COMMENT='Category description'");
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Category description'");
 
             // Create product table
             $this->processor->executeQuery("CREATE TABLE `product` (
