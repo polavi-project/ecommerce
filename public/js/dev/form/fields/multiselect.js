@@ -45,7 +45,7 @@ export default function MultiSelect (props) {
             onChange={onChange}
             disabled={isDisabled}
         >
-            <option value="">Please select</option>
+            <option value="" disabled>Please select</option>
             {props.options && props.options.map((option, key)=>{
                 return <option key={key} value={option.value}>{option.text}</option>;
             })}

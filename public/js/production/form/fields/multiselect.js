@@ -61,7 +61,7 @@ export default function MultiSelect(props) {
             },
             React.createElement(
                 "option",
-                { value: "" },
+                { value: "", disabled: true },
                 "Please select"
             ),
             props.options && props.options.map((option, key) => {

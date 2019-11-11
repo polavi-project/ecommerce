@@ -49,7 +49,7 @@ export default function Select (props) {
             disabled={isDisabled}
             style={width}
         >
-            <option value="">Please select</option>
+            <option value="" disabled>Please select</option>
             {props.options && props.options.map((option, key) => {
                 return <option key={key} value={option.value}>{option.text}</option>;
             })}
