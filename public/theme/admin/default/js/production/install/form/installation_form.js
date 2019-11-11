@@ -97,9 +97,41 @@ function AdminUser() {
     );
 }
 
+function Welcome() {
+    const admin = ReactRedux.useSelector(state => _.get(state, 'appState.baseUrlAdmin'));
+    const front = ReactRedux.useSelector(state => _.get(state, 'appState.baseUrl'));
+    return React.createElement(
+        "div",
+        null,
+        React.createElement(
+            "h2",
+            null,
+            "Great. Let's start using Similik"
+        ),
+        React.createElement(
+            "div",
+            { className: "uk-text-center" },
+            React.createElement(
+                "p",
+                null,
+                React.createElement(
+                    "a",
+                    { href: admin, className: "uk-button uk-button-primary uk-button-small", target: "_blank" },
+                    "Admin"
+                )
+            ),
+            React.createElement(
+                "a",
+                { href: front, className: "uk-button uk-button-primary uk-button-small", target: "_blank" },
+                "Front site"
+            )
+        )
+    );
+}
 export default function Installation({ action }) {
     const letsGo = ReactRedux.useSelector(state => _.get(state, 'appState.letsGo'));
     const dispatch = ReactRedux.useDispatch();
+    const [ready, setReady] = React.useState(false);
     const [stack, setStack] = React.useState([{
         step: 'Basic setting',
         api: ReactRedux.useSelector(state => _.get(state, 'appState.baseUrlAdmin') + '/setting/migrate/install'),
@@ -148,6 +180,7 @@ export default function Installation({ action }) {
         for (let i = 0; i < stack.length; ++i) {
             let item = stack[i];
             if (item.message === 'Running') break;
+            if (item.status === false) break;
             if (item.status === undefined) {
                 Fetch(item.api, false, 'POST', {}, () => {
                     setStack(stack.map(s => {
@@ -160,6 +193,7 @@ export default function Installation({ action }) {
                         if (s.step === item.step) {
                             s.message = 'Done';
                             s.status = true;
+                            if (s.step === 'Finishing') setReady(true);
                         }
                         return s;
                     }));else setStack(stack.map(s => {
@@ -238,6 +272,7 @@ export default function Installation({ action }) {
                     )
                 );
             })
-        )
+        ),
+        ready === true && React.createElement(Welcome, null)
     );
 }

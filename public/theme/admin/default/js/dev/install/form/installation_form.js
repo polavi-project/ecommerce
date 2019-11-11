@@ -69,9 +69,21 @@ function AdminUser() {
     </div>
 }
 
+function Welcome() {
+    const admin = ReactRedux.useSelector(state => _.get(state, 'appState.baseUrlAdmin'));
+    const front = ReactRedux.useSelector(state => _.get(state, 'appState.baseUrl'));
+    return <div>
+        <h2>Great. Let's start using Similik</h2>
+        <div className="uk-text-center">
+            <p><a href={admin} className="uk-button uk-button-primary uk-button-small" target='_blank'>Admin</a></p>
+            <a href={front} className="uk-button uk-button-primary uk-button-small" target='_blank'>Front site</a>
+        </div>
+    </div>
+}
 export default function Installation({action}) {
     const letsGo = ReactRedux.useSelector(state => _.get(state, 'appState.letsGo'));
     const dispatch = ReactRedux.useDispatch();
+    const [ready, setReady] = React.useState(false);
     const [stack, setStack] = React.useState(
         [
             {
@@ -133,6 +145,8 @@ export default function Installation({action}) {
             let item = stack[i];
             if(item.message === 'Running')
                 break;
+            if(item.status === false)
+                break;
             if(item.status === undefined) {
                 Fetch(item.api, false, 'POST', {}, ()=> {
                     setStack(stack.map((s)=> {
@@ -147,6 +161,8 @@ export default function Installation({action}) {
                             if(s.step === item.step) {
                                 s.message = 'Done';
                                 s.status = true;
+                                if(s.step === 'Finishing')
+                                    setReady(true);
                             }
                             return s;
                         }));
@@ -158,7 +174,7 @@ export default function Installation({action}) {
                             }
                             return s;
                         }));
-                })
+                });
                 break;
             }
         }
@@ -192,5 +208,6 @@ export default function Installation({action}) {
                 </li>
             })}
         </ul>}
+        {ready === true && <Welcome/>}
     </div>
 }

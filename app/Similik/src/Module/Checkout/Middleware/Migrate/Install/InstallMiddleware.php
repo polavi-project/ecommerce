@@ -146,6 +146,32 @@ class InstallMiddleware extends MiddlewareAbstract
               UNIQUE KEY `ORDER_NUMBER_UNIQUE` (`order_number`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT 'Order'");
 
+            //Create order_item table
+            $this->processor->executeQuery("CREATE TABLE `order_item` (
+              `order_item_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+              `order_item_order_id` int(10) unsigned NOT NULL,
+              `product_id` int(10) unsigned NOT NULL,
+              `referer` int(10) unsigned DEFAULT NULL,
+              `product_sku` varchar(255) NOT NULL,
+              `product_name` text NOT NULL,
+              `product_weight` decimal(12,4) DEFAULT NULL,
+              `product_price` decimal(12,4) NOT NULL,
+              `product_price_incl_tax` decimal(12,4) NOT NULL,
+              `qty` int(11) NOT NULL,
+              `final_price` decimal(12,4) NOT NULL,
+              `final_price_incl_tax` decimal(12,4) NOT NULL,
+              `tax_percent` decimal(12,4) NOT NULL,
+              `tax_amount` decimal(12,4) NOT NULL,
+              `discount_amount` decimal(12,4) NOT NULL,
+              `total` decimal(12,4) NOT NULL,
+              `variant_specification` text,
+              `product_custom_options` text,
+              `requested_data` text,
+              PRIMARY KEY (`order_item_id`),
+              KEY `FK_ORDER` (`order_item_order_id`),
+              CONSTRAINT `FK_ORDER` FOREIGN KEY (`order_item_order_id`) REFERENCES `order` (`order_id`) ON DELETE CASCADE
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Order item'");
+
             //Create order_address table
             $this->processor->executeQuery("CREATE TABLE `order_address` (
               `order_address_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
