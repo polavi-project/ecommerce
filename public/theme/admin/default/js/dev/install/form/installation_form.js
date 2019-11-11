@@ -2,14 +2,7 @@ import {Form} from "../../../../../../../js/production/form/form.js";
 import Text from "../../../../../../../js/production/form/fields/text.js";
 import Password from "../../../../../../../js/production/form/fields/password.js";
 import {ADD_APP_STATE} from "../../../../../../../js/dev/event-types.js";
-import {InstallSettingModule} from "../../setting/install/install.js";
-import {InstallCatalogModule} from "../../catalog/install/install.js";
-import {InstallCmsModule} from "../../cms/install/install.js";
-import {InstallDiscountModule} from "../../discount/install/install.js";
-import {InstallCheckoutModule} from "../../checkout/install/install.js";
-import {InstallCustomerModule} from "../../customer/install/install.js";
-import {InstallTaxModule} from "../../tax/install/install.js";
-import {FinishInstallation} from "./finish.js";
+import {Fetch} from "../../../../../../../js/production/fetch.js";
 
 function DBInfo() {
     return <div className="uk-width-1-2">
@@ -79,21 +72,97 @@ function AdminUser() {
 export default function Installation({action}) {
     const letsGo = ReactRedux.useSelector(state => _.get(state, 'appState.letsGo'));
     const dispatch = ReactRedux.useDispatch();
-    React.useEffect(() => {
-        dispatch({'type': ADD_APP_STATE, 'payload': {
-            appState: {
-                modules: {
-                    setting: false,
-                    catalog: false,
-                    customer: false,
-                    tax: false,
-                    checkout: false,
-                    cms: false,
-                    discount: false
-                }
+    const [stack, setStack] = React.useState(
+        [
+            {
+                step: 'Basic setting',
+                api: ReactRedux.useSelector(state => _.get(state, 'appState.baseUrlAdmin') + '/setting/migrate/install'),
+                running: false,
+                status: undefined,
+                message: 'Waiting',
+            },
+            {
+                step: 'Cms module',
+                api: ReactRedux.useSelector(state => _.get(state, 'appState.baseUrlAdmin') + '/cms/migrate/install'),
+                status: undefined,
+                message: 'Waiting'
+            },
+            {
+                step: 'Customer module',
+                api: ReactRedux.useSelector(state => _.get(state, 'appState.baseUrlAdmin') + '/customer/migrate/install'),
+                status: undefined,
+                message: 'Waiting'
+            },
+            {
+                step: 'Tax module',
+                api: ReactRedux.useSelector(state => _.get(state, 'appState.baseUrlAdmin') + '/tax/migrate/install'),
+                status: undefined,
+                message: 'Waiting'
+            },
+            {
+                step: 'Catalog setting',
+                api: ReactRedux.useSelector(state => _.get(state, 'appState.baseUrlAdmin') + '/catalog/migrate/install'),
+                status: undefined,
+                message: 'Waiting'
+            },
+            {
+                step: 'Checkout setting',
+                api: ReactRedux.useSelector(state => _.get(state, 'appState.baseUrlAdmin') + '/checkout/migrate/install'),
+                status: undefined,
+                message: 'Waiting'
+            },
+            {
+                step: 'Discount setting',
+                api: ReactRedux.useSelector(state => _.get(state, 'appState.baseUrlAdmin') + '/discount/migrate/install'),
+                status: undefined,
+                message: 'Waiting'
+            },
+            {
+                step: 'Finishing',
+                api: ReactRedux.useSelector(state => _.get(state, 'appState.baseUrlAdmin') + '/install/finish'),
+                status: undefined,
+                message: 'Waiting'
             }
-        }});
-    }, []);
+        ]
+    );
+
+    React.useEffect(()=>{
+        if(letsGo !== true)
+            return;
+        for (let i = 0; i < stack.length; ++i) {
+            let item = stack[i];
+            if(item.message === 'Running')
+                break;
+            if(item.status === undefined) {
+                Fetch(item.api, false, 'POST', {}, ()=> {
+                    setStack(stack.map((s)=> {
+                        if(s.step === item.step)
+                            s.message = 'Running';
+
+                        return s;
+                    }));
+                }, (response) => {
+                    if(parseInt(response.success) === 1)
+                        setStack(stack.map((s)=> {
+                            if(s.step === item.step) {
+                                s.message = 'Done';
+                                s.status = true;
+                            }
+                            return s;
+                        }));
+                    else
+                        setStack(stack.map((s)=> {
+                            if(s.step === item.step) {
+                                s.message = response.message;
+                                s.status = false;
+                            }
+                            return s;
+                        }));
+                })
+                break;
+            }
+        }
+    });
     return <div className="uk-align-center">
         <div className="uk-text-center"><h3>Welcome to Similik</h3></div>
         {(letsGo !== true && letsGo !== undefined) && <div className="text-danger">{isSuccess}</div>}
@@ -113,15 +182,15 @@ export default function Installation({action}) {
                 <AdminUser/>
             </div>
         </Form>}
-        <ul className="installation-stack uk-list">
-            <InstallSettingModule/>
-            <InstallCatalogModule/>
-            <InstallCmsModule/>
-            <InstallDiscountModule/>
-            <InstallCheckoutModule/>
-            <InstallCustomerModule/>
-            <InstallTaxModule/>
-            <FinishInstallation/>
-        </ul>
+        {letsGo === true && <ul className="installation-stack uk-list">
+            {stack.map((s, i)=> {
+                return <li key={i}>
+                    <span>{s.step} </span>
+                    {s.status === undefined && <span>{s.message}</span>}
+                    {s.status === true && <span className="text-success">{s.message}</span>}
+                    {s.status === false && <span className="text-danger">{s.message}</span>}
+                </li>
+            })}
+        </ul>}
     </div>
 }

@@ -5,6 +5,7 @@
     --borderColor: #e5e5e5;
 }
 .text-danger{color:#f0506e}
+.text-success{color:#32d296}
 /**************************************** LOADING ICON *********************************************/
 .spinner {
     margin: 100px auto;

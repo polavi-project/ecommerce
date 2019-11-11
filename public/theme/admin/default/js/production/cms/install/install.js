@@ -8,13 +8,15 @@ function InstallCmsModule() {
     const api = ReactRedux.useSelector(state => _.get(state, 'appState.baseUrlAdmin') + '/cms/migrate/install');
     const letsGo = ReactRedux.useSelector(state => _.get(state, 'appState.letsGo'));
     const modules = ReactRedux.useSelector(state => _.get(state, 'appState.modules'));
+    const setting = ReactRedux.useSelector(state => _.get(state, 'appState.modules.setting'));
+    const cms = ReactRedux.useSelector(state => _.get(state, 'appState.modules.cms'));
     React.useEffect(() => {
-        if (letsGo === true) {
+        if (letsGo === true && cms === false && setting === true) {
             Fetch(api, false, 'POST', {}, null, response => {
                 if (parseInt(response.success) === 1) dispatch({ 'type': ADD_APP_STATE, 'payload': { appState: { modules: _extends({}, modules, { cms: true }) } } });else dispatch({ 'type': ADD_APP_STATE, 'payload': { appState: { modules: _extends({}, modules, { cms: _.get(response, 'message', 'Something wrong') }) } } });
             });
         }
-    }, [letsGo]);
+    }, [letsGo, cms, setting]);
     if (letsGo !== true) return null;
 
     return React.createElement(

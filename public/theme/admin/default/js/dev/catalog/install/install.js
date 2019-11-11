@@ -6,8 +6,10 @@ function InstallCatalogModule() {
     const api = ReactRedux.useSelector(state => _.get(state, 'appState.baseUrlAdmin') + '/catalog/migrate/install');
     const letsGo = ReactRedux.useSelector(state => _.get(state, 'appState.letsGo'));
     const modules = ReactRedux.useSelector(state => _.get(state, 'appState.modules'));
+    const catalog = ReactRedux.useSelector(state => _.get(state, 'appState.modules.catalog'));
+    const tax = ReactRedux.useSelector(state => _.get(state, 'appState.modules.tax'));
     React.useEffect(()=> {
-        if(letsGo === true) {
+        if(letsGo === true && tax === true && catalog === false) {
             Fetch(api, false, 'POST', {}, null, (response) => {
                 if(parseInt(response.success) === 1)
                     dispatch({'type': ADD_APP_STATE, 'payload': {appState: {modules: {...modules, catalog: true}}}});
@@ -15,7 +17,7 @@ function InstallCatalogModule() {
                     dispatch({'type': ADD_APP_STATE, 'payload': {appState: {modules: {...modules, catalog: _.get(response, 'message', 'Something wrong')}}}});
             });
         }
-    }, [letsGo]);
+    }, [letsGo, tax, catalog]);
     if(letsGo !== true)
         return null;
 

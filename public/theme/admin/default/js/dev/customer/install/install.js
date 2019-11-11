@@ -6,8 +6,9 @@ function InstallCustomerModule() {
     const api = ReactRedux.useSelector(state => _.get(state, 'appState.baseUrlAdmin') + '/customer/migrate/install');
     const letsGo = ReactRedux.useSelector(state => _.get(state, 'appState.letsGo'));
     const modules = ReactRedux.useSelector(state => _.get(state, 'appState.modules'));
+    const customer = ReactRedux.useSelector(state => _.get(state, 'appState.modules.customer'));
     React.useEffect(()=> {
-        if(letsGo === true) {
+        if(letsGo === true && customer === false) {
             Fetch(api, false, 'POST', {}, null, (response) => {
                 if(parseInt(response.success) === 1)
                     dispatch({'type': ADD_APP_STATE, 'payload': {appState: {modules: {...modules, customer: true}}}});
@@ -15,7 +16,7 @@ function InstallCustomerModule() {
                     dispatch({'type': ADD_APP_STATE, 'payload': {appState: {modules: {...modules, customer: _.get(response, 'message', 'Something wrong')}}}});
             });
         }
-    }, [letsGo]);
+    }, [letsGo, customer]);
     if(letsGo !== true)
         return null;
 

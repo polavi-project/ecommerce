@@ -8,13 +8,15 @@ function InstallDiscountModule() {
     const api = ReactRedux.useSelector(state => _.get(state, 'appState.baseUrlAdmin') + '/discount/migrate/install');
     const letsGo = ReactRedux.useSelector(state => _.get(state, 'appState.letsGo'));
     const modules = ReactRedux.useSelector(state => _.get(state, 'appState.modules'));
+    const order = ReactRedux.useSelector(state => _.get(state, 'appState.modules.order'));
+    const discount = ReactRedux.useSelector(state => _.get(state, 'appState.modules.discount'));
     React.useEffect(() => {
-        if (letsGo === true) {
+        if (letsGo === true && order === true && discount === false) {
             Fetch(api, false, 'POST', {}, null, response => {
                 if (parseInt(response.success) === 1) dispatch({ 'type': ADD_APP_STATE, 'payload': { appState: { modules: _extends({}, modules, { discount: true }) } } });else dispatch({ 'type': ADD_APP_STATE, 'payload': { appState: { modules: _extends({}, modules, { discount: _.get(response, 'message', 'Something wrong') }) } } });
             });
         }
-    }, [letsGo]);
+    }, [letsGo, order, discount]);
     if (letsGo !== true) return null;
 
     return React.createElement(

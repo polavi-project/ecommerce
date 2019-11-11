@@ -27,7 +27,7 @@ function FinishInstallation() {
                     dispatch({'type': ADD_APP_STATE, 'payload': {appState: {installed: _.get(response, 'message', 'Can not finish installation. Please check file permission (*/config/)')}}});
             });
         }
-    }, [canFinish]);
+    });
 
     if(canFinish !== true)
         return null;

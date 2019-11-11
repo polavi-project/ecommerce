@@ -8,13 +8,14 @@ function InstallTaxModule() {
     const api = ReactRedux.useSelector(state => _.get(state, 'appState.baseUrlAdmin') + '/tax/migrate/install');
     const letsGo = ReactRedux.useSelector(state => _.get(state, 'appState.letsGo'));
     const modules = ReactRedux.useSelector(state => _.get(state, 'appState.modules'));
+    const tax = ReactRedux.useSelector(state => _.get(state, 'appState.modules.tax'));
     React.useEffect(() => {
-        if (letsGo === true) {
+        if (letsGo === true && tax === false) {
             Fetch(api, false, 'POST', {}, null, response => {
                 if (parseInt(response.success) === 1) dispatch({ 'type': ADD_APP_STATE, 'payload': { appState: { modules: _extends({}, modules, { tax: true }) } } });else dispatch({ 'type': ADD_APP_STATE, 'payload': { appState: { modules: _extends({}, modules, { tax: _.get(response, 'message', 'Something wrong') }) } } });
             });
         }
-    }, [letsGo]);
+    }, [letsGo, tax]);
     if (letsGo !== true) return null;
 
     return React.createElement(

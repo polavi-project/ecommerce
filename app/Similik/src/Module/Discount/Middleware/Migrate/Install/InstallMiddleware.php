@@ -73,8 +73,7 @@ class InstallMiddleware extends MiddlewareAbstract
 
             //Create TRIGGER_UPDATE_COUPON_USED_TIME_AFTER_CREATE_ORDER trigger
             $this->processor->executeQuery(
-                "DELIMITER $$
-                CREATE TRIGGER `TRIGGER_UPDATE_COUPON_USED_TIME_AFTER_CREATE_ORDER` AFTER INSERT ON `order` 
+                "CREATE TRIGGER `TRIGGER_UPDATE_COUPON_USED_TIME_AFTER_CREATE_ORDER` AFTER INSERT ON `order` 
                     FOR EACH ROW                     
                         BEGIN
                             UPDATE `coupon` SET `coupon`.used_time = `coupon`.used_time + 1 WHERE `coupon`.coupon = NEW.coupon;
@@ -82,9 +81,7 @@ class InstallMiddleware extends MiddlewareAbstract
                                 INSERT INTO `customer_coupon_use` (`customer_id`, `coupon`, `used_time`) VALUES (NEW.customer_id, NEW.coupon, 1)
                                     ON DUPLICATE KEY UPDATE `customer_coupon_use`.used_time = `customer_coupon_use`.used_time + 1;
                             END IF;
-                        END;
-                $$
-                DELIMITER ;"
+                        END;"
             );
 
             $this->processor->commit();

@@ -16,6 +16,6 @@ $router->addSiteRoute('similik.install.post', 'POST', '/install/post', [
     \Similik\Module\Install\Middleware\Post\CreateAdminUserMiddleware::class
 ]);
 
-$router->addSiteRoute('similik.install.finish', 'POST', '/install/finish', [
+$router->addAdminRoute('similik.install.finish', 'POST', '/install/finish', [
     \Similik\Module\Install\Middleware\Finish\FinishMiddleware::class
 ]);

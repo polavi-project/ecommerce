@@ -133,7 +133,7 @@ class InstallMiddleware extends MiddlewareAbstract
               PRIMARY KEY (`product_id`),
               UNIQUE KEY `UNIQUE_SKU` (`sku`),
               KEY `FK_PRODUCT_ATTRIBUTE_GROUP` (`group_id`),
-              CONSTRAINT `FK_PRODUCT_ATTRIBUTE_GROUP` FOREIGN KEY (`group_id`) REFERENCES `attribute_group` (`attribute_group_id`) ON DELETE SET NULL,
+              CONSTRAINT `FK_PRODUCT_ATTRIBUTE_GROUP` FOREIGN KEY (`group_id`) REFERENCES `attribute_group` (`attribute_group_id`) ON DELETE SET NULL
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Product'");
 
             //Create product_description table
@@ -242,63 +242,44 @@ class InstallMiddleware extends MiddlewareAbstract
 
             // Create TRIGGER_AFTER_DELETE_ATTRIBUTE_OPTION trigger
             $this->processor->executeQuery(
-                "DELIMITER $$
-                CREATE
-                    TRIGGER `TRIGGER_AFTER_DELETE_ATTRIBUTE_OPTION` AFTER DELETE ON `attribute_option` 
+                "CREATE TRIGGER `TRIGGER_AFTER_DELETE_ATTRIBUTE_OPTION` AFTER DELETE ON `attribute_option` 
                     FOR EACH ROW BEGIN
                          DELETE FROM `product_attribute_value_index` WHERE `product_attribute_value_index`.option_id = OLD.attribute_option_id AND `product_attribute_value_index`.`attribute_id` = OLD.attribute_id;
-                    END;
-                $$
-                DELIMITER ;"
+                    END;"
             );
 
             //Create TRIGGER_AFTER_DELETE_TAX_CLASS trigger
             $this->processor->executeQuery(
-                "DELIMITER $$
-                CREATE
-                    TRIGGER `TRIGGER_AFTER_DELETE_TAX_CLASS` AFTER DELETE ON `tax_class` 
+                "CREATE TRIGGER `TRIGGER_AFTER_DELETE_TAX_CLASS` AFTER DELETE ON `tax_class` 
                     FOR EACH ROW BEGIN
                          UPDATE `product` SET `product`.tax_class = 0 WHERE `product`.tax_class = OLD.tax_class_id;
-                    END;
-                $$
-                DELIMITER ;"
+                    END;"
             );
 
             //Create TRIGGER_ATTRIBUTE_OPTION_UPDATE trigger
             $this->processor->executeQuery(
-                "DELIMITER $$
-                CREATE
-                    TRIGGER `TRIGGER_ATTRIBUTE_OPTION_UPDATE` AFTER UPDATE ON `attribute_option` 
+                "CREATE TRIGGER `TRIGGER_ATTRIBUTE_OPTION_UPDATE` AFTER UPDATE ON `attribute_option` 
                     FOR EACH ROW UPDATE `product_attribute_value_index` SET `product_attribute_value_index`.`attribute_value_text` = NEW.option_text
                         WHERE `product_attribute_value_index`.option_id = NEW.attribute_option_id AND `product_attribute_value_index`.attribute_id = NEW.attribute_id;
-                $$
-                DELIMITER ;"
+                "
             );
 
             //Create TRIGGER_PRODUCT_AFTER_UPDATE trigger
             $this->processor->executeQuery(
-                "DELIMITER $$
-                CREATE
-                    TRIGGER `TRIGGER_PRODUCT_AFTER_UPDATE` AFTER UPDATE ON `product` 
+                "CREATE TRIGGER `TRIGGER_PRODUCT_AFTER_UPDATE` AFTER UPDATE ON `product` 
                     FOR EACH ROW BEGIN
                         DELETE FROM `product_attribute_value_index`
                         WHERE `product_attribute_value_index`.`product_id` = New.product_id 
                         AND `product_attribute_value_index`.`attribute_id` NOT IN (SELECT `attribute_group_link`.`attribute_id` FROM `attribute_group_link` WHERE `attribute_group_link`.`group_id` = NEW.group_id);
-                    END;
-                $$
-                DELIMITER ;"
+                    END;"
             );
 
             //Create TRIGGER_REMOVE_ATTRIBUTE_FROM_GROUP from group
             $this->processor->executeQuery(
-                "DELIMITER $$
-                CREATE
-                    TRIGGER `TRIGGER_REMOVE_ATTRIBUTE_FROM_GROUP` AFTER DELETE ON `attribute_group_link` 
+                "CREATE TRIGGER `TRIGGER_REMOVE_ATTRIBUTE_FROM_GROUP` AFTER DELETE ON `attribute_group_link` 
                     FOR EACH ROW BEGIN
                         DELETE FROM `product_attribute_value_index` WHERE product_attribute_value_index.attribute_id = OLD.attribute_id AND product_attribute_value_index.product_id IN (SELECT product.product_id FROM product WHERE product.group_id = OLD.group_id);
-                    END;
-                $$
-                DELIMITER ;"
+                    END;"
             );
             $this->processor->commit();
             $response->addData('success', 1)->addData('message', 'Done');

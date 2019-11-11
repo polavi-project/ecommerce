@@ -6,8 +6,10 @@ function InstallCheckoutModule() {
     const api = ReactRedux.useSelector(state => _.get(state, 'appState.baseUrlAdmin') + '/checkout/migrate/install');
     const letsGo = ReactRedux.useSelector(state => _.get(state, 'appState.letsGo'));
     const modules = ReactRedux.useSelector(state => _.get(state, 'appState.modules'));
+    const catalog = ReactRedux.useSelector(state => _.get(state, 'appState.modules.catalog'));
+    const checkout = ReactRedux.useSelector(state => _.get(state, 'appState.modules.checkout'));
     React.useEffect(()=> {
-        if(letsGo === true && modules.catalog === true) {
+        if(letsGo === true && catalog === true && checkout === false) {
             Fetch(api, false, 'POST', {}, null, (response) => {
                 if(parseInt(response.success) === 1)
                     dispatch({'type': ADD_APP_STATE, 'payload': {appState: {modules: {...modules, checkout: true}}}});
@@ -15,7 +17,7 @@ function InstallCheckoutModule() {
                     dispatch({'type': ADD_APP_STATE, 'payload': {appState: {modules: {...modules, checkout: _.get(response, 'message', 'Something wrong')}}}});
             });
         }
-    }, [letsGo]);
+    }, [letsGo, catalog, checkout]);
     if(letsGo !== true)
         return null;
 
