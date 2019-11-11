@@ -10,6 +10,7 @@ namespace Similik\Module\Checkout\Middleware\Cart\View;
 
 use function Similik\get_js_file_url;
 use Similik\Module\Checkout\Services\Cart\Cart;
+use Similik\Services\Helmet;
 use Similik\Services\Http\Request;
 use Similik\Services\Http\Response;
 use Similik\Middleware\MiddlewareAbstract;
@@ -25,6 +26,7 @@ class ShoppingCartMiddleware extends MiddlewareAbstract
      */
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
+        $this->getContainer()->get(Helmet::class)->setTitle('Shopping cart');
         $response->addWidget(
             'shopping_cart_page',
             'content',
