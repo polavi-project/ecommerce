@@ -11,6 +11,7 @@ namespace Similik\Module\Customer\Middleware\Login;
 
 use function Similik\get_js_file_url;
 use Similik\Middleware\MiddlewareAbstract;
+use Similik\Services\Helmet;
 use Similik\Services\Http\Request;
 use Similik\Services\Http\Response;
 use Similik\Services\Routing\Router;
@@ -34,7 +35,7 @@ class FormMiddleware extends MiddlewareAbstract
                     'registerUrl' => $this->getContainer()->get(Router::class)->generateUrl('customer.register')
                 ]
             );
-
+            $this->getContainer()->get(Helmet::class)->setTitle('Login');
             return $delegate;
         }
     }
