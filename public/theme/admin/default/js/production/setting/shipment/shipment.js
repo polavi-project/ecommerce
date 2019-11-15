@@ -8,7 +8,7 @@ export default function Shipment() {
             "div",
             null,
             React.createElement(
-                "h1",
+                "h2",
                 null,
                 "Shipment methods"
             )

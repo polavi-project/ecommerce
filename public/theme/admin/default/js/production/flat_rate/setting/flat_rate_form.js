@@ -34,7 +34,7 @@ export default function FlatRateSettingForm(props) {
 
     return React.createElement(
         "div",
-        { className: "uk-width-1-4" },
+        { className: "uk-width-1-3" },
         React.createElement(
             "div",
             { className: "border-block" },

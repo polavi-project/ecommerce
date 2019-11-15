@@ -214,6 +214,15 @@ export default function CatalogSettingForms(props) {
         "div",
         { className: "uk-flex-center" },
         React.createElement(
+            "div",
+            null,
+            React.createElement(
+                "h2",
+                null,
+                "Catalog"
+            )
+        ),
+        React.createElement(
             Form,
             { id: "catalog_setting_form", action: props.action },
             React.createElement(Area, { id: "catalog_setting_form_inner", className: "uk-grid uk-grid-small", coreWidgets: [{

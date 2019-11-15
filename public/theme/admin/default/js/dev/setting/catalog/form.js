@@ -180,6 +180,7 @@ function General(props) {
 
 export default function CatalogSettingForms(props) {
     return <div className="uk-flex-center">
+        <div><h2>Catalog</h2></div>
         <Form id="catalog_setting_form" action={props.action}>
             <Area id="catalog_setting_form_inner" className="uk-grid uk-grid-small" coreWidgets={[
                 {
