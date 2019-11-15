@@ -11,6 +11,7 @@ namespace Similik\Module\Setting\Middleware\Payment;
 use function Similik\_mysql;
 use function Similik\get_default_language_Id;
 use function Similik\get_js_file_url;
+use Similik\Services\Helmet;
 use Similik\Services\Http\Request;
 use Similik\Middleware\MiddlewareAbstract;
 use Similik\Services\Http\Response;
@@ -22,7 +23,7 @@ class PaymentSettingMiddleware extends MiddlewareAbstract
     {
         if($request->getMethod() == 'POST')
             return $delegate;
-
+        $this->getContainer()->get(Helmet::class)->setTitle('Payment setting');
         $response->addWidget(
             'payment_setting',
             'content',

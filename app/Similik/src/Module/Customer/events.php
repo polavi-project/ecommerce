@@ -14,6 +14,7 @@ use GraphQL\Type\Definition\Type;
 use function Similik\_mysql;
 use Similik\Services\Di\Container;
 use Similik\Services\Http\Request;
+use Similik\Services\Routing\Router;
 
 $eventDispatcher->addListener(
         'before_execute_' . strtolower(str_replace('\\', '_', \Similik\Module\Graphql\Middleware\Graphql\GraphqlQLMiddleware::class)),
@@ -64,19 +65,22 @@ $eventDispatcher->addListener(
 $eventDispatcher->addListener(
     'filter.query.type',
     function (&$fields, Container $container) {
-        $fields['admin_customer_grid'] = [
-            'type' => $container->get(\Similik\Module\Customer\Services\Type\CustomerGridType::class),
-            'description' => "Return list of customer for admin grid",
-            'args' => [
-                'filter' =>  Type::string() //
-            ],
-            'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
-                // Authentication example
-                if($container->get(Request::class)->isAdmin() == false)
-                    return [];
-                else
-                    return $container->get(\Similik\Module\Customer\Services\CustomerGridCollection::class)->getData($rootValue, $args, $container, $info);
-            }
+        $fields += [
+            'customerCollection' => [
+                'type' => $container->get(\Similik\Module\Customer\Services\Type\CustomerCollectionType::class),
+                'description' => "Return list of customer and total count",
+                'args' => [
+                    'filter' =>  [
+                        'type' => $container->get(\Similik\Module\Customer\Services\Type\CustomerCollectionFilterType::class)
+                    ]
+                ],
+                'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
+                    if($container->get(\Similik\Services\Http\Request::class)->isAdmin() == false)
+                        return [];
+                    $collection = new \Similik\Module\Customer\Services\CustomerCollection($container);
+                    return $collection->getData($rootValue, $args, $container, $info);
+                }
+            ]
         ];
 
         $fields['customerGroups'] = [
@@ -240,4 +244,33 @@ $eventDispatcher->addListener(
         ];
     },
     5
+);
+
+$eventDispatcher->addListener(
+    'before_execute_' . strtolower(str_replace('\\', '_', \Similik\Middleware\AdminNavigationMiddleware::class)),
+    function (\Similik\Services\Di\Container $container) {
+        $container->get(\Similik\Module\Cms\Services\NavigationManager::class)->addItem(
+            'customer',
+            'Customer',
+            '',
+            'users',
+            null,
+            15
+        )->addItem(
+            'customer.grid',
+            'All customer',
+            $container->get(Router::class)->generateUrl('customer.grid'),
+            'list',
+            'customer',
+            0
+        )->addItem(
+            'customer.create',
+            'Add customer',
+            $container->get(Router::class)->generateUrl('widget.grid'),
+            'plus',
+            'customer',
+            10
+        );
+    },
+    0
 );

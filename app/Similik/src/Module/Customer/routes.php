@@ -10,8 +10,6 @@ declare(strict_types=1);
 
 
 $router->addAdminRoute('customer.grid', 'GET', '/customers', [
-    \Similik\Module\Customer\Middleware\Grid\ColumnMiddleware::class,
-    \Similik\Module\Customer\Middleware\Grid\BuildCollectionMiddleware::class,
     \Similik\Module\Customer\Middleware\Grid\GridMiddleware::class,
 ]);
 

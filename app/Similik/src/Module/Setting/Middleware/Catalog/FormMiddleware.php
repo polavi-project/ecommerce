@@ -11,6 +11,7 @@ namespace Similik\Module\Setting\Middleware\Catalog;
 use function Similik\_mysql;
 use function Similik\get_default_language_Id;
 use function Similik\get_js_file_url;
+use Similik\Services\Helmet;
 use Similik\Services\Http\Request;
 use Similik\Middleware\MiddlewareAbstract;
 use Similik\Services\Http\Response;
@@ -23,6 +24,7 @@ class FormMiddleware extends MiddlewareAbstract
         if($request->getMethod() == 'POST')
             return $delegate;
 
+        $this->getContainer()->get(Helmet::class)->setTitle('Catalog setting');
         $stm = _mysql()
             ->executeQuery("SELECT * FROM `setting`
 WHERE language_id = :language
