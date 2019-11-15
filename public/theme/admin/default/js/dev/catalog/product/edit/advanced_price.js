@@ -51,7 +51,7 @@ export default function AdvancedPrice(props) {
                             <Text formId={props.formId} key={"qty_" + index} type="text" name={'advance_price[' + price.product_price_id + '][qty]'} value={price.qty} validation_rules={["number"]}/>
                         </td>
                         <td>
-                            <Text formId={props.formId} key={"price_" + index} type="text" name={'advance_price[' + price.product_price_id + '][price]'} value={price.price} validation_rules={["notEmpty"]}/>
+                            <Text formId={props.formId} key={"price_" + index} type="text" name={'advance_price[' + price.product_price_id + '][tier_price]'} value={price.price} validation_rules={["notEmpty"]}/>
                         </td>
                         <td className="uk-width-1-2">
                             <Datefield formId={props.formId} type="text" name={'advance_price[' + price.product_price_id + '][active_from]'} value={price.active_from}/>

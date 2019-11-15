@@ -39,15 +39,15 @@ class InstallMiddleware extends MiddlewareAbstract
         try {
             //Create customer_group table
             $this->processor->executeQuery("CREATE TABLE `customer_group` (
-              `customer_group_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+              `customer_group_id` int(10) unsigned NOT NULL,
               `group_name` char(255) NOT NULL,
+              `row_id` int(10) unsigned NOT NULL AUTO_INCREMENT
               `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
               `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
               PRIMARY KEY (`customer_group_id`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Customer group'");
 
-            $this->processor->getTable('customer_group')->insert(['group_name'=> 'General']);
-
+            $this->processor->executeQuery("INSERT INTO `customer_group` (`customer_group_id`, `group_name`) VALUES (1, 'General'), (999, 'All'), (1000, 'BASEPRICE')");
             //Create customer table
             $this->processor->executeQuery("CREATE TABLE `customer` (
               `customer_id` int(10) unsigned NOT NULL AUTO_INCREMENT,

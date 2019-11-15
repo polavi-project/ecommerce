@@ -223,7 +223,7 @@ class InstallMiddleware extends MiddlewareAbstract
             $this->processor->executeQuery("CREATE TABLE `product_price` (
               `product_price_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
               `product_price_product_id` int(10) unsigned NOT NULL,
-              `price` decimal(12,4) NOT NULL,
+              `tier_price` decimal(12,4) NOT NULL,
               `customer_group_id` int(10) unsigned NOT NULL DEFAULT '0',
               `qty` int(10) unsigned NOT NULL DEFAULT '0',
               `active_from` datetime DEFAULT NULL,
@@ -239,6 +239,13 @@ class InstallMiddleware extends MiddlewareAbstract
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Product advanced price'");
 
             ////////////////// CREATE SOME TRIGGERS /////////////////////
+            // Create TRIGGER_AFTER_INSERT_PRODUCT trigger
+            $this->processor->executeQuery(
+                "CREATE TRIGGER `TRIGGER_AFTER_INSERT_PRODUCT` AFTER INSERT ON `product` 
+                    FOR EACH ROW BEGIN
+                         INSERT INTO `product_price`(product_price_product_id, tier_price, customer_group_id, qty) VALUES(NEW.product_id, NEW.price, 1000, 1);
+                    END;"
+            );
 
             // Create TRIGGER_AFTER_DELETE_ATTRIBUTE_OPTION trigger
             $this->processor->executeQuery(
@@ -268,6 +275,7 @@ class InstallMiddleware extends MiddlewareAbstract
             $this->processor->executeQuery(
                 "CREATE TRIGGER `TRIGGER_PRODUCT_AFTER_UPDATE` AFTER UPDATE ON `product` 
                     FOR EACH ROW BEGIN
+                        UPDATE `product_price` SET tier_price = NEW.price WHERE product_price_product_id = OLD.product_id AND customer_group_id = 1000 AND qty = 1;
                         DELETE FROM `product_attribute_value_index`
                         WHERE `product_attribute_value_index`.`product_id` = New.product_id 
                         AND `product_attribute_value_index`.`attribute_id` NOT IN (SELECT `attribute_group_link`.`attribute_id` FROM `attribute_group_link` WHERE `attribute_group_link`.`group_id` = NEW.group_id);

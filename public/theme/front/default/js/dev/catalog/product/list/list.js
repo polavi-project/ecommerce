@@ -1,8 +1,8 @@
 import Area from "../../../../../../../../js/production/area.js";
-import {Name} from "../../../../production/catalog/product/list/item/name.js";
-import {Thumbnail} from "../../../../production/catalog/product/list/item/thumbnail.js";
-import {Price} from "../../../../production/catalog/product/list/item/price.js";
-import {AddToCart} from "../../../../production/catalog/product/list/item/buy_button.js";
+import {Name} from "./item/name.js";
+import {Thumbnail} from "./item/thumbnail.js";
+import {Price} from "./item/price.js";
+import {AddToCart} from "./item/buy_button.js";
 
 export default function ProductList({products, addItemApi}) {
     return <div className="product-list uk-grid">
@@ -27,7 +27,7 @@ export default function ProductList({products, addItemApi}) {
                         },
                         {
                             component: Price,
-                            props : {price: p.price},
+                            props : {price: p.price, salePrice: p.salePrice},
                             sort_order: 30,
                             id: "price"
                         },

@@ -25,7 +25,7 @@ class PriceMiddleware extends MiddlewareAbstract
                     productTierPrice (productId: {$request->attributes->getInt('id')})
                     {
                         qty
-                        price
+                        price: tier_price
                     }
                 }"
             ])

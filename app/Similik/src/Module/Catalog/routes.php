@@ -144,7 +144,7 @@ $productViewMiddleware = [
     \Similik\Module\Catalog\Middleware\Product\View\AttributeMiddleware::class,
     \Similik\Module\Catalog\Middleware\Product\View\FormMiddleware::class,
 ];
-$router->addSiteRoute('product.view', 'GET', '/products/id/{id:\d+}', $productViewMiddleware);
+$router->addSiteRoute('product.view', 'GET', '/product/id/{id:\d+}', $productViewMiddleware);
 
 // Pretty url
-$router->addSiteRoute('product.view.pretty', 'GET', '/products/{slug}', $productViewMiddleware);
+$router->addSiteRoute('product.view.pretty', 'GET', '/product/{slug}', $productViewMiddleware);

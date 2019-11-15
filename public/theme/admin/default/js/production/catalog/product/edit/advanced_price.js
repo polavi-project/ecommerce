@@ -100,7 +100,7 @@ export default function AdvancedPrice(props) {
                         React.createElement(
                             "td",
                             null,
-                            React.createElement(Text, { formId: props.formId, key: "price_" + index, type: "text", name: 'advance_price[' + price.product_price_id + '][price]', value: price.price, validation_rules: ["notEmpty"] })
+                            React.createElement(Text, { formId: props.formId, key: "price_" + index, type: "text", name: 'advance_price[' + price.product_price_id + '][tier_price]', value: price.price, validation_rules: ["notEmpty"] })
                         ),
                         React.createElement(
                             "td",

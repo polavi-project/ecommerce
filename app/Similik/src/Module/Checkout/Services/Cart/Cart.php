@@ -116,7 +116,10 @@ class Cart
             ],
             'customer_group_id' => [
                 'resolver' => function(Cart $cart) {
-                    return $cart->request->getCustomer()->getData('group_id') ?? 1;
+                    if($cart->request->getCustomer()->isLoggedIn())
+                        return $cart->request->getCustomer()->getData('group_id') ?? 1;
+                    else
+                        return 999;
                 },
                 'dependencies' => ['customer_id']
             ],

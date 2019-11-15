@@ -87,7 +87,7 @@ $eventDispatcher->addListener(
                 if($container->get(Request::class)->isAdmin() == false)
                     return [];
                 else
-                    return \Similik\_mysql()->getTable('customer_group')->fetchAllAssoc();
+                    return \Similik\_mysql()->getTable('customer_group')->where('customer_group_id', '<', 1000)->fetchAllAssoc();
             }
         ];
 

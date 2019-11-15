@@ -409,3 +409,14 @@ function array_find($array, callable $callback, $default = null) {
 
     return $default;
 }
+
+function _unique_number()
+{
+    static $array;
+    if (!$array) {
+        $array = [];
+    }
+    $array[] = null;
+
+    return count($array);
+}

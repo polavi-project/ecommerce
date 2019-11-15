@@ -45,7 +45,7 @@ class ProductTierPriceType extends ObjectType
                     'customer_group_id' => [
                         'type' => Type::nonNull(Type::string())
                     ],
-                    'price' => [
+                    'tier_price' => [
                         'type' => Type::nonNull(Type::float())
                     ],
                     'qty' => [

@@ -87,6 +87,8 @@ html {font-size: 14px !important;}
 
 /* FOOTER */
 .container .footer{padding-top: 50px; padding-bottom: 20px}
-
+/* PRODUCT LISTING PAGE */
+.product-price-listing .regular-price{font-weight: 700; text-decoration: line-through}
 /* PRODUCT SINGLE PAGE */
 .product-single-name{font-size: 19px; font-weight: bold}
+.regular-price{font-weight: 700; text-decoration: line-through}

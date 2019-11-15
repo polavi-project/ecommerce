@@ -43,7 +43,15 @@ class MutationType extends ObjectType
                             return ['status' => false, 'group'=> null];
                         else {
                             $conn = _mysql();
-                            $conn->getTable('customer_group')->insert(['group_name' => $args['name']]);
+                            $id = $conn->executeQuery("SELECT `AUTO_INCREMENT`
+                                FROM  INFORMATION_SCHEMA.TABLES
+                                WHERE TABLE_SCHEMA = '" . DB_DATABASE . "'
+                                AND TABLE_NAME = 'customer_group'");
+                            $conn->getTable('customer_group')->insert([
+                                'customer_group_id' => $id,
+                                'group_name' => $args['name']
+                                ]
+                            );
                             $id = $conn->getLastID();
                             return ['status'=> true, 'group' => $conn->getTable('customer_group')->load($id)];
                         }
