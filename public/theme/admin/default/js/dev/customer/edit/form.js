@@ -4,6 +4,7 @@ import Text from "../../../../../../../js/production/form/fields/text.js";
 import Password from "../../../../../../../js/production/form/fields/password.js";
 import {Fetch} from "../../../../../../../js/production/fetch.js";
 import {ADD_ALERT} from "../../../../../../../js/production/event-types.js";
+import Select from "../../../../../../../js/production/form/fields/select.js";
 
 function Group({group, selectGroup, removeGroup, updateGroup}) {
     const [onEdit, setOnEdit] = React.useState(false);
@@ -175,6 +176,19 @@ function CustomerInfo(props) {
                     },
                     'sort_order': 20,
                     'id': 'email'
+                },
+                {
+                    'component': Select,
+                    'props': {
+                        name: "variables[customer][status]",
+                        value: props.customer.status,
+                        formId: "customer-edit-form",
+                        label: "Is enabled?",
+                        options: [{value: 1, text: 'Yes'}, {value: 0, text: 'No'}],
+                        validation_rules: ['notEmpty']
+                    },
+                    'sort_order': 25,
+                    'id': 'status'
                 },
                 {
                     'component': Groups,

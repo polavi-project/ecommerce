@@ -263,13 +263,6 @@ $eventDispatcher->addListener(
             'list',
             'customer',
             0
-        )->addItem(
-            'customer.create',
-            'Add customer',
-            $container->get(Router::class)->generateUrl('customer.create'),
-            'plus',
-            'customer',
-            10
         );
     },
     0

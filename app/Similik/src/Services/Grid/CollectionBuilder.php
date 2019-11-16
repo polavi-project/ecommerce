@@ -18,7 +18,7 @@ class CollectionBuilder
 
     protected $sortBy;
 
-    protected $offset;
+    protected $sortOrder;
 
     protected $page;
 
@@ -36,7 +36,14 @@ class CollectionBuilder
 
     public function load()
     {
-        return $this->collection->fetchAssoc();
+        $setting = [
+            'page'=> $this->page ?? 1,
+            'limit'=> $this->limit ?? 20,
+            'sort_by'=> $this->sortBy,
+            'sort_order'=> $this->sortOrder
+        ];
+
+        return $this->collection->fetchAssoc($setting);
     }
 
     /**
@@ -59,6 +66,54 @@ class CollectionBuilder
 
         $this->filters[$key] = $callBack;
         return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSortBy()
+    {
+        return $this->sortBy;
+    }
+
+    /**
+     * @param mixed $sortBy
+     */
+    public function setSortBy($sortBy): void
+    {
+        $this->sortBy = $sortBy;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPage()
+    {
+        return $this->page;
+    }
+
+    /**
+     * @param mixed $page
+     */
+    public function setPage($page): void
+    {
+        $this->page = $page;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLimit()
+    {
+        return $this->limit;
+    }
+
+    /**
+     * @param mixed $limit
+     */
+    public function setLimit($limit): void
+    {
+        $this->limit = $limit;
     }
 
     protected function applyFilter($id, $args = [])

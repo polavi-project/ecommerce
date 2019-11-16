@@ -163,6 +163,17 @@ class ProductCollection extends CollectionBuilder
             });
         }
 
+        $this->addFilter('page', function($args) use ($isAdmin) {
+            if($args['operator'] !== "EQUAL")
+                return;
+            $this->setPage((int)$args['value']);
+        });
+
+        $this->addFilter('limit', function($args) use ($isAdmin) {
+            if($args['operator'] !== "EQUAL")
+                return;
+            $this->setLimit((int)$args['value']);
+        });
     }
 
     public function getData($rootValue, $args, Container $container, ResolveInfo $info)
