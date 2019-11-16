@@ -1,6 +1,6 @@
 import Area from "../../../../../../../js/production/area.js";
 import {ReducerRegistry} from "../../../../../../../js/production/reducer_registry.js";
-import {PRODUCT_COLLECTION_FILTER_CHANGED} from "../../../../../../../js/production/action.js";
+import {PRODUCT_COLLECTION_FILTER_CHANGED} from "../../../../../../../js/production/event-types.js";
 import {Fetch} from "../../../../../../../js/production/fetch.js";
 
 function Price({minPrice, maxPrice, maxSteps = 3, minRange = 50, areaProps}) {

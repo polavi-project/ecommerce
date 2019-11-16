@@ -230,7 +230,7 @@ function CustomerInfo(props) {
                         validation_rules: ['notEmpty']
                     },
                     'sort_order': 25,
-                    'id': 'email'
+                    'id': 'status'
                 }, {
                     'component': Groups,
                     'props': { _groups: props.groups, _selectedGroup: props.customer.group_id },
