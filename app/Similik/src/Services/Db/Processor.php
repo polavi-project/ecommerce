@@ -253,10 +253,12 @@ class Processor extends \PDO
             if($column['Type'] == 'timestamp' and $column['Default'] == 'CURRENT_TIMESTAMP')
                 continue;
             if((!isset($data[$column['Field']]) or trim($data[$column['Field']])=='')) {
-                if($column['Null']=='NO' and $column['Default']!= NULL)
+                if($column['Extra'] == 'auto_increment')
+                    continue;
+                if($column['Null'] == 'NO' and $column['Default'] != NULL)
                     continue;
 
-                if($column['Null']=='NO' and $column['Default']== NULL)
+                if($column['Null'] == 'NO' and $column['Default'] == NULL)
                     throw new \InvalidArgumentException("{$column['Field']} can not be empty");
 
                 if($column['Null'] == 'YES' and in_array($column['Type'], ['date', 'datetime', 'timestamp']))
