@@ -35,19 +35,29 @@ class ProductFilterToolType extends ObjectType
                                     'minPrice' => 0,
                                     'maxPrice' => 0
                                 ];
+                            if($container->get(Request::class)->getCustomer()->isLoggedIn())
+                                $customerGroupId = $container->get(Request::class)->getCustomer()->getData('group_id') ?? 1;
+                            else
+                                $customerGroupId = 999;
                             $conn = _mysql();
                             $priceData = $conn->getTable('product')
-                                ->addFieldToSelect("product.product_id", "product_id")
-                                ->addFieldToSelect("product.price", "regularPrice")
-                                ->addFieldToSelect("product_price.price", 'customerGroupPrice')
+                                ->addFieldToSelect("product_price.tier_price")
                                 ->leftJoin('product_price', null, [
                                     [
                                         'column'      => "product_price.customer_group_id",
                                         'operator'    => "=",
-                                        'value'       => $container->get(Request::class)->getCustomer()->getData('group_id'),
+                                        'value'       => $customerGroupId,
                                         'ao'          => 'and',
-                                        'start_group' => null,
+                                        'start_group' => '(',
                                         'end_group'   => null
+                                    ],
+                                    [
+                                        'column'      => "product_price.customer_group_id",
+                                        'operator'    => "=",
+                                        'value'       => 1000,
+                                        'ao'          => 'or',
+                                        'start_group' => null,
+                                        'end_group'   => ')'
                                     ],
                                     [
                                         'column'      => "product_price.active_from",
@@ -59,9 +69,9 @@ class ProductFilterToolType extends ObjectType
                                     ],
                                     [
                                         'column'      => "product_price.active_from",
-                                        'operator'    => "<",
+                                        'operator'    => "<=",
                                         'value'       => date("Y-m-d H:i:s"),
-                                        'ao'          => 'and',
+                                        'ao'          => 'or',
                                         'start_group' => null,
                                         'end_group'   => ')'
                                     ],
@@ -75,24 +85,35 @@ class ProductFilterToolType extends ObjectType
                                     ],
                                     [
                                         'column'      => "product_price.active_to",
-                                        'operator'    => ">",
+                                        'operator'    => ">=",
                                         'value'       => date("Y-m-d H:i:s"),
-                                        'ao'          => 'and',
+                                        'ao'          => 'or',
                                         'start_group' => null,
                                         'end_group'   => '))'
+                                    ],
+                                    [
+                                        'column'      => "product_price.qty",
+                                        'operator'    => "=",
+                                        'value'       => 1,
+                                        'ao'          => 'and',
+                                        'start_group' => null,
+                                        'end_group'   => null
+                                    ],
+                                    [
+                                        'column'      => "product_price.tier_price",
+                                        'operator'    => "<=",
+                                        'value'       => "product.price",
+                                        'isValueAColumn' => true,
+                                        'ao'          => 'and',
+                                        'start_group' => null,
+                                        'end_group'   => null
                                     ]
                                 ])
                                 ->where('product_id', 'IN', $value)
-                                ->fetchAllAssoc();
+                                ->fetchAllAssoc(['order_by'=> 'product_price.tier_price']);
 
-                            $min = $max = 0;
-                            foreach ($priceData as $key=>$price) {
-                                if($key == 0)
-                                    $min = $price['regularPrice'];
-                                $compareValue = min([$price['customerGroupPrice'], $price['regularPrice']]) != null ? min([$price['customerGroupPrice'], $price['regularPrice']]) : $price['regularPrice'];
-                                $min = min([$min, $compareValue]);
-                                $max = max([$max, $compareValue]);
-                            }
+                            $max = $priceData[0]['tier_price'];
+                            $min = end($priceData)['tier_price'];
 
                             return [
                                 'minPrice' => $min,

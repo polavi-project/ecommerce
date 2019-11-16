@@ -1,5 +1,5 @@
 import ProductList from '../../product/list/list.js';
-import { ROOT_PRODUCT_COLLECTION_FILTER_DEFINED } from "../../../../../../../../js/production/action.js";
+import { ROOT_PRODUCT_COLLECTION_FILTER_DEFINED } from "../../../../../../../../js/production/event-types.js";
 import { ReducerRegistry } from "../../../../../../../../js/production/reducer_registry.js";
 
 function usePrevious(value) {
@@ -21,12 +21,12 @@ function reducer(rootProductCollectionFilter = [], action = {}) {
 
 ReducerRegistry.register('rootProductCollectionFilter', reducer);
 
-export default function Products({ ps, categoryId, addItemApi }) {
+export default function Products({ ps = [], categoryId, addItemApi }) {
     const dispatch = ReactRedux.useDispatch();
     const apiUrl = ReactRedux.useSelector(state => _.get(state, 'appState.graphqlApi'));
     const [products, setProducts] = React.useState(() => {
         dispatch({ 'type': ROOT_PRODUCT_COLLECTION_FILTER_DEFINED, 'payload': { 'rootProductCollectionFilter': [{ key: "category", operator: "IN", value: [categoryId] }] } });
-        return ps === undefined ? [] : ps;
+        return ps;
     });
 
     const productCollectionFilter = ReactRedux.useSelector(state => state.productCollectionFilter);
@@ -67,7 +67,7 @@ export default function Products({ ps, categoryId, addItemApi }) {
         if (filterStr) filterStr = `(filter : {${filterStr}})`;
 
         // TODO: field need to be changeable without overwriting this file
-        return `{productCollection ${filterStr} {products {product_id name price url image { list }} total currentFilter}}`;
+        return `{productCollection ${filterStr} {products {product_id name price salePrice url image { list }} total currentFilter}}`;
     };
     return React.createElement(ProductList, { products: products, addItemApi: addItemApi });
 }

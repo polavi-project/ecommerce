@@ -78,7 +78,7 @@ export default function Products({ps = [], categoryId, addItemApi}) {
             filterStr = `(filter : {${filterStr}})`;
 
         // TODO: field need to be changeable without overwriting this file
-        return `{productCollection ${filterStr} {products {product_id name price url image { list }} total currentFilter}}`
+        return `{productCollection ${filterStr} {products {product_id name price salePrice url image { list }} total currentFilter}}`
     };
     return <ProductList products={products} addItemApi={addItemApi}/>
 }

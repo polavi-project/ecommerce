@@ -73,12 +73,44 @@ class ProductCollection extends CollectionBuilder
                     'ao'          => 'or',
                     'start_group' => null,
                     'end_group'   => ")"
+                ],
+                [
+                    'column'      => "product_price.active_from",
+                    'operator'    => "IS",
+                    'value'       => null,
+                    'ao'          => 'and',
+                    'start_group' => '((',
+                    'end_group'   => null
+                ],
+                [
+                    'column'      => "product_price.active_from",
+                    'operator'    => "<=",
+                    'value'       => date("Y-m-d H:i:s"),
+                    'ao'          => 'or',
+                    'start_group' => null,
+                    'end_group'   => ')'
+                ],
+                [
+                    'column'      => "product_price.active_to",
+                    'operator'    => "IS",
+                    'value'       => null,
+                    'ao'          => 'and',
+                    'start_group' => '(',
+                    'end_group'   => null
+                ],
+                [
+                    'column'      => "product_price.active_to",
+                    'operator'    => ">=",
+                    'value'       => date("Y-m-d H:i:s"),
+                    'ao'          => 'or',
+                    'start_group' => null,
+                    'end_group'   => '))'
                 ]
             ])->groupBy("product.product_id");
         }
 
         if($this->container->get(Request::class)->isAdmin() == false) {
-            $collection->where('product.status', '=', 1);
+            $collection->andWhere('product.status', '=', 1);
         }
         dispatch_event('after_init_product_collection', [$collection]);
 

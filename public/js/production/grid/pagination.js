@@ -1,6 +1,6 @@
 import { PAGINATION_UPDATED } from "./../event-types.js";
 
-export default function Pagination(props) {
+export default function Pagination({}) {
     const [limit, setLimit] = React.useState(props.limit);
     const [currentPage, setCurrentPage] = React.useState(props.currentPage);
     const [ready, setReady] = React.useState(false);
