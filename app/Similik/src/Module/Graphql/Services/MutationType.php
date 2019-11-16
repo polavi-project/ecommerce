@@ -43,9 +43,67 @@ class MutationType extends ObjectType
                             return ['status' => false, 'group'=> null];
                         else {
                             $conn = _mysql();
-                            $conn->getTable('customer_group')->insert(['group_name' => $args['name']]);
+                            $id = $conn->executeQuery("SELECT `AUTO_INCREMENT`
+                                FROM  INFORMATION_SCHEMA.TABLES
+                                WHERE TABLE_SCHEMA = '" . DB_DATABASE . "'
+                                AND TABLE_NAME = 'customer_group'")->fetch();
+
+                            $conn->executeQuery("INSERT INTO customer_group(customer_group_id, group_name) VALUES(?, ?)", [(int)$id[0], $args['name']]);
+
                             $id = $conn->getLastID();
                             return ['status'=> true, 'group' => $conn->getTable('customer_group')->load($id)];
+                        }
+                    }
+                ],
+                'updateCustomerGroup' => [
+                    'args'=> [
+                        'id' => Type::nonNull(Type::int()),
+                        'name'=> Type::nonNull(Type::string())
+                    ],
+                    'type' => new ObjectType([
+                        'name'=> 'updateGroupOutput',
+                        'fields' => [
+                            'status' => Type::nonNull(Type::boolean()),
+                            'group' => $container->get(CustomerGroupType::class)
+                        ]
+                    ]),
+                    'resolve'=> function($value, $args, Container $container, ResolveInfo $info) {
+                        if(!$container->get(Request::class)->isAdmin())
+                            return ['status' => false, 'group'=> null];
+                        else {
+                            $conn = _mysql();
+                            $group = $conn->getTable('customer_group')->load($args['id']);
+                            if(!$group)
+                                return ['status' => false, 'group'=> null];
+                            $conn->getTable('customer_group')->where('customer_group_id', '=', $args['id'])->update(['group_name'=>$args['name']]);
+                            return ['status'=> true, 'group' => $conn->getTable('customer_group')->load($args['id'])];
+                        }
+                    }
+                ],
+                'deleteCustomerGroup' => [
+                    'args'=> [
+                        'id' => Type::nonNull(Type::int())
+                    ],
+                    'type' => new ObjectType([
+                        'name'=> 'deleteGroupOutput',
+                        'fields' => [
+                            'status' => Type::nonNull(Type::boolean()),
+                            'message' => Type::string()
+                        ]
+                    ]),
+                    'resolve'=> function($value, $args, Container $container, ResolveInfo $info) {
+                        if(in_array((int)$args['id'], [1, 999, 1000]))
+                            return ['status' => false];
+                        if(!$container->get(Request::class)->isAdmin())
+                            return ['status' => false];
+                        else {
+                            $conn = _mysql();
+                            $group = $conn->getTable('customer_group')->load($args['id']);
+                            if(!$group)
+                                return ['status' => false];
+                            $conn->getTable('customer_group')->where('customer_group_id', '=', $args['id'])->delete();
+
+                            return ['status'=> true];
                         }
                     }
                 ],
@@ -96,8 +154,9 @@ class MutationType extends ObjectType
                                 'name'=> 'updateCustomerInput',
                                 'fields'=> function() use ($container) {
                                     $fields = [
-                                        'full_name' => Type::string(),
-                                        'email' => Type::string(),
+                                        'customer_id' => Type::nonNull(Type::int()),
+                                        'full_name' => Type::nonNull(Type::string()),
+                                        'email' => Type::nonNull(Type::string()),
                                         'password' => Type::string(),
                                         'group_id' => Type::int()
                                     ];

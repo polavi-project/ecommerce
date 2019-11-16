@@ -16,7 +16,6 @@ use Monolog\Logger;
 use Similik\Middleware\AdminNavigationMiddleware;
 use Similik\Middleware\CartInitMiddleware;
 use Similik\Middleware\FrontNavigationMiddleware;
-use Similik\Middleware\GraphQLExecuteMiddleware;
 use Similik\Middleware\PromiseWaiterMiddleware;
 use Similik\Middleware\SaveCartMiddleware;
 use Similik\Module\Graphql\Services\ExecutionPromise;
@@ -123,7 +122,7 @@ class App
 
     protected function loadModule()
     {
-        $core_extensions = [
+        $coreModules = [
             'Catalog',
             'Customer',
             'Cms',
@@ -132,7 +131,6 @@ class App
             'FlatRate',
             'PaypalExpress',
             'Tax',
-            'ShippingLocation',
             'Discount',
             'Order',
             'User',
@@ -140,25 +138,28 @@ class App
             'SendGrid',
             'Graphql'
         ];
+        if(!file_exists(CONFIG_PATH . DS . 'config.php'))
+            $coreModules[] = 'Install';
 
+        $installed = file_exists(CONFIG_PATH . DS . 'config.php');
         // TODO: Refactor this
         $eventDispatcher = $this->container->get(EventDispatcher::class);
         $router = $this->container->get(Router::class);
         $container = $this->container;
-        foreach($core_extensions as $extension) {
-            if(file_exists( MODULE_PATH . DS . $extension . DS . 'events.php'))
-                (function() use ($extension, $eventDispatcher, $container) {
-                    include MODULE_PATH . DS . $extension . DS . 'events.php';
+        foreach($coreModules as $module) {
+            if(file_exists( MODULE_PATH . DS . $module . DS . 'events.php') && $installed === true)
+                (function() use ($module, $eventDispatcher, $container) {
+                    include MODULE_PATH . DS . $module . DS . 'events.php';
                 })();
 
-            if(file_exists( MODULE_PATH . DS . $extension . DS . 'routes.php'))
-                (function() use ($extension, $router, $container) {
-                    include MODULE_PATH . DS . $extension . DS . 'routes.php';
+            if(file_exists( MODULE_PATH . DS . $module . DS . 'routes.php'))
+                (function() use ($module, $router, $container) {
+                    include MODULE_PATH . DS . $module . DS . 'routes.php';
                 })();
 
-            if(file_exists( MODULE_PATH . DS . $extension . DS . 'services.php'))
-                (function() use ($extension, $container) {
-                    include MODULE_PATH . DS . $extension . DS . 'services.php';
+            if(file_exists( MODULE_PATH . DS . $module . DS . 'services.php'))
+                (function() use ($module, $container) {
+                    include MODULE_PATH . DS . $module . DS . 'services.php';
                 })();
         }
         subscribe('after.load.module', function() {}, 0 , $eventDispatcher);
@@ -169,30 +170,38 @@ class App
     public function run()
     {
         $this->loadModule();
-        $middleware = [
-            0 => ConfigMiddleware::class,
-            10 => SessionMiddleware::class,
-            20 => RoutingMiddleware::class,
-            30 => AuthenticateMiddleware::class,
-
-            //WidgetMiddleware::class,
-            35 => CartInitMiddleware::class,
-            //MiniCartMiddleware::class,
-            40 => HandlerMiddleware::class,
-            60 => InitHtmlMiddleware::class,
-            70 => SaveCartMiddleware::class,
-            80 => PromiseWaiterMiddleware::class,
-            90 => AdminLayoutMiddleware::class,
-            100 => FrontLayoutMiddleware::class,
-            110 => AdminNavigationMiddleware::class,
-            120 => FrontNavigationMiddleware::class,
-            140 => AlertMiddleware::class,
-            150 => ResponseMiddleware::class
-        ];
+        if(file_exists(CONFIG_PATH . DS . 'config.php'))
+            $middleware = [
+                0 => ConfigMiddleware::class,
+                10 => SessionMiddleware::class,
+                20 => RoutingMiddleware::class,
+                30 => AuthenticateMiddleware::class,
+                35 => CartInitMiddleware::class,
+                //MiniCartMiddleware::class,
+                40 => HandlerMiddleware::class,
+                60 => InitHtmlMiddleware::class,
+                70 => SaveCartMiddleware::class,
+                80 => PromiseWaiterMiddleware::class,
+                90 => AdminLayoutMiddleware::class,
+                100 => FrontLayoutMiddleware::class,
+                110 => AdminNavigationMiddleware::class,
+                120 => FrontNavigationMiddleware::class,
+                140 => AlertMiddleware::class,
+                150 => ResponseMiddleware::class
+            ];
+        else
+            $middleware = [
+                SessionMiddleware::class,
+                RoutingMiddleware::class,
+                HandlerMiddleware::class,
+                InitHtmlMiddleware::class,
+                FrontLayoutMiddleware::class,
+                ResponseMiddleware::class
+            ];
 
         $mm = new MiddlewareManager($this->container, $middleware);
-
         dispatch_event('register.core.middleware', [$mm]);
+
         $mm->run();
     }
 }

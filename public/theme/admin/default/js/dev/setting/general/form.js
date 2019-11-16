@@ -173,7 +173,7 @@ export default function GeneralSettingForms(props) {
     return <div className="uk-flex-center">
         <Form id="general_setting_form" action={props.action}>
             <div>
-                <div><strong>General setting</strong></div>
+                <div><h2>General setting</h2></div>
             </div>
             <Area id="general_setting_form_inner" coreWidgets={fields}/>
         </Form>

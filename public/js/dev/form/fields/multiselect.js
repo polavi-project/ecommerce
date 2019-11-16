@@ -34,8 +34,8 @@ export default function MultiSelect (props) {
         setValue(val);
     };
 
-    return <div className="form-group">
-        <label htmlFor={name}>{props.label}</label>
+    return <div className="form-field form-multi-select">
+        <div className="field-label"><label htmlFor={props.name}>{props.label}</label></div>
         <select
             className="uk-select uk-form-small"
             id={props.id}
@@ -45,7 +45,7 @@ export default function MultiSelect (props) {
             onChange={onChange}
             disabled={isDisabled}
         >
-            <option value="">Please select</option>
+            <option value="" disabled>Please select</option>
             {props.options && props.options.map((option, key)=>{
                 return <option key={key} value={option.value}>{option.text}</option>;
             })}

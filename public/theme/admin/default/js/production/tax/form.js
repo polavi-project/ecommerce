@@ -273,7 +273,7 @@ export default function Taxes({ classes, saveAction }) {
             "div",
             null,
             React.createElement(
-                "strong",
+                "h2",
                 null,
                 "Tax class"
             )

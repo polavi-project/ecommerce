@@ -35,7 +35,7 @@ export default function Checkbox (props) {
         setChecked(e.target.checked);
     };
 
-    return <div className="form-element form-element-text">
+    return <div className="form-field form-checkbox">
         <label htmlFor={name}><input
             type="checkbox"
             className="uk-checkbox"

@@ -10,6 +10,7 @@ namespace Similik\Module\Tax\Middleware\Edit;
 
 use function Similik\get_js_file_url;
 use Similik\Module\Graphql\Services\GraphqlExecutor;
+use Similik\Services\Helmet;
 use Similik\Services\Http\Request;
 use Similik\Services\Http\Response;
 use Similik\Middleware\MiddlewareAbstract;
@@ -66,7 +67,7 @@ class TaxClassMiddleware extends MiddlewareAbstract
                     );
                 }
             });
-
+        $this->getContainer()->get(Helmet::class)->setTitle('Tax setting');
         return $delegate;
     }
 }

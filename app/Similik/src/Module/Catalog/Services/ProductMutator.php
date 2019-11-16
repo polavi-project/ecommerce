@@ -268,7 +268,7 @@ class ProductMutator
             $this->processor->getTable('product')->where('product_id', '=', $productId)->update(['image'=>array_values($gallery)[0]]);
         }
         if($flag == true)
-            $gallery = array_shift($gallery);
+            array_shift($gallery);
 
         foreach ($gallery as $image) {
             $this->processor->getTable('product_image')->insert([

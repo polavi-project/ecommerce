@@ -37,12 +37,14 @@ class ItemsMiddleware extends MiddlewareAbstract
                             product_price
                             qty
                             final_price
-                            item_options {
+                            options {
                                 option_id
                                 option_name
-                                option_value_id
-                                option_value_text
-                                added_price
+                                values {
+                                    value_id
+                                    value_text
+                                    extra_price
+                                }
                             }
                             total
                         }

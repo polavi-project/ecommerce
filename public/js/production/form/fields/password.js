@@ -38,10 +38,10 @@ export default function Password(props) {
 
     return React.createElement(
         "div",
-        { className: "form-element form-element-text" },
+        { className: "form-field form-password" },
         React.createElement(
             "label",
-            { htmlFor: name },
+            { htmlFor: props.name },
             props.label
         ),
         React.createElement("input", {

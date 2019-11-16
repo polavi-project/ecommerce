@@ -116,16 +116,15 @@ $router->addAdminRoute('attribute.group.save', 'POST', '/attribute/group/save[/{
     \Similik\Module\Catalog\Middleware\AttributeGroup\Save\CreateMiddleware::class
 ]);
 
-$router->addAdminRoute('attribute.group.delete', 'GET', '/attribute/group/delete/{id:\d+}', [
-//    \Similik\Module\Catalog\Middleware\AttributeGroup\Save\ValidateMiddleware::class,
-//    \Similik\Module\Catalog\Middleware\AttributeGroup\Save\UpdateMiddleware::class,
-//    \Similik\Module\Catalog\Middleware\AttributeGroup\Save\CreateMiddleware::class
+$router->addAdminRoute('catalog.install', 'POST', '/catalog/migrate/install', [
+    \Similik\Module\Catalog\Middleware\Migrate\Install\InstallMiddleware::class
 ]);
-
 
 ////////////////////////////////////////////
 ///            SITE ROUTERS           //////
 ////////////////////////////////////////////
+
+
 $categoryViewMiddleware = [
     \Similik\Module\Catalog\Middleware\Category\View\InitMiddleware::class,
     \Similik\Module\Catalog\Middleware\Category\View\GeneralInfoMiddleware::class,
@@ -145,7 +144,7 @@ $productViewMiddleware = [
     \Similik\Module\Catalog\Middleware\Product\View\AttributeMiddleware::class,
     \Similik\Module\Catalog\Middleware\Product\View\FormMiddleware::class,
 ];
-$router->addSiteRoute('product.view', 'GET', '/products/id/{id:\d+}', $productViewMiddleware);
+$router->addSiteRoute('product.view', 'GET', '/product/id/{id:\d+}', $productViewMiddleware);
 
 // Pretty url
-$router->addSiteRoute('product.view.pretty', 'GET', '/products/{slug}', $productViewMiddleware);
+$router->addSiteRoute('product.view.pretty', 'GET', '/product/{slug}', $productViewMiddleware);

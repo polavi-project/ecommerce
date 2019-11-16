@@ -11,7 +11,8 @@ namespace Similik\Module\Catalog\Services;
 
 use GraphQL\Type\Definition\ResolveInfo;
 use function Similik\_mysql;
-use function Similik\get_default_language_Id;
+use function Similik\dispatch_event;
+use function Similik\get_current_language_id;
 use Similik\Services\Di\Container;
 use Similik\Services\Grid\CollectionBuilder;
 use Similik\Services\Http\Request;
@@ -24,21 +25,62 @@ class ProductCollection extends CollectionBuilder
     public function __construct(Container $container)
     {
         $this->container = $container;
+
         $collection = _mysql()->getTable('product')
             ->leftJoin('product_description', null, [
                 [
                     'column'      => "product_description.language_id",
                     'operator'    => "=",
-                    'value'       => get_default_language_Id(),
+                    'value'       => get_current_language_id(),
                     'ao'          => 'and',
                     'start_group' => null,
                     'end_group'   => null
                 ]
             ]);
 
+        if(!$container->get(Request::class)->isAdmin()) {
+            $customerGroupId = $container->get(Request::class)->getCustomer()->isLoggedIn() ? $container->get(Request::class)->getCustomer()->getData('group_id') ?? 1 : 999;
+            $collection->leftJoin('product_price', null, [
+                [
+                    'column'      => "product_price.qty",
+                    'operator'    => "=",
+                    'value'       => 1,
+                    'ao'          => 'and',
+                    'start_group' => null,
+                    'end_group'   => null
+                ],
+                [
+                    'column'      => "product_price.tier_price",
+                    'operator'    => "<=",
+                    'value'       => "product.price",
+                    'isValueAColumn' => true,
+                    'ao'          => 'and',
+                    'start_group' => null,
+                    'end_group'   => null
+                ],
+                [
+                    'column'      => "product_price.customer_group_id",
+                    'operator'    => "=",
+                    'value'       => $customerGroupId,
+                    'ao'          => 'and',
+                    'start_group' => "(",
+                    'end_group'   => null
+                ],
+                [
+                    'column'      => "product_price.customer_group_id",
+                    'operator'    => "=",
+                    'value'       => 1000,
+                    'ao'          => 'or',
+                    'start_group' => null,
+                    'end_group'   => ")"
+                ]
+            ])->groupBy("product.product_id");
+        }
+
         if($this->container->get(Request::class)->isAdmin() == false) {
             $collection->where('product.status', '=', 1);
         }
+        dispatch_event('after_init_product_collection', [$collection]);
 
         $this->init($collection);
 

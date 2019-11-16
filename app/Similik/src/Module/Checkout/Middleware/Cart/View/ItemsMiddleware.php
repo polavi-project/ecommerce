@@ -46,6 +46,7 @@ class ItemsMiddleware extends MiddlewareAbstract
                             thumbnail: product_thumbnail
                             productUrl
                             qty
+                            product_price
                             final_price
                             total
                             removeUrl

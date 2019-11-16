@@ -8,6 +8,8 @@ declare(strict_types=1);
 
 namespace Similik\Services\Db;
 
+use function Similik\_unique_number;
+
 class Table
 {
     protected $processor;
@@ -215,7 +217,8 @@ class Table
             'where' => $extraCondition
         ];
         foreach ($extraCondition as $key=>$condition) {
-            $this->setBinding(str_ireplace(["`", "'", "."], ['', '', "_"], $condition['column'] . '_' . $key), $condition['operator'], $condition['value']);
+            if(!isset($condition['isValueAColumn']) || $condition['isValueAColumn'] == false)
+                $this->setBinding(str_ireplace(["`", "'", "."], ['', '', "_"], $condition['column'] . '_' . $key), $condition['operator'], $condition['value']);
         }
 
         return $this;
@@ -237,7 +240,7 @@ class Table
             $column = "`{$this->getTable()}`.{$column}";
         if(is_array($value))
             foreach($value as $key=>$val) {
-                $value['binding' . rand(0, 10000)] = $val;
+                $value['binding' . _unique_number()] = $val;
                 unset($value[$key]);
             }
         $this->where[] = [

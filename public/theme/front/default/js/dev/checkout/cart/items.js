@@ -52,6 +52,7 @@ function Items({items}) {
                 <tbody>
                 {
                     items.map((item, index) => {
+                        const _regularPrice = new Intl.NumberFormat(language, { style: 'currency', currency: currency }).format(item.product_price);
                         const _finalPrice = new Intl.NumberFormat(language, { style: 'currency', currency: currency }).format(item.final_price);
                         const _total = new Intl.NumberFormat(language, { style: 'currency', currency: currency }).format(item.total);
                         return <tr key={index}>
@@ -69,7 +70,14 @@ function Items({items}) {
                                     <ItemOptions options={item.options}/>
                                 </div>
                             </td>
-                            <td><span>{_finalPrice}</span></td>
+                            <td>
+                                {parseFloat(item.final_price) < parseFloat(item.product_price) && <div>
+                                    <span className="regular-price">{_regularPrice}</span> <span className="sale-price">{_finalPrice}</span>
+                                </div>}
+                                {parseFloat(item.final_price) === parseFloat(item.product_price) && <div>
+                                    <span className="sale-price">{_regularPrice}</span>
+                                </div>}
+                            </td>
                             <td><span>{item.qty}</span></td>
                             <td><span>{_total}</span></td>
                             <td><A url={item.removeUrl} text=""><span uk-icon="close"></span></A></td>

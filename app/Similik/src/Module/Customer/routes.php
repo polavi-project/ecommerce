@@ -8,13 +8,8 @@ declare(strict_types=1);
 
 /** @var \Similik\Services\Routing\Router $router */
 
-use Similik\Module\Order\Middleware\Update\Payment\Payoffline\AddActivityMiddleware;
-use Similik\Module\Order\Middleware\Update\Payment\Payoffline\AddTransactionMiddleware;
-use Similik\Module\Order\Middleware\Update\Payment\Payoffline\PayOfflineMiddleware;
 
 $router->addAdminRoute('customer.grid', 'GET', '/customers', [
-    \Similik\Module\Customer\Middleware\Grid\ColumnMiddleware::class,
-    \Similik\Module\Customer\Middleware\Grid\BuildCollectionMiddleware::class,
     \Similik\Module\Customer\Middleware\Grid\GridMiddleware::class,
 ]);
 
@@ -22,9 +17,8 @@ $router->addAdminRoute('customer.edit', 'GET', '/customer/edit/{id:\d+}', [
     \Similik\Module\Customer\Middleware\Edit\CustomerInfoMiddleware::class,
 ]);
 
-$router->addAdminRoute('customer.admin.create', 'POST', '/customer/save[/{id:\d+}]', [
-    \Similik\Module\Customer\Middleware\Create\CreateAccountMiddleware::class,
-    \Similik\Module\Customer\Middleware\Create\RedirectMiddleware::class,
+$router->addAdminRoute('customer.install', ["POST", "GET"], '/customer/migrate/install', [
+    \Similik\Module\Customer\Middleware\Migrate\Install\InstallMiddleware::class
 ]);
 
 ////////////////////////////////////////////
@@ -47,11 +41,6 @@ $router->addSiteRoute('customer.dashboard', 'GET', '/customer/dashboard', [
 
 $router->addSiteRoute('customer.auth', 'POST', '/customer/auth', [
     \Similik\Module\Customer\Middleware\Auth\AuthMiddleware::class,
-]);
-
-$router->addSiteRoute('customer.create', 'POST', '/customer/create', [
-    \Similik\Module\Customer\Middleware\Create\CreateAccountMiddleware::class,
-    \Similik\Module\Customer\Middleware\Create\RedirectMiddleware::class,
 ]);
 
 $router->addSiteRoute('customer.update', 'POST', '/customer/update', [

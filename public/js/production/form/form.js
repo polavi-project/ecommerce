@@ -64,7 +64,7 @@ function Form(props) {
 
     return React.createElement(
         "form",
-        { id: props.id, method: "POST", onSubmit: e => onSubmit(e) },
+        { id: props.id, method: "POST", onSubmit: e => onSubmit(e), className: props.className },
         props.children,
         props.submitText !== null && React.createElement(
             "div",

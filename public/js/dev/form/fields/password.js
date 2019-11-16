@@ -35,8 +35,8 @@ export default function Password (props) {
         setValue(e.target.value);
     };
 
-    return <div className="form-element form-element-text">
-        <label htmlFor={name}>{props.label}</label>
+    return <div className="form-field form-password">
+        <label htmlFor={props.name}>{props.label}</label>
         <input
             type="password"
             className="uk-input uk-form-small"

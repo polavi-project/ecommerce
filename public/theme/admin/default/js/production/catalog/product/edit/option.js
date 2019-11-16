@@ -128,7 +128,7 @@ export default function CustomOption(props) {
                                     React.createElement(Select, {
                                         name: 'options[' + option_id + '][option_type]',
                                         value: option_type,
-                                        options: [{ value: 'select', text: 'Single choice' }, { value: 'multiselect', text: 'Multiple choice' }, { value: 'freetext', text: 'Free text' }]
+                                        options: [{ value: 'select', text: 'Single choice' }, { value: 'multiselect', text: 'Multiple choice' }]
                                     })
                                 ),
                                 React.createElement(

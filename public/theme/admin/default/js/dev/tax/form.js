@@ -168,7 +168,7 @@ export default function Taxes({classes, saveAction}) {
     };
 
     return <div>
-        <div><strong>Tax class</strong></div>
+        <div><h2>Tax class</h2></div>
         <ul uk-accordion="multiple: true">
             {taxes.map((t, i) => {
                     return <TaxClass key={i} action={saveAction} {...t}/>

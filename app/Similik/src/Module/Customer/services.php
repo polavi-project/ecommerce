@@ -33,3 +33,14 @@ $container[\Similik\Module\Customer\Services\Type\AddressInputType::class] = fun
     return new \Similik\Module\Customer\Services\Type\AddressInputType($container);
 };
 
+$container[\Similik\Module\Customer\Services\Type\CustomerCollectionFilterType::class] = function() use ($container){
+    return new \Similik\Module\Customer\Services\Type\CustomerCollectionFilterType($container);
+};
+
+$container[\Similik\Module\Customer\Services\CustomerCollection::class] = function() use ($container){
+    return new \Similik\Module\Customer\Services\CustomerCollection($container);
+};
+
+$container[\Similik\Module\Customer\Services\Type\CustomerCollectionType::class] = function() use ($container){
+    return new \Similik\Module\Customer\Services\Type\CustomerCollectionType($container);
+};

@@ -43,13 +43,13 @@ export default function Text(props) {
 
     return React.createElement(
         "div",
-        { className: "form-element form-element-text" },
+        { className: "form-field form-text" },
         React.createElement(
             "div",
-            null,
+            { className: "field-label" },
             React.createElement(
                 "label",
-                { htmlFor: name },
+                { htmlFor: props.name },
                 props.label
             )
         ),

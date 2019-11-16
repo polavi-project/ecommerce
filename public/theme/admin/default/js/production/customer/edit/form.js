@@ -3,99 +3,214 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 import Area from "../../../../../../../js/production/area.js";
 import { Form } from "../../../../../../../js/production/form/form.js";
 import Text from "../../../../../../../js/production/form/fields/text.js";
-import Select from "../../../../../../../js/production/form/fields/select.js";
 import Password from "../../../../../../../js/production/form/fields/password.js";
-import A from "../../../../../../../js/production/a.js";
-import { REQUEST_END } from "../../../../../../../js/production/event-types.js";
-import { ReducerRegistry } from "../../../../../../../js/production/reducer_registry.js";
 import { Fetch } from "../../../../../../../js/production/fetch.js";
-import { Hidden } from "../../../../../../../js/production/form/fields.js";
+import { ADD_ALERT } from "../../../../../../../js/production/event-types.js";
 
-function Gs(props) {
-    const [group, setGroup] = React.useState(props.customer.group_id);
-    const onClick = e => {
-        e.preventDefault();
-        e.persist();
-        if (e.target.value.trim()) Fetch(window.base_url + "/api/graphql", false, 'POST', {
-            query: "mutation { createCustomerGroup (name: \"" + e.target.value.trim() + "\") {status group {id:customer_group_id name:group_name}}}"
+function Group({ group, selectGroup, removeGroup, updateGroup }) {
+    const [onEdit, setOnEdit] = React.useState(false);
+
+    return React.createElement(
+        "tr",
+        null,
+        React.createElement(
+            "td",
+            null,
+            React.createElement("input", { className: "uk-radio", type: "radio", checked: group.isChecked === true, onChange: () => {
+                    selectGroup(group.id);
+                } })
+        ),
+        React.createElement(
+            "td",
+            null,
+            React.createElement(
+                "div",
+                { style: { width: '200px' } },
+                onEdit === true && React.createElement("input", { className: "uk-input uk-form-small", type: "text", defaultValue: group.name, onKeyDown: e => {
+                        if (e.target.value.trim() && e.which === 13) {
+                            e.preventDefault();updateGroup(group.id, e.target.value.trim());setOnEdit(false);
+                        }
+                    } }),
+                onEdit === false && React.createElement(
+                    "span",
+                    { onDoubleClick: e => {
+                            e.preventDefault();setOnEdit(true);
+                        } },
+                    group.name
+                )
+            )
+        ),
+        React.createElement(
+            "td",
+            null,
+            React.createElement(
+                "div",
+                { style: { width: '20px' } },
+                parseInt(group.id) !== 1 && React.createElement(
+                    "a",
+                    { href: "#", onClick: () => {
+                            removeGroup(group.id);
+                        } },
+                    React.createElement("span", { "uk-icon": "icon: close; ratio: 0.8" })
+                )
+            )
+        )
+    );
+}
+
+function Groups({ _groups, _selectedGroup }) {
+    const dispatch = ReactRedux.useDispatch();
+
+    const [groups, setGroups] = React.useState(() => {
+        return _groups.map(g => {
+            g.isChecked = parseInt(g.id) === parseInt(_selectedGroup);
+
+            return g;
         });
+    });
+    const [group, setGroup] = React.useState(_selectedGroup);
+    const api = ReactRedux.useSelector(state => _.get(state, 'appState.graphqlApi'));
+
+    const addGroup = name => {
+        Fetch(api, false, 'POST', {
+            query: "mutation { createCustomerGroup (name: \"" + name + "\") {status group {id:customer_group_id name:group_name}}}"
+        }, null, response => {
+            if (_.get(response, 'payload.data.createCustomerGroup.status') === true) {
+                setGroups(groups.concat(_.get(response, 'payload.data.createCustomerGroup.group')));
+            }
+        }, () => {
+            dispatch({ 'type': ADD_ALERT, 'payload': { alerts: [{ id: "create_customer_group_error", message: 'Something wrong, please try again', type: "error" }] } });
+        });
+    };
+
+    const updateGroup = (id, name) => {
+        Fetch(api, false, 'POST', {
+            query: "mutation { updateCustomerGroup (id: " + id + " name: \"" + name + "\") {status group {id:customer_group_id name:group_name}}}"
+        }, null, response => {
+            if (_.get(response, 'payload.data.updateCustomerGroup.status') === true) {
+                setGroups(groups.map(g => {
+                    if (parseInt(g.id) === parseInt(_.get(response, 'payload.data.updateCustomerGroup.group.id'))) g.name = _.get(response, 'payload.data.updateCustomerGroup.group.name');
+
+                    return g;
+                }));
+            }
+        }, () => {
+            dispatch({ 'type': ADD_ALERT, 'payload': { alerts: [{ id: "update_customer_group_error", message: 'Something wrong, please try again', type: "error" }] } });
+        });
+    };
+
+    const removeGroup = id => {
+        Fetch(api, false, 'POST', {
+            query: "mutation { deleteCustomerGroup (id: " + id + ") {status}}"
+        }, null, response => {
+            if (_.get(response, 'payload.data.deleteCustomerGroup.status') === true) {
+                setGroups(groups.filter(g => {
+                    return parseInt(g.id) !== parseInt(id);
+                }));
+            }
+        });
+    };
+
+    const selectGroup = id => {
+        setGroups(groups.map(g => {
+            g.isChecked = parseInt(g.id) === parseInt(id);
+
+            return g;
+        }));
+        setGroup(id);
     };
 
     return React.createElement(
         "div",
-        null,
+        { className: "form-field" },
         React.createElement(
-            "ul",
-            { className: "uk-list" },
-            props.groups.map((g, i) => {
-                return React.createElement(
-                    "li",
-                    { key: i },
-                    React.createElement(
-                        "a",
-                        { className: "uk-link-muted", onClick: e => {
-                                e.preventDefault();setGroup(g.id);
-                            } },
-                        React.createElement(
-                            "span",
-                            null,
-                            g.name
-                        )
-                    ),
-                    parseInt(group) === parseInt(g.id) && React.createElement("span", { "uk-icon": "icon: check; ratio: 0.8" })
-                );
-            }),
+            "div",
+            null,
             React.createElement(
-                "li",
+                "span",
                 null,
-                React.createElement("input", { className: "uk-input uk-form-small", type: "text", onBlur: e => onClick(e), placeholder: "Add new group" })
+                "Customer group"
             )
         ),
-        React.createElement("input", { type: "hidden", name: "group_id", value: group })
+        React.createElement(
+            "table",
+            { className: "uk-table-small uk-table" },
+            React.createElement(
+                "tbody",
+                null,
+                groups.map((g, i) => {
+                    return React.createElement(Group, { key: i, group: g, selectGroup: selectGroup, removeGroup: removeGroup, updateGroup: updateGroup });
+                }),
+                React.createElement(
+                    "tr",
+                    null,
+                    React.createElement("td", null),
+                    React.createElement(
+                        "td",
+                        null,
+                        React.createElement(
+                            "div",
+                            { style: { width: '200px' } },
+                            React.createElement("input", { className: "uk-input uk-form-small", type: "text", onKeyDown: e => {
+                                    if (e.target.value.trim() && e.which === 13) {
+                                        e.preventDefault();addGroup(e.target.value.trim());
+                                    }
+                                }, placeholder: "Add new group" })
+                        )
+                    ),
+                    React.createElement("td", null)
+                )
+            )
+        ),
+        React.createElement("input", { type: "hidden", name: "variables[customer][group_id]", value: group, readOnly: true })
     );
 }
 
-const mapStateToProps = (state, ownProps) => {
-    let groups = [];
-    ownProps.groups.forEach((g, i) => {
-        if (state.customerGroups.findIndex(e => e.id === g.id) === -1) groups.push(g);
-    });
-    return { groups: groups.concat(state.customerGroups) };
-};
-
-function reducer(groups = [], action = {}) {
-    if (action.type === REQUEST_END && action.payload && action.payload.success) {
-        if (action.payload.data.data.updateCustomerGroup !== undefined) return groups.map((g, i) => {
-            if (g.id === action.payload.data.data.updateCustomerGroup.group.id) g.name = action.payload.data.data.updateCustomerGroup.group.name;
-            return g;
-        });else if (action.payload.data.data.createCustomerGroup !== undefined) return groups.concat({
-            name: action.payload.data.data.createCustomerGroup.group.name,
-            id: action.payload.data.data.createCustomerGroup.group.id
-        });else if (action.payload.data.data.removeCustomerGroup !== undefined) return groups.filter((_, index) => _.id !== action.payload.data.data.removeCustomerGroup.group.id);else return groups;
-    }
-    return groups;
-}
-
-ReducerRegistry.register('customerGroups', reducer);
-const Groups = ReactRedux.connect(mapStateToProps)(Gs);
-
-export default function CustomerEditFormComponent(props) {
+function CustomerInfo(props) {
+    const dispatch = ReactRedux.useDispatch();
+    const action = ReactRedux.useSelector(state => _.get(state, 'appState.graphqlApi'));
     return React.createElement(
         "div",
-        null,
-        React.createElement(Area, { id: "admin_customer_edit_before", coreWidgets: [] }),
+        { className: "uk-width-1-2" },
+        React.createElement(
+            "div",
+            null,
+            React.createElement(
+                "h2",
+                null,
+                "Customer edit"
+            )
+        ),
         React.createElement(
             Form,
-            _extends({}, props, { id: "customer-edit-form" }),
+            _extends({}, props, {
+                id: "customer-edit-form",
+                action: action,
+                onComplete: response => {
+                    if (_.get(response, 'payload.data.updateCustomer.status') === true) {
+                        location.reload();
+                    } else {
+                        dispatch({ 'type': ADD_ALERT, 'payload': { alerts: [{ id: "customer_update_error", message: _.get(response, 'payload.data.updateCustomer.message', 'Something wrong, please try again'), type: "error" }] } });
+                    }
+                }
+            }),
+            React.createElement("input", { type: "hidden", name: "variables[customer][customer_id]", value: props.customer.customer_id, readOnly: true }),
+            React.createElement("input", { type: "text", name: "query", value: "mutation UpdateCustomer($customer: updateCustomerInput!) { updateCustomer (customer: $customer) {status message}}", readOnly: true, style: { display: 'none' } }),
             React.createElement(Area, { id: "admin_customer_edit_inner", coreWidgets: [{
-                    'component': Groups,
-                    'props': props,
+                    'component': Text,
+                    'props': {
+                        name: "variables[customer][full_name]",
+                        value: props.customer.full_name,
+                        formId: "customer-edit-form",
+                        label: "Full name",
+                        validation_rules: ['notEmpty']
+                    },
                     'sort_order': 10,
-                    'id': 'group'
+                    'id': 'full_name'
                 }, {
                     'component': Text,
                     'props': {
-                        name: "email",
+                        name: "variables[customer][email]",
                         value: props.customer.email,
                         formId: "customer-edit-form",
                         label: "Email",
@@ -104,20 +219,14 @@ export default function CustomerEditFormComponent(props) {
                     'sort_order': 20,
                     'id': 'email'
                 }, {
-                    'component': Text,
-                    'props': {
-                        name: "full_name",
-                        value: props.customer.full_name,
-                        formId: "customer-edit-form",
-                        label: "Full name",
-                        validation_rules: ['notEmpty']
-                    },
+                    'component': Groups,
+                    'props': { _groups: props.groups, _selectedGroup: props.customer.group_id },
                     'sort_order': 30,
-                    'id': 'full_name'
+                    'id': 'group'
                 }, {
                     'component': Password,
                     'props': {
-                        name: "password",
+                        name: "variables[customer][password]",
                         value: "",
                         formId: "customer-edit-form",
                         label: "New password",
@@ -126,7 +235,17 @@ export default function CustomerEditFormComponent(props) {
                     'sort_order': 50,
                     'id': 'password'
                 }] })
-        ),
-        React.createElement(Area, { id: "admin_customer_edit_after", widgets: [] })
+        )
     );
+}
+export default function CustomerEditFormComponent(props) {
+    return React.createElement(Area, {
+        id: "admin_customer_edit_inner",
+        className: "uk-grid uk-grid-small",
+        coreWidgets: [{
+            component: CustomerInfo,
+            props: _extends({}, props),
+            sort_order: 10,
+            id: "customer_info"
+        }] });
 }

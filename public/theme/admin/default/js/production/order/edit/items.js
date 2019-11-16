@@ -1,107 +1,138 @@
 import Area from "../../../../../../../js/production/area.js";
 
-function ProductColumn({ name, sku, options = [] }) {
+function ItemOptions({ options = [] }) {
+    if (options.length === 0) return null;
+    const currency = ReactRedux.useSelector(state => _.get(state, 'appState.orderData.currency', 'USD'));
+
     return React.createElement(
-        "td",
-        null,
+        'div',
+        { className: 'cart-item-options' },
         React.createElement(
-            "div",
-            { className: "product-column" },
-            React.createElement(
-                "div",
-                null,
-                React.createElement(
-                    "span",
-                    null,
-                    name
-                )
-            ),
-            React.createElement(
-                "div",
-                null,
-                React.createElement(
-                    "span",
-                    null,
-                    "Sku"
-                ),
-                ": ",
-                React.createElement(
-                    "span",
-                    null,
-                    sku
-                )
-            ),
+            'ul',
+            { className: 'uk-list' },
             options.map((o, i) => {
                 return React.createElement(
-                    "div",
+                    'li',
                     { key: i },
                     React.createElement(
-                        "i",
-                        null,
+                        'span',
+                        { className: 'option-name' },
                         React.createElement(
-                            "strong",
+                            'strong',
                             null,
-                            o.option_name
+                            o.option_name,
+                            ' : '
                         )
                     ),
-                    " : ",
-                    React.createElement(
-                        "span",
-                        null,
-                        o.option_value_text
-                    )
+                    o.values.map((v, k) => {
+                        const _extraPrice = new Intl.NumberFormat('en', { style: 'currency', currency: currency }).format(v.extra_price);
+                        return React.createElement(
+                            'span',
+                            { key: k },
+                            React.createElement(
+                                'i',
+                                { className: 'value-text' },
+                                v.value_text
+                            ),
+                            React.createElement(
+                                'span',
+                                { className: 'extra-price' },
+                                '(',
+                                _extraPrice,
+                                ')'
+                            ),
+                            ' '
+                        );
+                    })
                 );
             })
         )
     );
 }
+
+function ProductColumn({ name, sku, options = [] }) {
+    return React.createElement(
+        'td',
+        null,
+        React.createElement(
+            'div',
+            { className: 'product-column' },
+            React.createElement(
+                'div',
+                null,
+                React.createElement(
+                    'span',
+                    null,
+                    name
+                )
+            ),
+            React.createElement(
+                'div',
+                null,
+                React.createElement(
+                    'span',
+                    null,
+                    'Sku'
+                ),
+                ': ',
+                React.createElement(
+                    'span',
+                    null,
+                    sku
+                )
+            ),
+            React.createElement(ItemOptions, { options: options })
+        )
+    );
+}
+
 export default function Items({ items }) {
     const currency = ReactRedux.useSelector(state => _.get(state, 'appState.orderData.currency', 'USD'));
     return React.createElement(
-        "div",
+        'div',
         { className: "uk-width-1-1 uk-overflow-auto" },
         React.createElement(
-            "table",
+            'table',
             { className: "uk-table uk-table-small" },
             React.createElement(
-                "thead",
+                'thead',
                 null,
                 React.createElement(Area, {
-                    id: "order_item_table_header",
+                    id: 'order_item_table_header',
                     reactcomponent: "tr",
                     coreWidgets: [{
                         component: "th",
                         props: { children: React.createElement(
-                                "span",
+                                'span',
                                 null,
-                                "Product"
+                                'Product'
                             ), 'key': 'product' },
                         sort_order: 10,
                         id: "product"
                     }, {
                         component: "th",
                         props: { children: React.createElement(
-                                "span",
+                                'span',
                                 null,
-                                "Price"
+                                'Price'
                             ), 'key': 'price' },
                         sort_order: 20,
                         id: "price"
                     }, {
                         component: "th",
                         props: { children: React.createElement(
-                                "span",
+                                'span',
                                 null,
-                                "Qty"
+                                'Qty'
                             ), 'key': 'qty' },
                         sort_order: 30,
                         id: "qty"
                     }, {
                         component: "th",
                         props: { children: React.createElement(
-                                "span",
+                                'span',
                                 null,
-                                "Total"
+                                'Total'
                             ), 'key': 'total' },
                         sort_order: 40,
                         id: "total"
@@ -109,7 +140,7 @@ export default function Items({ items }) {
                 })
             ),
             React.createElement(
-                "tbody",
+                'tbody',
                 null,
                 items.map((i, k) => {
                     const _price = new Intl.NumberFormat('en', { style: 'currency', currency: currency }).format(i.product_price);
@@ -122,17 +153,17 @@ export default function Items({ items }) {
                         item: i,
                         coreWidgets: [{
                             component: ProductColumn,
-                            props: { name: i.product_name, sku: i.product_sku, options: i.item_options },
+                            props: { name: i.product_name, sku: i.product_sku, options: i.options },
                             sort_order: 10,
                             id: "product"
                         }, {
                             component: "td",
                             props: { children: [React.createElement(
-                                    "div",
+                                    'div',
                                     { key: 1 },
                                     _price
                                 ), React.createElement(
-                                    "div",
+                                    'div',
                                     { key: 2 },
                                     _finalPrice
                                 )], 'key': 'price' },
@@ -141,7 +172,7 @@ export default function Items({ items }) {
                         }, {
                             component: "td",
                             props: { children: React.createElement(
-                                    "span",
+                                    'span',
                                     null,
                                     i.qty
                                 ), 'key': 'qty' },
@@ -150,7 +181,7 @@ export default function Items({ items }) {
                         }, {
                             component: "td",
                             props: { children: React.createElement(
-                                    "span",
+                                    'span',
                                     null,
                                     _total
                                 ), 'key': 'total' },

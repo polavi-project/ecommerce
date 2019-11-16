@@ -140,6 +140,7 @@ function Items({ items }) {
                 "tbody",
                 null,
                 items.map((item, index) => {
+                    const _regularPrice = new Intl.NumberFormat(language, { style: 'currency', currency: currency }).format(item.product_price);
                     const _finalPrice = new Intl.NumberFormat(language, { style: 'currency', currency: currency }).format(item.final_price);
                     const _total = new Intl.NumberFormat(language, { style: 'currency', currency: currency }).format(item.total);
                     return React.createElement(
@@ -169,10 +170,29 @@ function Items({ items }) {
                         React.createElement(
                             "td",
                             null,
-                            React.createElement(
-                                "span",
+                            parseFloat(item.final_price) < parseFloat(item.product_price) && React.createElement(
+                                "div",
                                 null,
-                                _finalPrice
+                                React.createElement(
+                                    "span",
+                                    { className: "regular-price" },
+                                    _regularPrice
+                                ),
+                                " ",
+                                React.createElement(
+                                    "span",
+                                    { className: "sale-price" },
+                                    _finalPrice
+                                )
+                            ),
+                            parseFloat(item.final_price) === parseFloat(item.product_price) && React.createElement(
+                                "div",
+                                null,
+                                React.createElement(
+                                    "span",
+                                    { className: "sale-price" },
+                                    _regularPrice
+                                )
                             )
                         ),
                         React.createElement(

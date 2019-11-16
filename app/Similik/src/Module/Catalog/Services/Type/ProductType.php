@@ -42,6 +42,14 @@ class ProductType extends ObjectType
                     'price' => [
                         'type' => Type::nonNull(Type::float())
                     ],
+                    'salePrice' => [
+                        'type' => Type::nonNull(Type::float()),
+                        'resolve' => function($product, $args, Container $container, ResolveInfo $info) {
+                            if(isset($product['tier_price']))
+                                return $product['tier_price'];
+                            return $product['price'];
+                        }
+                    ],
                     'categories' => [
                         'type' => Type::listOf(new ObjectType([
                             'name'=> "Product's categories",

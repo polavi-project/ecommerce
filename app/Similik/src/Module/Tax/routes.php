@@ -17,4 +17,6 @@ $router->addAdminRoute('tax.class.save', "POST", '/tax/save', [
     \Similik\Module\Tax\Middleware\Save\SaveMiddleware::class
 ]);
 
-
+$router->addAdminRoute('tax.install', ["POST", "GET"], '/tax/migrate/install', [
+    \Similik\Module\Tax\Middleware\Migrate\Install\InstallMiddleware::class
+]);

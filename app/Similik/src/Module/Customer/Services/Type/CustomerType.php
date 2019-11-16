@@ -16,6 +16,8 @@ use function Similik\_mysql;
 use function Similik\dispatch_event;
 use Similik\Module\Order\Services\Type\OrderType;
 use Similik\Services\Di\Container;
+use Similik\Services\Http\Request;
+use Similik\Services\Routing\Router;
 
 class CustomerType extends ObjectType
 {
@@ -39,6 +41,14 @@ class CustomerType extends ObjectType
                     ],
                     'full_name' => [
                         'type' => Type::string()
+                    ],
+                    'editUrl' => [
+                        'type' => Type::string(),
+                        'resolve' => function($page, $args, Container $container, ResolveInfo $info) {
+                            if($container->get(Request::class)->isAdmin() == false)
+                                return null;
+                            return $container->get(Router::class)->generateUrl('customer.edit', ["id"=>$page['customer_id']]);
+                        }
                     ],
                     'orders' => [
                         'type' => Type::listOf($container->get(OrderType::class)),

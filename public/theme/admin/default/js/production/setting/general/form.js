@@ -192,7 +192,7 @@ export default function GeneralSettingForms(props) {
                     "div",
                     null,
                     React.createElement(
-                        "strong",
+                        "h2",
                         null,
                         "General setting"
                     )

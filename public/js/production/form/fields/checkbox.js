@@ -38,7 +38,7 @@ export default function Checkbox(props) {
 
     return React.createElement(
         "div",
-        { className: "form-element form-element-text" },
+        { className: "form-field form-checkbox" },
         React.createElement(
             "label",
             { htmlFor: name },

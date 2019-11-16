@@ -37,11 +37,15 @@ export default function Date(props) {
 
     return React.createElement(
         "div",
-        { className: "form-element form-element-text" },
+        { className: "form-field form-date" },
         React.createElement(
-            "label",
-            { htmlFor: name },
-            props.label
+            "div",
+            { className: "field-label" },
+            React.createElement(
+                "label",
+                { htmlFor: props.name },
+                props.label
+            )
         ),
         React.createElement("input", {
             type: "date",

@@ -109,20 +109,15 @@ $eventDispatcher->addListener(
             ],
             'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
                 $query = _mysql()->getTable('product_price')
-                    //->addFieldToSelect("DISTINCT(qty)", "qty")
-                    //->addFieldToSelect("MIN(price)", "price")
-                    //->addFieldToSelect("active_from")
-                    //->addFieldToSelect("active_to")
-                    //->groupBy('qty')
                     ->where('product_price_product_id', '=', $args['productId']);
-
+                $query->andWhere('customer_group_id', '<', 1000);
                 if(!$container->get(Request::class)->isAdmin()) {
                     $query->andWhere('active_from', 'IS', null, '((')
                         ->orWhere('active_from', '<', date("Y-m-d H:i:s"), null, ')')
                         ->andWhere('active_to', 'IS', null, '(')
                         ->orWhere('active_to', '>', date("Y-m-d H:i:s"), null, '))');
 
-                    $customerGroupId = $container->get(Request::class)->getCustomer() ? $container->get(Request::class)->getCustomer()->getData('group_id') ?? 1 : 1;
+                    $customerGroupId = $container->get(Request::class)->getCustomer()->isLoggedIn() ? $container->get(Request::class)->getCustomer()->getData('group_id') ?? 1 : 999;
                     $query->andWhere('customer_group_id', '=', $customerGroupId);
                 }
 

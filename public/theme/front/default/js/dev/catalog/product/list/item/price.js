@@ -1,9 +1,15 @@
-const Price = ({price}) => {
+const Price = ({price, salePrice}) => {
     const currency = ReactRedux.useSelector(state => _.get(state, 'appState.currency', 'USD'));
-
-    const _price = new Intl.NumberFormat(window.language, { style: 'currency', currency: currency }).format(price);
-    return <div>
-        <span>{_price}</span>
+    const language = ReactRedux.useSelector(state => _.get(state, 'appState.language[0]', 'en'));
+    const _price = new Intl.NumberFormat(language, { style: 'currency', currency: currency }).format(price);
+    const _salePrice = new Intl.NumberFormat(language, { style: 'currency', currency: currency }).format(salePrice);
+    return <div className="product-price-listing">
+        {parseFloat(salePrice) < parseFloat(price) && <div>
+            <span className="regular-price">{_price}</span> <span className="sale-price">{_salePrice}</span>
+        </div>}
+        {parseFloat(salePrice) === parseFloat(price) && <div>
+            <span className="sale-price">{_price}</span>
+        </div>}
     </div>
 };
 export {Price};

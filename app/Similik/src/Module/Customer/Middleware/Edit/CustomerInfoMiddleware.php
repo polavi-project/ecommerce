@@ -48,6 +48,7 @@ class CustomerInfoMiddleware extends MiddlewareAbstract
             ->waitToExecute([
                 "query"=>"{
                     customer (id: {$request->attributes->get('id')}) {
+                        customer_id 
                         full_name 
                         status
                         email 
@@ -59,27 +60,19 @@ class CustomerInfoMiddleware extends MiddlewareAbstract
                     }
                 }"
             ])
-            ->then(function($data) use ($request, $response) {
-                /**@var \GraphQL\Executor\ExecutionResult[] $data */
-                if(is_array($data)) {
-                    foreach ($data as $item) {
-                        //var_dump($item->data);
-                        //var_dump($item->errors);
-                        if(isset($item->data['customer'])) {
-                            $response->addWidget(
-                                'customer_info',
-                                'customer_information_container',
-                                10,
-                                get_js_file_url("production/customer/edit/form.js", true),
-                                [
-                                    'customer'=> $item->data['customer'],
-                                    'groups'=> $item->data['customerGroups'],
-                                    'action'=> $this->getContainer()->get(Router::class)->generateUrl('customer.admin.save', ['id'=> $request->attributes->get('id', null)])
-                                ]
-                            );
-                            break;
-                        }
-                    }
+            ->then(function($result) use ($request, $response) {
+                /**@var \GraphQL\Executor\ExecutionResult $result */
+                if(isset($result->data['customer'])) {
+                    $response->addWidget(
+                        'customer_info',
+                        'content',
+                        10,
+                        get_js_file_url("production/customer/edit/form.js", true),
+                        [
+                            'customer'=> $result->data['customer'],
+                            'groups'=> $result->data['customerGroups']
+                        ]
+                    );
                 }
             });
 

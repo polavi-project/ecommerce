@@ -32,24 +32,40 @@ const TierPrice = ({ prices = [] }) => {
 const Price = ({ tierPrices = [] }) => {
     const regularPrice = ReactRedux.useSelector(state => _.get(state, 'appState.product.regularPrice'));
 
-    const [price] = React.useState(() => {
+    const [salePrice] = React.useState(() => {
         if (tierPrices.length > 0 && tierPrices[0].qty === 1 && tierPrices[0].price < regularPrice) return tierPrices[0].price;
         return regularPrice;
     });
 
     const currency = ReactRedux.useSelector(state => _.get(state, 'appState.currency', 'USD'));
     const language = ReactRedux.useSelector(state => _.get(state, 'appState.language[0]', 'en'));
-    const _price = new Intl.NumberFormat(language, { style: 'currency', currency: currency }).format(price);
+    const _regularPrice = new Intl.NumberFormat(language, { style: 'currency', currency: currency }).format(regularPrice);
+    const _salePrice = new Intl.NumberFormat(language, { style: 'currency', currency: currency }).format(salePrice);
     return React.createElement(
         'div',
         { className: 'product-view-price' },
-        React.createElement(
-            'span',
-            { className: 'regular-price' },
+        parseFloat(salePrice) < parseFloat(regularPrice) && React.createElement(
+            'div',
+            null,
             React.createElement(
-                'strong',
-                null,
-                _price
+                'span',
+                { className: 'regular-price' },
+                _regularPrice
+            ),
+            ' ',
+            React.createElement(
+                'span',
+                { className: 'sale-price' },
+                _salePrice
+            )
+        ),
+        parseFloat(salePrice) === parseFloat(regularPrice) && React.createElement(
+            'div',
+            null,
+            React.createElement(
+                'span',
+                { className: 'sale-price' },
+                _regularPrice
             )
         ),
         React.createElement(TierPrice, { prices: tierPrices.filter(p => p.qty > 1) })

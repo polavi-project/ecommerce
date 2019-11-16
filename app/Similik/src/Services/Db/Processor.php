@@ -144,39 +144,44 @@ class Processor extends \PDO
                 $whereClause .= ' ' . strtoupper($condition['ao']) . ' ';
             if($condition['start_group'])
                 $whereClause .= ' ' . $condition['start_group'] . ' ';
-            $placeholder = str_ireplace(["`", "'", "."], ['', '', "_"], $condition['column']) . '_' . $key;
-            switch($condition['operator']) {
-                case '=':
-                case '>':
-                case '>=':
-                case '<':
-                case '<=':
-                case '!=':
-                case '<>':
-                    $whereClause .= "{$condition['column']} {$condition['operator']} :{$placeholder} ";
-                    $binding[$placeholder] = $condition['value'];
-                    break;
-                case 'LIKE':
-                case 'NOT LIKE':
-                case 'IS':
-                case 'IS NOT':
-                    $operator = strtolower(str_replace(' ', '', $condition['operator']));
-                    $whereClause .= "{$condition['column']} {$condition['operator']} :{$operator}_{$placeholder} ";
-                    $binding[$operator . '_' . $placeholder] = $condition['value'];
-                    break;
-                case 'IN':
-                case 'NOT IN':
-                    // Value must be an array
-                    $whereClause .= "{$condition['column']} {$condition['operator']} ";
-                    $in = '(';
-                    foreach($condition['value'] as $k=>$value) {
-                        $in .= ':in' . $k . ', ';
-                        $binding[':in' . $k] = $value;
-                    }
-                    $in = rtrim(trim($in), ',') . ')';
-                    $whereClause .= $in;
-                    break;
+            if(isset($condition['isValueAColumn']) and $condition['isValueAColumn'] == true) {
+                $whereClause .= "{$condition['column']} {$condition['operator']} {$condition['value']} ";
+            } else {
+                $placeholder = str_ireplace(["`", "'", "."], ['', '', "_"], $condition['column']) . '_' . $key;
+                switch($condition['operator']) {
+                    case '=':
+                    case '>':
+                    case '>=':
+                    case '<':
+                    case '<=':
+                    case '!=':
+                    case '<>':
+                        $whereClause .= "{$condition['column']} {$condition['operator']} :{$placeholder} ";
+                        $binding[$placeholder] = $condition['value'];
+                        break;
+                    case 'LIKE':
+                    case 'NOT LIKE':
+                    case 'IS':
+                    case 'IS NOT':
+                        $operator = strtolower(str_replace(' ', '', $condition['operator']));
+                        $whereClause .= "{$condition['column']} {$condition['operator']} :{$operator}_{$placeholder} ";
+                        $binding[$operator . '_' . $placeholder] = $condition['value'];
+                        break;
+                    case 'IN':
+                    case 'NOT IN':
+                        // Value must be an array
+                        $whereClause .= "{$condition['column']} {$condition['operator']} ";
+                        $in = '(';
+                        foreach($condition['value'] as $k=>$value) {
+                            $in .= ':in' . $k . ', ';
+                            $binding[':in' . $k] = $value;
+                        }
+                        $in = rtrim(trim($in), ',') . ')';
+                        $whereClause .= $in;
+                        break;
+                }
             }
+
             if($condition['end_group'])
                 $whereClause .= ' ' . $condition['end_group'] . ' ';
         }
@@ -209,8 +214,8 @@ class Processor extends \PDO
         $query = $query . " {$sortBy} {$sortOrder} {$limit}";
         try {
             $stmt = $this->prepare($query);
-            //Logger::write($query);
-            //Logger::write($table->getBinding());
+            Logger::write($query);
+            Logger::write($table->getBinding());
             $stmt->execute($table->getBinding());
             return $stmt;
         } catch (\PDOException $e) {
@@ -248,10 +253,12 @@ class Processor extends \PDO
             if($column['Type'] == 'timestamp' and $column['Default'] == 'CURRENT_TIMESTAMP')
                 continue;
             if((!isset($data[$column['Field']]) or trim($data[$column['Field']])=='')) {
-                if($column['Null']=='NO' and $column['Default']!= NULL)
+                if($column['Extra'] == 'auto_increment')
+                    continue;
+                if($column['Null'] == 'NO' and $column['Default'] != NULL)
                     continue;
 
-                if($column['Null']=='NO' and $column['Default']== NULL)
+                if($column['Null'] == 'NO' and $column['Default'] == NULL)
                     throw new \InvalidArgumentException("{$column['Field']} can not be empty");
 
                 if($column['Null'] == 'YES' and in_array($column['Type'], ['date', 'datetime', 'timestamp']))

@@ -25,7 +25,7 @@ class PriceHelper
     {
         $tierPrice = $this->processor->getTable('product_price')
             ->addFieldToSelect("DISTINCT(qty)", "qty")
-            ->addFieldToSelect("MIN(price)", "price")
+            ->addFieldToSelect("MIN(tier_price)", "price")
             ->addFieldToSelect("active_from")
             ->addFieldToSelect("active_to")
             ->groupBy('qty')

@@ -1,4 +1,4 @@
-import ProductList from "../../../../production/catalog/product/list/list.js";
+import ProductList from '../../product/list/list.js';
 import { ROOT_PRODUCT_COLLECTION_FILTER_DEFINED } from "../../../../../../../../js/production/action.js";
 import { ReducerRegistry } from "../../../../../../../../js/production/reducer_registry.js";
 

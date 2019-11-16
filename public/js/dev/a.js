@@ -1,6 +1,6 @@
 import {Fetch} from "./fetch.js"
 
-export default function A({id, pushState, classes, url, text, children}) {
+export default function A({id, pushState, className, url, text, children}) {
     const onClick = (e) => {
         e.preventDefault();
         if(!url)
@@ -10,7 +10,7 @@ export default function A({id, pushState, classes, url, text, children}) {
         Fetch(url, pushState);
     };
 
-    return <a key={id} className={classes} href={url} onClick={(e)=>onClick(e)}>
+    return <a key={id} className={className} href={url} onClick={(e)=>onClick(e)}>
         {text}
         {children}
     </a>;

@@ -33,8 +33,8 @@ export default function Date (props) {
         setValue(e.target.value);
     };
 
-    return <div className="form-element form-element-text">
-        <label htmlFor={name}>{props.label}</label>
+    return <div className="form-field form-date">
+        <div className="field-label"><label htmlFor={props.name}>{props.label}</label></div>
         <input
             type="date"
             className="uk-input uk-form-small"

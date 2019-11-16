@@ -8,7 +8,7 @@ export default function Payment() {
             "div",
             null,
             React.createElement(
-                "h1",
+                "h2",
                 null,
                 "Payment methods"
             )

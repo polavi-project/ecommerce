@@ -12,8 +12,9 @@ let reducers = {
     },
     appState: (state = [], action = {}) => {
         if (action.type === ADD_APP_STATE) {
-            if (action.payload.appState !== undefined) {
-                return _.merge(state, action.payload.appState);
+            let newState = action.payload.appState;
+            if (newState !== undefined) {
+                return _extends({}, state, newState);
             }
         }
         return state;
