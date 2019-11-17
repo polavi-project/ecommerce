@@ -71,6 +71,7 @@ function Attributes({attributes, areaProps}) {
         }
 
     };
+
     return <div className={"filter-attributes"}>
         {attributes.map((a, i) => {
             return <div key={i}>
@@ -82,26 +83,14 @@ function Attributes({attributes, areaProps}) {
                 </ul>
             </div>
         })}
-
     </div>
 }
 
-function reducer(productCollectionFilter = [], action = {}) {
-    if(
-        action.type === PRODUCT_COLLECTION_FILTER_CHANGED
-    ) {
-        if(action.payload.productCollectionFilter !== undefined)
-            return action.payload.productCollectionFilter;
-
-    }
-    return productCollectionFilter;
-}
-
-ReducerRegistry.register('productCollectionFilter', reducer);
-
 export default function Filter({apiUrl}) {
+    const productCollectionRootFilter = ReactRedux.useSelector(state => _.get(state, 'appState.productCollectionRootFilter'));
+    const productCollectionFilter = ReactRedux.useSelector(state => _.get(state, 'productCollectionFilter'));
+    const categoryId = ReactRedux.useSelector(state => _.get(state, 'appState.categoryId', undefined));
     const dispatch = ReactRedux.useDispatch();
-    const rootProductCollectionFilter = ReactRedux.useSelector(state => state.rootProductCollectionFilter);
     const buildQuery = (filters) => {
         let filterStr = ``;
         filters.forEach((f,i) => {
@@ -120,9 +109,10 @@ export default function Filter({apiUrl}) {
     const [data, setData] = React.useState([]);
 
     React.useLayoutEffect(() => {
+        if(currentPage !== 'Category' || categoryId === undefined)
+            return;
         let formData = new FormData();
-        formData.append('query', buildQuery(rootProductCollectionFilter));
-
+        formData.append('query', buildQuery([{key: "category", operator: "IN", value: [categoryId]}]));
         Fetch(
             apiUrl,
             false,
@@ -135,9 +125,14 @@ export default function Filter({apiUrl}) {
                 }
             }
         );
-    }, [rootProductCollectionFilter]);
+    }, [categoryId]);
 
-    const [filters, setFilters] = React.useState([]);
+    const [filters, setFilters] = React.useState(() => {
+        if(productCollectionFilter.length > 0)
+            return productCollectionFilter;
+        else
+            return productCollectionRootFilter;
+    });
 
     const addFilter = (key, operator, value) => {
         let flag = 0;
@@ -174,6 +169,8 @@ export default function Filter({apiUrl}) {
         dispatch({'type' : PRODUCT_COLLECTION_FILTER_CHANGED, 'payload': {'productCollectionFilter': filters}});
     }, [filters]);
 
+    if(currentPage !== 'Category')
+        return null;
     return <Area
         id={"category-info"}
         addFilter={addFilter}

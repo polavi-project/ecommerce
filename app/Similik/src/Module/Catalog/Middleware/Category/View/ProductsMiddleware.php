@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace Similik\Module\Catalog\Middleware\Category\View;
 
 use function Similik\generate_url;
+use function Similik\get_config;
 use function Similik\get_js_file_url;
 use Similik\Module\Graphql\Services\GraphqlExecutor;
 use Similik\Services\Http\Request;
@@ -28,12 +29,13 @@ class ProductsMiddleware extends MiddlewareAbstract
         if($response->hasWidget('category_view_products'))
             return $delegate;
 
+        $limit = get_config('catalog_product_list_limit', 50);
         $this->getContainer()
             ->get(GraphqlExecutor::class)
             ->waitToExecute([
                 "query"=> <<< QUERY
                     {
-                        productCollection (filter: { category : {operator: IN value: "{$request->get('id')}"}}) {
+                        productCollection (filter: { category : {operator: IN value: "{$request->get('id')}"} limit: {operator: Equal value: "{$limit}"}}) {
                                 products {
                                     product_id
                                     name
@@ -45,6 +47,7 @@ class ProductsMiddleware extends MiddlewareAbstract
                                     }
                                 }
                                 total
+                                currentFilter
                         }
                     }
 QUERY
@@ -53,6 +56,7 @@ QUERY
                 /**@var \GraphQL\Executor\ExecutionResult $result */
                 if (isset($result->data['productCollection']['products'])) {
                     $products = $result->data['productCollection']['products'];
+                    $response->addState('productCollectionRootFilter', json_decode($result->data['productCollection']['currentFilter'], true));
                     $response->addWidget(
                         'category_view_products',
                         'content',
@@ -60,12 +64,13 @@ QUERY
                         get_js_file_url("production/catalog/category/view/products.js", false),
                         [
                             "ps" => $products,
-                            "categoryId" => $request->get('id'),
+                            "currentFilter" => json_decode($result->data['productCollection']['currentFilter'], true),
+                            "_total" => $result->data['productCollection']['total'],
                             "addItemApi" => generate_url('cart.add')
                         ]
                     );
                 }
-            });
+            }, function($reason) {var_dump($reason);});
 
         return $delegate;
     }

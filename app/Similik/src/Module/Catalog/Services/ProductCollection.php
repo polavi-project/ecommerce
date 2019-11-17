@@ -196,13 +196,13 @@ class ProductCollection extends CollectionBuilder
         }
 
         $this->addFilter('page', function($args) use ($isAdmin) {
-            if($args['operator'] !== "EQUAL")
+            if($args['operator'] !== "=")
                 return;
             $this->setPage((int)$args['value']);
         });
 
         $this->addFilter('limit', function($args) use ($isAdmin) {
-            if($args['operator'] !== "EQUAL")
+            if($args['operator'] !== "=")
                 return;
             $this->setLimit((int)$args['value']);
         });

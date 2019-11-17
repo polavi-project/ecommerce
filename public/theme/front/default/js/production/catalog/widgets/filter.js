@@ -87,6 +87,7 @@ function Attributes({ attributes, areaProps }) {
             }
         }
     };
+
     return React.createElement(
         "div",
         { className: "filter-attributes" },
@@ -125,18 +126,10 @@ function Attributes({ attributes, areaProps }) {
     );
 }
 
-function reducer(productCollectionFilter = [], action = {}) {
-    if (action.type === PRODUCT_COLLECTION_FILTER_CHANGED) {
-        if (action.payload.productCollectionFilter !== undefined) return action.payload.productCollectionFilter;
-    }
-    return productCollectionFilter;
-}
-
-ReducerRegistry.register('productCollectionFilter', reducer);
-
 export default function Filter({ apiUrl }) {
+    const currentPage = ReactRedux.useSelector(state => _.get(state, 'appState.currentPage'));
+    const categoryId = ReactRedux.useSelector(state => _.get(state, 'appState.categoryId', undefined));
     const dispatch = ReactRedux.useDispatch();
-    const rootProductCollectionFilter = ReactRedux.useSelector(state => state.rootProductCollectionFilter);
     const buildQuery = filters => {
         let filterStr = ``;
         filters.forEach((f, i) => {
@@ -153,15 +146,15 @@ export default function Filter({ apiUrl }) {
     const [data, setData] = React.useState([]);
 
     React.useLayoutEffect(() => {
+        if (currentPage !== 'Category' || categoryId === undefined) return;
         let formData = new FormData();
-        formData.append('query', buildQuery(rootProductCollectionFilter));
-
+        formData.append('query', buildQuery([{ key: "category", operator: "IN", value: [categoryId] }]));
         Fetch(apiUrl, false, 'POST', formData, null, response => {
             if (_.get(response, 'payload.data.productFilterTool')) {
                 setData(_.get(response, 'payload.data.productFilterTool'));
             }
         });
-    }, [rootProductCollectionFilter]);
+    }, [categoryId]);
 
     const [filters, setFilters] = React.useState([]);
 
@@ -195,6 +188,7 @@ export default function Filter({ apiUrl }) {
         dispatch({ 'type': PRODUCT_COLLECTION_FILTER_CHANGED, 'payload': { 'productCollectionFilter': filters } });
     }, [filters]);
 
+    if (currentPage !== 'Category') return null;
     return React.createElement(Area, {
         id: "category-info",
         addFilter: addFilter,

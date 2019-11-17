@@ -30,7 +30,11 @@ class ProductCollectionFilterType extends InputObjectType
                     'stock' => $container->get(FilterFieldType::class),
                     'name' => $container->get(FilterFieldType::class),
                     'sku' => $container->get(FilterFieldType::class),
-                    'category' => $container->get(FilterFieldType::class)
+                    'category' => $container->get(FilterFieldType::class),
+                    'limit' => $container->get(FilterFieldType::class),
+                    'page' => $container->get(FilterFieldType::class),
+                    'sortBy' => $container->get(FilterFieldType::class),
+                    'sortOrder' => $container->get(FilterFieldType::class)
                 ];
                 $filterAbleAttributes = [1, 7, 8, 9];
                 $conn = _mysql();

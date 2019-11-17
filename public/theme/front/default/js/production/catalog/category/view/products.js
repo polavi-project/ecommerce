@@ -1,5 +1,8 @@
 import ProductList from '../../product/list/list.js';
-import { ROOT_PRODUCT_COLLECTION_FILTER_DEFINED } from "../../../../../../../../js/production/event-types.js";
+import { Fetch } from "../../../../../../../../js/production/fetch.js";
+import { ADD_ALERT } from "../../../../../../../../js/production/event-types.js";
+import Pagination from "../../../../../../../../js/production/pagination.js";
+import { PRODUCT_COLLECTION_FILTER_CHANGED } from "../../../../../../../../js/production/event-types.js";
 import { ReducerRegistry } from "../../../../../../../../js/production/reducer_registry.js";
 
 function usePrevious(value) {
@@ -12,47 +15,36 @@ function usePrevious(value) {
     return ref.current;
 }
 
-function reducer(rootProductCollectionFilter = [], action = {}) {
-    if (action.type === ROOT_PRODUCT_COLLECTION_FILTER_DEFINED) {
-        if (action.payload.rootProductCollectionFilter !== undefined) return action.payload.rootProductCollectionFilter;
+function reducer(productCollectionFilter = [], action = {}) {
+    if (action.type === PRODUCT_COLLECTION_FILTER_CHANGED) {
+        if (action.payload.productCollectionFilter !== undefined) return action.payload.productCollectionFilter;
     }
-    return rootProductCollectionFilter;
+    return productCollectionFilter;
 }
 
-ReducerRegistry.register('rootProductCollectionFilter', reducer);
+ReducerRegistry.register('productCollectionFilter', reducer);
 
-export default function Products({ ps = [], categoryId, addItemApi }) {
+export default function Products({ ps = [], addItemApi }) {
     const dispatch = ReactRedux.useDispatch();
     const apiUrl = ReactRedux.useSelector(state => _.get(state, 'appState.graphqlApi'));
-    const [products, setProducts] = React.useState(() => {
-        dispatch({ 'type': ROOT_PRODUCT_COLLECTION_FILTER_DEFINED, 'payload': { 'rootProductCollectionFilter': [{ key: "category", operator: "IN", value: [categoryId] }] } });
-        return ps;
-    });
+    const [products, setProducts] = React.useState(ps);
 
     const productCollectionFilter = ReactRedux.useSelector(state => state.productCollectionFilter);
-    const prevProductCollectionFilter = usePrevious(productCollectionFilter);
 
     React.useEffect(() => {
-        if (prevProductCollectionFilter === undefined || productCollectionFilter.length === 0 && prevProductCollectionFilter.length === 0) return;
-        applyFilter(productCollectionFilter);
+        if (productCollectionFilter.length !== 0) applyFilter(productCollectionFilter);
     }, [productCollectionFilter]);
 
     const applyFilter = filters => {
         let formData = new FormData();
         formData.append('query', buildQuery(filters));
-        axios({
-            method: 'post',
-            url: apiUrl,
-            headers: { 'content-type': 'multipart/form-data' },
-            data: formData
-        }).then(function (response) {
-            if (response.headers['content-type'] !== "application/json") throw new Error('Something wrong, please try again');
-            if (_.get(response, 'data.payload.data.productCollection.products')) {
-                setProducts(_.get(response, 'data.payload.data.productCollection.products'));
+        Fetch(apiUrl, false, 'POST', formData, null, response => {
+            if (_.get(response, 'payload.data.productCollection.products')) {
+                setProducts(_.get(response, 'payload.data.productCollection.products'));
+                dispatch({ 'type': PRODUCT_COLLECTION_FILTER_CHANGED, 'payload': { 'productCollectionFilter': JSON.parse(_.get(response, 'payload.data.productCollection.currentFilter')) } });
+            } else {
+                dispatch({ 'type': ADD_ALERT, 'payload': { alerts: [{ id: "filter_update_error", message: 'Something wrong, please try again', type: "error" }] } });
             }
-        }).catch(function (error) {}).finally(function () {
-            // e.target.value = null;
-            // setUploading(false);
         });
     };
 
@@ -69,5 +61,9 @@ export default function Products({ ps = [], categoryId, addItemApi }) {
         // TODO: field need to be changeable without overwriting this file
         return `{productCollection ${filterStr} {products {product_id name price salePrice url image { list }} total currentFilter}}`;
     };
-    return React.createElement(ProductList, { products: products, addItemApi: addItemApi });
+    return React.createElement(
+        "div",
+        null,
+        React.createElement(ProductList, { products: products, addItemApi: addItemApi })
+    );
 }
