@@ -1,7 +1,7 @@
 import ProductList from '../../product/list/list.js';
 import {Fetch} from "../../../../../../../../js/production/fetch.js";
 import {ADD_ALERT} from "../../../../../../../../js/production/event-types.js";
-import Pagination from "../../../../../../../../js/production/pagination.js";
+import Pagination from '../../product/list/pagination.js';
 import {PRODUCT_COLLECTION_FILTER_CHANGED} from "../../../../../../../../js/production/event-types.js";
 import {ReducerRegistry} from "../../../../../../../../js/production/reducer_registry.js";
 
@@ -34,6 +34,7 @@ export default function Products({ps = [], _total, addItemApi}) {
     const [products, setProducts] = React.useState(ps);
     const [total, setTotal] = React.useState(_total);
 
+    const productRootCollectionFilter = ReactRedux.useSelector(state => _.get(state, 'appState.graphqlApi'));
     const productCollectionFilter = ReactRedux.useSelector(state => state.productCollectionFilter);
 
     React.useEffect(() => {
@@ -53,7 +54,7 @@ export default function Products({ps = [], _total, addItemApi}) {
             (response) => {
                 if(_.get(response, 'payload.data.productCollection.products')) {
                     setProducts(_.get(response, 'payload.data.productCollection.products'));
-                    dispatch({'type' : PRODUCT_COLLECTION_FILTER_CHANGED, 'payload': {'productCollectionFilter': JSON.parse(_.get(response, 'payload.data.productCollection.currentFilter'))}});
+                    //dispatch({'type' : PRODUCT_COLLECTION_FILTER_CHANGED, 'payload': {'productCollectionFilter': JSON.parse(_.get(response, 'payload.data.productCollection.currentFilter'))}});
                     setTotal(parseInt(_.get(response, 'payload.data.productCollection.total')));
                 } else {
                     dispatch({'type' : ADD_ALERT, 'payload': {alerts: [{id: "filter_update_error", message: 'Something wrong, please try again', type: "error"}]}});
@@ -64,12 +65,15 @@ export default function Products({ps = [], _total, addItemApi}) {
 
     const buildQuery = (filters) => {
         let filterStr = ``;
-        filters.forEach((f,i) => {
-            let value = f.value;
-            if(f.operator == "IN")
-                value = value.join(", ");
-            filterStr +=`${f.key} : {operator : ${f.operator} value: "${value}"} `;
-        });
+
+        for (let key in filters) {
+            if (filters.hasOwnProperty(key)) {
+                let value = filters[key].value;
+                if(filters[key].operator == "IN" && Array.isArray(value))
+                    value = value.join(", ");
+                filterStr +=`${key} : {operator : "${filters[key].operator}" value: "${value}"} `;
+            }
+        }
         filterStr = filterStr.trim();
         if(filterStr)
             filterStr = `(filter : {${filterStr}})`;

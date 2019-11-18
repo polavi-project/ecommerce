@@ -1,5 +1,4 @@
 import Area from "../../../../../../../js/production/area.js";
-import { ReducerRegistry } from "../../../../../../../js/production/reducer_registry.js";
 import { PRODUCT_COLLECTION_FILTER_CHANGED } from "../../../../../../../js/production/event-types.js";
 import { Fetch } from "../../../../../../../js/production/fetch.js";
 
@@ -127,7 +126,9 @@ function Attributes({ attributes, areaProps }) {
 }
 
 export default function Filter({ apiUrl }) {
-    const currentPage = ReactRedux.useSelector(state => _.get(state, 'appState.currentPage'));
+    const productCollectionRootFilter = ReactRedux.useSelector(state => _.get(state, 'appState.productCollectionRootFilter'));
+    const productCollectionFilter = ReactRedux.useSelector(state => _.get(state, 'productCollectionFilter'));
+    const currentPage = ReactRedux.useSelector(state => _.get(state, 'appState.currentPage', undefined));
     const categoryId = ReactRedux.useSelector(state => _.get(state, 'appState.categoryId', undefined));
     const dispatch = ReactRedux.useDispatch();
     const buildQuery = filters => {
@@ -156,7 +157,14 @@ export default function Filter({ apiUrl }) {
         });
     }, [categoryId]);
 
-    const [filters, setFilters] = React.useState([]);
+    const [filters, setFilters] = React.useState(() => {
+        if (productCollectionFilter.length > 0) return productCollectionFilter;else return productCollectionRootFilter;
+    });
+
+    // React.useEffect(() => {
+    //     if(_.isEmpty(productCollectionFilter) === false)
+    //         dispatch({'type' : PRODUCT_COLLECTION_FILTER_CHANGED, 'payload': {'productCollectionFilter': filters}});
+    // }, [filters]);
 
     const addFilter = (key, operator, value) => {
         let flag = 0;
@@ -183,10 +191,6 @@ export default function Filter({ apiUrl }) {
     const removeFilter = key => {
         setFilters(filters.filter((v, k) => v.key !== key));
     };
-
-    React.useEffect(() => {
-        dispatch({ 'type': PRODUCT_COLLECTION_FILTER_CHANGED, 'payload': { 'productCollectionFilter': filters } });
-    }, [filters]);
 
     if (currentPage !== 'Category') return null;
     return React.createElement(Area, {

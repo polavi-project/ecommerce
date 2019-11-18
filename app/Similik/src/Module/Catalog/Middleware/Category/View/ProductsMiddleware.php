@@ -35,7 +35,7 @@ class ProductsMiddleware extends MiddlewareAbstract
             ->waitToExecute([
                 "query"=> <<< QUERY
                     {
-                        productCollection (filter: { category : {operator: IN value: "{$request->get('id')}"} limit: {operator: Equal value: "{$limit}"}}) {
+                        productCollection (filter: { category : {operator: "IN" value: "{$request->get('id')}"} limit: {operator: "=" value: "{$limit}"}}) {
                                 products {
                                     product_id
                                     name
@@ -54,6 +54,7 @@ QUERY
             ])
             ->then(function($result) use ($request, $response) {
                 /**@var \GraphQL\Executor\ExecutionResult $result */
+                //var_dump($result->data);
                 if (isset($result->data['productCollection']['products'])) {
                     $products = $result->data['productCollection']['products'];
                     $response->addState('productCollectionRootFilter', json_decode($result->data['productCollection']['currentFilter'], true));

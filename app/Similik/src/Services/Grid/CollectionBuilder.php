@@ -125,8 +125,7 @@ class CollectionBuilder
     protected function getTotal()
     {
         $collection = clone $this->collection;
-        $row = $collection->addFieldToSelect("COUNT(*)", "total")->fetch();
-
-        return $row['total'];
+        $row = $collection->addFieldToSelect("COUNT(*)", "total")->addFieldToSelect("COUNT(*)", "total")->fetchAllAssoc();
+        return count($row);
     }
 }
