@@ -27,7 +27,7 @@ class ProductFilterWidgetMiddleware extends MiddlewareAbstract
         $this->getContainer()
             ->get(GraphqlExecutor::class)
             ->waitToExecute([
-                "query"=>"{productFilter : widgetCollection (filter : {type : {operator : Equal value: \"product_filter\"}}) {widgets { cms_widget_id name setting {key value} displaySetting {key value} sort_order }}}"
+                "query"=>"{productFilter : widgetCollection (filter : {type : {operator : \"=\" value: \"product_filter\"}}) {widgets { cms_widget_id name setting {key value} displaySetting {key value} sort_order }}}"
             ])->then(function($result) use ($request, $response) {
                 /**@var \GraphQL\Executor\ExecutionResult $result */
                 if(isset($result->data['productFilter'])) {
@@ -87,7 +87,7 @@ class ProductFilterWidgetMiddleware extends MiddlewareAbstract
                             );
                     }
                 }
-            });
+            }, function($reason) {var_dump($reason);});
 
         return $delegate;
     }

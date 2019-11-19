@@ -24,17 +24,16 @@ function reducer(productCollectionFilter = [], action = {}) {
 
 ReducerRegistry.register('productCollectionFilter', reducer);
 
-export default function Products({ ps = [], _total, addItemApi }) {
+export default function Products({ ps = [], addItemApi }) {
     const dispatch = ReactRedux.useDispatch();
     const apiUrl = ReactRedux.useSelector(state => _.get(state, 'appState.graphqlApi'));
     const [products, setProducts] = React.useState(ps);
-    const [total, setTotal] = React.useState(_total);
 
-    const productRootCollectionFilter = ReactRedux.useSelector(state => _.get(state, 'appState.graphqlApi'));
     const productCollectionFilter = ReactRedux.useSelector(state => state.productCollectionFilter);
+    const prevProductCollectionFilter = usePrevious(productCollectionFilter);
 
     React.useEffect(() => {
-        if (productCollectionFilter.length !== 0) applyFilter(productCollectionFilter);
+        if (productCollectionFilter.length !== 0 && _.isEqual(productCollectionFilter, prevProductCollectionFilter) === false) applyFilter(productCollectionFilter);
     }, [productCollectionFilter]);
 
     const applyFilter = filters => {
@@ -43,8 +42,7 @@ export default function Products({ ps = [], _total, addItemApi }) {
         Fetch(apiUrl, false, 'POST', formData, null, response => {
             if (_.get(response, 'payload.data.productCollection.products')) {
                 setProducts(_.get(response, 'payload.data.productCollection.products'));
-                //dispatch({'type' : PRODUCT_COLLECTION_FILTER_CHANGED, 'payload': {'productCollectionFilter': JSON.parse(_.get(response, 'payload.data.productCollection.currentFilter'))}});
-                setTotal(parseInt(_.get(response, 'payload.data.productCollection.total')));
+                dispatch({ 'type': PRODUCT_COLLECTION_FILTER_CHANGED, 'payload': { 'productCollectionFilter': JSON.parse(_.get(response, 'payload.data.productCollection.currentFilter')) } });
             } else {
                 dispatch({ 'type': ADD_ALERT, 'payload': { alerts: [{ id: "filter_update_error", message: 'Something wrong, please try again', type: "error" }] } });
             }

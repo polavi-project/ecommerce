@@ -26,7 +26,7 @@ class TextWidgetMiddleware extends MiddlewareAbstract
         $this->getContainer()
             ->get(GraphqlExecutor::class)
             ->waitToExecute([
-                "query"=>"{textWidgets : widgetCollection (filter : {type : {operator : Equal value: \"text\"}}) {widgets { cms_widget_id name setting {key value} displaySetting {key value} sort_order }}}"
+                "query"=>"{textWidgets : widgetCollection (filter : {type : {operator : \"=\" value: \"text\"}}) {widgets { cms_widget_id name setting {key value} displaySetting {key value} sort_order }}}"
             ])->then(function($result) use ($request, $response) {
                 /**@var \GraphQL\Executor\ExecutionResult $result */
                 if(isset($result->data['textWidgets'])) {
