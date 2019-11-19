@@ -12,6 +12,7 @@ namespace Similik\Module\Catalog\Services;
 use GraphQL\Type\Definition\ResolveInfo;
 use function Similik\_mysql;
 use function Similik\dispatch_event;
+use function Similik\get_config;
 use function Similik\get_current_language_id;
 use Similik\Services\Di\Container;
 use Similik\Services\Grid\CollectionBuilder;
@@ -206,11 +207,37 @@ class ProductCollection extends CollectionBuilder
                 return;
             $this->setLimit((int)$args['value']);
         });
+
+        $this->addFilter('sort_by', function($args) use ($isAdmin) {
+            if($args['operator'] !== "=")
+                return;
+            $this->setSortBy((int)$args['value']);
+        });
+
+        $this->addFilter('sort_order', function($args) use ($isAdmin) {
+            if($args['operator'] !== "=")
+                return;
+            $this->setSortOrder((int)$args['value']);
+        });
     }
 
     public function getData($rootValue, $args, Container $container, ResolveInfo $info)
     {
         $filters = $args['filter'] ?? [];
+        $filters = $filters + [
+                'limit' => [
+                    'operator' => '=',
+                    'value' => get_config('catalog_product_list_limit', 50)
+                ],
+                'sort_by' => [
+                    'operator' => '=',
+                    'value' => get_config('catalog_product_list_sort_order', 'price')
+                ],
+                'sort_order' => [
+                    'operator' => '=',
+                    'value' => get_config('catalog_product_list_sort_order', 'ASC')
+                ]
+            ];
         foreach ($filters as $key => $arg)
             $this->applyFilter($key, $arg);
 

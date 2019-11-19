@@ -116,6 +116,22 @@ class CollectionBuilder
         $this->limit = $limit;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getSortOrder()
+    {
+        return $this->sortOrder;
+    }
+
+    /**
+     * @param mixed $sortOrder
+     */
+    public function setSortOrder($sortOrder): void
+    {
+        $this->sortOrder = $sortOrder;
+    }
+
     protected function applyFilter($id, $args = [])
     {
         if(isset($this->filters[$id]))
