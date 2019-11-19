@@ -39,6 +39,11 @@ class ProductCollection extends CollectionBuilder
                 ]
             ]);
 
+        // Display out of stock or not
+        $setting = get_config('catalog_out_of_stock_display', 0);
+        if($setting == 0) {
+            $collection->where('product.manage_stock', '=', 0)->orWhere('product.qty', '>', 0, '(')->andWhere('product.stock_availability', '=', 1, null, ')');
+        }
         if(!$container->get(Request::class)->isAdmin()) {
             $customerGroupId = $container->get(Request::class)->getCustomer()->isLoggedIn() ? $container->get(Request::class)->getCustomer()->getData('group_id') ?? 1 : 999;
             $collection->leftJoin('product_price', null, [
@@ -211,13 +216,13 @@ class ProductCollection extends CollectionBuilder
         $this->addFilter('sort_by', function($args) use ($isAdmin) {
             if($args['operator'] !== "=")
                 return;
-            $this->setSortBy((int)$args['value']);
+            $this->setSortBy($args['value']);
         });
 
         $this->addFilter('sort_order', function($args) use ($isAdmin) {
             if($args['operator'] !== "=")
                 return;
-            $this->setSortOrder((int)$args['value']);
+            $this->setSortOrder($args['value']);
         });
     }
 
@@ -231,7 +236,7 @@ class ProductCollection extends CollectionBuilder
                 ],
                 'sort_by' => [
                     'operator' => '=',
-                    'value' => get_config('catalog_product_list_sort_order', 'price')
+                    'value' => get_config('catalog_product_list_sort_by', 'price')
                 ],
                 'sort_order' => [
                     'operator' => '=',

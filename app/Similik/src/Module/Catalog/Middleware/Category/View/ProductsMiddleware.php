@@ -54,7 +54,6 @@ QUERY
             ])
             ->then(function($result) use ($request, $response) {
                 /**@var \GraphQL\Executor\ExecutionResult $result */
-                //var_dump($result->data);
                 if (isset($result->data['productCollection']['products'])) {
                     $products = $result->data['productCollection']['products'];
                     $response->addState('productCollectionRootFilter', json_decode($result->data['productCollection']['currentFilter'], true));
