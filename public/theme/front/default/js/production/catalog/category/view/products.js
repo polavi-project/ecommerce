@@ -1,9 +1,9 @@
 import ProductList from '../../product/list/list.js';
 import { Fetch } from "../../../../../../../../js/production/fetch.js";
 import { ADD_ALERT } from "../../../../../../../../js/production/event-types.js";
-import Pagination from '../../product/list/pagination.js';
 import { PRODUCT_COLLECTION_FILTER_CHANGED } from "../../../../../../../../js/production/event-types.js";
 import { ReducerRegistry } from "../../../../../../../../js/production/reducer_registry.js";
+import Area from "../../../../../../../../js/production/area.js";
 
 function usePrevious(value) {
     const ref = React.useRef();
@@ -67,10 +67,16 @@ export default function Products({ ps = [], _total, addItemApi }) {
         // TODO: field need to be changeable without overwriting this file
         return `{productCollection ${filterStr} {products {product_id name price salePrice url image { list }} total currentFilter}}`;
     };
-    return React.createElement(
-        "div",
-        null,
-        React.createElement(ProductList, { products: products, addItemApi: addItemApi }),
-        React.createElement(Pagination, { total: total })
-    );
+    return React.createElement(Area, {
+        id: "category_products_container",
+        coreWidgets: [{
+            component: ProductList,
+            props: {
+                products: products,
+                addItemApi: addItemApi
+            },
+            sort_order: 10,
+            id: "product_list"
+        }]
+    });
 }

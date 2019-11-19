@@ -30,7 +30,7 @@ class ProductsMiddleware extends MiddlewareAbstract
             return $delegate;
 
         $limit = get_config('catalog_product_list_limit', 50);
-        $this->getContainer()
+        $promise = $this->getContainer()
             ->get(GraphqlExecutor::class)
             ->waitToExecute([
                 "query"=> <<< QUERY
@@ -51,8 +51,8 @@ class ProductsMiddleware extends MiddlewareAbstract
                         }
                     }
 QUERY
-            ])
-            ->then(function($result) use ($request, $response) {
+            ]);
+        $promise->then(function($result) use ($request, $response) {
                 /**@var \GraphQL\Executor\ExecutionResult $result */
                 if (isset($result->data['productCollection']['products'])) {
                     $products = $result->data['productCollection']['products'];
@@ -70,8 +70,8 @@ QUERY
                         ]
                     );
                 }
-            }, function($reason) {var_dump($reason);});
+            });
 
-        return $delegate;
+        return $promise;
     }
 }

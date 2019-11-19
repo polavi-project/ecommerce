@@ -230,15 +230,19 @@ class ProductCollection extends CollectionBuilder
     {
         $filters = $args['filter'] ?? [];
         $filters = $filters + [
+                'page' => [
+                    'operator' => '=',
+                    'value' => 1
+                ],
                 'limit' => [
                     'operator' => '=',
                     'value' => get_config('catalog_product_list_limit', 50)
                 ],
-                'sort_by' => [
+                'sortBy' => [
                     'operator' => '=',
                     'value' => get_config('catalog_product_list_sort_by', 'price')
                 ],
-                'sort_order' => [
+                'sortOrder' => [
                     'operator' => '=',
                     'value' => get_config('catalog_product_list_sort_order', 'ASC')
                 ]

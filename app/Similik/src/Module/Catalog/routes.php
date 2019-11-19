@@ -128,7 +128,8 @@ $router->addAdminRoute('catalog.install', 'POST', '/catalog/migrate/install', [
 $categoryViewMiddleware = [
     \Similik\Module\Catalog\Middleware\Category\View\InitMiddleware::class,
     \Similik\Module\Catalog\Middleware\Category\View\GeneralInfoMiddleware::class,
-    \Similik\Module\Catalog\Middleware\Category\View\ProductsMiddleware::class
+    \Similik\Module\Catalog\Middleware\Category\View\ProductsMiddleware::class,
+    \Similik\Module\Catalog\Middleware\Category\View\PaginationMiddleware::class
 ];
 $router->addSiteRoute('category.view', 'GET', '/catalog/id/{id:\d+}', $categoryViewMiddleware);
 
