@@ -2,6 +2,16 @@ import Area from "../../../../../../../js/production/area.js";
 import {PRODUCT_COLLECTION_FILTER_CHANGED} from "../../../../../../../js/production/event-types.js";
 import {Fetch} from "../../../../../../../js/production/fetch.js";
 
+function usePrevious(value) {
+    const ref = React.useRef();
+
+    React.useEffect(() => {
+        ref.current = value;
+    }, [value]);
+
+    return ref.current;
+}
+
 function Price({minPrice, maxPrice, maxSteps = 3, minRange = 50, areaProps}) {
     const getSteps = () => {
         let stepNumber = Math.min((parseFloat(maxPrice) - parseFloat(minPrice)) / parseFloat(minRange), maxSteps);
@@ -39,10 +49,11 @@ function Price({minPrice, maxPrice, maxSteps = 3, minRange = 50, areaProps}) {
 function Attributes({attributes, areaProps}) {
     const onChange = (e, attributeCode, optionId) => {
         let filter = undefined;
-        areaProps.filters.forEach((f, i) => {
-            if(f.key === attributeCode)
-                filter = f;
-        });
+        for (let key in areaProps.filters) {
+            if (areaProps.filters.hasOwnProperty(key) && key === attributeCode)
+                filter = areaProps.filters[key];
+        }
+
         if(filter === undefined) {
             if(e.target.checked === false) {
                 return;
@@ -86,19 +97,21 @@ function Attributes({attributes, areaProps}) {
 }
 
 export default function Filter({apiUrl}) {
-    const productCollectionRootFilter = ReactRedux.useSelector(state => _.get(state, 'appState.productCollectionRootFilter'));
     const productCollectionFilter = ReactRedux.useSelector(state => _.get(state, 'productCollectionFilter'));
     const currentPage = ReactRedux.useSelector(state => _.get(state, 'appState.currentPage', undefined));
     const categoryId = ReactRedux.useSelector(state => _.get(state, 'appState.categoryId', undefined));
     const dispatch = ReactRedux.useDispatch();
     const buildQuery = (filters) => {
         let filterStr = ``;
-        filters.forEach((f,i) => {
-            let value = f.value;
-            if(f.operator == "IN")
-                value = value.join(", ");
-            filterStr +=`${f.key} : {operator : ${f.operator} value: "${value}"} `;
-        });
+        for (let key in filters) {
+            if (filters.hasOwnProperty(key)) {
+                let value = filters[key].value;
+                if(filters[key].operator === "IN")
+                    value = value.join(", ");
+                filterStr +=`${key} : {operator : "${filters[key].operator}" value: "${value}"} `;
+            }
+        }
+
         filterStr = filterStr.trim();
         if(filterStr)
             filterStr = `(filter : {${filterStr}})`;
@@ -112,7 +125,7 @@ export default function Filter({apiUrl}) {
         if(currentPage !== 'Category' || categoryId === undefined)
             return;
         let formData = new FormData();
-        formData.append('query', buildQuery([{key: "category", operator: "IN", value: [categoryId]}]));
+        formData.append('query', buildQuery({category: {operator: "IN", value: [categoryId]}}));
         Fetch(
             apiUrl,
             false,
@@ -128,46 +141,57 @@ export default function Filter({apiUrl}) {
     }, [categoryId]);
 
     const [filters, setFilters] = React.useState(() => {
-        if(productCollectionFilter.length > 0)
-            return productCollectionFilter;
-        else
-            return productCollectionRootFilter;
+        let f = {};
+        for (let key in productCollectionFilter) {
+            if (productCollectionFilter.hasOwnProperty(key) && key !== 'page') {
+                f[key] = productCollectionFilter[key];
+            }
+        }
+
+        return f;
     });
 
     // React.useEffect(() => {
-    //     if(_.isEmpty(productCollectionFilter) === false)
+    //     if(filters.length !== 0)
     //         dispatch({'type' : PRODUCT_COLLECTION_FILTER_CHANGED, 'payload': {'productCollectionFilter': filters}});
     // }, [filters]);
 
     const addFilter = (key, operator, value) => {
-        let flag = 0;
-        filters.forEach((f, i) => {
-            if(f.key === key && (!value || _.isEmpty(value)))
-                flag = 1; // Remove
-            if(f.key === key && value && !_.isEmpty(value))
-                flag = 2; // Update
-        });
-        if(flag === 0)
-            setFilters(prevFilters => prevFilters.concat({key: key, operator: operator, value: value}));
-        else if(flag === 1) {
-            const newFilters = filters.filter((f, index) => f.key !== key);
-            setFilters(newFilters);
-        } else
-            setFilters(prevFilters => prevFilters.map((f, i) => {
-                if(f.key === key) {
-                    f.operator = operator;
-                    f.value = value;
+        let f = {};
+        if(_.isEmpty(filters))
+            f[key] = {operator: operator, value: value};
+        else
+            for (let k in filters) {
+                if (filters.hasOwnProperty(k)) {
+                    if(k !== key)
+                        f[k] = filters[k];
+                    else {
+                        if(value !== undefined && !_.isEmpty(value))
+                            f[key] = {operator: operator, value: value}
+                    }
                 }
-                return f;
-            }));
+            }
+        if(filters[key] === undefined)
+            f[key] = {operator: operator, value: value};
+        setFilters(f);
+        dispatch({'type' : PRODUCT_COLLECTION_FILTER_CHANGED, 'payload': {'productCollectionFilter': f}});
     };
 
     const cleanFilter = () => {
-        setFilters([]);
+        setFilters({});
     };
 
     const removeFilter = (key) => {
-        setFilters(filters.filter((v, k)=> v.key !== key));
+        setFilters(() => {
+            let f = {};
+            for (let k in filters) {
+                if (filters.hasOwnProperty(k) && k !== key) {
+                    f[k] = filters[k];
+                }
+            }
+
+            return f;
+        });
     };
 
     if(currentPage !== 'Category')

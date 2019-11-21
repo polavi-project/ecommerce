@@ -2,11 +2,11 @@ import Area from "../../../../../../../../js/production/area.js";
 import {ReducerRegistry} from "../../../../../../../../js/production/reducer_registry.js";
 
 const Name = ({name}) => {
-    return <h1>{name}</h1>
+    return <h1 className="category-name">{name}</h1>
 };
 
 const Description = ({description}) => {
-    return <div>{description}</div>
+    return <div className="category-description">{description}</div>
 };
 
 function reducer(categoryId = null, action = {}) {
@@ -29,6 +29,7 @@ export default function CategoryInfo(props) {
     });
     return <Area
         id={"category-info"}
+        className="uk-width-1-1 category-general-info"
         coreWidgets={[
             {
                 component: Name,

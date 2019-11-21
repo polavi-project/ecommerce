@@ -4,7 +4,16 @@ import { Thumbnail } from "./item/thumbnail.js";
 import { Price } from "./item/price.js";
 import { AddToCart } from "./item/buy_button.js";
 
-export default function ProductList({ products, addItemApi }) {
+export default function ProductList({ products = [], addItemApi }) {
+    if (products.length === 0) return React.createElement(
+        "div",
+        { className: "product-list uk-grid" },
+        React.createElement(
+            "p",
+            null,
+            "There is no product to display"
+        )
+    );
     return React.createElement(
         "div",
         { className: "product-list uk-grid" },

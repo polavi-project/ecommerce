@@ -130,6 +130,11 @@ export default function AttributeEditForm(props) {
             sort_order: 50,
             id: "display_on_frontend"
         }, {
+            component: Select,
+            props: { id: "is_filterable", formId: "attribute-edit-form", name: "is_filterable", label: "Filterable?", options: [{ value: 0, text: 'No' }, { value: 1, text: 'Yes' }] },
+            sort_order: 55,
+            id: "is_filterable"
+        }, {
             component: Text,
             props: { id: "sort_order", formId: "attribute-edit-form", name: "sort_order", type: "text", label: "Sort order", validation_rules: ["integer"] },
             sort_order: 60,

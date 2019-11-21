@@ -64,6 +64,8 @@ QUERY
                         get_js_file_url("production/catalog/category/view/products.js", false),
                         [
                             "ps" => $products,
+                            "currentFilter" => json_decode($result->data['productCollection']['currentFilter'], true),
+                            "_total" => $result->data['productCollection']['total'],
                             "addItemApi" => generate_url('cart.add')
                         ]
                     );

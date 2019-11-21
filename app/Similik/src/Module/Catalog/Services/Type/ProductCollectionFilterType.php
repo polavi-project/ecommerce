@@ -36,11 +36,11 @@ class ProductCollectionFilterType extends InputObjectType
                     'sortBy' => $container->get(FilterFieldType::class),
                     'sortOrder' => $container->get(FilterFieldType::class)
                 ];
-                $filterAbleAttributes = [1, 7, 8, 9];
                 $conn = _mysql();
                 $tmp = $conn->getTable('attribute')
                     ->addFieldToSelect('attribute_code')
-                    ->where('attribute_id', 'IN', $filterAbleAttributes);
+                    ->where('is_filterable', '=', 1)
+                    ->andWhere('type', 'IN', ['select', 'multiselect']);
                 while($row = $tmp->fetch()) {
                     $fields[$row['attribute_code']] = $container->get(FilterFieldType::class);
                 }

@@ -43,6 +43,9 @@ class AttributeType extends ObjectType
                     'display_on_frontend' => [
                         'type' => Type::int()
                     ],
+                    'is_filterable' => [
+                        'type' => Type::int()
+                    ],
                     'sort_order' => [
                         'type' => Type::int()
                     ],

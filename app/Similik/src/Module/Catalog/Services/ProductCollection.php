@@ -180,11 +180,11 @@ class ProductCollection extends CollectionBuilder
             }
         });
 
-        $filterAbleAttributes = [1, 7, 8, 9];
         $conn = _mysql();
         $tmp = $conn->getTable('attribute')
             ->addFieldToSelect('attribute_code')
-            ->where('attribute_id', 'IN', $filterAbleAttributes);
+            ->where('type', 'IN', ['select', 'multiselect'])
+            ->andWhere('is_filterable', '=', 1);
         while($row = $tmp->fetch()) {
             $this->addFilter($row['attribute_code'], function($args) use ($isAdmin, $conn) {
                 if($args['operator'] == "IN") {

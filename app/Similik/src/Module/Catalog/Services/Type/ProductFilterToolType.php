@@ -127,11 +127,12 @@ class ProductFilterToolType extends ObjectType
                     'attributes' => [
                         'type' => Type::listOf($container->get(AttributeFilterType::class)),
                         'resolve' => function($value, $args, Container $container, ResolveInfo $info) {
-                            $filterAbleAttributes = [1, 7, 8, 9];
 
                             $conn = _mysql();
                             $attributeData = $conn->getTable('attribute')
                                 ->addFieldToSelect("attribute.attribute_name", "attribute_name")
+                                ->addFieldToSelect("attribute.type", "type")
+                                ->addFieldToSelect("attribute.is_filterable", "is_filterable")
                                 ->addFieldToSelect("product_attribute_value_index.attribute_id", "attribute_id")
                                 ->addFieldToSelect("attribute.attribute_code", "attribute_code")
                                 ->addFieldToSelect("product_attribute_value_index.option_id", 'option_id')
@@ -139,7 +140,8 @@ class ProductFilterToolType extends ObjectType
                                 ->addFieldToSelect("COUNT(`product_attribute_value_index`.product_id)", 'productCount')
                                 ->innerJoin('product_attribute_value_index')
                                 ->where('product_attribute_value_index.product_id', 'IN', $value)
-                                ->andWhere('product_attribute_value_index.attribute_id', 'IN', $filterAbleAttributes)
+                                ->andWhere('type', 'IN', ['select', 'multiselect'])
+                                ->andWhere('is_filterable', '=', 1)
                                 ->groupBy('product_attribute_value_index.option_id')
                                 ->fetchAllAssoc();
                             $result = [];

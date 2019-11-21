@@ -1,6 +1,6 @@
 import {PRODUCT_COLLECTION_FILTER_CHANGED} from "../../../../../../../../js/production/event-types.js";
 
-export default function Pagination({limit, total}) {
+export default function Pagination({total}) {
     const dispatch = ReactRedux.useDispatch();
     const filters = ReactRedux.useSelector(state => {
         if(_.get(state, 'productCollectionFilter').length > 0)
@@ -8,6 +8,7 @@ export default function Pagination({limit, total}) {
         else
             return _.get(state, 'appState.productCollectionRootFilter')
     });
+    const limit = ReactRedux.useSelector(state => _.get(state, 'appState.productCollectionRootFilter.limit.value', 20));
     const current = ReactRedux.useSelector(state => _.get(state, 'productCollectionFilter.page.value', 1));
     const [isOnEdit, setIsOnEdit] = React.useState(false);
     const [inputVal, setInPutVal] = React.useState(current);
@@ -56,7 +57,7 @@ export default function Pagination({limit, total}) {
         dispatch({'type' : PRODUCT_COLLECTION_FILTER_CHANGED, 'payload': {'productCollectionFilter': {...filters, page: {operator: "=", value: Math.ceil(total/limit)}}}});
     };
 
-    return <div className="products-pagination uk-flex-center uk-grid">
+    return <div className="products-pagination uk-flex-center">
         <ul className="uk-pagination">
             {current > 1 && <li className="prev"><a href={"#"} onClick={(e) => onPrev(e)}><span>Previous</span></a></li>}
             <li className="first"><a href="#" onClick={(e) => onFirst(e)}>1</a></li>

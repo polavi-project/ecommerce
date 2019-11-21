@@ -69,18 +69,6 @@ function ListingPage(props) {
             React.createElement(Area, {
                 id: "catalog_setting_form_listing",
                 coreWidgets: [{
-                    component: Select,
-                    props: {
-                        id: "catalog_display_mode",
-                        formId: "catalog_setting_form",
-                        name: "catalog_display_mode",
-                        label: "Product listing mode",
-                        options: [{ value: 'list', text: 'List' }, { value: 'grid', text: 'Grid' }],
-                        value: props.catalog_display_mode,
-                        validation_rules: ["notEmpty"] },
-                    sort_order: 10,
-                    id: "catalog_display_mode"
-                }, {
                     component: Text,
                     props: {
                         id: "catalog_product_list_limit",

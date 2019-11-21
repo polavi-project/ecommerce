@@ -3,7 +3,7 @@ import { Fetch } from "../../../../../../../../js/production/fetch.js";
 import { ADD_ALERT } from "../../../../../../../../js/production/event-types.js";
 import { PRODUCT_COLLECTION_FILTER_CHANGED } from "../../../../../../../../js/production/event-types.js";
 import { ReducerRegistry } from "../../../../../../../../js/production/reducer_registry.js";
-import Area from "../../../../../../../../js/production/area.js";
+import Pagination from "../../product/list/pagination.js";
 
 function usePrevious(value) {
     const ref = React.useRef();
@@ -24,16 +24,16 @@ function reducer(productCollectionFilter = [], action = {}) {
 
 ReducerRegistry.register('productCollectionFilter', reducer);
 
-export default function Products({ ps = [], addItemApi }) {
+export default function Products({ ps = [], _total, addItemApi }) {
     const dispatch = ReactRedux.useDispatch();
     const apiUrl = ReactRedux.useSelector(state => _.get(state, 'appState.graphqlApi'));
     const [products, setProducts] = React.useState(ps);
+    const [total, setTotal] = React.useState(_total);
 
     const productCollectionFilter = ReactRedux.useSelector(state => state.productCollectionFilter);
-    const prevProductCollectionFilter = usePrevious(productCollectionFilter);
 
     React.useEffect(() => {
-        if (productCollectionFilter.length !== 0 && _.isEqual(productCollectionFilter, prevProductCollectionFilter) === false) applyFilter(productCollectionFilter);
+        if (productCollectionFilter.length !== 0) applyFilter(productCollectionFilter);
     }, [productCollectionFilter]);
 
     const applyFilter = filters => {
@@ -42,7 +42,8 @@ export default function Products({ ps = [], addItemApi }) {
         Fetch(apiUrl, false, 'POST', formData, null, response => {
             if (_.get(response, 'payload.data.productCollection.products')) {
                 setProducts(_.get(response, 'payload.data.productCollection.products'));
-                dispatch({ 'type': PRODUCT_COLLECTION_FILTER_CHANGED, 'payload': { 'productCollectionFilter': JSON.parse(_.get(response, 'payload.data.productCollection.currentFilter')) } });
+                //dispatch({'type' : PRODUCT_COLLECTION_FILTER_CHANGED, 'payload': {'productCollectionFilter': JSON.parse(_.get(response, 'payload.data.productCollection.currentFilter'))}});
+                setTotal(parseInt(_.get(response, 'payload.data.productCollection.total')));
             } else {
                 dispatch({ 'type': ADD_ALERT, 'payload': { alerts: [{ id: "filter_update_error", message: 'Something wrong, please try again', type: "error" }] } });
             }
@@ -65,16 +66,11 @@ export default function Products({ ps = [], addItemApi }) {
         // TODO: field need to be changeable without overwriting this file
         return `{productCollection ${filterStr} {products {product_id name price salePrice url image { list }} total currentFilter}}`;
     };
-    return React.createElement(Area, {
-        id: "category_products_container",
-        coreWidgets: [{
-            component: ProductList,
-            props: {
-                products: products,
-                addItemApi: addItemApi
-            },
-            sort_order: 10,
-            id: "product_list"
-        }]
-    });
+
+    return React.createElement(
+        "div",
+        { className: "uk-width-1-1" },
+        React.createElement(ProductList, { products: products, addItemApi: addItemApi }),
+        React.createElement(Pagination, { total: total })
+    );
 }
