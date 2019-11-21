@@ -1,9 +1,7 @@
 export default function Alert() {
     const alerts = ReactRedux.useSelector(state => state.alerts);
 
-    return React.createElement(
-        "div",
-        { id: "alert-container", className: "uk-width-1-1" },
+    React.useEffect(() => {
         alerts.map((alert, index) => {
             switch (alert.type) {
                 case "error":
@@ -15,6 +13,8 @@ export default function Alert() {
                 default:
                     UIkit.notification({ message: alert.message, status: 'primary' });
             }
-        })
-    );
+        });
+    }, [alerts]);
+
+    return null;
 }
