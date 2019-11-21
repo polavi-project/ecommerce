@@ -84,7 +84,7 @@ html {font-size: 14px !important;}
 .header{overflow: hidden; padding-top: 20px}
 .logo{float: left;}
 .customer-area-header{float: right}
-
+.main-menu{float:left; width: 100%}
 /* FOOTER */
 .container .footer{padding-top: 50px; padding-bottom: 20px}
 /* PRODUCT LISTING PAGE */

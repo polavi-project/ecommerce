@@ -35,7 +35,7 @@ class WidgetManagerMiddleware extends MiddlewareAbstract
             $props['defaultFilter'] = [
                 [
                     'key' => 'type',
-                    'operator' => 'Equal',
+                    'operator' => '=',
                     'value' => $request->attributes->get('type')
                 ]
             ];
