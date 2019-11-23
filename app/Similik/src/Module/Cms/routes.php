@@ -24,6 +24,7 @@ $router->addAdminRoute('page.save', 'POST', '/page/save[/{id:\d+}]', [
 
 $router->addAdminRoute('widget.grid', 'GET', '/widgets[/{type}]', [
     \Similik\Module\Cms\Middleware\Widget\TextWidgetMiddleware::class,
+    \Similik\Module\Cms\Middleware\Widget\MenuWidgetMiddleware::class,
     \Similik\Module\Cms\Middleware\Widget\WidgetManagerMiddleware::class
 ]);
 

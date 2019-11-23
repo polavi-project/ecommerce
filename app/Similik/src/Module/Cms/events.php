@@ -323,6 +323,7 @@ $eventDispatcher->addListener(
     'register.core.middleware',
     function (\Similik\Services\MiddlewareManager $middlewareManager) {
         $middlewareManager->registerMiddleware(\Similik\Module\Cms\Middleware\TextWidget\TextWidgetMiddleware::class, 21);
+        $middlewareManager->registerMiddleware(\Similik\Module\Cms\Middleware\MenuWidget\MenuWidgetMiddleware::class, 21);
         $middlewareManager->registerMiddleware(\Similik\Module\Cms\Middleware\Page\View\LogoMiddleware::class, 22);
     },
     5
