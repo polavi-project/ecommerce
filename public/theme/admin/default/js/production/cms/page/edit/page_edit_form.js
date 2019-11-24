@@ -38,10 +38,10 @@ function General({ pageId, name, content, layout, status }) {
     );
 }
 
-function SEO({ seo_key, meta_keywords, meta_title, meta_description }) {
+function SEO({ url_key, meta_keywords, meta_title, meta_description }) {
     return React.createElement(Area, { id: "admin-page-edit-seo", coreWidgets: [{
             component: Text,
-            props: { id: 'seo_key', value: seo_key, formId: "page-edit-form", name: "variables[page][url_key]", label: "Url key", validation_rules: ["notEmpty"] },
+            props: { id: 'url_key', value: url_key, formId: "page-edit-form", name: "variables[page][url_key]", label: "Url key", validation_rules: ["notEmpty"] },
             sort_order: 10,
             id: "seo_key"
         }, {

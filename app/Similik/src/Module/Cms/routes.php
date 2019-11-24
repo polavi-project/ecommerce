@@ -9,7 +9,13 @@ declare(strict_types=1);
 /** @var \Similik\Services\Routing\Router $router */
 
 $router->addAdminRoute('page.grid', 'GET', '/pages', [
+    Similik\Module\Cms\Middleware\Page\Grid\AddNewButtonMiddleware::class,
     Similik\Module\Cms\Middleware\Page\Grid\GridMiddleware::class
+]);
+
+$router->addAdminRoute('page.create', 'GET', '/page/create', [
+    \Similik\Module\Cms\Middleware\Page\Edit\InitMiddleware::class,
+    \Similik\Module\Cms\Middleware\Page\Edit\FormMiddleware::class
 ]);
 
 $router->addAdminRoute('page.edit', 'GET', '/page/edit/{id:\d+}', [
