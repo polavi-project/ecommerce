@@ -52,8 +52,3 @@ $router->addSiteRoute('page.view.pretty', 'GET', '/page/{slug}', $pageViewMiddle
 $router->addSiteRoute('homepage', 'GET', '/', [
     \Similik\Module\Cms\Middleware\Page\View\HomepageMiddleware::class
 ]);
-
-$router->addSiteRoute('testimageresize', 'GET', '/resize', [
-    \Similik\Module\Cms\Middleware\Page\View\ImageResizerMiddleware::class
-]);
-

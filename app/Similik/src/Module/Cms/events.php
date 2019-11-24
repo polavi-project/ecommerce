@@ -325,6 +325,7 @@ $eventDispatcher->addListener(
         $middlewareManager->registerMiddleware(\Similik\Module\Cms\Middleware\TextWidget\TextWidgetMiddleware::class, 21);
         $middlewareManager->registerMiddleware(\Similik\Module\Cms\Middleware\MenuWidget\MenuWidgetMiddleware::class, 21);
         $middlewareManager->registerMiddleware(\Similik\Module\Cms\Middleware\Page\View\LogoMiddleware::class, 22);
+        $middlewareManager->registerMiddlewareBefore(\Similik\Middleware\ResponseMiddleware::class, \Similik\Module\Cms\Middleware\Page\View\NotFoundPageMiddleware::class);
     },
     5
 );
