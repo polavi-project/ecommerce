@@ -42,10 +42,7 @@ $router->addAdminRoute('cms.install', ["POST", "GET"], '/cms/migrate/install', [
 ////////////////////////////////////////////
 
 $pageViewMiddleware = [
-    \Similik\Module\Catalog\Middleware\Category\View\InitMiddleware::class,
-    \Similik\Module\Catalog\Middleware\Category\View\GeneralInfoMiddleware::class,
-    \Similik\Module\Catalog\Middleware\Category\View\ProductsMiddleware::class,
-    \Similik\Module\Catalog\Middleware\Category\View\FilterMiddleware::class
+    \Similik\Module\Cms\Middleware\Page\View\ViewMiddleware::class
 ];
 $router->addSiteRoute('page.view', 'GET', '/page/id/{id:\d+}', $pageViewMiddleware);
 
