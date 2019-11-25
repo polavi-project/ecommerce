@@ -223,7 +223,7 @@ export default function Installation({ action }) {
         letsGo !== true && letsGo !== undefined && React.createElement(
             "div",
             { className: "text-danger" },
-            isSuccess
+            letsGo
         ),
         letsGo !== true && React.createElement(
             Form,

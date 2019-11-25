@@ -181,7 +181,7 @@ export default function Installation({action}) {
     });
     return <div className="uk-align-center">
         <div className="uk-text-center"><h3>Welcome to Similik</h3></div>
-        {(letsGo !== true && letsGo !== undefined) && <div className="text-danger">{isSuccess}</div>}
+        {(letsGo !== true && letsGo !== undefined) && <div className="text-danger">{letsGo}</div>}
         {letsGo !== true && <Form
             id = "installation-form"
             submitText="Let's go"

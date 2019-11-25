@@ -41,10 +41,11 @@ class InstallMiddleware extends MiddlewareAbstract
             $this->processor->executeQuery("CREATE TABLE `customer_group` (
               `customer_group_id` int(10) unsigned NOT NULL,
               `group_name` char(255) NOT NULL,
-              `row_id` int(10) unsigned NOT NULL AUTO_INCREMENT
               `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
               `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-              PRIMARY KEY (`customer_group_id`)
+              `row_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+              PRIMARY KEY (`customer_group_id`),
+              KEY `row_id` (`row_id`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Customer group'");
 
             $this->processor->executeQuery("INSERT INTO `customer_group` (`customer_group_id`, `group_name`) VALUES (1, 'General'), (999, 'All'), (1000, 'BASEPRICE')");
