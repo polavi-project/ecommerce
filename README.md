@@ -20,3 +20,4 @@ Please check [here](https://similik.com/document/installation) for more detail.
 
 * [Symfony](https://github.com/symfony/symfony/) - Some component from Symfony like HttpFoundation, EventDispatcher
 * [React](https://github.com/facebook/react/) - All of html will be rendered by using ReactJs
+* [Graphql-php](https://github.com/webonyx/graphql-php/) - A great php framework for graphql
