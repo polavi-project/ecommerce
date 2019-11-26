@@ -12,7 +12,7 @@ import {Fetch} from "../../../../../../../js/production/fetch.js";
 function Logo({value = null}) {
     const uploadApi = ReactRedux.useSelector(state => _.get(state, 'appState.graphqlApi'));
     const baseUrl = ReactRedux.useSelector(state => _.get(state, 'appState.baseUrl'));
-    const [logo, setLogo] = React.useState({path: value, url: baseUrl + "/media/" + value});
+    const [logo, setLogo] = React.useState({path: value, url: baseUrl + "/public/media/" + value});
 
     const onChange = (e) => {
         e.persist();

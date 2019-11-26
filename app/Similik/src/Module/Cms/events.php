@@ -162,7 +162,7 @@ $eventDispatcher->addListener(
                                 'type'=> $file->getMimeType(),
                                 'size'=> $file->getSize(),
                                 'path'=> $args['targetPath'] . '/' . $file->getFilename(),
-                                'url'=> \Similik\get_base_url_scheme_less() . '/media/' . $args['targetPath'] . '/' . $file->getFilename()
+                                'url'=> \Similik\get_base_url_scheme_less() . '/public/media/' . $args['targetPath'] . '/' . $file->getFilename()
                             ]
                         ];
                     } catch (Exception $e) {
