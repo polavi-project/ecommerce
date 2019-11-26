@@ -9,7 +9,13 @@ declare(strict_types=1);
 /** @var \Similik\Services\Routing\Router $router */
 
 $router->addAdminRoute('page.grid', 'GET', '/pages', [
+    Similik\Module\Cms\Middleware\Page\Grid\AddNewButtonMiddleware::class,
     Similik\Module\Cms\Middleware\Page\Grid\GridMiddleware::class
+]);
+
+$router->addAdminRoute('page.create', 'GET', '/page/create', [
+    \Similik\Module\Cms\Middleware\Page\Edit\InitMiddleware::class,
+    \Similik\Module\Cms\Middleware\Page\Edit\FormMiddleware::class
 ]);
 
 $router->addAdminRoute('page.edit', 'GET', '/page/edit/{id:\d+}', [
@@ -24,6 +30,7 @@ $router->addAdminRoute('page.save', 'POST', '/page/save[/{id:\d+}]', [
 
 $router->addAdminRoute('widget.grid', 'GET', '/widgets[/{type}]', [
     \Similik\Module\Cms\Middleware\Widget\TextWidgetMiddleware::class,
+    \Similik\Module\Cms\Middleware\Widget\MenuWidgetMiddleware::class,
     \Similik\Module\Cms\Middleware\Widget\WidgetManagerMiddleware::class
 ]);
 
@@ -35,10 +42,7 @@ $router->addAdminRoute('cms.install', ["POST", "GET"], '/cms/migrate/install', [
 ////////////////////////////////////////////
 
 $pageViewMiddleware = [
-    \Similik\Module\Catalog\Middleware\Category\View\InitMiddleware::class,
-    \Similik\Module\Catalog\Middleware\Category\View\GeneralInfoMiddleware::class,
-    \Similik\Module\Catalog\Middleware\Category\View\ProductsMiddleware::class,
-    \Similik\Module\Catalog\Middleware\Category\View\FilterMiddleware::class
+    \Similik\Module\Cms\Middleware\Page\View\ViewMiddleware::class
 ];
 $router->addSiteRoute('page.view', 'GET', '/page/id/{id:\d+}', $pageViewMiddleware);
 
@@ -48,8 +52,3 @@ $router->addSiteRoute('page.view.pretty', 'GET', '/page/{slug}', $pageViewMiddle
 $router->addSiteRoute('homepage', 'GET', '/', [
     \Similik\Module\Cms\Middleware\Page\View\HomepageMiddleware::class
 ]);
-
-$router->addSiteRoute('testimageresize', 'GET', '/resize', [
-    \Similik\Module\Cms\Middleware\Page\View\ImageResizerMiddleware::class
-]);
-

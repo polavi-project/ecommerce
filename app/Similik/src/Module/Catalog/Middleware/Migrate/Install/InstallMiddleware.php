@@ -46,6 +46,7 @@ class InstallMiddleware extends MiddlewareAbstract
               `is_required` smallint(5) unsigned NOT NULL DEFAULT '0',
               `display_on_frontend` smallint(5) unsigned NOT NULL DEFAULT '0',
               `sort_order` int(10) unsigned NOT NULL DEFAULT '0',
+              `is_filterable` smallint(2) unsigned NOT NULL DEFAULT '0',
               PRIMARY KEY (`attribute_id`),
               UNIQUE KEY `UNIQUE_ATTRIBUTE_CODE` (`attribute_code`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Product attribute'");
@@ -275,7 +276,7 @@ class InstallMiddleware extends MiddlewareAbstract
             $this->processor->executeQuery(
                 "CREATE TRIGGER `TRIGGER_PRODUCT_AFTER_UPDATE` AFTER UPDATE ON `product` 
                     FOR EACH ROW BEGIN
-                        UPDATE `product_price` SET tier_price = NEW.price WHERE product_price_product_id = OLD.product_id AND customer_group_id = 1000 AND qty = 1;
+                        INSERT INTO `product_price`(`product_price_product_id`,`customer_group_id`, `qty`, `tier_price`) VALUES (NEW.product_id, 1000, 1, NEW.price) ON DUPLICATE KEY UPDATE tier_price = NEW.price;
                         DELETE FROM `product_attribute_value_index`
                         WHERE `product_attribute_value_index`.`product_id` = New.product_id 
                         AND `product_attribute_value_index`.`attribute_id` NOT IN (SELECT `attribute_group_link`.`attribute_id` FROM `attribute_group_link` WHERE `attribute_group_link`.`group_id` = NEW.group_id);

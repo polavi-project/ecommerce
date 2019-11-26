@@ -78,7 +78,7 @@ function IsRequiredColumnHeader({areaProps}) {
 
     return <td>
         <div className="header status-header">
-            <div className={"title"}><span>Type</span></div>
+            <div className={"title"}><span>Is required?</span></div>
             <div className={"filter"}>
                 <select className="uk-select" ref={filterInput} onChange={(e)=> {
                     areaProps.addFilter("is_required", "Equal", e.target.value);
@@ -93,6 +93,36 @@ function IsRequiredColumnHeader({areaProps}) {
 
 function IsRequiredColumnRow({row}) {
     if(row.is_required == 1) {
+        return <td><span>Yes</span></td>
+    } else {
+        return <td><span>No</span></td>
+    }
+}
+
+function IsFilterableColumnHeader({areaProps}) {
+    const filterInput = React.useRef(null);
+
+    React.useEffect(() => {
+        areaProps.addField("is_filterable");
+    }, []);
+
+    return <td>
+        <div className="header status-header">
+            <div className={"title"}><span>Is filterable?</span></div>
+            <div className={"filter"}>
+                <select className="uk-select" ref={filterInput} onChange={(e)=> {
+                    areaProps.addFilter("is_filterable", "Equal", e.target.value);
+                }}>
+                    <option value={1}>Yes</option>
+                    <option value={0}>No</option>
+                </select>
+            </div>
+        </div>
+    </td>
+}
+
+function IsFilterableColumnRow({row}) {
+    if(row.is_filterable == 1) {
         return <td><span>Yes</span></td>
     } else {
         return <td><span>No</span></td>
@@ -259,6 +289,12 @@ export default function AttributeGrid({apiUrl})
                         id: "isRequired"
                     },
                     {
+                        component: IsFilterableColumnHeader,
+                        props : {},
+                        sort_order: 45,
+                        id: "isFilterable"
+                    },
+                    {
                         component: ActionColumnHeader,
                         props : {},
                         sort_order: 50,
@@ -299,6 +335,12 @@ export default function AttributeGrid({apiUrl})
                             props : {row: a},
                             sort_order: 40,
                             id: "isRequired"
+                        },
+                        {
+                            component: IsFilterableColumnRow,
+                            props : {row: a},
+                            sort_order: 45,
+                            id: "isFilterable"
                         },
                         {
                             component: ActionColumnRow,

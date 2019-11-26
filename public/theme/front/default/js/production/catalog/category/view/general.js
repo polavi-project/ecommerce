@@ -4,7 +4,7 @@ import { ReducerRegistry } from "../../../../../../../../js/production/reducer_r
 const Name = ({ name }) => {
     return React.createElement(
         "h1",
-        null,
+        { className: "category-name" },
         name
     );
 };
@@ -12,7 +12,7 @@ const Name = ({ name }) => {
 const Description = ({ description }) => {
     return React.createElement(
         "div",
-        null,
+        { className: "category-description" },
         description
     );
 };
@@ -33,6 +33,7 @@ export default function CategoryInfo(props) {
     });
     return React.createElement(Area, {
         id: "category-info",
+        className: "uk-width-1-1 category-general-info",
         coreWidgets: [{
             component: Name,
             props: { name: props.name },

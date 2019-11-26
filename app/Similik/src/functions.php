@@ -127,14 +127,14 @@ function get_base_url_scheme_less($isAdmin = false)
 
 function get_admin_theme_url($secure = false)
 {
-    return get_base_url($secure) .  '/theme/admin/default';
+    return get_base_url($secure) .  '/public/theme/admin/default';
 }
 
 function get_theme_url($secure = false)
 {
     $theme_name = get_config('general_theme', 'default');
 
-    return get_base_url($secure) .  '/theme/front/' . $theme_name;
+    return get_base_url($secure) .  '/public/theme/front/' . $theme_name;
 }
 
 function get_js_file_url(string $sub_path, bool $isAdmin = false)
@@ -145,15 +145,15 @@ function get_js_file_url(string $sub_path, bool $isAdmin = false)
         if(file_exists(THEME_PATH . "/admin/default/js/" . $sub_path))
             $fileUrl = get_admin_theme_url() . "/js/" . $sub_path;
         else if(file_exists(JS_PATH . DS . $sub_path))
-            $fileUrl = get_base_url() . '/js/' . $sub_path;
+            $fileUrl = get_base_url() . '/public/js/' . $sub_path;
     } else {
         $themeName = get_config('general_theme', 'default');
         if(file_exists(THEME_PATH . "/front/{$themeName}/js/" . $sub_path))
-            $fileUrl = get_base_url() .  '/theme/front/' . $themeName . "/js/" . $sub_path;
+            $fileUrl = get_base_url() .  '/public/theme/front/' . $themeName . "/js/" . $sub_path;
         else if(file_exists(THEME_PATH . "/front/default/js/" . $sub_path))
-            $fileUrl = get_base_url() .  '/theme/front/default' . "/js/" . $sub_path;
+            $fileUrl = get_base_url() .  '/public/theme/front/default' . "/js/" . $sub_path;
         else if(file_exists(JS_PATH . DS . $sub_path))
-            $fileUrl = get_base_url() . '/js/' . $sub_path;
+            $fileUrl = get_base_url() . '/public/js/' . $sub_path;
     }
 
     if($fileUrl)
@@ -171,9 +171,9 @@ function get_css_file_url(string $sub_path, bool $isAdmin = false)
     } else {
         $themeName = get_config('general_theme', 'default');
         if(file_exists(THEME_PATH . "/front/{$themeName}/css/" . $sub_path))
-            $fileUrl = get_base_url() .  '/theme/front/' . $themeName . "/css/" . $sub_path;
+            $fileUrl = get_base_url() .  '/public/theme/front/' . $themeName . "/css/" . $sub_path;
         else if(file_exists(THEME_PATH . "/front/default/css/" . $sub_path))
-            $fileUrl = get_base_url() .  '/theme/front/default' . "/css/" . $sub_path;
+            $fileUrl = get_base_url() .  '/public/theme/front/default' . "/css/" . $sub_path;
     }
 
     if($fileUrl)

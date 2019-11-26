@@ -69,18 +69,6 @@ function ListingPage(props) {
             React.createElement(Area, {
                 id: "catalog_setting_form_listing",
                 coreWidgets: [{
-                    component: Select,
-                    props: {
-                        id: "catalog_display_mode",
-                        formId: "catalog_setting_form",
-                        name: "catalog_display_mode",
-                        label: "Product listing mode",
-                        options: [{ value: 'list', text: 'List' }, { value: 'grid', text: 'Grid' }],
-                        value: props.catalog_display_mode,
-                        validation_rules: ["notEmpty"] },
-                    sort_order: 10,
-                    id: "catalog_display_mode"
-                }, {
                     component: Text,
                     props: {
                         id: "catalog_product_list_limit",
@@ -92,6 +80,30 @@ function ListingPage(props) {
                     sort_order: 20,
                     id: "catalog_product_list_limit"
                 }, {
+                    component: Select,
+                    props: {
+                        id: "catalog_product_list_sort_by",
+                        formId: "catalog_setting_form",
+                        name: "catalog_product_list_sort_by",
+                        label: "Default sort by",
+                        value: props.catalog_product_list_sort_by,
+                        options: [{ value: 'price', text: 'Price' }, { value: 'name', text: 'Name' }, { value: 'created_at', text: 'Created date' }]
+                    },
+                    sort_order: 30,
+                    id: "catalog_product_list_sort_by"
+                }, {
+                    component: Select,
+                    props: {
+                        id: "catalog_product_list_sort_order",
+                        formId: "catalog_setting_form",
+                        name: "catalog_product_list_sort_order",
+                        label: "Default sort order",
+                        value: props.catalog_product_list_sort_order,
+                        options: [{ value: 'ASC', text: 'Low to high' }, { value: 'DESC', text: 'High to low' }]
+                    },
+                    sort_order: 40,
+                    id: "catalog_product_list_sort_order"
+                }, {
                     component: Text,
                     props: {
                         id: "catalog_product_list_image_width",
@@ -100,7 +112,7 @@ function ListingPage(props) {
                         label: "Product image width in listing page",
                         value: props.catalog_product_list_image_width
                     },
-                    sort_order: 30,
+                    sort_order: 50,
                     id: "catalog_product_list_image_width"
                 }, {
                     component: Text,
@@ -111,7 +123,7 @@ function ListingPage(props) {
                         label: "Product image height in listing page",
                         value: props.catalog_product_list_image_height
                     },
-                    sort_order: 40,
+                    sort_order: 60,
                     id: "catalog_product_list_image_height"
                 }]
             })

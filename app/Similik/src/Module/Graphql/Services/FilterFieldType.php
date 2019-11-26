@@ -22,7 +22,7 @@ class FilterFieldType extends InputObjectType
             'name'=> 'FilterFieldType',
             'fields' => function() use($container) {
                 $fields = [
-                    'operator' => Type::nonNull($container->get(FilterOperatorType::class)),
+                    'operator' => Type::nonNull(Type::string()),
                     'value' => Type::nonNull(Type::string())
                 ];
 

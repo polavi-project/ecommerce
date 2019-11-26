@@ -18,7 +18,7 @@ class CollectionBuilder
 
     protected $sortBy;
 
-    protected $offset;
+    protected $sortOrder;
 
     protected $page;
 
@@ -36,7 +36,14 @@ class CollectionBuilder
 
     public function load()
     {
-        return $this->collection->fetchAssoc();
+        $setting = [
+            'page'=> $this->page ?? 1,
+            'limit'=> $this->limit ?? 20,
+            'sort_by'=> $this->sortBy,
+            'sort_order'=> $this->sortOrder
+        ];
+
+        return $this->collection->fetchAssoc($setting);
     }
 
     /**
@@ -61,6 +68,70 @@ class CollectionBuilder
         return $this;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getSortBy()
+    {
+        return $this->sortBy;
+    }
+
+    /**
+     * @param mixed $sortBy
+     */
+    public function setSortBy($sortBy): void
+    {
+        $this->sortBy = $sortBy;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPage()
+    {
+        return $this->page;
+    }
+
+    /**
+     * @param mixed $page
+     */
+    public function setPage($page): void
+    {
+        $this->page = $page;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLimit()
+    {
+        return $this->limit;
+    }
+
+    /**
+     * @param mixed $limit
+     */
+    public function setLimit($limit): void
+    {
+        $this->limit = $limit;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSortOrder()
+    {
+        return $this->sortOrder;
+    }
+
+    /**
+     * @param mixed $sortOrder
+     */
+    public function setSortOrder($sortOrder): void
+    {
+        $this->sortOrder = $sortOrder;
+    }
+
     protected function applyFilter($id, $args = [])
     {
         if(isset($this->filters[$id]))
@@ -70,8 +141,7 @@ class CollectionBuilder
     protected function getTotal()
     {
         $collection = clone $this->collection;
-        $row = $collection->addFieldToSelect("COUNT(*)", "total")->fetch();
-
-        return $row['total'];
+        $row = $collection->addFieldToSelect("COUNT(*)", "total")->addFieldToSelect("COUNT(*)", "total")->fetchAllAssoc();
+        return count($row);
     }
 }

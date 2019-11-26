@@ -6,19 +6,16 @@
 
 declare(strict_types=1);
 
-namespace Similik\Module\Catalog\Middleware\Category\View;
+namespace Similik\Module\Cms\Middleware\Page\Grid;
 
 use function Similik\generate_url;
-use function Similik\get_default_language_Id;
 use function Similik\get_js_file_url;
-use Similik\Module\Graphql\Services\GraphqlExecutor;
 use Similik\Services\Http\Request;
 use Similik\Services\Http\Response;
 use Similik\Middleware\MiddlewareAbstract;
 
-class FilterMiddleware extends MiddlewareAbstract
+class AddNewButtonMiddleware extends MiddlewareAbstract
 {
-
     /**
      * @param Request $request
      * @param Response $response
@@ -26,13 +23,14 @@ class FilterMiddleware extends MiddlewareAbstract
      */
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
-        // Loading data by using GraphQL
         $response->addWidget(
-            'category_product_filter',
+            'page-grid-add-new',
             'content',
-            20,
-            get_js_file_url("production/catalog/product/list/filter.js", false),
-            ['apiUrl' => generate_url('graphql.api')]
+            5,
+            get_js_file_url("production/cms/page/grid/add_new_button.js", true),
+            [
+                "url" => generate_url('page.create')
+            ]
         );
 
         return $delegate;

@@ -4,7 +4,9 @@ import {Thumbnail} from "./item/thumbnail.js";
 import {Price} from "./item/price.js";
 import {AddToCart} from "./item/buy_button.js";
 
-export default function ProductList({products, addItemApi}) {
+export default function ProductList({products = [], addItemApi}) {
+    if(products.length === 0)
+        return <div className="product-list uk-grid"><p>There is no product to display</p></div>
     return <div className="product-list uk-grid">
         {
             products.map((p, index) => {

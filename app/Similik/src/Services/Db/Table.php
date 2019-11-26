@@ -26,19 +26,19 @@ class Table
 
     protected $where = [];
 
-    protected $group_by;
+    protected $groupBy;
 
     protected $having;
 
-    protected $custom_where_clause;
+    protected $customWhereClause;
 
     protected $binding = [];
 
     protected $query = '';
 
-    protected $select_fields;
+    protected $selectFields;
 
-    protected $target_row;
+    protected $targetRow;
 
     protected $fetchPdoStatement;
 
@@ -139,14 +139,14 @@ class Table
 
     public function addFieldToSelect(string $field, string $alias = null) : Table
     {
-        $this->select_fields[$field] = $alias ? $alias : null;
+        $this->selectFields[$field] = $alias ? $alias : null;
 
         return $this;
     }
 
     public function getSelectFields()
     {
-        return $this->select_fields;
+        return $this->selectFields;
     }
 
     protected function setBinding($column, $operator, $value)
@@ -253,7 +253,7 @@ class Table
         ];
         $this->setBinding(str_ireplace(["`", "'", "."], ['', '', "_"], $column) . "_0", $operator, $value);
         if($column == "`{$this->getTable()}`." . $this->primary && trim($operator) == '=')
-            $this->target_row = (int) $value;
+            $this->targetRow = (int) $value;
 
         return $this;
     }
@@ -285,7 +285,7 @@ class Table
         ];
         $this->setBinding(str_ireplace(["`", "'", "."], ['', '', "_"], $column) . "_" . (count($this->where) - 1), $operator, $value);
         if($column == "`{$this->getTable()}`." . $this->primary && trim($operator) == '=')
-            $this->target_row = (int) $value;
+            $this->targetRow = (int) $value;
 
         return $this;
     }
@@ -460,12 +460,12 @@ class Table
 
     public function getSelect()
     {
-        return $this->select_fields ? $this->select_fields : '*';
+        return $this->selectFields ? $this->selectFields : '*';
     }
 
     public function select(array $fields)
     {
-        $this->select_fields = $fields;
+        $this->selectFields = $fields;
 
         return $this;
     }
@@ -498,12 +498,12 @@ class Table
     }
 
     /**
-     * @param null $group_by
+     * @param null $groupBy
      * @return Table
      */
-    public function groupBy($group_by)
+    public function groupBy($groupBy)
     {
-        $this->group_by = $group_by;
+        $this->groupBy = $groupBy;
         return $this;
     }
 
@@ -523,7 +523,7 @@ class Table
      */
     public function getGroupBy()
     {
-        return $this->group_by;
+        return $this->groupBy;
     }
 
     /**

@@ -162,7 +162,7 @@ $eventDispatcher->addListener(
                                 'type'=> $file->getMimeType(),
                                 'size'=> $file->getSize(),
                                 'path'=> $args['targetPath'] . '/' . $file->getFilename(),
-                                'url'=> \Similik\get_base_url_scheme_less() . '/media/' . $args['targetPath'] . '/' . $file->getFilename()
+                                'url'=> \Similik\get_base_url_scheme_less() . '/public/media/' . $args['targetPath'] . '/' . $file->getFilename()
                             ]
                         ];
                     } catch (Exception $e) {
@@ -323,7 +323,9 @@ $eventDispatcher->addListener(
     'register.core.middleware',
     function (\Similik\Services\MiddlewareManager $middlewareManager) {
         $middlewareManager->registerMiddleware(\Similik\Module\Cms\Middleware\TextWidget\TextWidgetMiddleware::class, 21);
+        $middlewareManager->registerMiddleware(\Similik\Module\Cms\Middleware\MenuWidget\MenuWidgetMiddleware::class, 21);
         $middlewareManager->registerMiddleware(\Similik\Module\Cms\Middleware\Page\View\LogoMiddleware::class, 22);
+        $middlewareManager->registerMiddlewareBefore(\Similik\Middleware\ResponseMiddleware::class, \Similik\Module\Cms\Middleware\Page\View\NotFoundPageMiddleware::class);
     },
     5
 );

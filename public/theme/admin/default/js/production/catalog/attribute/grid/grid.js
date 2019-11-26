@@ -172,7 +172,7 @@ function IsRequiredColumnHeader({ areaProps }) {
                 React.createElement(
                     "span",
                     null,
-                    "Type"
+                    "Is required?"
                 )
             ),
             React.createElement(
@@ -201,6 +201,76 @@ function IsRequiredColumnHeader({ areaProps }) {
 
 function IsRequiredColumnRow({ row }) {
     if (row.is_required == 1) {
+        return React.createElement(
+            "td",
+            null,
+            React.createElement(
+                "span",
+                null,
+                "Yes"
+            )
+        );
+    } else {
+        return React.createElement(
+            "td",
+            null,
+            React.createElement(
+                "span",
+                null,
+                "No"
+            )
+        );
+    }
+}
+
+function IsFilterableColumnHeader({ areaProps }) {
+    const filterInput = React.useRef(null);
+
+    React.useEffect(() => {
+        areaProps.addField("is_filterable");
+    }, []);
+
+    return React.createElement(
+        "td",
+        null,
+        React.createElement(
+            "div",
+            { className: "header status-header" },
+            React.createElement(
+                "div",
+                { className: "title" },
+                React.createElement(
+                    "span",
+                    null,
+                    "Is filterable?"
+                )
+            ),
+            React.createElement(
+                "div",
+                { className: "filter" },
+                React.createElement(
+                    "select",
+                    { className: "uk-select", ref: filterInput, onChange: e => {
+                            areaProps.addFilter("is_filterable", "Equal", e.target.value);
+                        } },
+                    React.createElement(
+                        "option",
+                        { value: 1 },
+                        "Yes"
+                    ),
+                    React.createElement(
+                        "option",
+                        { value: 0 },
+                        "No"
+                    )
+                )
+            )
+        )
+    );
+}
+
+function IsFilterableColumnRow({ row }) {
+    if (row.is_filterable == 1) {
         return React.createElement(
             "td",
             null,
@@ -416,6 +486,11 @@ export default function AttributeGrid({ apiUrl }) {
                         sort_order: 40,
                         id: "isRequired"
                     }, {
+                        component: IsFilterableColumnHeader,
+                        props: {},
+                        sort_order: 45,
+                        id: "isFilterable"
+                    }, {
                         component: ActionColumnHeader,
                         props: {},
                         sort_order: 50,
@@ -453,6 +528,11 @@ export default function AttributeGrid({ apiUrl }) {
                             props: { row: a },
                             sort_order: 40,
                             id: "isRequired"
+                        }, {
+                            component: IsFilterableColumnRow,
+                            props: { row: a },
+                            sort_order: 45,
+                            id: "isFilterable"
                         }, {
                             component: ActionColumnRow,
                             props: { row: a },

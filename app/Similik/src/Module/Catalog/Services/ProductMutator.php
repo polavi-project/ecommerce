@@ -248,13 +248,13 @@ class ProductMutator
 
     protected function savePrices(int $productId, array $prices)
     {
-        $this->processor->getTable('product_price')
-            ->where('product_price_product_id', '=', $productId)
-            ->delete();
+//        $this->processor->getTable('product_price')
+//            ->where('product_price_product_id', '=', $productId)
+//            ->delete();
         foreach ($prices as $key=>$price) {
             $price['product_price_product_id'] = $productId;
             $this->processor->getTable('product_price')
-                ->insert($price);
+                ->insertOnUpdate($price);
         }
     }
 

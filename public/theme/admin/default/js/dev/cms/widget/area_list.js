@@ -8,6 +8,17 @@ function AreaList({selectedAreas = [], formId = '', }) {
             {
                 'component': Checkbox,
                 'props': {
+                    name: "area[header]",
+                    isChecked: selectedAreas.find((e) => e === 'header') === undefined ? false : true,
+                    formId: formId,
+                    label: "Header"
+                },
+                'sort_order': 5,
+                'id': 'header-area'
+            },
+            {
+                'component': Checkbox,
+                'props': {
                     name: "area[leftColumn]",
                     isChecked: selectedAreas.find((e) => e === 'leftColumn') === undefined ? false : true,
                     formId: formId,

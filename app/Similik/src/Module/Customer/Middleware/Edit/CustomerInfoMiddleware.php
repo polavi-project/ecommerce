@@ -11,10 +11,10 @@ namespace Similik\Module\Customer\Middleware\Edit;
 use function Similik\_mysql;
 use function Similik\get_js_file_url;
 use Similik\Module\Graphql\Services\GraphqlExecutor;
+use Similik\Services\Helmet;
 use Similik\Services\Http\Request;
 use Similik\Services\Http\Response;
 use Similik\Middleware\MiddlewareAbstract;
-use Similik\Services\Routing\Router;
 
 class CustomerInfoMiddleware extends MiddlewareAbstract
 {
@@ -32,16 +32,7 @@ class CustomerInfoMiddleware extends MiddlewareAbstract
             return $response;
         }
 
-        $response->addWidget(
-            'customer_information_container',
-            'content',
-            10,
-            get_js_file_url("production/area.js", true),
-            [
-                "id"=>"customer_information_container",
-                "className"=>"uk-child-width-expand@s uk-grid uk-grid-small"
-            ]
-        );
+        $this->getContainer()->get(Helmet::class)->setTitle('Edit customer');
         // Loading data by using GraphQL
         $this->getContainer()
             ->get(GraphqlExecutor::class)

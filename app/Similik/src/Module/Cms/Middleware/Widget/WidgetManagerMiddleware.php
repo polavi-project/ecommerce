@@ -24,6 +24,7 @@ class WidgetManagerMiddleware extends MiddlewareAbstract
     public function __invoke(Request $request, Response $response, $types = [])
     {
         $types[] = ['code' => 'text', 'name' => 'Text'];
+        $types[] = ['code' => 'menu', 'name' => 'Menu'];
 
         dispatch_event('add_widget_type', [&$types]);
         $props = [
@@ -35,7 +36,7 @@ class WidgetManagerMiddleware extends MiddlewareAbstract
             $props['defaultFilter'] = [
                 [
                     'key' => 'type',
-                    'operator' => 'Equal',
+                    'operator' => '=',
                     'value' => $request->attributes->get('type')
                 ]
             ];

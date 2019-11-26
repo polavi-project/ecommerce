@@ -39,6 +39,7 @@ class EditFormMiddleware extends MiddlewareAbstract
                         type
                         is_required
                         display_on_frontend
+                        is_filterable
                         sort_order
                         options {
                             attribute_option_id

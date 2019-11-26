@@ -185,7 +185,6 @@ class App
                 90 => AdminLayoutMiddleware::class,
                 100 => FrontLayoutMiddleware::class,
                 110 => AdminNavigationMiddleware::class,
-                120 => FrontNavigationMiddleware::class,
                 140 => AlertMiddleware::class,
                 150 => ResponseMiddleware::class
             ];

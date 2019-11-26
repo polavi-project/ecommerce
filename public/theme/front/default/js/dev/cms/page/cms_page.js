@@ -1,8 +1,4 @@
-import {REQUEST_END} from "../../../../../../../js/dev/event-types.js";
-
-const CmsPage = (props) => {
-    const {id, name, content} = props;
-
+const CmsPage = ({id, name, content}) => {
     return (
         <div className={"cms-page cms-page-" + id}>
             <h1 className="cms-page-heading">{name}</h1>

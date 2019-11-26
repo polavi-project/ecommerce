@@ -56,7 +56,7 @@ class Customer
         if($this->isLoggedIn == true)
             return $this;
 
-        $user = _mysql()->getTable('customer')->where('email', '=', $email)->fetchOneAssoc();
+        $user = _mysql()->getTable('customer')->where('email', '=', $email)->andWhere('status', '=', 1)->fetchOneAssoc();
         if($user == false)
             throw new \RuntimeException("Email or password is invalid");
         if (password_verify($password, $user['password'])) {

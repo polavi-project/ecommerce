@@ -22,19 +22,19 @@ class FilterOperatorType extends EnumType
                 'Equal' => [
                     'value' => "="
                 ],
-                'Not equal' => [
+                'NotEqual' => [
                     'value' => "<>",
                 ],
-                'Less than' => [
+                'LessThan' => [
                     'value' => "<"
                 ],
-                'Greater than' => [
+                'GreaterThan' => [
                     'value' => ">"
                 ],
-                'Greater than or equal to' => [
+                'GreaterThanOrEqualTo' => [
                     'value' => ">="
                 ],
-                'Less than or equal to' => [
+                'LessThanOrEqualTo' => [
                     'value' => "<="
                 ],
                 'LIKE' => [

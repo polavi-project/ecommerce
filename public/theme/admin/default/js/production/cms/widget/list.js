@@ -258,7 +258,7 @@ function WidgetGrid({ apiUrl, defaultFilter }) {
     const buildQuery = () => {
         let filterStr = "";
         filters.forEach((f, i) => {
-            filterStr += `${f.key} : {operator : ${f.operator} value: "${f.value}"} `;
+            filterStr += `${f.key} : {operator : "${f.operator}" value: "${f.value}"} `;
         });
         filterStr = filterStr.trim();
         if (filterStr) filterStr = `(filter : {${filterStr}})`;

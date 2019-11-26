@@ -157,6 +157,7 @@ class MutationType extends ObjectType
                                         'customer_id' => Type::nonNull(Type::int()),
                                         'full_name' => Type::nonNull(Type::string()),
                                         'email' => Type::nonNull(Type::string()),
+                                        'status' => Type::nonNull(Type::int()),
                                         'password' => Type::string(),
                                         'group_id' => Type::int()
                                     ];
@@ -190,8 +191,10 @@ class MutationType extends ObjectType
                                 ->fetchOneAssoc()
                         )
                             return ['status'=> false, 'message'=> "Email is existed", 'customer'=>null];
-                        if(!$container->get(Request::class)->isAdmin())
+                        if(!$container->get(Request::class)->isAdmin()) {
                             unset($data['group_id']);
+                            unset($data['status']);
+                        }
                         dispatch_event('before_update_customer', [&$data, $container]);
 
                         if(isset($data['password']) and $data['password'])

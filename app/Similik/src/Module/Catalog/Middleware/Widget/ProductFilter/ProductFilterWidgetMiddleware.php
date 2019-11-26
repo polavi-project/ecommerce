@@ -27,7 +27,7 @@ class ProductFilterWidgetMiddleware extends MiddlewareAbstract
         $this->getContainer()
             ->get(GraphqlExecutor::class)
             ->waitToExecute([
-                "query"=>"{productFilter : widgetCollection (filter : {type : {operator : Equal value: \"product_filter\"}}) {widgets { cms_widget_id name setting {key value} displaySetting {key value} sort_order }}}"
+                "query"=>"{productFilter : widgetCollection (filter : {type : {operator : \"=\" value: \"product_filter\"}}) {widgets { cms_widget_id name setting {key value} displaySetting {key value} sort_order }}}"
             ])->then(function($result) use ($request, $response) {
                 /**@var \GraphQL\Executor\ExecutionResult $result */
                 if(isset($result->data['productFilter'])) {
@@ -38,7 +38,22 @@ class ProductFilterWidgetMiddleware extends MiddlewareAbstract
                                 return json_decode($value['value'], true);
                             return null;
                         }, []);
-                        return empty($layouts) || in_array($matchedRoute, $layouts);
+                        if(empty($layouts))
+                            return true;
+                        $match = false;
+                        foreach ($layouts as $layout) {
+                            if($matchedRoute == $layout) {
+                                $match = true;
+                                break;
+                            }
+                            if (strpos($layout, '|') !== false) {
+                                if(in_array($matchedRoute, explode('|', $layout))) {
+                                    $match = true;
+                                    break;
+                                }
+                            }
+                        }
+                        return $match;
                     }, ARRAY_FILTER_USE_BOTH);
 
                     foreach ($widgets as $widget) {
@@ -72,7 +87,7 @@ class ProductFilterWidgetMiddleware extends MiddlewareAbstract
                             );
                     }
                 }
-            });
+            }, function($reason) {var_dump($reason);});
 
         return $delegate;
     }

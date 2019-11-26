@@ -26,49 +26,21 @@ class NotFoundPageMiddleware extends MiddlewareAbstract
      */
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
-        if($response->hasWidget('notfound_page_content'))
+        if($response->hasWidget('notfound_page_content') || $response->getStatusCode() !== 404)
             return $delegate;
 
-        $notFoundPage = get_config('notfound_page', 404);
-        $this->getContainer()
-            ->get(GraphqlExecutor::class)
-            ->waitToExecute([
-                "query"=> <<< QUERY
-                    {
-                        cmsPage (id: {$notFoundPage} language:{$request->get('language', get_default_language_Id())}) {
-                            cms_page_id
-                            layout
-                            name
-                            content
-                        }
-                    }
-QUERY
+        $notFoundContent = get_config('general_notfound_page_content', 'The page you are looking for is not found');
 
-            ])
-            ->then(function($result) use ($response) {
-                /**@var \GraphQL\Executor\ExecutionResult $result */
-                if (isset($result->data['cmsPage'])) {
-                    $response->addWidget(
-                        'notfound_page_content',
-                        'content',
-                        10,
-                        get_js_file_url("production/cms/page/cms_page.js", false),
-                        $result->data['cmsPage']
-                    );
-                } else {
-                    $response->addWidget(
-                        'notfound_page_content',
-                        'content',
-                        10,
-                        get_js_file_url("production/cms/page/cms_page.js", false),
-                        [
-                            "name"=> "Page Not Found",
-                            "content"=> "Page not found"
-                        ]
-                    );
-                }
-            });
-
+        $response->addWidget(
+            'notfound_page_content',
+            'content',
+            10,
+            get_js_file_url("production/cms/page/cms_page.js", false),
+            [
+                "name"=> "Page Not Found",
+                "content"=> $notFoundContent
+            ]
+        );
         return $delegate;
     }
 }

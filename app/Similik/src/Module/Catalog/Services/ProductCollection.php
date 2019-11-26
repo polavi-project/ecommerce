@@ -12,6 +12,7 @@ namespace Similik\Module\Catalog\Services;
 use GraphQL\Type\Definition\ResolveInfo;
 use function Similik\_mysql;
 use function Similik\dispatch_event;
+use function Similik\get_config;
 use function Similik\get_current_language_id;
 use Similik\Services\Di\Container;
 use Similik\Services\Grid\CollectionBuilder;
@@ -38,6 +39,11 @@ class ProductCollection extends CollectionBuilder
                 ]
             ]);
 
+        // Display out of stock or not
+        $setting = get_config('catalog_out_of_stock_display', 0);
+        if($setting == 0) {
+            $collection->where('product.manage_stock', '=', 0)->orWhere('product.qty', '>', 0, '(')->andWhere('product.stock_availability', '=', 1, null, ')');
+        }
         if(!$container->get(Request::class)->isAdmin()) {
             $customerGroupId = $container->get(Request::class)->getCustomer()->isLoggedIn() ? $container->get(Request::class)->getCustomer()->getData('group_id') ?? 1 : 999;
             $collection->leftJoin('product_price', null, [
@@ -73,12 +79,44 @@ class ProductCollection extends CollectionBuilder
                     'ao'          => 'or',
                     'start_group' => null,
                     'end_group'   => ")"
+                ],
+                [
+                    'column'      => "product_price.active_from",
+                    'operator'    => "IS",
+                    'value'       => null,
+                    'ao'          => 'and',
+                    'start_group' => '((',
+                    'end_group'   => null
+                ],
+                [
+                    'column'      => "product_price.active_from",
+                    'operator'    => "<=",
+                    'value'       => date("Y-m-d H:i:s"),
+                    'ao'          => 'or',
+                    'start_group' => null,
+                    'end_group'   => ')'
+                ],
+                [
+                    'column'      => "product_price.active_to",
+                    'operator'    => "IS",
+                    'value'       => null,
+                    'ao'          => 'and',
+                    'start_group' => '(',
+                    'end_group'   => null
+                ],
+                [
+                    'column'      => "product_price.active_to",
+                    'operator'    => ">=",
+                    'value'       => date("Y-m-d H:i:s"),
+                    'ao'          => 'or',
+                    'start_group' => null,
+                    'end_group'   => '))'
                 ]
             ])->groupBy("product.product_id");
         }
 
         if($this->container->get(Request::class)->isAdmin() == false) {
-            $collection->where('product.status', '=', 1);
+            $collection->andWhere('product.status', '=', 1);
         }
         dispatch_event('after_init_product_collection', [$collection]);
 
@@ -142,11 +180,11 @@ class ProductCollection extends CollectionBuilder
             }
         });
 
-        $filterAbleAttributes = [1, 7, 8, 9];
         $conn = _mysql();
         $tmp = $conn->getTable('attribute')
             ->addFieldToSelect('attribute_code')
-            ->where('attribute_id', 'IN', $filterAbleAttributes);
+            ->where('type', 'IN', ['select', 'multiselect'])
+            ->andWhere('is_filterable', '=', 1);
         while($row = $tmp->fetch()) {
             $this->addFilter($row['attribute_code'], function($args) use ($isAdmin, $conn) {
                 if($args['operator'] == "IN") {
@@ -163,11 +201,52 @@ class ProductCollection extends CollectionBuilder
             });
         }
 
+        $this->addFilter('page', function($args) use ($isAdmin) {
+            if($args['operator'] !== "=")
+                return;
+            $this->setPage((int)$args['value']);
+        });
+
+        $this->addFilter('limit', function($args) use ($isAdmin) {
+            if($args['operator'] !== "=")
+                return;
+            $this->setLimit((int)$args['value']);
+        });
+
+        $this->addFilter('sort_by', function($args) use ($isAdmin) {
+            if($args['operator'] !== "=")
+                return;
+            $this->setSortBy($args['value']);
+        });
+
+        $this->addFilter('sort_order', function($args) use ($isAdmin) {
+            if($args['operator'] !== "=")
+                return;
+            $this->setSortOrder($args['value']);
+        });
     }
 
     public function getData($rootValue, $args, Container $container, ResolveInfo $info)
     {
         $filters = $args['filter'] ?? [];
+        $filters = $filters + [
+                'page' => [
+                    'operator' => '=',
+                    'value' => 1
+                ],
+                'limit' => [
+                    'operator' => '=',
+                    'value' => get_config('catalog_product_list_limit', 50)
+                ],
+                'sortBy' => [
+                    'operator' => '=',
+                    'value' => get_config('catalog_product_list_sort_by', 'price')
+                ],
+                'sortOrder' => [
+                    'operator' => '=',
+                    'value' => get_config('catalog_product_list_sort_order', 'ASC')
+                ]
+            ];
         foreach ($filters as $key => $arg)
             $this->applyFilter($key, $arg);
 
