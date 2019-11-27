@@ -39,7 +39,7 @@ class ProductImageType extends ObjectType
                             if(!$fileSystem->exists(MEDIA_PATH . DS . $image['path']))
                                 return null;
 
-                            return get_base_url_scheme_less(false) . "/media/" . $image['path'];
+                            return get_base_url_scheme_less(false) . "/public/media/" . $image['path'];
                         }
                     ],
                     'thumb' => [
@@ -48,7 +48,7 @@ class ProductImageType extends ObjectType
                             if(!isset($image['path']) or $image['path'] == null)
                                 return null;
                             if($fileSystem->exists(MEDIA_PATH . DS . str_replace_last('.', '_thumb.', $image['path'])))
-                                return get_base_url_scheme_less(false) . "/media/" . str_replace_last('.', '_thumb.', $image['path']);
+                                return get_base_url_scheme_less(false) . "/public/media/" . str_replace_last('.', '_thumb.', $image['path']);
                             else
                                 return null;
                         }
@@ -59,7 +59,7 @@ class ProductImageType extends ObjectType
                             if(!isset($image['path']) or $image['path'] == null)
                                 return null;
                             if($fileSystem->exists(MEDIA_PATH . DS . str_replace_last('.', '_list.', $image['path'])))
-                                return get_base_url_scheme_less(false) . "/media/" . str_replace_last('.', '_list.', $image['path']);
+                                return get_base_url_scheme_less(false) . "/public/media/" . str_replace_last('.', '_list.', $image['path']);
                             else
                                 return null;
                         }
@@ -70,7 +70,7 @@ class ProductImageType extends ObjectType
                             if(!isset($image['path']) or $image['path'] == null)
                                 return null;
                             if($fileSystem->exists(MEDIA_PATH . DS . str_replace_last('.', '_main.', $image['path'])))
-                                return get_base_url_scheme_less(false) . "/media/" . str_replace_last('.', '_main.', $image['path']);
+                                return get_base_url_scheme_less(false) . "/public/media/" . str_replace_last('.', '_main.', $image['path']);
                             else
                                 return null;
                         }
