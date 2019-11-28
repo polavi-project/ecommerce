@@ -8,6 +8,7 @@ import {LanguageOptions} from "../../../../../../../js/production/locale/languag
 import {CurrencyOptions} from "../../../../../../../js/production/locale/currency_option.js";
 import {TimezoneOptions} from "../../../../../../../js/production/locale/timezone_option.js";
 import {Fetch} from "../../../../../../../js/production/fetch.js";
+import TextArea from "../../../../../../../js/production/form/fields/textarea.js";
 
 function Logo({value = null}) {
     const uploadApi = ReactRedux.useSelector(state => _.get(state, 'appState.graphqlApi'));
@@ -107,7 +108,7 @@ function Timezone({value = 'Europe/London'}) {
 }
 
 export default function GeneralSettingForms(props) {
-    const [fields] = React.useState(() => {
+    const [left] = React.useState(() => {
         return  [
             {
                 component: Text,
@@ -138,7 +139,16 @@ export default function GeneralSettingForms(props) {
                 props : {id : 'general_store_contact_telephone', formId: "general_setting_form", name: "general_store_contact_telephone", label: "Contact phone", validation_rules:["notEmpty"]},
                 sort_order: 20,
                 id: "general_store_contact_telephone"
-            },
+            }
+        ].filter((f) => {
+            if(_.get(props, `data.${f.props.name}`) !== undefined)
+                f.props.value = _.get(props, `data.${f.props.name}`);
+            return f;
+        })
+    });
+
+    const [right] = React.useState(() => {
+        return  [
             {
                 component: Country,
                 props : {name: "general_allow_countries"},
@@ -162,6 +172,24 @@ export default function GeneralSettingForms(props) {
                 props : {name: "general_timezone"},
                 sort_order: 60,
                 id: "general_timezone"
+            },
+            {
+                component: Text,
+                props : {
+                    name: "general_google_tag",
+                    label: "Google tag manage ID"
+                },
+                sort_order: 70,
+                id: "general_google_tag"
+            },
+            {
+                component: TextArea,
+                props : {
+                    name: "general_notfound_page_content",
+                    label: "Content for 404 page"
+                },
+                sort_order: 80,
+                id: "general_notfound_page_content"
             }
         ].filter((f) => {
             if(_.get(props, `data.${f.props.name}`) !== undefined)
@@ -175,7 +203,10 @@ export default function GeneralSettingForms(props) {
             <div>
                 <div><h2>General setting</h2></div>
             </div>
-            <Area id="general_setting_form_inner" coreWidgets={fields}/>
+            <div className="uk-grid uk-grid-small">
+                <Area id="general_setting_form_left" coreWidgets={left} className="uk-width-1-2"/>
+                <Area id="general_setting_form_right" coreWidgets={right} className="uk-width-1-2"/>
+            </div>
         </Form>
     </div>
 }
