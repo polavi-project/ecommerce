@@ -92,11 +92,17 @@ function get_config(string $name, $defaultValue = null, int $languageId = 0)
 
     if(isset($config[$languageId][$name]))
         return $config[$languageId][$name];
+    else if(isset($config[0][$name]))
+        return $config[$languageId][$name];
 
-    $settingTable = new Table('setting', new Processor());
-    $config = $settingTable->where('name', '=', $name)
+    $config = _mysql()->getTable('setting')->where('name', '=', $name)
         ->andWhere('language_id', '=', $languageId)
         ->fetchOneAssoc();
+
+    if(!$config)
+        $config = _mysql()->getTable('setting')->where('name', '=', $name)
+            ->andWhere('language_id', '=', 0)
+            ->fetchOneAssoc();
 
     if(!$config)
         return $defaultValue;
@@ -191,7 +197,7 @@ function get_default_language_code() {
 }
 
 function get_current_language_id() {
-    return the_container()->get(Session::class)->get('languageId', get_default_language_Id());
+    return (int)the_container()->get(Session::class)->get('languageId', get_default_language_Id());
 }
 
 function get_display_languages() {

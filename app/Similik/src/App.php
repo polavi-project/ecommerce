@@ -15,7 +15,6 @@ use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Similik\Middleware\AdminNavigationMiddleware;
 use Similik\Middleware\CartInitMiddleware;
-use Similik\Middleware\FrontNavigationMiddleware;
 use Similik\Middleware\PromiseWaiterMiddleware;
 use Similik\Middleware\SaveCartMiddleware;
 use Similik\Module\Graphql\Services\ExecutionPromise;

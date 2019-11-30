@@ -359,6 +359,7 @@ class Processor extends \PDO
         try {
             $stmt = $this->prepare($query);
             $stmt->execute($binding);
+            dispatch_event("after_insert_on_update_{$table->getTable()}", [$data]);
             return $stmt->rowCount();
         } catch (\PDOException $e) {
             $this->commit = false;

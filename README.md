@@ -8,7 +8,7 @@ Similik is a simple eCommerce platform. Similik uses PHP and Mysql as backend la
  
 ### Prerequisites
 
-LAMP server and 1 free SendGrid account for transactional email
+Apache server, PHP 7.3, Mysql 5.6 and 1 free SendGrid account for transactional email
 Please check [here](https://similik.com/document/system-requirements) for more detail.
 
 ### Installing
