@@ -233,8 +233,6 @@ class HtmlDocument
 
     public function getHtml(array $jsonData = [])
     {
-        $language = $this->request->getSession()->get('language', get_default_language_Id());;
-        $language_code = Language::listLanguagesV2()[$language][0];
         ob_start();
         echo "<!DOCTYPE html><html lang='{$this->getLang()}'>";
         echo "<head><meta charset=\"{$this->getCharset()}\" data-react-helmet=\"true\"/>";
