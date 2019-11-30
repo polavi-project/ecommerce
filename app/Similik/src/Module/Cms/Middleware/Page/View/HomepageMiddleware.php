@@ -8,9 +8,9 @@ declare(strict_types=1);
 
 namespace Similik\Module\Cms\Middleware\Page\View;
 
-use function Similik\get_default_language_Id;
-use function Similik\get_js_file_url;
-use Similik\Module\Graphql\Services\GraphqlExecutor;
+use function Similik\get_config;
+use function Similik\get_current_language_id;
+use Similik\Services\Helmet;
 use Similik\Services\Http\Response;
 use Similik\Services\Http\Request;
 use Similik\Middleware\MiddlewareAbstract;
@@ -25,33 +25,7 @@ class HomepageMiddleware extends MiddlewareAbstract
      */
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
-        $this->getContainer()
-            ->get(GraphqlExecutor::class)
-            ->waitToExecute([
-                "query"=> <<< QUERY
-                    {
-                        cms_page (id: 1 language:{$request->get('language', get_default_language_Id())}) {
-                            cms_page_id
-                            layout
-                            name
-                            content
-                        }
-                    }
-QUERY
-
-            ])
-            ->then(function($result) use ($response) {
-                /**@var \GraphQL\Executor\ExecutionResult $result */
-                if (isset($result->data['cms_page'])) {
-                    $response->addWidget(
-                        'cms_page_content',
-                        'content',
-                        31,
-                        get_js_file_url("production/cms/page/cms_page.js", false),
-                        $result->data['cms_page']
-                    );
-                }
-            });
+        $this->getContainer()->get(Helmet::class)->setTitle(get_config('general_store_name', 'Similik store', get_current_language_id()));
 
         return $delegate;
     }
