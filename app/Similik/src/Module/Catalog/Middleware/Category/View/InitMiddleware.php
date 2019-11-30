@@ -55,9 +55,10 @@ class InitMiddleware extends MiddlewareAbstract
                 ->where('category.category_id', '=', $request->attributes->get('id'))
                 ->fetchOneAssoc();
 
-        if(!$category)
+        if(!$category) {
+            $request->attributes->set('_matched_route', 'not.found');
             $response->setStatusCode(404);
-        else
+        } else
             $request->attributes->set('id', $category['category_id']);
 
         $this->getContainer()->get(Helmet::class)->setTitle($category['name'])

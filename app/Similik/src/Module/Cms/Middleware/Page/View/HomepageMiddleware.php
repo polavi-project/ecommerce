@@ -25,9 +25,6 @@ class HomepageMiddleware extends MiddlewareAbstract
      */
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
-        if($response->hasWidget('cms_page_content'))
-            return $delegate;
-
         $this->getContainer()
             ->get(GraphqlExecutor::class)
             ->waitToExecute([

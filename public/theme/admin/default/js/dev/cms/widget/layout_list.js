@@ -70,6 +70,17 @@ function LayoutList({selectedLayouts = [], formId = '', }) {
                 },
                 'sort_order': 50,
                 'id': 'search-page-layout'
+            },
+            {
+                'component': Checkbox,
+                'props': {
+                    name: "layout[not.found]",
+                    isChecked: selectedLayouts.find((e) => e === 'not.found') !== undefined,
+                    formId: formId,
+                    label: "404 page"
+                },
+                'sort_order': 60,
+                'id': 'not-found-page-layout'
             }
         ]}
     />

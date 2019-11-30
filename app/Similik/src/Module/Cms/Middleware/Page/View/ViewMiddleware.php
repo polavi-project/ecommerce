@@ -63,6 +63,7 @@ class ViewMiddleware extends MiddlewareAbstract
                 ->fetchOneAssoc();
 
         if(!$page) {
+            $request->attributes->set('_matched_route', 'not.found');
             $response->setStatusCode(404);
             return $response;
         }
