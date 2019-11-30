@@ -12,6 +12,7 @@ use function Similik\get_config;
 use function Similik\get_default_language_Id;
 use function Similik\get_js_file_url;
 use Similik\Module\Graphql\Services\GraphqlExecutor;
+use Similik\Services\Helmet;
 use Similik\Services\Http\Response;
 use Similik\Services\Http\Request;
 use Similik\Middleware\MiddlewareAbstract;
@@ -26,21 +27,10 @@ class NotFoundPageMiddleware extends MiddlewareAbstract
      */
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
-        if($response->hasWidget('notfound_page_content') || $response->getStatusCode() !== 404)
+        if($response->getStatusCode()!== 404)
             return $delegate;
 
-        $notFoundContent = get_config('general_notfound_page_content', 'The page you are looking for is not found');
-
-        $response->addWidget(
-            'notfound_page_content',
-            'content',
-            10,
-            get_js_file_url("production/cms/page/cms_page.js", false),
-            [
-                "name"=> "Page Not Found",
-                "content"=> $notFoundContent
-            ]
-        );
+        $this->getContainer()->get(Helmet::class)->setTitle('Page not found');
         return $delegate;
     }
 }

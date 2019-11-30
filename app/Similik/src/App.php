@@ -177,7 +177,6 @@ class App
                 20 => RoutingMiddleware::class,
                 30 => AuthenticateMiddleware::class,
                 35 => CartInitMiddleware::class,
-                //MiniCartMiddleware::class,
                 40 => HandlerMiddleware::class,
                 60 => InitHtmlMiddleware::class,
                 70 => SaveCartMiddleware::class,

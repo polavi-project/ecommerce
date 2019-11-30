@@ -46,6 +46,7 @@ class InitMiddleware extends MiddlewareAbstract
 
         if(!$product) {
             $response->setStatusCode(404);
+            $request->attributes->set('_matched_route', 'not.found');
             return $delegate;
         }
 

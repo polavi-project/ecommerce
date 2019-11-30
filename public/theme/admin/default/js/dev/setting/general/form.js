@@ -181,15 +181,6 @@ export default function GeneralSettingForms(props) {
                 },
                 sort_order: 70,
                 id: "general_google_tag"
-            },
-            {
-                component: TextArea,
-                props : {
-                    name: "general_notfound_page_content",
-                    label: "Content for 404 page"
-                },
-                sort_order: 80,
-                id: "general_notfound_page_content"
             }
         ].filter((f) => {
             if(_.get(props, `data.${f.props.name}`) !== undefined)
