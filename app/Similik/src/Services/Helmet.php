@@ -58,11 +58,11 @@ class Helmet
         return $this->links;
     }
 
-    public function addScript(array $attributes, $content)
+    public function addScript($src, $type = "text/javascript")
     {
         $this->scripts[] = [
-            $attributes,
-            $content
+            'src'=> $src,
+            'type' => $type
         ];
     }
 
@@ -90,13 +90,13 @@ class Helmet
             echo $l;
         }
 
-        foreach ($this->scripts as $script) {
-            $s = "<script ";
-            foreach ($script[0] as $key=>$value)
-                $s .= "{$key}=\"{$value}\" ";
-            $s .= ">{$script[1]}</script>";
-            echo $s;
-        }
+//        foreach ($this->scripts as $script) {
+//            $s = "<script ";
+//            foreach ($script[0] as $key=>$value)
+//                $s .= "{$key}=\"{$value}\" ";
+//            $s .= ">{$script[1]}</script>";
+//            echo $s;
+//        }
         $output = ob_get_clean();
 
         return $output;
