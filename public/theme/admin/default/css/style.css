@@ -22,7 +22,7 @@ html {
 .admin-navigation{
     float: left;
     width: 200px;
-    padding: 10px;
+    padding: 0 10px 10px 10px;
     box-sizing: border-box;
 }
 .admin-navigation + .content {
@@ -113,3 +113,9 @@ table input{max-width: 95px}
 
 /* TABLE */
 html .uk-table-small td, html .uk-table-small th{padding: 5px}
+
+/* HEADER */
+.container > .header{padding: 12px 10px; background: #1d1b1b; margin-bottom: 15px; overflow: hidden}
+.container > .header .logo{float: left}
+.container > .header .admin-user-greeting{float: right}
+.container > .header .admin-user-greeting div > span {color: #fff}
