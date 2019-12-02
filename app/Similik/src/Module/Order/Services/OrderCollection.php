@@ -11,7 +11,6 @@ namespace Similik\Module\Order\Services;
 
 use GraphQL\Type\Definition\ResolveInfo;
 use function Similik\_mysql;
-use function Similik\get_default_language_Id;
 use Similik\Services\Di\Container;
 use Similik\Services\Grid\CollectionBuilder;
 use Similik\Services\Http\Request;
