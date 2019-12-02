@@ -1,5 +1,18 @@
 import {Fetch} from "../../../../../../../js/production/fetch.js";
 
+function CustomTooltip({ payload, label, active }) {
+    if (active) {
+        return (
+            <div className="custom-tooltip">
+                <p className="label">{`Count : ${payload[1].value}`}</p>
+                <p className="label">{`Amount : ${payload[0].value}`}</p>
+            </div>
+        );
+    }
+
+    return null;
+}
+
 export default function SaleStatistic() {
     const [data, setData] = React.useState([]);
     const [period, setPeriod] = React.useState('daily');
@@ -7,7 +20,7 @@ export default function SaleStatistic() {
 
     React.useEffect(()=> {
         let formData = new FormData();
-        formData.append('query', `{saleStatistic (period : ${period}) {time value}}`);
+        formData.append('query', `{saleStatistic (period : ${period}) {time count value}}`);
 
         Fetch(
             api,
@@ -25,11 +38,11 @@ export default function SaleStatistic() {
     return <div>
         <div><h3>Sale statistic</h3></div>
         <Recharts.LineChart
-            width={500}
+            width={1000}
             height={300}
             data={data}
             margin={{
-                top: 5, right: 30, left: 20, bottom: 5,
+                top: 5, right: 0, left: -25, bottom: 5,
             }}
         >
             <Recharts.CartesianGrid strokeDasharray="3 3" />
@@ -38,6 +51,7 @@ export default function SaleStatistic() {
             <Recharts.Tooltip />
             <Recharts.Legend />
             <Recharts.Line type="monotone" dataKey="value" stroke="#8884d8" activeDot={{ r: 8 }} />
+            <Recharts.Line type="monotone" dataKey="count" stroke="#82ca9d" activeDot={{ r: 8 }} />
         </Recharts.LineChart>
     </div>;
 }
