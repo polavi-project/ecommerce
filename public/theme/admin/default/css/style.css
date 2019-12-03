@@ -119,3 +119,7 @@ html .uk-table-small td, html .uk-table-small th{padding: 5px}
 .container > .header .logo{float: left}
 .container > .header .admin-user-greeting{float: right}
 .container > .header .admin-user-greeting div > span {color: #fff}
+
+/**/
+.sale-statistic-header ul {list-style: none; margin-top: 6px; margin-bottom:0px}
+.sale-statistic-header ul li {float: left; padding-left: 10px}
