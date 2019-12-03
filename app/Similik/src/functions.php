@@ -110,37 +110,38 @@ function get_config(string $name, $defaultValue = null, int $languageId = 0)
     return $config['json'] == 1  ? json_decode($config['value'], true) : $config['value'];
 }
 
-function get_base_url($secure = false, $isAdmin = false)
+function get_base_url($isAdmin = false)
 {
+    $secure = get_config('general_https', 0, 0) == 0 ? false: true;
     if (isset($_SERVER['HTTP_HOST']) && preg_match('/^((\[[0-9a-f:]+\])|(\d{1,3}(\.\d{1,3}){3})|[a-z0-9\-\.]+)(:\d+)?$/i', $_SERVER['HTTP_HOST'])) {
-        $base_url = (($secure==true) ? 'https' : 'http').'://'.$_SERVER['HTTP_HOST']
+        $baseUrl = (($secure == true) ? 'https' : 'http').'://'.$_SERVER['HTTP_HOST']
             .substr($_SERVER['SCRIPT_NAME'], 0, strpos($_SERVER['SCRIPT_NAME'], basename($_SERVER['SCRIPT_FILENAME'])));
     } else {
-        $base_url = 'http://127.0.0.1/';
+        $baseUrl = 'http://127.0.0.1/';
     }
 
     if(!$isAdmin)
-        return trim($base_url, '/');
+        return trim($baseUrl, '/');
     else
-        return trim($base_url, '/') . '/' . ADMIN_PATH;
+        return trim($baseUrl, '/') . '/' . ADMIN_PATH;
 }
 
 function get_base_url_scheme_less($isAdmin = false)
 {
-    $url = get_base_url(false, $isAdmin);
+    $url = get_base_url($isAdmin);
     return str_replace(['http:', 'https:'], '', $url);
 }
 
-function get_admin_theme_url($secure = false)
+function get_admin_theme_url()
 {
-    return get_base_url($secure) .  '/public/theme/admin/default';
+    return get_base_url() .  '/public/theme/admin/default';
 }
 
-function get_theme_url($secure = false)
+function get_theme_url()
 {
-    $theme_name = get_config('general_theme', 'default');
+    $themeName = get_config('general_theme', 'default');
 
-    return get_base_url($secure) .  '/public/theme/front/' . $theme_name;
+    return get_base_url() .  '/public/theme/front/' . $themeName;
 }
 
 function get_js_file_url(string $sub_path, bool $isAdmin = false)
@@ -168,24 +169,24 @@ function get_js_file_url(string $sub_path, bool $isAdmin = false)
         throw new \RuntimeException(sprintf("Requested file %s does not exist", $sub_path) );
 }
 
-function get_css_file_url(string $sub_path, bool $isAdmin = false)
+function get_css_file_url(string $subPath, bool $isAdmin = false)
 {
     $fileUrl = null;
 
     if($isAdmin == true) {
-        $fileUrl = get_admin_theme_url() . "/css/" . $sub_path;
+        $fileUrl = get_admin_theme_url() . "/css/" . $subPath;
     } else {
         $themeName = get_config('general_theme', 'default');
-        if(file_exists(THEME_PATH . "/front/{$themeName}/css/" . $sub_path))
-            $fileUrl = get_base_url() .  '/public/theme/front/' . $themeName . "/css/" . $sub_path;
-        else if(file_exists(THEME_PATH . "/front/default/css/" . $sub_path))
-            $fileUrl = get_base_url() .  '/public/theme/front/default' . "/css/" . $sub_path;
+        if(file_exists(THEME_PATH . "/front/{$themeName}/css/" . $subPath))
+            $fileUrl = get_base_url() .  '/public/theme/front/' . $themeName . "/css/" . $subPath;
+        else if(file_exists(THEME_PATH . "/front/default/css/" . $subPath))
+            $fileUrl = get_base_url() .  '/public/theme/front/default' . "/css/" . $subPath;
     }
 
     if($fileUrl)
         return str_replace(['http:', 'https:'], '', $fileUrl);
     else
-        throw new \RuntimeException(sprintf("Requested file %s does not exist", $sub_path) );
+        throw new \RuntimeException(sprintf("Requested file %s does not exist", $subPath) );
 }
 
 function get_default_language_Id() {
