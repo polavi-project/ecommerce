@@ -19,6 +19,7 @@ function IdColumnHeader({areaProps}) {
                         ref={filterFrom}
                         onKeyPress={(e) => { if(e.key === 'Enter') areaProps.addFilter("id", "BETWEEN", `${e.target.value} AND ${filterTo.current.value}`);}}
                         placeholder={"From"}
+                        className="uk-input uk-form-small uk-form-width-small"
                     />
                 </div>
                 <div>
@@ -27,6 +28,7 @@ function IdColumnHeader({areaProps}) {
                         ref={filterTo}
                         onKeyPress={(e) => { if(e.key === 'Enter') areaProps.addFilter("id", "BETWEEN", `${filterFrom.current.value} AND ${e.target.value}`);}}
                         placeholder={"To"}
+                        className="uk-input uk-form-small uk-form-width-small"
                     />
                 </div>
             </div>
@@ -56,6 +58,7 @@ function PriceColumnHeader({areaProps}) {
                         ref={filterFrom}
                         onKeyPress={(e) => { if(e.key === 'Enter') areaProps.addFilter("price", "BETWEEN", `${e.target.value} AND ${filterTo.current.value}`);}}
                         placeholder={"From"}
+                        className="uk-input uk-form-small uk-form-width-small"
                     />
                 </div>
                 <div>
@@ -64,6 +67,7 @@ function PriceColumnHeader({areaProps}) {
                         ref={filterTo}
                         onKeyPress={(e) => { if(e.key === 'Enter') areaProps.addFilter("price", "BETWEEN", `${filterFrom.current.value} AND ${e.target.value}`);}}
                         placeholder={"To"}
+                        className="uk-input uk-form-small uk-form-width-small"
                     />
                 </div>
             </div>
@@ -93,6 +97,7 @@ function NameColumnHeader({areaProps}) {
                     ref={filterInput}
                     onKeyPress={(e) => { if(e.key === 'Enter') areaProps.addFilter("name", "LIKE", `%${e.target.value}%`);}}
                     placeholder={"Product name"}
+                    className="uk-input uk-form-small uk-form-width-medium"
                 />
             </div>
         </div>
@@ -121,6 +126,7 @@ function QtyColumnHeader({areaProps}) {
                         ref={filterFrom}
                         onKeyPress={(e) => { if(e.key === 'Enter') areaProps.addFilter("qty", "BETWEEN", `${e.target.value} AND ${filterTo.current.value}`);}}
                         placeholder={"From"}
+                        className="uk-input uk-form-small uk-form-width-small"
                     />
                 </div>
                 <div>
@@ -129,6 +135,7 @@ function QtyColumnHeader({areaProps}) {
                         ref={filterTo}
                         onKeyPress={(e) => { if(e.key === 'Enter') areaProps.addFilter("qty", "BETWEEN", `${filterFrom.current.value} AND ${e.target.value}`);}}
                         placeholder={"To"}
+                        className="uk-input uk-form-small uk-form-width-small"
                     />
                 </div>
             </div>
@@ -171,9 +178,13 @@ function StatusColumnHeader({areaProps})
         <div className="header status-header">
             <div className={"title"}><span>Status</span></div>
             <div className={"filter"}>
-                <select ref={filterInput} onChange={(e)=> {
-                    areaProps.addFilter("status", "Equal", e.target.value);
-                }}>
+                <select
+                    ref={filterInput}
+                    onChange={(e)=> {
+                        areaProps.addFilter("status", "Equal", e.target.value);
+                    }}
+                    className="uk-select uk-form-small uk-form-width-small"
+                >
                     <option value={1}>Enabled</option>
                     <option value={0}>Disabled</option>
                 </select>

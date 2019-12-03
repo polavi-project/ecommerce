@@ -36,22 +36,17 @@ export default function Text (props) {
         if (props.handler) props.handler.call(window, e, props);
     };
 
-    const width = {
-        maxWidth: props.width ? props.width : '200px',
-    };
-
     return <div className="form-field form-text">
         <div className="field-label"><label htmlFor={props.name}>{props.label}</label></div>
         <input
             type="text"
-            className="uk-input uk-form-small"
+            className={"uk-input uk-form-small uk-form-width-" + props.size}
             id={props.name}
             name={props.name}
             placeholder={props.placeholder}
             value={value}
             onChange={onChange}
             disabled={isDisabled}
-            style={width}
         />
         { props.comment &&
             <div><i>{props.comment}</i></div>

@@ -37,10 +37,6 @@ export default function Text(props) {
         if (props.handler) props.handler.call(window, e, props);
     };
 
-    const width = {
-        maxWidth: props.width ? props.width : '200px'
-    };
-
     return React.createElement(
         "div",
         { className: "form-field form-text" },
@@ -55,14 +51,13 @@ export default function Text(props) {
         ),
         React.createElement("input", {
             type: "text",
-            className: "uk-input uk-form-small",
+            className: "uk-input uk-form-small uk-form-width-" + props.size,
             id: props.name,
             name: props.name,
             placeholder: props.placeholder,
             value: value,
             onChange: onChange,
-            disabled: isDisabled,
-            style: width
+            disabled: isDisabled
         }),
         props.comment && React.createElement(
             "div",

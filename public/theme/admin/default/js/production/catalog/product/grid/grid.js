@@ -36,7 +36,8 @@ function IdColumnHeader({ areaProps }) {
                         onKeyPress: e => {
                             if (e.key === 'Enter') areaProps.addFilter("id", "BETWEEN", `${e.target.value} AND ${filterTo.current.value}`);
                         },
-                        placeholder: "From"
+                        placeholder: "From",
+                        className: "uk-input uk-form-small uk-form-width-small"
                     })
                 ),
                 React.createElement(
@@ -48,7 +49,8 @@ function IdColumnHeader({ areaProps }) {
                         onKeyPress: e => {
                             if (e.key === 'Enter') areaProps.addFilter("id", "BETWEEN", `${filterFrom.current.value} AND ${e.target.value}`);
                         },
-                        placeholder: "To"
+                        placeholder: "To",
+                        className: "uk-input uk-form-small uk-form-width-small"
                     })
                 )
             )
@@ -99,7 +101,8 @@ function PriceColumnHeader({ areaProps }) {
                         onKeyPress: e => {
                             if (e.key === 'Enter') areaProps.addFilter("price", "BETWEEN", `${e.target.value} AND ${filterTo.current.value}`);
                         },
-                        placeholder: "From"
+                        placeholder: "From",
+                        className: "uk-input uk-form-small uk-form-width-small"
                     })
                 ),
                 React.createElement(
@@ -111,7 +114,8 @@ function PriceColumnHeader({ areaProps }) {
                         onKeyPress: e => {
                             if (e.key === 'Enter') areaProps.addFilter("price", "BETWEEN", `${filterFrom.current.value} AND ${e.target.value}`);
                         },
-                        placeholder: "To"
+                        placeholder: "To",
+                        className: "uk-input uk-form-small uk-form-width-small"
                     })
                 )
             )
@@ -160,7 +164,8 @@ function NameColumnHeader({ areaProps }) {
                     onKeyPress: e => {
                         if (e.key === 'Enter') areaProps.addFilter("name", "LIKE", `%${e.target.value}%`);
                     },
-                    placeholder: "Product name"
+                    placeholder: "Product name",
+                    className: "uk-input uk-form-small uk-form-width-medium"
                 })
             )
         )
@@ -210,7 +215,8 @@ function QtyColumnHeader({ areaProps }) {
                         onKeyPress: e => {
                             if (e.key === 'Enter') areaProps.addFilter("qty", "BETWEEN", `${e.target.value} AND ${filterTo.current.value}`);
                         },
-                        placeholder: "From"
+                        placeholder: "From",
+                        className: "uk-input uk-form-small uk-form-width-small"
                     })
                 ),
                 React.createElement(
@@ -222,7 +228,8 @@ function QtyColumnHeader({ areaProps }) {
                         onKeyPress: e => {
                             if (e.key === 'Enter') areaProps.addFilter("qty", "BETWEEN", `${filterFrom.current.value} AND ${e.target.value}`);
                         },
-                        placeholder: "To"
+                        placeholder: "To",
+                        className: "uk-input uk-form-small uk-form-width-small"
                     })
                 )
             )
@@ -300,9 +307,13 @@ function StatusColumnHeader({ areaProps }) {
                 { className: "filter" },
                 React.createElement(
                     "select",
-                    { ref: filterInput, onChange: e => {
+                    {
+                        ref: filterInput,
+                        onChange: e => {
                             areaProps.addFilter("status", "Equal", e.target.value);
-                        } },
+                        },
+                        className: "uk-select uk-form-small uk-form-width-small"
+                    },
                     React.createElement(
                         "option",
                         { value: 1 },
