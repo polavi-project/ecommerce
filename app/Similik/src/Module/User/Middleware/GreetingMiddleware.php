@@ -37,7 +37,7 @@ class GreetingMiddleware extends MiddlewareAbstract
             get_js_file_url("production/user/greeting.js", true),
             [
                 "fullName" => $user['full_name'],
-                "logoutUrl" => "#",
+                "logoutUrl" => generate_url('admin.logout'),
             ]
         );
 

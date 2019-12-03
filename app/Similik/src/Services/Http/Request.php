@@ -33,7 +33,7 @@ class Request extends \Symfony\Component\HttpFoundation\Request
     public function setUser($user)
     {
         if($this->user)
-            throw new \RuntimeException(__('You can not set user twice'));
+            throw new \RuntimeException('You can not set user twice');
         $this->user = $user;
         return $this;
     }
