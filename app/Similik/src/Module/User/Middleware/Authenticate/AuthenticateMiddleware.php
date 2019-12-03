@@ -22,7 +22,7 @@ class AuthenticateMiddleware extends MiddlewareAbstract
             $email = $request->get('email', null);
             $password = $request->get('password', null);
             $this->getContainer()->get(Authenticator::class)->login($email, $password);
-            $response->addData('success', 1)->redirect($this->getContainer()->get(Router::class)->generateUrl('product.create'))->notNewPage();
+            $response->addData('success', 1)->redirect($this->getContainer()->get(Router::class)->generateUrl('dashboard'))->notNewPage();
 
             return $response;
         } catch (\Exception $e) {
