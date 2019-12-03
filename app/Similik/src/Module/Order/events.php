@@ -39,6 +39,7 @@ $eventDispatcher->addListener(
     'register.core.middleware',
     function (\Similik\Services\MiddlewareManager $middlewareManager) {
         $middlewareManager->registerMiddlewareBefore(\Similik\Middleware\PromiseWaiterMiddleware::class, \Similik\Module\Order\Middleware\Update\AddActivityMiddleware::class);
+        $middlewareManager->registerMiddleware(\Similik\Module\Order\Middleware\Dashboard\AddRechartsMiddleware::class, 1);
     },
     0
 );
@@ -46,7 +47,6 @@ $eventDispatcher->addListener(
 $eventDispatcher->addListener(
     'register.dashboard.middleware',
     function (\Similik\Services\MiddlewareManager $middlewareManager) {
-        $middlewareManager->registerMiddleware(\Similik\Module\Order\Middleware\Dashboard\AddRechartsMiddleware::class, 1);
         $middlewareManager->registerMiddleware(\Similik\Module\Order\Middleware\Dashboard\StatisticMiddleware::class, 1);
     },
     0
@@ -125,7 +125,7 @@ $eventDispatcher->addListener(
                             ->fetch();
                         $result[$key]['value'] = $data['total'] ?? 0;
                         $result[$key]['count'] = $data['count'] ?? 0;
-                        $result[$key]['time'] = substr($result[$key]['to'], 0, -10);
+                        $result[$key]['time'] = date('M j', strtotime($result[$key]['to']));
                     }
 
                     return $result;

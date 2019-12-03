@@ -107,97 +107,193 @@ function Timezone({value = 'Europe/London'}) {
     </div>
 }
 
+function General(props) {
+    return <div className="uk-width-1-3">
+        <div className="border-block">
+            <div><strong>General</strong></div>
+            <Area
+                id="general_setting_form_general"
+                coreWidgets={[
+                    {
+                        component: Text,
+                        props : {
+                            id : 'general_store_name',
+                            formId: "general_setting_form",
+                            name: "general_store_name",
+                            label: "Store name",
+                            validation_rules:["notEmpty"],
+                            value: _.get(props, 'general_store_name')
+                        },
+                        sort_order: 10,
+                        id: "general_store_name"
+                    },
+                    {
+                        component: Text,
+                        props : {
+                            id : 'general_store_contact_telephone',
+                            formId: "general_setting_form",
+                            name: "general_store_contact_telephone",
+                            label: "Contact phone",
+                            validation_rules:["notEmpty"],
+                            value: _.get(props, 'general_store_contact_telephone')
+                        },
+                        sort_order: 20,
+                        id: "general_store_contact_telephone"
+                    },
+                    {
+                        component: Language,
+                        props : {
+                            name: "general_default_language",
+                            value: _.get(props, 'general_default_language')
+                        },
+                        sort_order: 30,
+                        id: "general_default_language"
+                    }
+                ]}
+            />
+        </div>
+    </div>
+}
+
+function Ecommerce(props) {
+    return <div className="uk-width-1-3">
+        <div className="border-block">
+            <div><strong>E-Commerce</strong></div>
+            <Area
+                id="general_setting_form_ecommerce"
+                coreWidgets={[
+                    {
+                        component: Country,
+                        props : {
+                            name: "general_allow_countries",
+                            value: _.get(props, 'general_allow_countries')
+                        },
+                        sort_order: 10,
+                        id: "general_allow_countries"
+                    },
+                    {
+                        component: Currency,
+                        props : {
+                            name: "general_currency",
+                            value: _.get(props, 'general_currency')
+                        },
+                        sort_order: 20,
+                        id: "general_currency"
+                    },
+                    {
+                        component: Timezone,
+                        props : {
+                            name: "general_timezone",
+                            value: _.get(props, 'general_timezone')
+                        },
+                        sort_order: 30,
+                        id: "general_timezone"
+                    },
+                    {
+                        component: Text,
+                        props : {
+                            name: "general_google_tag",
+                            label: "Google tag manage ID",
+                            value: _.get(props, 'general_google_tag')
+                        },
+                        sort_order: 35,
+                        id: "general_google_tag"
+                    }
+                ]}
+            />
+        </div>
+    </div>
+}
+
+function Web(props) {
+    return <div className="uk-width-1-3">
+        <div className="border-block">
+            <div><strong>Web</strong></div>
+            <Area
+                id="general_setting_form_web"
+                coreWidgets={[
+                    {
+                        component: Logo,
+                        props : {
+                            name: "general_logo",
+                            value: _.get(props, 'general_logo')
+                        },
+                        sort_order: 10,
+                        id: "general_logo"
+                    },
+                    {
+                        component: Text,
+                        props : {
+                            id : 'general_logo_width',
+                            formId: "general_setting_form",
+                            name: "general_logo_width",
+                            label: "Logo width(pixel)",
+                            value: _.get(props, 'general_logo_width')
+                        },
+                        sort_order: 20,
+                        id: "general_logo_width"
+                    },
+                    {
+                        component: Text,
+                        props : {
+                            id : 'general_logo_height',
+                            formId: "general_setting_form",
+                            name: "general_logo_height",
+                            label: "Logo height(pixel)",
+                            value: _.get(props, 'general_logo_height')
+                        },
+                        sort_order: 30,
+                        id: "general_logo_height"
+                    },
+                    {
+                        component: Select,
+                        props : {
+                            id : 'general_https',
+                            formId: "general_setting_form",
+                            name: "general_https",
+                            label: "Use https?",
+                            options: [{value: 0, text: 'No'}, {value: 1, text: 'Yes'}],
+                            value: _.get(props, 'general_https')
+                        },
+                        sort_order: 40,
+                        id: "general_https"
+                    }
+                ]}
+            />
+        </div>
+    </div>
+}
+
 export default function GeneralSettingForms(props) {
-    const [left] = React.useState(() => {
-        return  [
-            {
-                component: Text,
-                props : {id : 'general_store_name', formId: "general_setting_form", name: "general_store_name", label: "Store name", validation_rules:["notEmpty"]},
-                sort_order: 10,
-                id: "general_store_name"
-            },
-            {
-                component: Logo,
-                props : {name: "general_logo"},
-                sort_order: 15,
-                id: "general_logo"
-            },
-            {
-                component: Text,
-                props : {id : 'general_logo_width', formId: "general_setting_form", name: "general_logo_width", label: "Logo width(pixel)"},
-                sort_order: 16,
-                id: "general_logo_width"
-            },
-            {
-                component: Text,
-                props : {id : 'general_logo_height', formId: "general_setting_form", name: "general_logo_height", label: "Logo height(pixel)"},
-                sort_order: 17,
-                id: "general_logo_height"
-            },
-            {
-                component: Text,
-                props : {id : 'general_store_contact_telephone', formId: "general_setting_form", name: "general_store_contact_telephone", label: "Contact phone", validation_rules:["notEmpty"]},
-                sort_order: 20,
-                id: "general_store_contact_telephone"
-            }
-        ].filter((f) => {
-            if(_.get(props, `data.${f.props.name}`) !== undefined)
-                f.props.value = _.get(props, `data.${f.props.name}`);
-            return f;
-        })
-    });
-
-    const [right] = React.useState(() => {
-        return  [
-            {
-                component: Country,
-                props : {name: "general_allow_countries"},
-                sort_order: 30,
-                id: "general_allow_countries"
-            },
-            {
-                component: Language,
-                props : {name: "general_default_language"},
-                sort_order: 40,
-                id: "general_default_language"
-            },
-            {
-                component: Currency,
-                props : {name: "general_currency"},
-                sort_order: 50,
-                id: "general_currency"
-            },
-            {
-                component: Timezone,
-                props : {name: "general_timezone"},
-                sort_order: 60,
-                id: "general_timezone"
-            },
-            {
-                component: Text,
-                props : {
-                    name: "general_google_tag",
-                    label: "Google tag manage ID"
-                },
-                sort_order: 70,
-                id: "general_google_tag"
-            }
-        ].filter((f) => {
-            if(_.get(props, `data.${f.props.name}`) !== undefined)
-                f.props.value = _.get(props, `data.${f.props.name}`);
-            return f;
-        })
-    });
-
     return <div className="uk-flex-center">
+        <div><h2>General setting</h2></div>
         <Form id="general_setting_form" action={props.action}>
-            <div>
-                <div><h2>General setting</h2></div>
-            </div>
-            <div className="uk-grid uk-grid-small">
-                <Area id="general_setting_form_left" coreWidgets={left} className="uk-width-1-2"/>
-                <Area id="general_setting_form_right" coreWidgets={right} className="uk-width-1-2"/>
-            </div>
+            <Area id="general_setting_form_inner" className="uk-grid uk-grid-small" coreWidgets={[
+                {
+                    component: General,
+                    props : {
+                        ...props.data
+                    },
+                    sort_order: 10,
+                    id: "general_setting_general"
+                },
+                {
+                    component: Ecommerce,
+                    props : {
+                        ...props.data
+                    },
+                    sort_order: 20,
+                    id: "general_setting_catalog"
+                },
+                {
+                    component: Web,
+                    props : {
+                        ...props.data
+                    },
+                    sort_order: 30,
+                    id: "general_setting_web"
+                }
+            ]}/>
         </Form>
     </div>
 }

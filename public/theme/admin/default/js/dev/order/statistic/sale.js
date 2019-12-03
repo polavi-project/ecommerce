@@ -1,17 +1,5 @@
 import {Fetch} from "../../../../../../../js/production/fetch.js";
 
-function CustomTooltip({ payload, label, active }) {
-    if (active) {
-        return (
-            <div className="custom-tooltip">
-                <p className="label">{`Count : ${payload[1].value}`}</p>
-                <p className="label">{`Amount : ${payload[0].value}`}</p>
-            </div>
-        );
-    }
-
-    return null;
-}
 
 export default function SaleStatistic() {
     const [data, setData] = React.useState([]);
@@ -35,8 +23,15 @@ export default function SaleStatistic() {
             }
         );
     }, [period]);
-    return <div>
-        <div><h3>Sale statistic</h3></div>
+    return <div className="sale-statistic">
+        <div className="sale-statistic-header uk-flex">
+            <h3>Sale statistic</h3>
+            <ul>
+                <li><label><input onChange={() => setPeriod('daily')} className="uk-radio" type="radio" checked={period === 'daily'}/> Daily</label></li>
+                <li><label><input onChange={() => setPeriod('weekly')} className="uk-radio" type="radio" checked={period === 'weekly'}/> Weekly</label></li>
+                <li><label><input onChange={() => setPeriod('monthly')} className="uk-radio" type="radio" checked={period === 'monthly'}/> Monthly</label></li>
+            </ul>
+        </div>
         <Recharts.LineChart
             width={1000}
             height={300}

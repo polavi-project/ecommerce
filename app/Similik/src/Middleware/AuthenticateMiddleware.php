@@ -56,7 +56,7 @@ class AuthenticateMiddleware extends MiddlewareAbstract
 
     protected function loadUser($id)
     {
-        $user = Helper::getMysqlTable('admin_user')->load($id);
+        $user = Helper::getMysqlTable('admin_user')->where('status', '=', 1)->andWhere('admin_user_id', '=', $id)->fetchOneAssoc();
         if($user == false)
             throw new \RuntimeException('User does not exist');
 
