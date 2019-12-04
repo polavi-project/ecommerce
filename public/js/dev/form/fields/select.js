@@ -34,20 +34,15 @@ export default function Select (props) {
         if (props.handler) props.handler.call(window, e, props);
     };
 
-    const width = {
-        maxWidth: props.width ? props.width : '200px',
-    };
-
     return <div className="form-field form-select">
         <div className="field-label"><label htmlFor={props.name}>{props.label}</label></div>
         <select
-            className="uk-select uk-form-small"
+            className={"uk-select uk-form-small uk-form-width-" + props.size}
             id={props.name}
             name={props.name}
             value={value}
             onChange={onChange}
             disabled={isDisabled}
-            style={width}
         >
             <option value="" disabled>Please select</option>
             {props.options && props.options.map((option, key) => {

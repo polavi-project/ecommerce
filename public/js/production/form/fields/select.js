@@ -36,10 +36,6 @@ export default function Select(props) {
         if (props.handler) props.handler.call(window, e, props);
     };
 
-    const width = {
-        maxWidth: props.width ? props.width : '200px'
-    };
-
     return React.createElement(
         "div",
         { className: "form-field form-select" },
@@ -55,13 +51,12 @@ export default function Select(props) {
         React.createElement(
             "select",
             {
-                className: "uk-select uk-form-small",
+                className: "uk-select uk-form-small uk-form-width-" + props.size,
                 id: props.name,
                 name: props.name,
                 value: value,
                 onChange: onChange,
-                disabled: isDisabled,
-                style: width
+                disabled: isDisabled
             },
             React.createElement(
                 "option",

@@ -8,7 +8,7 @@ export default function ActionColumnHeader({ areaProps }) {
     }, []);
 
     return React.createElement(
-        "td",
+        "th",
         { className: "column" },
         React.createElement(
             "div",

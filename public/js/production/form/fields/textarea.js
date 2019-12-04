@@ -48,7 +48,7 @@ export default function TextArea(props) {
             )
         ),
         React.createElement("textarea", {
-            className: "uk-textarea uk-form-small",
+            className: "uk-textarea uk-form-small uk-form-width-" + props.size,
             id: props.name,
             name: props.name,
             placeholder: props.placeholder,

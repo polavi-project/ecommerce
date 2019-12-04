@@ -7,9 +7,9 @@ export default function ActionColumnHeader({areaProps}) {
         areaProps.addField('editUrl');
     }, []);
 
-    return <td className={"column"}>
+    return <th className={"column"}>
         <div className="header">
             <div className={"title"}><span>Action</span></div>
         </div>
-    </td>
+    </th>
 }

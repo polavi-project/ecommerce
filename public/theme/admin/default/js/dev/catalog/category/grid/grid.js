@@ -9,25 +9,31 @@ function IdColumnHeader({areaProps}) {
         areaProps.addField("category_id");
     }, []);
 
-    return <td>
+    return <th>
         <div className="header id-header">
             <div className={"title"}><span>ID</span></div>
             <div className={"filter"}>
-                <input
-                    type={"text"}
-                    ref={filterFrom}
-                    onKeyPress={(e) => { if(e.key === 'Enter') areaProps.addFilter("id", "BETWEEN", `${e.target.value} AND ${filterTo.current.value}`);}}
-                    placeholder={"From"}
-                />
-                <input
-                    type={"text"}
-                    ref={filterTo}
-                    onKeyPress={(e) => { if(e.key === 'Enter') areaProps.addFilter("id", "BETWEEN", `${filterFrom.current.value} AND ${e.target.value}`);}}
-                    placeholder={"To"}
-                />
+                <div>
+                    <input
+                        type={"text"}
+                        ref={filterFrom}
+                        onKeyPress={(e) => { if(e.key === 'Enter') areaProps.addFilter("id", "BETWEEN", `${e.target.value} AND ${filterTo.current.value}`);}}
+                        placeholder={"From"}
+                        className="uk-input uk-form-small uk-form-width-small"
+                    />
+                </div>
+                <div>
+                    <input
+                        type={"text"}
+                        ref={filterTo}
+                        onKeyPress={(e) => { if(e.key === 'Enter') areaProps.addFilter("id", "BETWEEN", `${filterFrom.current.value} AND ${e.target.value}`);}}
+                        placeholder={"To"}
+                        className="uk-input uk-form-small uk-form-width-small"
+                    />
+                </div>
             </div>
         </div>
-    </td>
+    </th>
 }
 
 function IdColumnRow({row}) {
@@ -41,7 +47,7 @@ function NameColumnHeader({areaProps}) {
         areaProps.addField('name');
     }, []);
 
-    return <td>
+    return <th>
         <div className="header name-header">
             <div className={"title"}><span>Category name</span></div>
             <div className={"filter"}>
@@ -50,10 +56,11 @@ function NameColumnHeader({areaProps}) {
                     ref={filterInput}
                     onKeyPress={(e) => { if(e.key === 'Enter') areaProps.addFilter("name", "LIKE", `%${e.target.value}%`);}}
                     placeholder={"Category name"}
+                    className="uk-input uk-form-small uk-form-width-small"
                 />
             </div>
         </div>
-    </td>
+    </th>
 }
 
 function NameColumnRow({row}) {
@@ -64,11 +71,11 @@ function ActionColumnHeader({areaProps}) {
     React.useEffect(() => {
         areaProps.addField('editUrl');
     }, []);
-    return <td>
+    return <th>
         <div className="header">
             <div className={"title"}><span>Action</span></div>
         </div>
-    </td>
+    </th>
 }
 
 function ActionColumnRow({row}) {
@@ -85,19 +92,23 @@ function StatusColumnHeader({areaProps})
         areaProps.addField("status");
     }, []);
 
-    return <td>
+    return <th>
         <div className="header status-header">
             <div className={"title"}><span>Status</span></div>
             <div className={"filter"}>
-                <select className="uk-select" ref={filterInput} onChange={(e)=> {
-                    areaProps.addFilter("status", "Equal", e.target.value);
-                }}>
+                <select
+                    className="uk-select" ref={filterInput}
+                    onChange={(e)=> {
+                        areaProps.addFilter("status", "Equal", e.target.value);
+                    }}
+                    className="uk-select uk-form-small uk-form-width-small"
+                >
                     <option value={1}>Enabled</option>
                     <option value={0}>Disabled</option>
                 </select>
             </div>
         </div>
-    </td>
+    </th>
 }
 
 function StatusColumnRow({row}) {
@@ -188,7 +199,7 @@ export default function CategoryGrid({apiUrl})
     }, [fields, filters]);
 
     return <div className={"uk-overflow-auto"}>
-        <table className="uk-table uk-table-small">
+        <table className="uk-table uk-table-small uk-table-divider">
             <thead>
             <Area
                 className={""}

@@ -6,16 +6,15 @@
 
 declare(strict_types=1);
 
-namespace Similik\Module\Catalog\Middleware\Category\Grid;
+namespace Similik\Module\Catalog\Middleware\Product\Grid;
 
 use function Similik\generate_url;
 use function Similik\get_js_file_url;
-use Similik\Services\Helmet;
 use Similik\Services\Http\Request;
 use Similik\Services\Http\Response;
 use Similik\Middleware\MiddlewareAbstract;
 
-class GridMiddleware extends MiddlewareAbstract
+class AddNewButtonMiddleware extends MiddlewareAbstract
 {
     /**
      * @param Request $request
@@ -24,22 +23,13 @@ class GridMiddleware extends MiddlewareAbstract
      */
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
-        if($response->hasWidget('category-grid'))
-            return $delegate;
-
-        $this->getContainer()->get(Helmet::class)->setTitle("Categories");
-
         $response->addWidget(
-            'category_grid_title',
+            'product-grid-add-new',
             'content',
-            0, get_js_file_url("production/catalog/category/grid/title.js", true)
-        );
-        $response->addWidget(
-            'category-grid',
-            'content',
-            20, get_js_file_url("production/catalog/category/grid/grid.js", true),
+            5,
+            get_js_file_url("production/catalog/product/grid/add_new_button.js", true),
             [
-                "apiUrl" => generate_url('admin.graphql.api')
+                "url" => generate_url('product.create')
             ]
         );
 

@@ -10,7 +10,7 @@ function IdColumnHeader({ areaProps }) {
     }, []);
 
     return React.createElement(
-        "td",
+        "th",
         { className: "column" },
         React.createElement(
             "div",
@@ -36,7 +36,8 @@ function IdColumnHeader({ areaProps }) {
                         onKeyPress: e => {
                             if (e.key === 'Enter') areaProps.addFilter("id", "BETWEEN", `${e.target.value} AND ${filterTo.current.value}`);
                         },
-                        placeholder: "From"
+                        placeholder: "From",
+                        className: "uk-input uk-form-small uk-form-width-small"
                     })
                 ),
                 React.createElement(
@@ -48,7 +49,8 @@ function IdColumnHeader({ areaProps }) {
                         onKeyPress: e => {
                             if (e.key === 'Enter') areaProps.addFilter("id", "BETWEEN", `${filterFrom.current.value} AND ${e.target.value}`);
                         },
-                        placeholder: "To"
+                        placeholder: "To",
+                        className: "uk-input uk-form-small uk-form-width-small"
                     })
                 )
             )
@@ -73,7 +75,7 @@ function PriceColumnHeader({ areaProps }) {
     }, []);
 
     return React.createElement(
-        "td",
+        "th",
         null,
         React.createElement(
             "div",
@@ -99,7 +101,8 @@ function PriceColumnHeader({ areaProps }) {
                         onKeyPress: e => {
                             if (e.key === 'Enter') areaProps.addFilter("price", "BETWEEN", `${e.target.value} AND ${filterTo.current.value}`);
                         },
-                        placeholder: "From"
+                        placeholder: "From",
+                        className: "uk-input uk-form-small uk-form-width-small"
                     })
                 ),
                 React.createElement(
@@ -111,7 +114,8 @@ function PriceColumnHeader({ areaProps }) {
                         onKeyPress: e => {
                             if (e.key === 'Enter') areaProps.addFilter("price", "BETWEEN", `${filterFrom.current.value} AND ${e.target.value}`);
                         },
-                        placeholder: "To"
+                        placeholder: "To",
+                        className: "uk-input uk-form-small uk-form-width-small"
                     })
                 )
             )
@@ -137,7 +141,7 @@ function NameColumnHeader({ areaProps }) {
     }, []);
 
     return React.createElement(
-        "td",
+        "th",
         { className: "column" },
         React.createElement(
             "div",
@@ -160,7 +164,8 @@ function NameColumnHeader({ areaProps }) {
                     onKeyPress: e => {
                         if (e.key === 'Enter') areaProps.addFilter("name", "LIKE", `%${e.target.value}%`);
                     },
-                    placeholder: "Product name"
+                    placeholder: "Product name",
+                    className: "uk-input uk-form-small uk-form-width-medium"
                 })
             )
         )
@@ -184,7 +189,7 @@ function QtyColumnHeader({ areaProps }) {
     }, []);
 
     return React.createElement(
-        "td",
+        "th",
         { className: "column" },
         React.createElement(
             "div",
@@ -210,7 +215,8 @@ function QtyColumnHeader({ areaProps }) {
                         onKeyPress: e => {
                             if (e.key === 'Enter') areaProps.addFilter("qty", "BETWEEN", `${e.target.value} AND ${filterTo.current.value}`);
                         },
-                        placeholder: "From"
+                        placeholder: "From",
+                        className: "uk-input uk-form-small uk-form-width-small"
                     })
                 ),
                 React.createElement(
@@ -222,7 +228,8 @@ function QtyColumnHeader({ areaProps }) {
                         onKeyPress: e => {
                             if (e.key === 'Enter') areaProps.addFilter("qty", "BETWEEN", `${filterFrom.current.value} AND ${e.target.value}`);
                         },
-                        placeholder: "To"
+                        placeholder: "To",
+                        className: "uk-input uk-form-small uk-form-width-small"
                     })
                 )
             )
@@ -243,7 +250,7 @@ function ThumbColumnHeader({ areaProps }) {
         areaProps.addField("image { thumb }");
     }, []);
     return React.createElement(
-        "td",
+        "th",
         { className: "column" },
         React.createElement(
             "div",
@@ -265,7 +272,7 @@ function ThumbColumnRow({ row }) {
     if (_.get(row, "image.thumb")) return React.createElement(
         "td",
         null,
-        React.createElement("img", { className: 'product-thumbnail', src: row.image.thumb })
+        React.createElement("img", { className: 'product-thumbnail table-row-img', src: row.image.thumb })
     );else return React.createElement(
         "td",
         null,
@@ -281,7 +288,7 @@ function StatusColumnHeader({ areaProps }) {
     }, []);
 
     return React.createElement(
-        "td",
+        "th",
         { className: "column" },
         React.createElement(
             "div",
@@ -300,9 +307,13 @@ function StatusColumnHeader({ areaProps }) {
                 { className: "filter" },
                 React.createElement(
                     "select",
-                    { ref: filterInput, onChange: e => {
+                    {
+                        ref: filterInput,
+                        onChange: e => {
                             areaProps.addFilter("status", "Equal", e.target.value);
-                        } },
+                        },
+                        className: "uk-select uk-form-small uk-form-width-small"
+                    },
                     React.createElement(
                         "option",
                         { value: 1 },
@@ -408,7 +419,7 @@ export default function ProductGrid({ apiUrl, defaultFilter }) {
         { className: "uk-overflow-auto" },
         React.createElement(
             "table",
-            { className: "uk-table uk-table-small" },
+            { className: "uk-table uk-table-small uk-table-divider" },
             React.createElement(
                 "thead",
                 null,
