@@ -9,27 +9,31 @@ function IdColumnHeader({areaProps}) {
         areaProps.addField("customer_id");
     }, []);
 
-    return <td>
+    return <th>
         <div className="header id-header">
             <div className={"title"}><span>ID</span></div>
             <div className={"filter"}>
-                <input
-                    className="uk-input uk-form-small"
-                    type={"text"}
-                    ref={filterFrom}
-                    onKeyPress={(e) => { if(e.key === 'Enter') areaProps.addFilter("id", "BETWEEN", `${e.target.value} AND ${filterTo.current.value}`);}}
-                    placeholder={"From"}
-                />
-                <input
-                    className="uk-input uk-form-small"
-                    type={"text"}
-                    ref={filterTo}
-                    onKeyPress={(e) => { if(e.key === 'Enter') areaProps.addFilter("id", "BETWEEN", `${filterFrom.current.value} AND ${e.target.value}`);}}
-                    placeholder={"To"}
-                />
+                <div>
+                    <input
+                        className="uk-input uk-form-small uk-form-width-small"
+                        type={"text"}
+                        ref={filterFrom}
+                        onKeyPress={(e) => { if(e.key === 'Enter') areaProps.addFilter("id", "BETWEEN", `${e.target.value} AND ${filterTo.current.value}`);}}
+                        placeholder={"From"}
+                    />
+                </div>
+                <div>
+                    <input
+                        className="uk-input uk-form-small uk-form-width-small"
+                        type={"text"}
+                        ref={filterTo}
+                        onKeyPress={(e) => { if(e.key === 'Enter') areaProps.addFilter("id", "BETWEEN", `${filterFrom.current.value} AND ${e.target.value}`);}}
+                        placeholder={"To"}
+                    />
+                </div>
             </div>
         </div>
-    </td>
+    </th>
 }
 
 function IdColumnRow({row}) {
@@ -43,12 +47,12 @@ function EmailColumnHeader({areaProps}) {
         areaProps.addField('email');
     }, []);
 
-    return <td>
+    return <th>
         <div className="header name-header">
             <div className={"title"}><span>Email</span></div>
             <div className={"filter"}>
                 <input
-                    className="uk-input uk-form-small"
+                    className="uk-input uk-form-small uk-form-width-small"
                     type={"text"}
                     ref={filterInput}
                     onKeyPress={(e) => { if(e.key === 'Enter') areaProps.addFilter("email", "LIKE", `%${e.target.value}%`);}}
@@ -56,7 +60,7 @@ function EmailColumnHeader({areaProps}) {
                 />
             </div>
         </div>
-    </td>
+    </th>
 }
 
 function EmailColumnRow({row}) {
@@ -70,12 +74,12 @@ function NameColumnHeader({areaProps}) {
         areaProps.addField('full_name');
     }, []);
 
-    return <td>
+    return <th>
         <div className="header name-header">
             <div className={"title"}><span>Full name</span></div>
             <div className={"filter"}>
                 <input
-                    className="uk-select uk-form-small"
+                    className="uk-input uk-form-small uk-form-width-small"
                     type={"text"}
                     ref={filterInput}
                     onKeyPress={(e) => { if(e.key === 'Enter') areaProps.addFilter("full_name", "LIKE", `%${e.target.value}%`);}}
@@ -83,7 +87,7 @@ function NameColumnHeader({areaProps}) {
                 />
             </div>
         </div>
-    </td>
+    </th>
 }
 
 function NameColumnRow({row}) {
@@ -98,12 +102,12 @@ function GroupColumnHeader({areaProps})
         areaProps.addField("group_id");
     }, []);
 
-    return <td>
+    return <th>
         <div className="header status-header">
             <div className={"title"}><span>Customer group</span></div>
             <div className={"filter"}>
                 <select
-                    className="uk-select uk-form-small"
+                    className="uk-select uk-form-small uk-form-width-small"
                     defaultValue={"placeholder"}
                     ref={filterInput}
                     onChange={(e)=> {
@@ -117,7 +121,7 @@ function GroupColumnHeader({areaProps})
                 </select>
             </div>
         </div>
-    </td>
+    </th>
 }
 
 function GroupColumnRow({row, groups}) {
@@ -129,11 +133,11 @@ function ActionColumnHeader({areaProps}) {
     React.useEffect(() => {
         areaProps.addField('editUrl');
     }, []);
-    return <td>
+    return <th>
         <div className="header">
             <div className={"title"}><span>Action</span></div>
         </div>
-    </td>
+    </th>
 }
 
 function ActionColumnRow({row}) {
@@ -252,7 +256,7 @@ export default function CmsPageGrid({apiUrl, groups = []})
 
     return <div className={"uk-overflow-auto"}>
         <div><h3>Customers</h3></div>
-        <table className="uk-table uk-table-small">
+        <table className="uk-table uk-table-small uk-table-divider">
             <thead>
             <Area
                 className={""}
