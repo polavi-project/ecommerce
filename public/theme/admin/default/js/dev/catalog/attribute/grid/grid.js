@@ -2,32 +2,15 @@ import Area from "../../../../../../../../js/production/area.js";
 import A from "../../../../../../../../js/production/a.js";
 
 function IdColumnHeader({areaProps}) {
-    const filterFrom = React.useRef(null);
-    const filterTo = React.useRef(null);
-
     React.useEffect(() => {
         areaProps.addField("attribute_id");
     }, []);
 
-    return <td>
+    return <th>
         <div className="header id-header">
             <div className={"title"}><span>ID</span></div>
-            <div className={"filter"}>
-                <input
-                    type={"text"}
-                    ref={filterFrom}
-                    onKeyPress={(e) => { if(e.key === 'Enter') areaProps.addFilter("id", "BETWEEN", `${e.target.value} AND ${filterTo.current.value}`);}}
-                    placeholder={"From"}
-                />
-                <input
-                    type={"text"}
-                    ref={filterTo}
-                    onKeyPress={(e) => { if(e.key === 'Enter') areaProps.addFilter("id", "BETWEEN", `${filterFrom.current.value} AND ${e.target.value}`);}}
-                    placeholder={"To"}
-                />
-            </div>
         </div>
-    </td>
+    </th>
 }
 
 function IdColumnRow({row}) {
@@ -41,13 +24,17 @@ function TypeColumnHeader({areaProps}) {
         areaProps.addField("type");
     }, []);
 
-    return <td>
+    return <th>
         <div className="header status-header">
             <div className={"title"}><span>Type</span></div>
             <div className={"filter"}>
-                <select className="uk-select" ref={filterInput} onChange={(e)=> {
-                    areaProps.addFilter("type", "Equal", e.target.value);
-                }}>
+                <select
+                    className="uk-select uk-form-small uk-form-width-small"
+                    ref={filterInput}
+                    onChange={(e)=> {
+                        areaProps.addFilter("type", "Equal", e.target.value);
+                    }}
+                >
                     <option value={"select"}>Select</option>
                     <option value={"multiselect"}>Multi Select</option>
                     <option value={"text"}>Text</option>
@@ -56,7 +43,7 @@ function TypeColumnHeader({areaProps}) {
                 </select>
             </div>
         </div>
-    </td>
+    </th>
 }
 
 function TypeColumnRow({row}) {
@@ -76,19 +63,23 @@ function IsRequiredColumnHeader({areaProps}) {
         areaProps.addField("is_required");
     }, []);
 
-    return <td>
+    return <th>
         <div className="header status-header">
             <div className={"title"}><span>Is required?</span></div>
             <div className={"filter"}>
-                <select className="uk-select" ref={filterInput} onChange={(e)=> {
-                    areaProps.addFilter("is_required", "Equal", e.target.value);
-                }}>
+                <select
+                    className="uk-select uk-form-small uk-form-width-small"
+                    ref={filterInput}
+                    onChange={(e)=> {
+                        areaProps.addFilter("is_required", "Equal", e.target.value);
+                    }}
+                >
                     <option value={1}>Yes</option>
                     <option value={0}>No</option>
                 </select>
             </div>
         </div>
-    </td>
+    </th>
 }
 
 function IsRequiredColumnRow({row}) {
@@ -106,19 +97,23 @@ function IsFilterableColumnHeader({areaProps}) {
         areaProps.addField("is_filterable");
     }, []);
 
-    return <td>
+    return <th>
         <div className="header status-header">
             <div className={"title"}><span>Is filterable?</span></div>
             <div className={"filter"}>
-                <select className="uk-select" ref={filterInput} onChange={(e)=> {
-                    areaProps.addFilter("is_filterable", "Equal", e.target.value);
-                }}>
+                <select
+                    className="uk-select uk-form-small uk-form-width-small"
+                    ref={filterInput}
+                    onChange={(e)=> {
+                        areaProps.addFilter("is_filterable", "Equal", e.target.value);
+                    }}
+                >
                     <option value={1}>Yes</option>
                     <option value={0}>No</option>
                 </select>
             </div>
         </div>
-    </td>
+    </th>
 }
 
 function IsFilterableColumnRow({row}) {
@@ -136,7 +131,7 @@ function NameColumnHeader({areaProps}) {
         areaProps.addField('attribute_name');
     }, []);
 
-    return <td>
+    return <th>
         <div className="header name-header">
             <div className={"title"}><span>Attribute name</span></div>
             <div className={"filter"}>
@@ -145,10 +140,11 @@ function NameColumnHeader({areaProps}) {
                     ref={filterInput}
                     onKeyPress={(e) => { if(e.key === 'Enter') areaProps.addFilter("name", "LIKE", `%${e.target.value}%`);}}
                     placeholder={"Attribute name"}
+                    className="uk-input uk-form-small uk-form-width-small"
                 />
             </div>
         </div>
-    </td>
+    </th>
 }
 
 function NameColumnRow({row}) {
@@ -159,11 +155,11 @@ function ActionColumnHeader({areaProps}) {
     React.useEffect(() => {
         areaProps.addField('editUrl');
     }, []);
-    return <td>
+    return <th>
         <div className="header">
             <div className={"title"}><span>Action</span></div>
         </div>
-    </td>
+    </th>
 }
 
 function ActionColumnRow({row}) {
@@ -253,7 +249,7 @@ export default function AttributeGrid({apiUrl})
     }, [fields, filters]);
 
     return <div className={"uk-overflow-auto"}>
-        <table className="uk-table uk-table-small">
+        <table className="uk-table uk-table-small uk-table-divider">
             <thead>
             <Area
                 className={""}
