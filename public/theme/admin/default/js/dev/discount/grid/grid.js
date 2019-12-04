@@ -9,13 +9,13 @@ function IdColumnHeader({areaProps}) {
         areaProps.addField("coupon_id");
     }, []);
 
-    return <td>
+    return <th>
         <div className="header id-header">
             <div className={"title"}><span>ID</span></div>
             <div className={"filter"}>
                 <div>
                     <input
-                        className="uk-input uk-form-small"
+                        className="uk-input uk-form-small uk-form-width-small"
                         type={"text"}
                         ref={filterFrom}
                         onKeyPress={(e) => { if(e.key === 'Enter') areaProps.addFilter("id", "BETWEEN", `${e.target.value} AND ${filterTo.current.value}`);}}
@@ -24,7 +24,7 @@ function IdColumnHeader({areaProps}) {
                 </div>
                 <div>
                     <input
-                        className="uk-input uk-form-small"
+                        className="uk-input uk-form-small uk-form-width-small"
                         type={"text"}
                         ref={filterTo}
                         onKeyPress={(e) => { if(e.key === 'Enter') areaProps.addFilter("id", "BETWEEN", `${filterFrom.current.value} AND ${e.target.value}`);}}
@@ -33,7 +33,7 @@ function IdColumnHeader({areaProps}) {
                 </div>
             </div>
         </div>
-    </td>
+    </th>
 }
 
 function IdColumnRow({row}) {
@@ -46,12 +46,12 @@ function DescriptionColumnHeader({areaProps}) {
         areaProps.addField('description');
     }, []);
 
-    return <td>
+    return <th>
         <div className="header name-header">
             <div className={"title"}><span>Description</span></div>
             <div className={"filter"}>
                 <input
-                    className="uk-input uk-form-small"
+                    className="uk-input uk-form-small uk-form-width-medium"
                     type={"text"}
                     ref={filterInput}
                     onKeyPress={(e) => { if(e.key === 'Enter') areaProps.addFilter("description", "LIKE", `%${e.target.value}%`);}}
@@ -59,7 +59,7 @@ function DescriptionColumnHeader({areaProps}) {
                 />
             </div>
         </div>
-    </td>
+    </th>
 }
 
 function DescriptionColumnRow({row}) {
@@ -70,11 +70,11 @@ function ActionColumnHeader({areaProps}) {
     React.useEffect(() => {
         areaProps.addField('editUrl');
     }, []);
-    return <td>
+    return <th>
         <div className="header">
             <div className={"title"}><span>Action</span></div>
         </div>
-    </td>
+    </th>
 }
 
 function ActionColumnRow({row}) {
@@ -89,11 +89,11 @@ function StatusColumnHeader({areaProps})
         areaProps.addField("status");
     }, []);
 
-    return <td>
+    return <th>
         <div className="header status-header">
             <div className={"title"}><span>Status</span></div>
             <div className={"filter"}>
-                <select className="uk-select uk-form-small" ref={filterInput} onChange={(e)=> {
+                <select className="uk-select uk-form-small uk-form-width-small" ref={filterInput} onChange={(e)=> {
                     areaProps.addFilter("status", "Equal", e.target.value);
                 }}>
                     <option value={1}>Enabled</option>
@@ -101,7 +101,7 @@ function StatusColumnHeader({areaProps})
                 </select>
             </div>
         </div>
-    </td>
+    </th>
 }
 
 function StatusColumnRow({row}) {
@@ -193,7 +193,7 @@ export default function CouponGrid({apiUrl})
     }, [fields, filters]);
 
     return <div className={"uk-overflow-auto"}>
-        <table className="uk-table uk-table-small">
+        <table className="uk-table uk-table-small uk-table-divider">
             <thead>
             <Area
                 className={""}
