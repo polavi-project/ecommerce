@@ -54,7 +54,6 @@ class HtmlDocument
         $this->addCssFile('style.css');
         $this->addCssFile('uikit.min.css');
         $this->addjsFile('production/jquery-3.3.1.min.js', 0);
-        $this->addjsFile('production/observer.js', 10);
     }
 
     public function addJsFile($path, $sortOrder = null, $type="text/javascript")
@@ -243,7 +242,7 @@ class HtmlDocument
         echo "<script src=\"https://unpkg.com/axios/dist/axios.min.js\"></script>";
         if($this->request->isAdmin())
             echo "<script crossorigin src=\"".get_js_file_url('production/tinymce/tinymce.min.js')."\"></script>";
-        echo "<script crossorigin src=\"".get_js_file_url('production/lodash.js')."\"></script>";
+        echo "<script crossorigin=true src=\"".get_js_file_url('production/lodash.js')."\"></script>";
         echo "<script crossorigin src=\"".get_js_file_url('production/react.js')."\"></script>";
         echo "<script crossorigin src=\"https://unpkg.com/react-dom@16/umd/react-dom.development.js\"></script>";
         echo "<script crossorigin src=\"https://unpkg.com/prop-types@15.6/prop-types.js\"></script>";
@@ -255,21 +254,6 @@ class HtmlDocument
         }
 
         echo "<script crossorigin src=\"https://cdnjs.cloudflare.com/ajax/libs/pubsub-js/1.7.0/pubsub.js\"></script>";
-//        $format = "<script type=\"text/javascript\">
-////<![CDATA[
-//base_url = \"%s\";
-//language = \"%s\";
-//currency = \"%s\";
-//data = %s;
-////]]>
-//</script>";
-//
-//        echo sprintf($format,
-//            get_base_url(false, $this->request->isAdmin()),
-//            $language_code,
-//            get_config('general_currency', 'USD'),
-//            json_encode($jsonData)
-//        );
         echo $this->getHtmlBeforeCloseHead();
         echo "</head>";
         echo "<body>";
