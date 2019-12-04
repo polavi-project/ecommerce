@@ -12,7 +12,7 @@ function IdColumnHeader({ areaProps }) {
     }, []);
 
     return React.createElement(
-        "td",
+        "th",
         null,
         React.createElement(
             "div",
@@ -38,7 +38,8 @@ function IdColumnHeader({ areaProps }) {
                         onKeyPress: e => {
                             if (e.key === 'Enter') areaProps.addFilter("id", "BETWEEN", `${e.target.value} AND ${filterTo.current.value}`);
                         },
-                        placeholder: "From"
+                        placeholder: "From",
+                        className: "uk-input uk-form-small uk-form-width-small"
                     })
                 ),
                 React.createElement(
@@ -50,7 +51,8 @@ function IdColumnHeader({ areaProps }) {
                         onKeyPress: e => {
                             if (e.key === 'Enter') areaProps.addFilter("id", "BETWEEN", `${filterFrom.current.value} AND ${e.target.value}`);
                         },
-                        placeholder: "To"
+                        placeholder: "To",
+                        className: "uk-input uk-form-small uk-form-width-small"
                     })
                 )
             )
@@ -78,7 +80,7 @@ function NumberColumnHeader({ areaProps }) {
     }, []);
 
     return React.createElement(
-        "td",
+        "th",
         null,
         React.createElement(
             "div",
@@ -101,7 +103,8 @@ function NumberColumnHeader({ areaProps }) {
                     onKeyPress: e => {
                         if (e.key === 'Enter') areaProps.addFilter("orderNumber", "Equal", `%${e.target.value}%`);
                     },
-                    placeholder: "Order number"
+                    placeholder: "Order number",
+                    className: "uk-input uk-form-small uk-form-width-small"
                 })
             )
         )
@@ -130,7 +133,7 @@ function TotalColumnHeader({ areaProps }) {
     }, []);
 
     return React.createElement(
-        "td",
+        "th",
         null,
         React.createElement(
             "div",
@@ -156,7 +159,8 @@ function TotalColumnHeader({ areaProps }) {
                         onKeyPress: e => {
                             if (e.key === 'Enter') areaProps.addFilter("grand_total", "BETWEEN", `${e.target.value} AND ${filterTo.current.value}`);
                         },
-                        placeholder: "From"
+                        placeholder: "From",
+                        className: "uk-input uk-form-small uk-form-width-small"
                     })
                 ),
                 React.createElement(
@@ -168,7 +172,8 @@ function TotalColumnHeader({ areaProps }) {
                         onKeyPress: e => {
                             if (e.key === 'Enter') areaProps.addFilter("grand_total", "BETWEEN", `${filterFrom.current.value} AND ${e.target.value}`);
                         },
-                        placeholder: "To"
+                        placeholder: "To",
+                        className: "uk-input uk-form-small uk-form-width-small"
                     })
                 )
             )
@@ -196,7 +201,7 @@ function PaymentStatusColumnHeader({ areaProps }) {
     }, []);
 
     return React.createElement(
-        "td",
+        "th",
         null,
         React.createElement(
             "div",
@@ -215,9 +220,13 @@ function PaymentStatusColumnHeader({ areaProps }) {
                 { className: "filter" },
                 React.createElement(
                     "select",
-                    { ref: filterInput, onChange: e => {
+                    {
+                        ref: filterInput,
+                        onChange: e => {
                             areaProps.addFilter("status", "Equal", e.target.value);
-                        } },
+                        },
+                        className: "uk-select uk-form-small uk-form-width-small"
+                    },
                     React.createElement(
                         "option",
                         { value: 1 },
@@ -250,7 +259,7 @@ function ShipmentStatusColumnHeader({ areaProps }) {
     }, []);
 
     return React.createElement(
-        "td",
+        "th",
         null,
         React.createElement(
             "div",
@@ -267,9 +276,14 @@ function ShipmentStatusColumnHeader({ areaProps }) {
             React.createElement(
                 "div",
                 { className: "filter" },
-                React.createElement("input", { type: "text", ref: filterInput, onKeyPress: e => {
+                React.createElement("input", {
+                    type: "text",
+                    ref: filterInput,
+                    onKeyPress: e => {
                         if (e.key === 'Enter') areaProps.addFilter("shipment_status", "Equal", e.target.value);
-                    } })
+                    },
+                    className: "uk-input uk-form-small uk-form-width-small"
+                })
             )
         )
     );
@@ -289,7 +303,7 @@ function ActionColumnHeader({ areaProps }) {
     }, []);
 
     return React.createElement(
-        "td",
+        "th",
         null,
         React.createElement(
             "div",
@@ -390,7 +404,7 @@ export default function OrderGrid({ apiUrl }) {
         { className: "uk-overflow-auto" },
         React.createElement(
             "table",
-            { className: "uk-table uk-table-small" },
+            { className: "uk-table uk-table-small uk-table-divider" },
             React.createElement(
                 "thead",
                 null,
