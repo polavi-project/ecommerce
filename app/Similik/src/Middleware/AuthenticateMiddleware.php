@@ -8,8 +8,8 @@ declare(strict_types=1);
 
 namespace Similik\Middleware;
 
+use function Similik\_mysql;
 use Similik\Module\Customer\Services\Customer;
-use Similik\Services\Helper;
 use Similik\Services\Http\Request;
 use Similik\Services\Http\Response;
 use Similik\Services\Routing\Router;
@@ -56,7 +56,7 @@ class AuthenticateMiddleware extends MiddlewareAbstract
 
     protected function loadUser($id)
     {
-        $user = Helper::getMysqlTable('admin_user')->where('status', '=', 1)->andWhere('admin_user_id', '=', $id)->fetchOneAssoc();
+        $user = _mysql()->getTable('admin_user')->where('status', '=', 1)->andWhere('admin_user_id', '=', $id)->fetchOneAssoc();
         if($user == false)
             throw new \RuntimeException('User does not exist');
 

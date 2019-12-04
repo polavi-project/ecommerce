@@ -8,9 +8,9 @@ declare(strict_types=1);
 
 namespace Similik\Module\Catalog\Middleware\Product\Edit;
 
+use function Similik\_mysql;
 use function Similik\get_default_language_Id;
 use Similik\Services\Helmet;
-use Similik\Services\Helper;
 use Similik\Services\Http\Response;
 use Similik\Services\Http\Request;
 use Similik\Middleware\MiddlewareAbstract;
@@ -28,7 +28,7 @@ class InitMiddleware extends MiddlewareAbstract
     {
         $id = (int) $request->attributes->get('id');
         if($id) {
-            $product = Helper::getMysqlTable('product')->load($id);
+            $product = _mysql()->getTable('product')->load($id);
             if($product === false) {
                 $response->addData('success', 0);
                 $response->addData('message', 'Requested product does not exist');
