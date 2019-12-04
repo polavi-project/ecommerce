@@ -103,7 +103,8 @@ td .form-field{margin-top: 0px}
 .similik-form-button{margin-top: 15px}
 /* GRID */
 table input{max-width: 95px}
-
+table.uk-table thead th{vertical-align: top}
+.table-row-img{max-width: 60px}
 .row {
     border-top: 1px solid #999;
     min-height: 25px;

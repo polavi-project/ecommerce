@@ -10,7 +10,7 @@ function IdColumnHeader({ areaProps }) {
     }, []);
 
     return React.createElement(
-        "td",
+        "th",
         { className: "column" },
         React.createElement(
             "div",
@@ -75,7 +75,7 @@ function PriceColumnHeader({ areaProps }) {
     }, []);
 
     return React.createElement(
-        "td",
+        "th",
         null,
         React.createElement(
             "div",
@@ -141,7 +141,7 @@ function NameColumnHeader({ areaProps }) {
     }, []);
 
     return React.createElement(
-        "td",
+        "th",
         { className: "column" },
         React.createElement(
             "div",
@@ -189,7 +189,7 @@ function QtyColumnHeader({ areaProps }) {
     }, []);
 
     return React.createElement(
-        "td",
+        "th",
         { className: "column" },
         React.createElement(
             "div",
@@ -250,7 +250,7 @@ function ThumbColumnHeader({ areaProps }) {
         areaProps.addField("image { thumb }");
     }, []);
     return React.createElement(
-        "td",
+        "th",
         { className: "column" },
         React.createElement(
             "div",
@@ -272,7 +272,7 @@ function ThumbColumnRow({ row }) {
     if (_.get(row, "image.thumb")) return React.createElement(
         "td",
         null,
-        React.createElement("img", { className: 'product-thumbnail', src: row.image.thumb })
+        React.createElement("img", { className: 'product-thumbnail table-row-img', src: row.image.thumb })
     );else return React.createElement(
         "td",
         null,
@@ -288,7 +288,7 @@ function StatusColumnHeader({ areaProps }) {
     }, []);
 
     return React.createElement(
-        "td",
+        "th",
         { className: "column" },
         React.createElement(
             "div",
@@ -419,7 +419,7 @@ export default function ProductGrid({ apiUrl, defaultFilter }) {
         { className: "uk-overflow-auto" },
         React.createElement(
             "table",
-            { className: "uk-table uk-table-small" },
+            { className: "uk-table uk-table-small uk-table-divider" },
             React.createElement(
                 "thead",
                 null,

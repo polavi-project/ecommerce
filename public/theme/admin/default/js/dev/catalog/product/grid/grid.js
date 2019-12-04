@@ -9,7 +9,7 @@ function IdColumnHeader({areaProps}) {
         areaProps.addField("product_id");
     }, []);
 
-    return <td className={"column"}>
+    return <th className={"column"}>
         <div className="header id-header">
             <div className={"title"}><span>ID</span></div>
             <div className={"filter"}>
@@ -33,7 +33,7 @@ function IdColumnHeader({areaProps}) {
                 </div>
             </div>
         </div>
-    </td>
+    </th>
 }
 
 function IdColumnRow({row}) {
@@ -48,7 +48,7 @@ function PriceColumnHeader({areaProps}) {
         areaProps.addField("price");
     }, []);
 
-    return <td>
+    return <th>
         <div className="header price-header">
             <div className={"title"}><span>Price</span></div>
             <div className={"filter"}>
@@ -72,7 +72,7 @@ function PriceColumnHeader({areaProps}) {
                 </div>
             </div>
         </div>
-    </td>
+    </th>
 }
 
 function PriceColumnRow({row}) {
@@ -88,7 +88,7 @@ function NameColumnHeader({areaProps}) {
         areaProps.addField('name');
     }, []);
 
-    return <td className={"column"}>
+    return <th className={"column"}>
         <div className="header name-header">
             <div className={"title"}><span>Product name</span></div>
             <div className={"filter"}>
@@ -101,7 +101,7 @@ function NameColumnHeader({areaProps}) {
                 />
             </div>
         </div>
-    </td>
+    </th>
 }
 
 function NameColumnRow({row}) {
@@ -116,7 +116,7 @@ function QtyColumnHeader({areaProps}) {
         areaProps.addField('qty');
     }, []);
 
-    return <td className={"column"}>
+    return <th className={"column"}>
         <div className="header name-header">
             <div className={"title"}><span>Qty</span></div>
             <div className={"filter"}>
@@ -140,7 +140,7 @@ function QtyColumnHeader({areaProps}) {
                 </div>
             </div>
         </div>
-    </td>
+    </th>
 }
 
 function QtyColumnRow({row}) {
@@ -152,16 +152,16 @@ function ThumbColumnHeader({areaProps})
     React.useEffect(() => {
         areaProps.addField("image { thumb }");
     }, []);
-    return <td className={"column"}>
+    return <th className={"column"}>
         <div className="header thumb-header">
             <div className={"title"}><span>Thumbnail</span></div>
         </div>
-    </td>
+    </th>
 }
 
 function ThumbColumnRow({row}) {
     if(_.get(row, "image.thumb"))
-        return <td><img className={'product-thumbnail'} src={row.image.thumb}/></td>;
+        return <td><img className={'product-thumbnail table-row-img'} src={row.image.thumb}/></td>;
     else
         return <td><span uk-icon="icon: image; ratio: 3"></span></td>;
 }
@@ -174,7 +174,7 @@ function StatusColumnHeader({areaProps})
         areaProps.addField("status");
     }, []);
 
-    return <td className={"column"}>
+    return <th className={"column"}>
         <div className="header status-header">
             <div className={"title"}><span>Status</span></div>
             <div className={"filter"}>
@@ -190,7 +190,7 @@ function StatusColumnHeader({areaProps})
                 </select>
             </div>
         </div>
-    </td>
+    </th>
 }
 
 function StatusColumnRow({row}) {
@@ -283,7 +283,7 @@ export default function ProductGrid({apiUrl, defaultFilter})
     }, [fields, filters]);
 
     return <div className={"uk-overflow-auto"}>
-        <table className="uk-table uk-table-small">
+        <table className="uk-table uk-table-small uk-table-divider">
             <thead>
             <Area
                 className={""}

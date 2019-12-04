@@ -29,6 +29,12 @@ class GridMiddleware extends MiddlewareAbstract
 
         $this->getContainer()->get(Helmet::class)->setTitle("Products");
         $response->addWidget(
+            'product_grid_title',
+            'content',
+            0, get_js_file_url("production/catalog/product/grid/title.js", true)
+        );
+        
+        $response->addWidget(
             'product_grid',
             'content',
             20, get_js_file_url("production/catalog/product/grid/grid.js", true),
