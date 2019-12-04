@@ -21,6 +21,7 @@ class AddCatalogMenuMiddleware extends MiddlewareAbstract
     {
         if(!$request->isAdmin())
             return $delegate;
+
         $this->getContainer()->get(NavigationManager::class)
             ->addItem(
                 'catalog',
@@ -36,28 +37,13 @@ class AddCatalogMenuMiddleware extends MiddlewareAbstract
                 'catalog'
             )
             ->addItem(
-                'new-product',
-                'Add product',
-                $this->getContainer()->get(Router::class)->generateUrl('product.create'),
-                'plus',
-                'catalog'
-            )
-            ->addItem(
                 'categories',
                 'All category',
                 $this->getContainer()->get(Router::class)->generateUrl('category.grid'),
                 'list',
                 'catalog'
-            )
-            ->addItem(
-                'new-category',
-                'Add category',
-                $this->getContainer()->get(Router::class)->generateUrl('category.create'),
-                'plus',
-                'catalog'
             );
 
-
-        return true;
+        return $delegate;
     }
 }

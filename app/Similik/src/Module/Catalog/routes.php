@@ -8,9 +8,8 @@ declare(strict_types=1);
 
 /** @var \Similik\Services\Routing\Router $router */
 $router->addAdminRoute('product.grid', 'GET', '/products', [
-//    \Similik\Module\Catalog\Middleware\Product\Grid\ColumnMiddleware::class,
-//    \Similik\Module\Catalog\Middleware\Product\Grid\BuildCollectionMiddleware::class,
     \Similik\Module\Catalog\Middleware\Product\Grid\GridMiddleware::class,
+    \Similik\Module\Catalog\Middleware\Product\Grid\AddNewButtonMiddleware::class,
     \Similik\Module\Catalog\Middleware\Product\Grid\ActionColumn::class,
 ]);
 
@@ -45,6 +44,7 @@ $router->addAdminRoute('product.delete', 'GET', '/product/delete/{id:\d+}', [
 
 $router->addAdminRoute('category.grid', 'GET', '/categories', [
     \Similik\Module\Catalog\Middleware\Category\Grid\GridMiddleware::class,
+    \Similik\Module\Catalog\Middleware\Category\Grid\AddNewButtonMiddleware::class,
 ]);
 
 $categoryEditMiddleware = [
