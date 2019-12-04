@@ -29,6 +29,11 @@ class GridMiddleware extends MiddlewareAbstract
 
         $this->getContainer()->get(Helmet::class)->setTitle("Coupons");
         $response->addWidget(
+            'coupon_grid_title',
+            'content',
+            0, get_js_file_url("production/discount/grid/title.js", true)
+        );
+        $response->addWidget(
             'coupon-grid',
             'content',
             20, get_js_file_url("production/discount/grid/grid.js", true),
