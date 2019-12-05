@@ -27,7 +27,12 @@ class GridMiddleware extends MiddlewareAbstract
         if($response->hasWidget('attribute-grid'))
             return $delegate;
 
-        $this->getContainer()->get(Helmet::class)->setTitle("Product attribute groups");
+        $this->getContainer()->get(Helmet::class)->setTitle("Attribute groups");
+        $response->addWidget(
+            'attribute_group_grid_title',
+            'content',
+            0, get_js_file_url("production/catalog/attribute_group/grid/title.js", true)
+        );
         $response->addWidget(
             'attribute-group-grid',
             'content',

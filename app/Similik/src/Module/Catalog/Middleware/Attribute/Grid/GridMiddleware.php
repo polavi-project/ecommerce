@@ -28,6 +28,13 @@ class GridMiddleware extends MiddlewareAbstract
             return $delegate;
 
         $this->getContainer()->get(Helmet::class)->setTitle("Product attributes");
+
+        $response->addWidget(
+            'attribute_grid_title',
+            'content',
+            0, get_js_file_url("production/catalog/attribute/grid/title.js", true)
+        );
+
         $response->addWidget(
             'attribute-grid',
             'content',

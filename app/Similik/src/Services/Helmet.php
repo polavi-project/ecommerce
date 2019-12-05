@@ -41,6 +41,8 @@ class Helmet
     public function addMeta(array $attributes)
     {
         $this->metas[] = $attributes;
+
+        return $this;
     }
 
     public function getMetas()
@@ -51,6 +53,8 @@ class Helmet
     public function addLink(array $attributes)
     {
         $this->links[] = $attributes;
+
+        return $this;
     }
 
     public function getLinks()
@@ -58,12 +62,11 @@ class Helmet
         return $this->links;
     }
 
-    public function addScript($src, $type = "text/javascript")
+    public function addScript(array $attributes)
     {
-        $this->scripts[] = [
-            'src'=> $src,
-            'type' => $type
-        ];
+        $this->scripts[] = $attributes;
+
+        return $this;
     }
 
     public function getScripts()
@@ -90,13 +93,13 @@ class Helmet
             echo $l;
         }
 
-//        foreach ($this->scripts as $script) {
-//            $s = "<script ";
-//            foreach ($script[0] as $key=>$value)
-//                $s .= "{$key}=\"{$value}\" ";
-//            $s .= ">{$script[1]}</script>";
-//            echo $s;
-//        }
+        foreach ($this->scripts as $script) {
+            $s = "<script ";
+            foreach ($script as $key=>$value)
+                $s .= "{$key}=\"{$value}\" ";
+            $s .= "></script>";
+            echo $s;
+        }
         $output = ob_get_clean();
 
         return $output;

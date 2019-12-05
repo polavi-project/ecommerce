@@ -67,7 +67,7 @@ class OrderItemType extends ObjectType
                         'type' => $container->get(Price::class)
                     ],
                     'total' => [
-                        'type' => Type::nonNull(Type::int())
+                        'type' => Type::nonNull(Type::float())
                     ],
                     'options' => [
                         'type' => Type::listOf($container->get(ItemCustomOptionType::class)),

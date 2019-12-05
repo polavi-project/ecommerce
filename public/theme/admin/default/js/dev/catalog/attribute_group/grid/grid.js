@@ -9,25 +9,11 @@ function IdColumnHeader({areaProps}) {
         areaProps.addField("attribute_group_id");
     }, []);
 
-    return <td>
+    return <th>
         <div className="header id-header">
             <div className={"title"}><span>ID</span></div>
-            <div className={"filter"}>
-                <input
-                    type={"text"}
-                    ref={filterFrom}
-                    onKeyPress={(e) => { if(e.key === 'Enter') areaProps.addFilter("attribute_group_id", "BETWEEN", `${e.target.value} AND ${filterTo.current.value}`);}}
-                    placeholder={"From"}
-                />
-                <input
-                    type={"text"}
-                    ref={filterTo}
-                    onKeyPress={(e) => { if(e.key === 'Enter') areaProps.addFilter("attribute_group_id", "BETWEEN", `${filterFrom.current.value} AND ${e.target.value}`);}}
-                    placeholder={"To"}
-                />
-            </div>
         </div>
-    </td>
+    </th>
 }
 
 function IdColumnRow({row}) {
@@ -49,7 +35,8 @@ function NameColumnHeader({areaProps}) {
                     type={"text"}
                     ref={filterInput}
                     onKeyPress={(e) => { if(e.key === 'Enter') areaProps.addFilter("group_name", "LIKE", `%${e.target.value}%`);}}
-                    placeholder={"Attribute name"}
+                    placeholder={"Group name"}
+                    className="uk-input uk-form-small uk-form-width-small"
                 />
             </div>
         </div>
@@ -158,7 +145,7 @@ export default function AttributeGrid({apiUrl})
     }, [fields, filters]);
 
     return <div className={"uk-overflow-auto"}>
-        <table className="uk-table uk-table-small">
+        <table className="uk-table uk-table-small uk-table-divider">
             <thead>
             <Area
                 className={""}

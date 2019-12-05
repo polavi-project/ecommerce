@@ -76,10 +76,6 @@ class App
             return new Helmet();
         };
 
-        the_container()[HtmlDocument::class] = function($c) {
-            return new HtmlDocument($c[Request::class], $c[Helmet::class]);
-        };
-
         the_container()[Response::class] = function($c) {
             return new Response();
         };
@@ -176,8 +172,8 @@ class App
                 20 => RoutingMiddleware::class,
                 30 => AuthenticateMiddleware::class,
                 35 => CartInitMiddleware::class,
+                36 => InitHtmlMiddleware::class,
                 40 => HandlerMiddleware::class,
-                60 => InitHtmlMiddleware::class,
                 70 => SaveCartMiddleware::class,
                 80 => PromiseWaiterMiddleware::class,
                 90 => AdminLayoutMiddleware::class,

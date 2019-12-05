@@ -10,7 +10,7 @@ function IdColumnHeader({ areaProps }) {
     }, []);
 
     return React.createElement(
-        "td",
+        "th",
         null,
         React.createElement(
             "div",
@@ -27,24 +27,32 @@ function IdColumnHeader({ areaProps }) {
             React.createElement(
                 "div",
                 { className: "filter" },
-                React.createElement("input", {
-                    className: "uk-input uk-form-small",
-                    type: "text",
-                    ref: filterFrom,
-                    onKeyPress: e => {
-                        if (e.key === 'Enter') areaProps.addFilter("id", "BETWEEN", `${e.target.value} AND ${filterTo.current.value}`);
-                    },
-                    placeholder: "From"
-                }),
-                React.createElement("input", {
-                    className: "uk-input uk-form-small",
-                    type: "text",
-                    ref: filterTo,
-                    onKeyPress: e => {
-                        if (e.key === 'Enter') areaProps.addFilter("id", "BETWEEN", `${filterFrom.current.value} AND ${e.target.value}`);
-                    },
-                    placeholder: "To"
-                })
+                React.createElement(
+                    "div",
+                    null,
+                    React.createElement("input", {
+                        className: "uk-input uk-form-small uk-form-width-small",
+                        type: "text",
+                        ref: filterFrom,
+                        onKeyPress: e => {
+                            if (e.key === 'Enter') areaProps.addFilter("id", "BETWEEN", `${e.target.value} AND ${filterTo.current.value}`);
+                        },
+                        placeholder: "From"
+                    })
+                ),
+                React.createElement(
+                    "div",
+                    null,
+                    React.createElement("input", {
+                        className: "uk-input uk-form-small uk-form-width-small",
+                        type: "text",
+                        ref: filterTo,
+                        onKeyPress: e => {
+                            if (e.key === 'Enter') areaProps.addFilter("id", "BETWEEN", `${filterFrom.current.value} AND ${e.target.value}`);
+                        },
+                        placeholder: "To"
+                    })
+                )
             )
         )
     );
@@ -70,7 +78,7 @@ function EmailColumnHeader({ areaProps }) {
     }, []);
 
     return React.createElement(
-        "td",
+        "th",
         null,
         React.createElement(
             "div",
@@ -88,7 +96,7 @@ function EmailColumnHeader({ areaProps }) {
                 "div",
                 { className: "filter" },
                 React.createElement("input", {
-                    className: "uk-input uk-form-small",
+                    className: "uk-input uk-form-small uk-form-width-small",
                     type: "text",
                     ref: filterInput,
                     onKeyPress: e => {
@@ -121,7 +129,7 @@ function NameColumnHeader({ areaProps }) {
     }, []);
 
     return React.createElement(
-        "td",
+        "th",
         null,
         React.createElement(
             "div",
@@ -139,7 +147,7 @@ function NameColumnHeader({ areaProps }) {
                 "div",
                 { className: "filter" },
                 React.createElement("input", {
-                    className: "uk-select uk-form-small",
+                    className: "uk-input uk-form-small uk-form-width-small",
                     type: "text",
                     ref: filterInput,
                     onKeyPress: e => {
@@ -172,7 +180,7 @@ function GroupColumnHeader({ areaProps }) {
     }, []);
 
     return React.createElement(
-        "td",
+        "th",
         null,
         React.createElement(
             "div",
@@ -192,7 +200,7 @@ function GroupColumnHeader({ areaProps }) {
                 React.createElement(
                     "select",
                     {
-                        className: "uk-select uk-form-small",
+                        className: "uk-select uk-form-small uk-form-width-small",
                         defaultValue: "placeholder",
                         ref: filterInput,
                         onChange: e => {
@@ -235,7 +243,7 @@ function ActionColumnHeader({ areaProps }) {
         areaProps.addField('editUrl');
     }, []);
     return React.createElement(
-        "td",
+        "th",
         null,
         React.createElement(
             "div",
@@ -411,7 +419,7 @@ export default function CmsPageGrid({ apiUrl, groups = [] }) {
         ),
         React.createElement(
             "table",
-            { className: "uk-table uk-table-small" },
+            { className: "uk-table uk-table-small uk-table-divider" },
             React.createElement(
                 "thead",
                 null,

@@ -2,15 +2,12 @@ import Area from "../../../../../../../../js/production/area.js";
 import A from "../../../../../../../../js/production/a.js";
 
 function IdColumnHeader({ areaProps }) {
-    const filterFrom = React.useRef(null);
-    const filterTo = React.useRef(null);
-
     React.useEffect(() => {
         areaProps.addField("attribute_id");
     }, []);
 
     return React.createElement(
-        "td",
+        "th",
         null,
         React.createElement(
             "div",
@@ -23,26 +20,6 @@ function IdColumnHeader({ areaProps }) {
                     null,
                     "ID"
                 )
-            ),
-            React.createElement(
-                "div",
-                { className: "filter" },
-                React.createElement("input", {
-                    type: "text",
-                    ref: filterFrom,
-                    onKeyPress: e => {
-                        if (e.key === 'Enter') areaProps.addFilter("id", "BETWEEN", `${e.target.value} AND ${filterTo.current.value}`);
-                    },
-                    placeholder: "From"
-                }),
-                React.createElement("input", {
-                    type: "text",
-                    ref: filterTo,
-                    onKeyPress: e => {
-                        if (e.key === 'Enter') areaProps.addFilter("id", "BETWEEN", `${filterFrom.current.value} AND ${e.target.value}`);
-                    },
-                    placeholder: "To"
-                })
             )
         )
     );
@@ -68,7 +45,7 @@ function TypeColumnHeader({ areaProps }) {
     }, []);
 
     return React.createElement(
-        "td",
+        "th",
         null,
         React.createElement(
             "div",
@@ -87,9 +64,13 @@ function TypeColumnHeader({ areaProps }) {
                 { className: "filter" },
                 React.createElement(
                     "select",
-                    { className: "uk-select", ref: filterInput, onChange: e => {
+                    {
+                        className: "uk-select uk-form-small uk-form-width-small",
+                        ref: filterInput,
+                        onChange: e => {
                             areaProps.addFilter("type", "Equal", e.target.value);
-                        } },
+                        }
+                    },
                     React.createElement(
                         "option",
                         { value: "select" },
@@ -161,7 +142,7 @@ function IsRequiredColumnHeader({ areaProps }) {
     }, []);
 
     return React.createElement(
-        "td",
+        "th",
         null,
         React.createElement(
             "div",
@@ -180,9 +161,13 @@ function IsRequiredColumnHeader({ areaProps }) {
                 { className: "filter" },
                 React.createElement(
                     "select",
-                    { className: "uk-select", ref: filterInput, onChange: e => {
+                    {
+                        className: "uk-select uk-form-small uk-form-width-small",
+                        ref: filterInput,
+                        onChange: e => {
                             areaProps.addFilter("is_required", "Equal", e.target.value);
-                        } },
+                        }
+                    },
                     React.createElement(
                         "option",
                         { value: 1 },
@@ -231,7 +216,7 @@ function IsFilterableColumnHeader({ areaProps }) {
     }, []);
 
     return React.createElement(
-        "td",
+        "th",
         null,
         React.createElement(
             "div",
@@ -250,9 +235,13 @@ function IsFilterableColumnHeader({ areaProps }) {
                 { className: "filter" },
                 React.createElement(
                     "select",
-                    { className: "uk-select", ref: filterInput, onChange: e => {
+                    {
+                        className: "uk-select uk-form-small uk-form-width-small",
+                        ref: filterInput,
+                        onChange: e => {
                             areaProps.addFilter("is_filterable", "Equal", e.target.value);
-                        } },
+                        }
+                    },
                     React.createElement(
                         "option",
                         { value: 1 },
@@ -301,7 +290,7 @@ function NameColumnHeader({ areaProps }) {
     }, []);
 
     return React.createElement(
-        "td",
+        "th",
         null,
         React.createElement(
             "div",
@@ -324,7 +313,8 @@ function NameColumnHeader({ areaProps }) {
                     onKeyPress: e => {
                         if (e.key === 'Enter') areaProps.addFilter("name", "LIKE", `%${e.target.value}%`);
                     },
-                    placeholder: "Attribute name"
+                    placeholder: "Attribute name",
+                    className: "uk-input uk-form-small uk-form-width-small"
                 })
             )
         )
@@ -348,7 +338,7 @@ function ActionColumnHeader({ areaProps }) {
         areaProps.addField('editUrl');
     }, []);
     return React.createElement(
-        "td",
+        "th",
         null,
         React.createElement(
             "div",
@@ -453,7 +443,7 @@ export default function AttributeGrid({ apiUrl }) {
         { className: "uk-overflow-auto" },
         React.createElement(
             "table",
-            { className: "uk-table uk-table-small" },
+            { className: "uk-table uk-table-small uk-table-divider" },
             React.createElement(
                 "thead",
                 null,

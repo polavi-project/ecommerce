@@ -22,11 +22,6 @@ class NavigationManager
         int $sortOrder = 1
     )
     {
-        if(isset($this->items[$id]))
-            throw new \Exception(sprintf("Item %s already existed", $id));
-//        if($parentId && !isset($this->items[$parentId]))
-//            throw new \Exception(sprintf("Item %s does not exist", $parentId));
-
         $this->items[$id] = [
             "id" => $id,
             "sort_order" => $sortOrder,

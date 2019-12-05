@@ -10,7 +10,7 @@ function IdColumnHeader({ areaProps }) {
     }, []);
 
     return React.createElement(
-        "td",
+        "th",
         null,
         React.createElement(
             "div",
@@ -31,7 +31,7 @@ function IdColumnHeader({ areaProps }) {
                     "div",
                     null,
                     React.createElement("input", {
-                        className: "uk-input uk-form-small",
+                        className: "uk-input uk-form-small uk-form-width-small",
                         type: "text",
                         ref: filterFrom,
                         onKeyPress: e => {
@@ -44,7 +44,7 @@ function IdColumnHeader({ areaProps }) {
                     "div",
                     null,
                     React.createElement("input", {
-                        className: "uk-input uk-form-small",
+                        className: "uk-input uk-form-small uk-form-width-small",
                         type: "text",
                         ref: filterTo,
                         onKeyPress: e => {
@@ -77,7 +77,7 @@ function DescriptionColumnHeader({ areaProps }) {
     }, []);
 
     return React.createElement(
-        "td",
+        "th",
         null,
         React.createElement(
             "div",
@@ -95,7 +95,7 @@ function DescriptionColumnHeader({ areaProps }) {
                 "div",
                 { className: "filter" },
                 React.createElement("input", {
-                    className: "uk-input uk-form-small",
+                    className: "uk-input uk-form-small uk-form-width-medium",
                     type: "text",
                     ref: filterInput,
                     onKeyPress: e => {
@@ -125,7 +125,7 @@ function ActionColumnHeader({ areaProps }) {
         areaProps.addField('editUrl');
     }, []);
     return React.createElement(
-        "td",
+        "th",
         null,
         React.createElement(
             "div",
@@ -159,7 +159,7 @@ function StatusColumnHeader({ areaProps }) {
     }, []);
 
     return React.createElement(
-        "td",
+        "th",
         null,
         React.createElement(
             "div",
@@ -178,7 +178,7 @@ function StatusColumnHeader({ areaProps }) {
                 { className: "filter" },
                 React.createElement(
                     "select",
-                    { className: "uk-select uk-form-small", ref: filterInput, onChange: e => {
+                    { className: "uk-select uk-form-small uk-form-width-small", ref: filterInput, onChange: e => {
                             areaProps.addFilter("status", "Equal", e.target.value);
                         } },
                     React.createElement(
@@ -292,7 +292,7 @@ export default function CouponGrid({ apiUrl }) {
         { className: "uk-overflow-auto" },
         React.createElement(
             "table",
-            { className: "uk-table uk-table-small" },
+            { className: "uk-table uk-table-small uk-table-divider" },
             React.createElement(
                 "thead",
                 null,

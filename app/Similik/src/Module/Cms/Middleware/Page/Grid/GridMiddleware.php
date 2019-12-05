@@ -28,6 +28,12 @@ class GridMiddleware extends MiddlewareAbstract
             return $delegate;
 
         $this->getContainer()->get(Helmet::class)->setTitle("CMS pages");
+
+        $response->addWidget(
+            'page_grid_title',
+            'content',
+            0, get_js_file_url("production/cms/page/grid/title.js", true)
+        );
         $response->addWidget(
             'page_grid',
             'content',
