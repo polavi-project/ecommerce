@@ -23,19 +23,7 @@ export default function FeaturedProductWidget({id, name, status, setting, displa
             dispatch({'type' : ADD_ALERT, 'payload': {alerts: [{id: "widget_update_error", message: _.get(response, 'payload.data.createWidget.message', 'Something wrong, please try again'), type: "error"}]}});
     };
 
-    const [products, setProducts] = React.useState(_.find(setting, {key:'products'}) !== undefined ?
-        JSON.parse(_.get(_.find(setting, {key:'products'}), 'value', [])) : []);
-
-    const addProduct = (e) => {
-        e.preventDefault();
-        if(e.target.value.trim() !== "")
-            setProducts(products.concat(e.target.value));
-    };
-
-    const removeProducts = (sku) => {
-        const newProducts = products.filter((p) => p !== sku);
-        setProducts(newProducts);
-    };
+    const [products, setProducts] = React.useState(_.get(_.find(setting, {key:'products'}), 'value', ""));
 
     return <div>
         <Form
@@ -65,24 +53,20 @@ export default function FeaturedProductWidget({id, name, status, setting, displa
             />
             <input type='text' name="variables[widget][setting][0][key]" value="products" readOnly style={{display:'none'}}/>
             <div><span>Products</span></div>
-            <input
-                className="uk-input"
-                type="text" defaultValue=""
-                onKeyPress={(e)=>{ if(e.key === 'Enter') addProduct(e)}}
-                placeholder={"Product sku"}
-            />
-            <div className="">
-                {products.map((p, i) => {
-                    return <span key={i}>
-                        <span uk-icon="icon: close; ratio: 0.5" onClick={() => removeProducts(p)}></span>
-                        <span> {p}</span>
-                        <input type='text' name="variables[widget][setting][0][value][]" value={p} readOnly style={{display:'none'}}/>
-                    </span>
-                })}
+            <div className="form-field">
+                <input
+                    className="uk-input"
+                    name="variables[widget][setting][0][value]"
+                    value={products}
+                    type="text" defaultValue=""
+                    onChange={(e)=>{ setProducts(e.target.value)}}
+                    placeholder={"Product sku"}
+                />
+                <div><i>Support multiple sku, comma separated.</i></div>
             </div>
-            <div>Select page layout</div>
+            <div className="uk-margin-medium-top"><strong>Select page layout</strong></div>
             <LayoutList formId={"text-widget-edit-form"} selectedLayouts={layout}/>
-            <div>Select area</div>
+            <div className="uk-margin-small-top"><strong>Select area</strong></div>
             <AreaList formId={"text-widget-edit-form"} selectedAreas={area}/>
             <Text
                 name="variables[widget][sort_order]"

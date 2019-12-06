@@ -12,7 +12,6 @@ use function Similik\get_css_file_url;
 use function Similik\get_current_language_id;
 use function Similik\get_js_file_url;
 use Similik\Services\Helmet;
-use Similik\Services\HtmlDocument;
 use Similik\Services\Http\Request;
 use Similik\Services\Http\Response;
 use Similik\Services\Locale\Language;
