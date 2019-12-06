@@ -1,9 +1,10 @@
 import A from "../../../../../../../js/production/a.js";
-import { ReducerRegistry } from "../../../../../../../js/production/reducer_registry.js";
-import { REQUEST_END } from "../../../../../../../js/production/event-types.js";
 
-function Minicart({ id, items, item_count, discount_amount, tax_amount, grand_total }) {
-    const [status, setStatus] = React.useState(false);
+export default function Minicart({ cartUrl, checkoutUrl }) {
+    const currency = ReactRedux.useSelector(state => _.get(state, 'appState.currency', 'USD'));
+    const language = ReactRedux.useSelector(state => _.get(state, 'appState.language[0]', 'en'));
+    const items = ReactRedux.useSelector(state => _.get(state, 'appState.cart.items'));
+    const subTotal = new Intl.NumberFormat(language, { style: 'currency', currency: currency }).format(ReactRedux.useSelector(state => _.get(state, 'appState.cart.subTotal')));
 
     const onClick = e => {
         e.preventDefault();
@@ -11,136 +12,95 @@ function Minicart({ id, items, item_count, discount_amount, tax_amount, grand_to
     };
 
     return React.createElement(
-        "div",
-        { id: id, className: id + "-content-inner" },
+        'div',
+        { className: 'uk-inline' },
         React.createElement(
-            "a",
+            'a',
             { onClick: e => onClick(e) },
-            React.createElement("span", { "uk-icon": "cart" }),
+            React.createElement('span', { 'uk-icon': 'cart' }),
             React.createElement(
-                "span",
+                'span',
                 null,
-                "(",
-                item_count,
-                ")"
+                '(',
+                items.length,
+                ')'
             )
         ),
         React.createElement(
-            "div",
-            { className: "mini-cart-content", style: { display: status ? 'block' : 'none' } },
+            'div',
+            { className: 'mini-cart-content', 'uk-dropdown': 'mode: click;pos: bottom-left' },
             React.createElement(
-                "table",
-                { className: "uk-table" },
-                React.createElement(
-                    "tbody",
-                    null,
-                    items.map((item, index) => {
-                        return React.createElement(
-                            "tr",
-                            { key: index },
+                'div',
+                { className: '' },
+                items.map((item, index) => {
+                    const _price = new Intl.NumberFormat(language, { style: 'currency', currency: currency }).format(item.final_price);
+                    return React.createElement(
+                        'div',
+                        { key: index, className: 'uk-grid uk-grid-small' },
+                        React.createElement(
+                            'div',
+                            { className: 'uk-width-3-4' },
                             React.createElement(
-                                "td",
-                                null,
+                                A,
+                                { url: item.url },
                                 React.createElement(
-                                    A,
-                                    { url: item.url },
-                                    React.createElement(
-                                        "span",
-                                        null,
-                                        item.product_name
-                                    )
-                                ),
-                                React.createElement(
-                                    "div",
+                                    'span',
                                     null,
-                                    item.qty,
-                                    " x ",
-                                    item.final_price
+                                    item.product_name
                                 )
+                            ),
+                            React.createElement(
+                                'div',
+                                null,
+                                item.qty,
+                                ' x ',
+                                _price
                             )
-                        );
-                    })
-                ),
+                        ),
+                        React.createElement(
+                            'div',
+                            { className: 'uk-width-1-4' },
+                            'x'
+                        )
+                    );
+                }),
                 React.createElement(
-                    "tfoot",
+                    'div',
                     null,
-                    tax_amount !== 0 && React.createElement(
-                        "tr",
-                        null,
-                        React.createElement(
-                            "td",
-                            null,
-                            "Tax:"
-                        ),
-                        React.createElement(
-                            "td",
-                            null,
-                            tax_amount
-                        )
-                    ),
-                    discount_amount !== 0 && React.createElement(
-                        "tr",
-                        null,
-                        React.createElement(
-                            "td",
-                            null,
-                            "Discount:"
-                        ),
-                        React.createElement(
-                            "td",
-                            null,
-                            discount_amount
-                        )
-                    ),
                     React.createElement(
-                        "tr",
-                        null,
+                        'div',
+                        { className: 'uk-align-right' },
                         React.createElement(
-                            "td",
+                            'span',
                             null,
-                            "Total:"
+                            'Total: '
                         ),
                         React.createElement(
-                            "td",
+                            'span',
                             null,
-                            grand_total
+                            subTotal
                         )
                     )
                 )
             ),
             React.createElement(
                 A,
-                { classes: "uk-button uk-button-small uk-button-primary", url: window.base_url + "/checkout/index" },
+                { className: 'uk-button uk-button-small uk-button-primary', url: cartUrl },
                 React.createElement(
-                    "span",
+                    'span',
                     null,
-                    "Checkout"
+                    'Checkout'
                 )
             ),
             React.createElement(
                 A,
-                { classes: "uk-button uk-button-small uk-button-primary", url: window.base_url + "/checkout/cart" },
+                { className: 'uk-button uk-button-small uk-button-primary uk-margin-small-left', url: checkoutUrl },
                 React.createElement(
-                    "span",
+                    'span',
                     null,
-                    "Shopping cart"
+                    'Shopping cart'
                 )
             )
         )
     );
 }
-
-function reducer(state = {}, action = {}) {
-    if (action.type === REQUEST_END) {
-        if (action.minicart !== undefined) return action.minicart;
-    }
-    return state;
-}
-
-ReducerRegistry.register('minicart', reducer);
-
-const mapStateToProps = (state, ownProps) => {
-    return state.minicart;
-};
-
-export default ReactRedux.connect(mapStateToProps)(Minicart);
