@@ -21,7 +21,7 @@ function Coupon(props) {
                 onChange={(e) => onChange(e)}
                 placeholder={"Enter coupon code"}/>
         </div>
-        <button className={"uk-button uk-button-primary"} onClick={(e)=>submit(e)}>Submit</button>
+        <button className={"uk-button uk-button-primary uk-button-small"} onClick={(e)=>submit(e)}>Submit</button>
     </div>
 }
 

@@ -35,7 +35,7 @@ function Coupon(props) {
         ),
         React.createElement(
             "button",
-            { className: "uk-button uk-button-primary", onClick: e => submit(e) },
+            { className: "uk-button uk-button-primary uk-button-small", onClick: e => submit(e) },
             "Submit"
         )
     );
