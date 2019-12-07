@@ -64,7 +64,7 @@ class ItemFactory
                     if(!isset($dataSource['image']) or $dataSource['image'] == null)
                         return null;
                     if($fileSystem->exists(MEDIA_PATH . DS . str_replace_last('.', '_thumb.', $dataSource['image'])))
-                        return get_base_url_scheme_less(false) . "/media/" . str_replace_last('.', '_thumb.', $dataSource['image']);
+                        return get_base_url_scheme_less(false) . "/public/media/" . str_replace_last('.', '_thumb.', $dataSource['image']);
                     else
                         return null;
                 },
