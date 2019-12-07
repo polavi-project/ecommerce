@@ -333,7 +333,7 @@ class ItemFactory
             $item->setError(sprintf("%s is not available for sale", $product['name']));
         if(($product['qty'] < 1 || $product['stock_availability'] == 0) && $product['manage_stock'] == 1)
             $item->setError(sprintf("%s is out of stock", $product['name']));
-        if($product['qty'] - $addedQty < $qty)
+        if(($product['qty'] - $addedQty < $qty) && $product['manage_stock'] == 1)
             $item->setError(sprintf("We don't have enough stock for %s", $product['name']));
 
         $item->setResolvers($this->callbacks);

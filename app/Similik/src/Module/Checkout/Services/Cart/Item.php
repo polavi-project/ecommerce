@@ -48,8 +48,7 @@ class Item
             $promise = new \GuzzleHttp\Promise\Promise(function() use (&$promise, $key, $value) {
                 if($this->getData($key) == $value) {
                     $promise->resolve($value);
-                }
-                else
+                } else
                     $promise->reject("Can not change {$key} field to {$value}");
             });
             $this->setDataPromises = $promise;
@@ -88,7 +87,7 @@ class Item
     {
         if($this->isRunning == false) {
             $this->isRunning = true;
-            $this->error = null;
+            //$this->error = null;
             foreach ($this->resolvers as $field=>$resolver) {
                 if($field != $trigger) {
                     $this->data[$field] = $resolver($this, $this->dataSource);
