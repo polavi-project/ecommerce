@@ -7,7 +7,7 @@ export default function Minicart({cartUrl, checkoutUrl}) {
     const subTotal = new Intl.NumberFormat(language, { style: 'currency', currency: currency }).format(ReactRedux.useSelector(state => _.get(state, 'appState.cart.subTotal')));
 
     if(items.length === 0)
-        return <div className="uk-inline">
+        return <div className="uk-inline mini-cart-wrapper">
             <a href="#" onClick={(e)=> {e.preventDefault()}} className="uk-link-muted"><span uk-icon="cart"></span><span>({items.length})</span></a>
             <div className="mini-cart-content" uk-dropdown="mode: click; pos: bottom-left">
                 <div>
@@ -15,7 +15,7 @@ export default function Minicart({cartUrl, checkoutUrl}) {
                 </div>
             </div>
         </div>;
-    return <div className="uk-inline">
+    return <div className="uk-inline mini-cart-wrapper">
         <a onClick={(e) => onClick(e)}><span uk-icon="cart"></span><span>({items.length})</span></a>
         <div className="mini-cart-content" uk-dropdown="mode: click; pos: bottom-justify">
             <div className="">
@@ -38,8 +38,8 @@ export default function Minicart({cartUrl, checkoutUrl}) {
                     </div>
                 </div>
             </div>
-            <A className="uk-button uk-button-small uk-button-primary" url={cartUrl}><span>Checkout</span></A>
-            <A className="uk-button uk-button-small uk-button-primary uk-margin-small-left" url={checkoutUrl}><span>Shopping cart</span></A>
+            <A className="uk-button uk-button-small uk-button-primary" url={cartUrl}><span>Shopping cart</span></A>
+            <A className="uk-button uk-button-small uk-button-primary uk-margin-small-left" url={checkoutUrl}><span>Checkout</span></A>
         </div>
     </div>
 }

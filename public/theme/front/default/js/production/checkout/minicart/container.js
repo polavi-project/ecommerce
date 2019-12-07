@@ -8,7 +8,7 @@ export default function Minicart({ cartUrl, checkoutUrl }) {
 
     if (items.length === 0) return React.createElement(
         'div',
-        { className: 'uk-inline' },
+        { className: 'uk-inline mini-cart-wrapper' },
         React.createElement(
             'a',
             { href: '#', onClick: e => {
@@ -39,7 +39,7 @@ export default function Minicart({ cartUrl, checkoutUrl }) {
     );
     return React.createElement(
         'div',
-        { className: 'uk-inline' },
+        { className: 'uk-inline mini-cart-wrapper' },
         React.createElement(
             'a',
             { onClick: e => onClick(e) },
@@ -115,7 +115,7 @@ export default function Minicart({ cartUrl, checkoutUrl }) {
                 React.createElement(
                     'span',
                     null,
-                    'Checkout'
+                    'Shopping cart'
                 )
             ),
             React.createElement(
@@ -124,7 +124,7 @@ export default function Minicart({ cartUrl, checkoutUrl }) {
                 React.createElement(
                     'span',
                     null,
-                    'Shopping cart'
+                    'Checkout'
                 )
             )
         )

@@ -81,7 +81,7 @@ html {font-size: 14px !important;}
 .cart-tem-info{overflow: hidden}
 
 /* HEADER */
-.header{padding-top: 20px}
+.header{padding-top: 20px; position: relative}
 .logo{float: left;}
 .customer-area-header{float: right}
 .main-menu{float:left; width: 100%}
@@ -98,4 +98,14 @@ html {font-size: 14px !important;}
 .regular-price{font-weight: 700; text-decoration: line-through}
 
 /*MINI CART*/
-.mini-cart-content{box-shadow: none !important; padding: 10px !important; border: 1px solid var(--borderColor); min-width: 290px !important}
+.mini-cart-content{
+    box-shadow: none !important;
+    padding: 10px !important;
+    border: 1px solid var(--borderColor);
+    min-width: 290px !important
+}
+.mini-cart-wrapper{
+    position: absolute !important;
+    top: 50px;
+    right: 0;
+}
