@@ -3,17 +3,21 @@ import A from "../../../../../../../js/production/a.js";
 export default function Minicart({cartUrl, checkoutUrl}) {
     const currency = ReactRedux.useSelector(state => _.get(state, 'appState.currency', 'USD'));
     const language = ReactRedux.useSelector(state => _.get(state, 'appState.language[0]', 'en'));
-    const items = ReactRedux.useSelector(state => _.get(state, 'appState.cart.items'));
+    const items = ReactRedux.useSelector(state => _.get(state, 'appState.cart.items', []));
     const subTotal = new Intl.NumberFormat(language, { style: 'currency', currency: currency }).format(ReactRedux.useSelector(state => _.get(state, 'appState.cart.subTotal')));
 
-    const onClick = (e) => {
-        e.preventDefault();
-        setStatus(!status)
-    };
-
+    if(items.length === 0)
+        return <div className="uk-inline">
+            <a href="#" onClick={(e)=> {e.preventDefault()}} className="uk-link-muted"><span uk-icon="cart"></span><span>({items.length})</span></a>
+            <div className="mini-cart-content" uk-dropdown="mode: click; pos: bottom-left">
+                <div>
+                    <span>You have no item in cart</span>
+                </div>
+            </div>
+        </div>;
     return <div className="uk-inline">
         <a onClick={(e) => onClick(e)}><span uk-icon="cart"></span><span>({items.length})</span></a>
-        <div className="mini-cart-content" uk-dropdown="mode: click;pos: bottom-left">
+        <div className="mini-cart-content" uk-dropdown="mode: click; pos: bottom-justify">
             <div className="">
                 {
                     items.map((item, index) => {

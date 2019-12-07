@@ -3,14 +3,40 @@ import A from "../../../../../../../js/production/a.js";
 export default function Minicart({ cartUrl, checkoutUrl }) {
     const currency = ReactRedux.useSelector(state => _.get(state, 'appState.currency', 'USD'));
     const language = ReactRedux.useSelector(state => _.get(state, 'appState.language[0]', 'en'));
-    const items = ReactRedux.useSelector(state => _.get(state, 'appState.cart.items'));
+    const items = ReactRedux.useSelector(state => _.get(state, 'appState.cart.items', []));
     const subTotal = new Intl.NumberFormat(language, { style: 'currency', currency: currency }).format(ReactRedux.useSelector(state => _.get(state, 'appState.cart.subTotal')));
 
-    const onClick = e => {
-        e.preventDefault();
-        setStatus(!status);
-    };
-
+    if (items.length === 0) return React.createElement(
+        'div',
+        { className: 'uk-inline' },
+        React.createElement(
+            'a',
+            { href: '#', onClick: e => {
+                    e.preventDefault();
+                }, className: 'uk-link-muted' },
+            React.createElement('span', { 'uk-icon': 'cart' }),
+            React.createElement(
+                'span',
+                null,
+                '(',
+                items.length,
+                ')'
+            )
+        ),
+        React.createElement(
+            'div',
+            { className: 'mini-cart-content', 'uk-dropdown': 'mode: click; pos: bottom-left' },
+            React.createElement(
+                'div',
+                null,
+                React.createElement(
+                    'span',
+                    null,
+                    'You have no item in cart'
+                )
+            )
+        )
+    );
     return React.createElement(
         'div',
         { className: 'uk-inline' },
@@ -28,7 +54,7 @@ export default function Minicart({ cartUrl, checkoutUrl }) {
         ),
         React.createElement(
             'div',
-            { className: 'mini-cart-content', 'uk-dropdown': 'mode: click;pos: bottom-left' },
+            { className: 'mini-cart-content', 'uk-dropdown': 'mode: click; pos: bottom-justify' },
             React.createElement(
                 'div',
                 { className: '' },
