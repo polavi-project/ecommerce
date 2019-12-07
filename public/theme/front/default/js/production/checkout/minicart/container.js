@@ -57,7 +57,7 @@ export default function Minicart({ cartUrl, checkoutUrl }) {
             { className: 'mini-cart-content', 'uk-dropdown': 'mode: click; pos: bottom-justify' },
             React.createElement(
                 'div',
-                { className: '' },
+                { className: 'uk-clearfix' },
                 items.map((item, index) => {
                     const _price = new Intl.NumberFormat(language, { style: 'currency', currency: currency }).format(item.final_price);
                     return React.createElement(
@@ -110,21 +110,25 @@ export default function Minicart({ cartUrl, checkoutUrl }) {
                 )
             ),
             React.createElement(
-                A,
-                { className: 'uk-button uk-button-small uk-button-primary', url: cartUrl },
+                'div',
+                null,
                 React.createElement(
-                    'span',
-                    null,
-                    'Shopping cart'
-                )
-            ),
-            React.createElement(
-                A,
-                { className: 'uk-button uk-button-small uk-button-primary uk-margin-small-left', url: checkoutUrl },
+                    A,
+                    { className: 'uk-button uk-button-small uk-button-primary', url: cartUrl },
+                    React.createElement(
+                        'span',
+                        null,
+                        'Shopping cart'
+                    )
+                ),
                 React.createElement(
-                    'span',
-                    null,
-                    'Checkout'
+                    A,
+                    { className: 'uk-button uk-button-small uk-button-primary uk-margin-small-left', url: checkoutUrl },
+                    React.createElement(
+                        'span',
+                        null,
+                        'Checkout'
+                    )
                 )
             )
         )

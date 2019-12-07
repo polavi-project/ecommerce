@@ -18,7 +18,7 @@ export default function Minicart({cartUrl, checkoutUrl}) {
     return <div className="uk-inline mini-cart-wrapper">
         <a onClick={(e) => onClick(e)}><span uk-icon="cart"></span><span>({items.length})</span></a>
         <div className="mini-cart-content" uk-dropdown="mode: click; pos: bottom-justify">
-            <div className="">
+            <div className="uk-clearfix">
                 {
                     items.map((item, index) => {
                         const _price = new Intl.NumberFormat(language, { style: 'currency', currency: currency }).format(item.final_price);
@@ -38,8 +38,10 @@ export default function Minicart({cartUrl, checkoutUrl}) {
                     </div>
                 </div>
             </div>
-            <A className="uk-button uk-button-small uk-button-primary" url={cartUrl}><span>Shopping cart</span></A>
-            <A className="uk-button uk-button-small uk-button-primary uk-margin-small-left" url={checkoutUrl}><span>Checkout</span></A>
+            <div>
+                <A className="uk-button uk-button-small uk-button-primary" url={cartUrl}><span>Shopping cart</span></A>
+                <A className="uk-button uk-button-small uk-button-primary uk-margin-small-left" url={checkoutUrl}><span>Checkout</span></A>
+            </div>
         </div>
     </div>
 }
