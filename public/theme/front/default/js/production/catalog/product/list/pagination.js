@@ -53,7 +53,7 @@ export default function Pagination({ total }) {
 
     return React.createElement(
         'div',
-        { className: 'products-pagination uk-flex-center' },
+        { className: 'products-pagination uk-flex uk-flex-center' },
         React.createElement(
             'ul',
             { className: 'uk-pagination' },
