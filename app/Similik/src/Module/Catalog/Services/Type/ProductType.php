@@ -109,7 +109,7 @@ class ProductType extends ObjectType
                     'image' => [
                         'type' => $container->get(ProductImageType::class),
                         'resolve' => function($product, $args, Container $container, ResolveInfo $info) {
-                            return $product['image'] ? ['path' => $product['image'], 'isMain'=> true] : [];
+                            return $product['image'] ? ['path' => $product['image'], 'isMain'=> true] : ['path'=> 'upload/placeholder.png', 'isMain'=> true];
                         }
                     ],
                     'name' => [

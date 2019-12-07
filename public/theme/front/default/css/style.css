@@ -88,10 +88,19 @@ html {font-size: 14px !important;}
 /* FOOTER */
 .container .footer{padding-top: 50px; padding-bottom: 20px}
 /* PRODUCT LISTING PAGE */
+.product-list .listing-tem{margin-bottom: 30px}
+.listing-tem .product-price-listing{margin: 10px 0}
+.list-placeholder-helper {
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+}
+.product-thumbnail-listing{text-align: center; height: 220px}
+.product-thumbnail-listing img {vertical-align: middle}
 .product-price-listing .regular-price{font-weight: 700; text-decoration: line-through}
 .uk-pagination li > a {line-height: 30px}
 .uk-pagination li .uk-input {text-align: center;width: 35px; padding:5px}
-.uk-pagination li a.uk-input {padding-top: 0px}
+.uk-pagination li a.uk-input {padding-top: 0}
 .products-pagination{margin-top: 20px}
 /* PRODUCT SINGLE PAGE */
 .product-single-name{font-size: 19px; font-weight: bold}
