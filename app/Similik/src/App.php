@@ -22,7 +22,6 @@ use Similik\Services\Db\Processor;
 use Similik\Services\Di\Container;
 use Similik\Services\Event\EventDispatcher;
 use Similik\Services\Helmet;
-use Similik\Services\HtmlDocument;
 use Similik\Services\Http\Request;
 use Similik\Services\Http\Response;
 use Similik\Middleware\ConfigMiddleware;
