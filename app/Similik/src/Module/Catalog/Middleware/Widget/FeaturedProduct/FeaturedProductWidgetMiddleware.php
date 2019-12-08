@@ -60,6 +60,7 @@ class FeaturedProductWidgetMiddleware extends MiddlewareAbstract
                                     product_id
                                     name
                                     price
+                                    salePrice
                                     url
                                     image {
                                         list
