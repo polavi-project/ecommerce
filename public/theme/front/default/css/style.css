@@ -71,7 +71,7 @@ html {font-size: 14px !important;}
 .group-wrapper{
     display: inline;
 }
-.group-form{float: left; width: 50%; box-sizing: border-box;padding: 10px}
+.group-form{float: left; width: 50%; box-sizing: border-box; padding: 10px}
 .similik-form-button{margin-top: 15px}
 
 /* CHECKOUT PAGE*/
@@ -95,11 +95,11 @@ html {font-size: 14px !important;}
     height: 100%;
     vertical-align: middle;
 }
-.product-thumbnail-listing{text-align: center; height: 220px}
+.product-thumbnail-listing{text-align: center; min-height: 220px}
 .product-thumbnail-listing img {vertical-align: middle}
 .product-price-listing .regular-price{font-weight: 700; text-decoration: line-through}
 .uk-pagination li > a {line-height: 30px}
-.uk-pagination li .uk-input {text-align: center;width: 35px; padding:5px}
+.uk-pagination li .uk-input {text-align: center; width: 35px; padding:5px}
 .uk-pagination li a.uk-input {padding-top: 0}
 .products-pagination{margin-top: 20px}
 /* PRODUCT SINGLE PAGE */
