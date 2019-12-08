@@ -78,7 +78,7 @@ class Request extends \Symfony\Component\HttpFoundation\Request
 
     public function isAdmin() : bool
     {
-        if(preg_match("/^\/" . ADMIN_PATH . "/", $this->getUri()))
+        if(preg_match("/^\/" . ADMIN_PATH . "/", $this->getPathInfo()))
             return true;
         else
             return false;
