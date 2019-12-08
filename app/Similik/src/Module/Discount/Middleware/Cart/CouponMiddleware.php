@@ -6,7 +6,7 @@
 
 declare(strict_types=1);
 
-namespace Similik\Module\Checkout\Middleware\Cart\View;
+namespace Similik\Module\Discount\Middleware\Cart;
 
 use function Similik\get_js_file_url;
 use Similik\Module\Checkout\Services\Cart\Cart;

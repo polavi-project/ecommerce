@@ -15,7 +15,6 @@ $router->addAdminRoute('checkout.install', 'POST', '/checkout/migrate/install', 
 $router->addSiteRoute('checkout.cart', 'GET', '/cart', [
     \Similik\Module\Checkout\Middleware\Cart\View\ShoppingCartMiddleware::class,
     \Similik\Module\Checkout\Middleware\Cart\View\ItemsMiddleware::class,
-    \Similik\Module\Checkout\Middleware\Cart\View\CouponMiddleware::class,
     \Similik\Module\Checkout\Middleware\Cart\View\SummaryMiddleware::class
 ]);
 

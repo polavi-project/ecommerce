@@ -1,8 +1,4 @@
-import { REQUEST_END } from "../../../../../../../js/dev/event-types.js";
-
-const CmsPage = props => {
-    const { id, name, content } = props;
-
+const CmsPage = ({ id, name, content }) => {
     return React.createElement(
         "div",
         { className: "cms-page cms-page-" + id },

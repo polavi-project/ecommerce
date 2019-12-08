@@ -71,7 +71,7 @@ html {font-size: 14px !important;}
 .group-wrapper{
     display: inline;
 }
-.group-form{float: left; width: 50%; box-sizing: border-box;padding: 10px}
+.group-form{float: left; width: 50%; box-sizing: border-box; padding: 10px}
 .similik-form-button{margin-top: 15px}
 
 /* CHECKOUT PAGE*/
@@ -81,18 +81,40 @@ html {font-size: 14px !important;}
 .cart-tem-info{overflow: hidden}
 
 /* HEADER */
-.header{overflow: hidden; padding-top: 20px}
+.header{padding-top: 20px; position: relative}
 .logo{float: left;}
 .customer-area-header{float: right}
 .main-menu{float:left; width: 100%}
 /* FOOTER */
 .container .footer{padding-top: 50px; padding-bottom: 20px}
 /* PRODUCT LISTING PAGE */
+.product-list .listing-tem{margin-bottom: 30px}
+.listing-tem .product-price-listing{margin: 10px 0}
+.list-placeholder-helper {
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+}
+.product-thumbnail-listing{text-align: center; min-height: 220px}
+.product-thumbnail-listing img {vertical-align: middle}
 .product-price-listing .regular-price{font-weight: 700; text-decoration: line-through}
 .uk-pagination li > a {line-height: 30px}
-.uk-pagination li .uk-input {text-align: center;width: 35px; padding:5px}
-.uk-pagination li a.uk-input {padding-top: 0px}
+.uk-pagination li .uk-input {text-align: center; width: 35px; padding:5px}
+.uk-pagination li a.uk-input {padding-top: 0}
 .products-pagination{margin-top: 20px}
 /* PRODUCT SINGLE PAGE */
 .product-single-name{font-size: 19px; font-weight: bold}
 .regular-price{font-weight: 700; text-decoration: line-through}
+
+/*MINI CART*/
+.mini-cart-content{
+    box-shadow: none !important;
+    padding: 10px !important;
+    border: 1px solid var(--borderColor);
+    min-width: 290px !important
+}
+.mini-cart-wrapper{
+    position: absolute !important;
+    top: 50px;
+    right: 0;
+}

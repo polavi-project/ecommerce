@@ -37,11 +37,11 @@ class FeaturedProductWidgetMiddleware extends MiddlewareAbstract
 
         foreach ($widgets as $widget) {
             $setting = json_decode($widget['setting'], true);
-            $products = implode(',', json_decode(array_find($setting, function($value, $key) {
+            $products = array_find($setting, function($value, $key) {
                 if($value['key'] == 'products')
-                    return $value['value'];
+                    return $value['value'] ?? null;
                 return null;
-            }, []), true));
+            }, '');
 
             $displaySetting = json_decode($widget['display_setting'], true);
             $areas = array_find($displaySetting, function($value, $key) {
@@ -60,6 +60,7 @@ class FeaturedProductWidgetMiddleware extends MiddlewareAbstract
                                     product_id
                                     name
                                     price
+                                    salePrice
                                     url
                                     image {
                                         list
@@ -77,8 +78,9 @@ QUERY
                                 $widget['cms_widget_id'] . '-featured-products-widget',
                                 $area,
                                 (int)$widget['sort_order'],
-                                get_js_file_url("production/catalog/product/list/list.js", false),
+                                get_js_file_url("production/catalog/widgets/featured_products.js", false),
                                 [
+                                    "title" => $widget['name'],
                                     "products" => $result->data['featuredProducts']['products'],
                                     "addItemApi" => generate_url('cart.add')
                                 ]

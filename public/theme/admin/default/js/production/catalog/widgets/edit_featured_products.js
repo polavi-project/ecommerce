@@ -20,17 +20,7 @@ export default function FeaturedProductWidget({ id, name, status, setting, displ
         } else dispatch({ 'type': ADD_ALERT, 'payload': { alerts: [{ id: "widget_update_error", message: _.get(response, 'payload.data.createWidget.message', 'Something wrong, please try again'), type: "error" }] } });
     };
 
-    const [products, setProducts] = React.useState(_.find(setting, { key: 'products' }) !== undefined ? JSON.parse(_.get(_.find(setting, { key: 'products' }), 'value', [])) : []);
-
-    const addProduct = e => {
-        e.preventDefault();
-        if (e.target.value.trim() !== "") setProducts(products.concat(e.target.value));
-    };
-
-    const removeProducts = sku => {
-        const newProducts = products.filter(p => p !== sku);
-        setProducts(newProducts);
-    };
+    const [products, setProducts] = React.useState(_.get(_.find(setting, { key: 'products' }), 'value', ""));
 
     return React.createElement(
         "div",
@@ -69,35 +59,32 @@ export default function FeaturedProductWidget({ id, name, status, setting, displ
                     "Products"
                 )
             ),
-            React.createElement("input", {
-                className: "uk-input",
-                type: "text", defaultValue: "",
-                onKeyPress: e => {
-                    if (e.key === 'Enter') addProduct(e);
-                },
-                placeholder: "Product sku"
-            }),
             React.createElement(
                 "div",
-                { className: "" },
-                products.map((p, i) => {
-                    return React.createElement(
-                        "span",
-                        { key: i },
-                        React.createElement("span", { "uk-icon": "icon: close; ratio: 0.5", onClick: () => removeProducts(p) }),
-                        React.createElement(
-                            "span",
-                            null,
-                            " ",
-                            p
-                        ),
-                        React.createElement("input", { type: "text", name: "variables[widget][setting][0][value][]", value: p, readOnly: true, style: { display: 'none' } })
-                    );
-                })
+                { className: "form-field" },
+                React.createElement("input", {
+                    className: "uk-input",
+                    name: "variables[widget][setting][0][value]",
+                    value: products,
+                    type: "text", defaultValue: "",
+                    onChange: e => {
+                        setProducts(e.target.value);
+                    },
+                    placeholder: "Product sku"
+                }),
+                React.createElement(
+                    "div",
+                    null,
+                    React.createElement(
+                        "i",
+                        null,
+                        "Support multiple sku, comma separated."
+                    )
+                )
             ),
             React.createElement(
                 "div",
-                null,
+                { className: "uk-margin-medium-top" },
                 "Select page layout"
             ),
             React.createElement(LayoutList, { formId: "text-widget-edit-form", selectedLayouts: layout }),

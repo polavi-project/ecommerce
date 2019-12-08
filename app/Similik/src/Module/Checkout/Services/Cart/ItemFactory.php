@@ -64,7 +64,7 @@ class ItemFactory
                     if(!isset($dataSource['image']) or $dataSource['image'] == null)
                         return null;
                     if($fileSystem->exists(MEDIA_PATH . DS . str_replace_last('.', '_thumb.', $dataSource['image'])))
-                        return get_base_url_scheme_less(false) . "/media/" . str_replace_last('.', '_thumb.', $dataSource['image']);
+                        return get_base_url_scheme_less(false) . "/public/media/" . str_replace_last('.', '_thumb.', $dataSource['image']);
                     else
                         return null;
                 },
@@ -333,7 +333,7 @@ class ItemFactory
             $item->setError(sprintf("%s is not available for sale", $product['name']));
         if(($product['qty'] < 1 || $product['stock_availability'] == 0) && $product['manage_stock'] == 1)
             $item->setError(sprintf("%s is out of stock", $product['name']));
-        if($product['qty'] - $addedQty < $qty)
+        if(($product['qty'] - $addedQty < $qty) && $product['manage_stock'] == 1)
             $item->setError(sprintf("We don't have enough stock for %s", $product['name']));
 
         $item->setResolvers($this->callbacks);

@@ -32,3 +32,11 @@ $eventDispatcher->addListener(
         },
         0
 );
+
+$eventDispatcher->addListener(
+    'register.checkout.cart.middleware',
+    function (\Similik\Services\MiddlewareManager $middlewareManager) {
+        $middlewareManager->registerMiddleware(\Similik\Module\Discount\Middleware\Cart\CouponMiddleware::class, 21);
+    },
+    0
+);

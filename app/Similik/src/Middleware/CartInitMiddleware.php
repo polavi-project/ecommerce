@@ -19,7 +19,7 @@ class CartInitMiddleware extends MiddlewareAbstract
 {
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
-        if($request->isAdmin() == true)
+        if($request->isAdmin() == true || $request->isAjax() == false)
             return $delegate;
         $conn = _mysql();
         try {

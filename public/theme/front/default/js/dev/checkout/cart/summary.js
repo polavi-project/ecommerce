@@ -80,7 +80,7 @@ function Summary(props) {
             />
         </table>
         <p>
-            <A classes={"uk-button uk-button-primary"} url={props.checkoutUrl} text={"Checkout"}/>
+            <A className={"uk-button uk-button-primary uk-button-small"} url={props.checkoutUrl} text={"Checkout"}/>
         </p>
     </div>
 }

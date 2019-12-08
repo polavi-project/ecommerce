@@ -57,7 +57,7 @@ export default function Pagination({total}) {
         dispatch({'type' : PRODUCT_COLLECTION_FILTER_CHANGED, 'payload': {'productCollectionFilter': {...filters, page: {operator: "=", value: Math.ceil(total/limit)}}}});
     };
 
-    return <div className="products-pagination uk-flex-center">
+    return <div className="products-pagination uk-flex uk-flex-center">
         <ul className="uk-pagination">
             {current > 1 && <li className="prev"><a href={"#"} onClick={(e) => onPrev(e)}><span>Previous</span></a></li>}
             <li className="first"><a href="#" onClick={(e) => onFirst(e)}>1</a></li>

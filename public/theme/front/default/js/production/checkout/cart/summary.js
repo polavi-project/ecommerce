@@ -129,7 +129,7 @@ function Summary(props) {
         React.createElement(
             "p",
             null,
-            React.createElement(A, { classes: "uk-button uk-button-primary", url: props.checkoutUrl, text: "Checkout" })
+            React.createElement(A, { className: "uk-button uk-button-primary uk-button-small", url: props.checkoutUrl, text: "Checkout" })
         )
     );
 }

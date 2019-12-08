@@ -20,6 +20,7 @@ export default function ProductList({ products = [], addItemApi }) {
         products.map((p, index) => {
             return React.createElement(Area, {
                 id: "product_item_" + p.product_id,
+                className: "uk-width-1-4 listing-tem",
                 product: p,
                 key: index,
                 coreWidgets: [{
