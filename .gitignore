@@ -9,7 +9,7 @@ vendor/*
 
 .phpstorm.meta.php
 
-config/config.php
+config/*
 !config/.htaccess
 
 public/media
