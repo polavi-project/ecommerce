@@ -52,6 +52,7 @@ EOT;
             $fileSystem->dumpFile(CONFIG_PATH . DS . 'config.tmp.php', $fileContent);
         } catch(\Exception $e) {
             $response->addData('success', 0);
+            $response->addData('message', $e->getMessage());
             return $response;
         }
 
