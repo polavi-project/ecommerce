@@ -16,7 +16,7 @@ export default function Minicart({cartUrl, checkoutUrl}) {
             </div>
         </div>;
     return <div className="uk-inline mini-cart-wrapper">
-        <a onClick={(e) => onClick(e)}><span uk-icon="cart"></span><span>({items.length})</span></a>
+        <a href="#" onClick={(e)=> {e.preventDefault()}} className="uk-link-muted"><span uk-icon="cart"></span><span>({items.length})</span></a>
         <div className="mini-cart-content" uk-dropdown="mode: click; pos: bottom-justify">
             <div className="uk-clearfix">
                 {

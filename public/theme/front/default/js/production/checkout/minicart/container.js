@@ -42,7 +42,9 @@ export default function Minicart({ cartUrl, checkoutUrl }) {
         { className: 'uk-inline mini-cart-wrapper' },
         React.createElement(
             'a',
-            { onClick: e => onClick(e) },
+            { href: '#', onClick: e => {
+                    e.preventDefault();
+                }, className: 'uk-link-muted' },
             React.createElement('span', { 'uk-icon': 'cart' }),
             React.createElement(
                 'span',
