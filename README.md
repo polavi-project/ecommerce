@@ -5,6 +5,8 @@ A Simple eCommerce platform using PHP, Mysql and ReactJs.
 ## Getting Started
 
 Similik is a simple eCommerce platform. Similik uses PHP and Mysql as backend languages and ReactJS as frontend language.
+
+### Demo
 [Demo store](http://demo.similik.com/)
 
 ### Prerequisites
