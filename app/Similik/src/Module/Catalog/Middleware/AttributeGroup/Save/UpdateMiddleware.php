@@ -40,13 +40,20 @@ class UpdateMiddleware extends MiddlewareAbstract
                 ->where('attribute_group_id', '=', $request->attributes->get('id'))
                 ->update($request->request->all());
 
-            $conn->getTable('attribute_group_link')->where('group_id', '=', $request->attributes->get('id'))->delete();
+            $oldAttributes = $conn->getTable('attribute_group_link')->where('group_id', '=', $request->attributes->get('id'))->fetchAllAssoc();
 
             if($attributes = $request->request->get('attributes'))
                 foreach ($attributes as $attribute) {
                     if($conn->getTable('attribute')->load($attribute))
-                        $conn->getTable('attribute_group_link')->insert(['attribute_id'=>$attribute, 'group_id'=>$request->attributes->get('id')]);
+                        $conn->getTable('attribute_group_link')->insertOnUpdate(['attribute_id'=>$attribute, 'group_id'=>$request->attributes->get('id')]);
                 }
+
+            foreach ($oldAttributes as $oldAttr)
+                if(!in_array($oldAttr['attribute_id'], $attributes))
+                    $conn->getTable('attribute_group_link')
+                        ->where('attribute_id', '=', $oldAttr['attribute_id'])
+                        ->andWhere('group_id', '=', $request->attributes->get('id'))
+                        ->delete();
 
             $conn->commit();
             $response->addAlert('attribute_group_save_success', 'success', 'Attribute group saved')

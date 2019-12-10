@@ -78,7 +78,7 @@ class DataLoader
             ->leftJoin('attribute')
             ->where('product_id', '=', $args['product_id'])
             ->andWhere('language_id', '=', $args['language'], '(')
-            ->orWhere('language_id', 'IS', null, false, ')')->fetchAllAssoc();
+            ->orWhere('language_id', '=', '0', false, ')')->fetchAllAssoc();
     }
 
     public function getProductGridData($rootValue, $args, Container $container, ResolveInfo $info)

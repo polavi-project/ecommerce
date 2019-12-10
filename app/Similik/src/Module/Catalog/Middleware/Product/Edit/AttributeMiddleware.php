@@ -78,7 +78,7 @@ QUERY
             ->waitToExecute([
                 "query"=> <<< QUERY
                     {
-                        product_attribute_index (product_id: {$request->get('id', 0)} language:{$request->get('language', get_default_language_Id())}) {
+                        productAttributeIndex (product_id: {$request->get('id', 0)} language:{$request->get('language', get_default_language_Id())}) {
                             attribute_id
                             option_id
                             attribute_value_text
@@ -92,18 +92,18 @@ QUERY
             ])
             ->then(function($result) use ($response) {
                 /**@var \GraphQL\Executor\ExecutionResult $result */
+                //var_dump($result);
                 if(!$result->errors) {
-                    $widget = $response->getWidget("product_edit_attributes", "admin_product_edit_inner");
+                    $widget = $response->getWidget("product_edit_attributes", "admin_product_edit_inner_right");
                     if(!$widget)
                         return;
 
                     if (isset($result->data['selected_group']['id']) and $result->data['selected_group']['id']) {
                         $widget['props']['selected_group'] = $result->data['selected_group']['id'];
                     }
-                    if (isset($result->data['product_attribute_index']) and $result->data['product_attribute_index']) {
-                        $widget['props']['product_attribute_index'] = $result->data['product_attribute_index'];
+                    if (isset($result->data['productAttributeIndex']) and $result->data['productAttributeIndex']) {
+                        $widget['props']['product_attribute_index'] = $result->data['productAttributeIndex'];
                     }
-
                     $response->addWidget(
                         'product_edit_attributes',
                         'admin_product_edit_inner_right',
