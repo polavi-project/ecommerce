@@ -174,7 +174,7 @@ class InstallMiddleware extends MiddlewareAbstract
               `attribute_id` int(10) unsigned NOT NULL,
               `option_id` int(10) unsigned DEFAULT NULL,
               `attribute_value_text` text,
-              `language_id` int(10) unsigned DEFAULT NULL,
+              `language_id` int(10) unsigned NOT NULL DEFAULT '0',
               PRIMARY KEY (`product_attribute_value_index_id`),
               UNIQUE KEY `UNIQUE_OPTION_VALUE` (`product_id`,`attribute_id`,`option_id`),
               UNIQUE KEY `UNIQUE_TEXT_VALUE` (`product_id`,`attribute_id`,`language_id`),
@@ -183,7 +183,7 @@ class InstallMiddleware extends MiddlewareAbstract
               CONSTRAINT `FK_ATTRIBUTE_OPTION_VALUE_LINK` FOREIGN KEY (`option_id`) REFERENCES `attribute_option` (`attribute_option_id`) ON DELETE CASCADE,
               CONSTRAINT `FK_ATTRIBUTE_VALUE_LINK` FOREIGN KEY (`attribute_id`) REFERENCES `attribute` (`attribute_id`) ON DELETE CASCADE,
               CONSTRAINT `FK_PRODUCT_ATTRIBUTE_LINK` FOREIGN KEY (`product_id`) REFERENCES `product` (`product_id`) ON DELETE CASCADE
-            ) ENGINE=InnoDB AUTO_INCREMENT=152 DEFAULT CHARSET=utf8 COMMENT='Product attribute value index'");
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Product attribute value index'");
 
             //Create product_custom_option table
             $this->processor->executeQuery("CREATE TABLE `product_custom_option` (
