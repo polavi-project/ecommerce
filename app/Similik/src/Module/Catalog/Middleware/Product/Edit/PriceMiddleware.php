@@ -62,13 +62,13 @@ QUERY;
             ])
             ->then(function($result) use ($response) {
                 $tierPrice = [];
-                $customerGroups = [];
+                $customerGroups = [['value'=> '999', 'text'=> 'All']];
                 /**@var \GraphQL\Executor\ExecutionResult $result */
                 if (isset($result->data['productTierPrice'])) {
                     $tierPrice = $result->data['productTierPrice'];
                 }
                 if (isset($result->data['customerGroups'])) {
-                    $customerGroups = $result->data['customerGroups'];
+                    $customerGroups = array_merge($customerGroups, $result->data['customerGroups']);
                 }
                 $response->addWidget(
                     'product_edit_advanced_price',
