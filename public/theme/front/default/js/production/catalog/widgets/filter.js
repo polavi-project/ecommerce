@@ -20,7 +20,11 @@ function Price({ minPrice, maxPrice, maxSteps = 3, minRange = 50, areaProps }) {
             let steps = [];
             let prev = minPrice;
             for (let i = 0; i < stepNumber; i++) {
-                steps.push({ from: prev, to: prev += step });
+                let from = prev;
+                let to = Math.round(prev + step);
+                prev = to;
+                if (to > maxPrice) to = maxPrice;
+                steps.push({ from: from, to: to });
             }
 
             return steps;
@@ -31,6 +35,8 @@ function Price({ minPrice, maxPrice, maxSteps = 3, minRange = 50, areaProps }) {
     // React.useEffect(function() {
     //     setSteps(getSteps());
     // });
+    const currency = ReactRedux.useSelector(state => _.get(state, 'appState.currency', 'USD'));
+    const language = ReactRedux.useSelector(state => _.get(state, 'appState.language[0]', 'en'));
     const steps = getSteps();
     return React.createElement(
         "div",
@@ -40,17 +46,19 @@ function Price({ minPrice, maxPrice, maxSteps = 3, minRange = 50, areaProps }) {
             { className: "header price-header" },
             React.createElement(
                 "div",
-                { className: "title" },
+                { className: "title uk-margin-small-bottom" },
                 React.createElement(
-                    "span",
+                    "strong",
                     null,
                     "Price"
                 )
             ),
             React.createElement(
                 "div",
-                { className: "filter" },
+                { className: "filter uk-margin-small-bottom" },
                 steps.map((s, i) => {
+                    const _from = new Intl.NumberFormat(language, { style: 'currency', currency: currency }).format(s.from);
+                    const _to = new Intl.NumberFormat(language, { style: 'currency', currency: currency }).format(s.to);
                     return React.createElement(
                         "div",
                         { key: i },
@@ -62,9 +70,9 @@ function Price({ minPrice, maxPrice, maxSteps = 3, minRange = 50, areaProps }) {
                             React.createElement(
                                 "span",
                                 null,
-                                s.from,
+                                _from,
                                 " to ",
-                                s.to
+                                _to
                             )
                         )
                     );

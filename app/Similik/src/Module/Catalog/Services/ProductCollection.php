@@ -133,11 +133,11 @@ class ProductCollection extends CollectionBuilder
                 $arr = explode("AND", $args['value']);
                 $from = (float) trim($arr[0]);
                 $to = isset($arr[1]) ? (float) trim($arr[1]) : null;
-                $this->getCollection()->andWhere('product.price', '>=', $from);
+                $this->getCollection()->andWhere('product_price.tier_price', '>=', $from);
                 if($to)
-                    $this->getCollection()->andWhere('product.price', '<=', $to);
+                    $this->getCollection()->andWhere('product_price.tier_price', '<=', $to);
             } else {
-                $this->getCollection()->andWhere('product.price', $args['operator'], $args['value']);
+                $this->getCollection()->andWhere('product_price.tier_price', $args['operator'], $args['value']);
             }
         });
 

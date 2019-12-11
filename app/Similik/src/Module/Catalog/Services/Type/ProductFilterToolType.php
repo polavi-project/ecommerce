@@ -110,7 +110,8 @@ class ProductFilterToolType extends ObjectType
                                     ]
                                 ])
                                 ->where('product_id', 'IN', $value)
-                                ->fetchAllAssoc(['order_by'=> 'product_price.tier_price']);
+                                ->groupBy("product.product_id")
+                                ->fetchAllAssoc(['sort_by'=> 'product_price.tier_price']);
 
                             $max = $priceData[0]['tier_price'];
                             $min = end($priceData)['tier_price'];
