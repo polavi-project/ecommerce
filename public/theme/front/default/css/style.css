@@ -67,6 +67,7 @@
 html {font-size: 14px !important;}
 .wrapper{width: 1200px; margin: 0 auto}
 #container{padding: 0 20px; box-sizing: border-box}
+ul{margin: 10px 0 !important;}
 /* FORM */
 .group-wrapper{
     display: inline;

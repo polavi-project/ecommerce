@@ -22,7 +22,12 @@ function Price({minPrice, maxPrice, maxSteps = 3, minRange = 50, areaProps}) {
             let steps = [];
             let prev = minPrice;
             for (let i = 0; i < stepNumber; i++) {
-                steps.push({from: prev, to: prev+=step});
+                let from = prev;
+                let to = Math.round(prev + step);
+                prev=to;
+                if(to > maxPrice)
+                    to = maxPrice;
+                steps.push({from: from, to: to});
             }
 
             return steps;
@@ -33,13 +38,17 @@ function Price({minPrice, maxPrice, maxSteps = 3, minRange = 50, areaProps}) {
     // React.useEffect(function() {
     //     setSteps(getSteps());
     // });
+    const currency = ReactRedux.useSelector(state => _.get(state, 'appState.currency', 'USD'));
+    const language = ReactRedux.useSelector(state => _.get(state, 'appState.language[0]', 'en'));
     const steps = getSteps();
     return <div className={"row"}>
         <div className="header price-header">
-            <div className={"title"}><span>Price</span></div>
-            <div className={"filter"}>
+            <div className="title uk-margin-small-bottom"><strong>Price</strong></div>
+            <div className="filter uk-margin-small-bottom">
                 {steps.map((s, i) => {
-                    return <div key={i} ><a href={"#"} onClick={(e) => {e.preventDefault(); areaProps.addFilter('price', 'BETWEEN', `${s.from} AND ${s.to}`) }}><span>{s.from} to {s.to}</span></a></div>
+                    const _from = new Intl.NumberFormat(language, { style: 'currency', currency: currency }).format(s.from);
+                    const _to = new Intl.NumberFormat(language, { style: 'currency', currency: currency }).format(s.to);
+                    return <div key={i} ><a href={"#"} onClick={(e) => {e.preventDefault(); areaProps.addFilter('price', 'BETWEEN', `${s.from} AND ${s.to}`) }}><span>{_from} to {_to}</span></a></div>;
                 })}
             </div>
         </div>
