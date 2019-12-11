@@ -73,18 +73,22 @@ class ProductFilterWidgetMiddleware extends MiddlewareAbstract
                                 return json_decode($value['value'], true);
                             return null;
                         }, []);
-                        foreach ($areas as $area)
-                            $response->addWidget(
-                                $widget['cms_widget_id'] . '-product-filter-widget',
-                                $area,
-                                (int)$widget['sort_order'],
-                                get_js_file_url("production/catalog/widgets/filter.js", false),
-                                [
-                                    "showCount" => $showCount,
-                                    "title" => $title,
-                                    'apiUrl' => generate_url('graphql.api')
-                                ]
-                            );
+
+                        if($response->getState('currentPageType') == 'Category') {
+                            $categoryId = (int)$response->getState('categoryId');
+                            foreach ($areas as $area)
+                                $response->addWidget(
+                                    $widget['cms_widget_id'] . '-product-filter-widget',
+                                    $area,
+                                    (int)$widget['sort_order'],
+                                    get_js_file_url("production/catalog/widgets/filter.js", false),
+                                    [
+                                        "categoryId" => $categoryId,
+                                        "title" => $title,
+                                        'apiUrl' => generate_url('graphql.api')
+                                    ]
+                                );
+                        }
                     }
                 }
             }, function($reason) {var_dump($reason);});

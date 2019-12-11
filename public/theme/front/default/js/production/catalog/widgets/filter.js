@@ -144,10 +144,9 @@ function Attributes({ attributes, areaProps }) {
     );
 }
 
-export default function Filter({ apiUrl }) {
+export default function Filter({ categoryId, apiUrl }) {
     const productCollectionFilter = ReactRedux.useSelector(state => _.get(state, 'productCollectionFilter'));
-    const currentPage = ReactRedux.useSelector(state => _.get(state, 'appState.currentPage', undefined));
-    const categoryId = ReactRedux.useSelector(state => _.get(state, 'appState.categoryId', undefined));
+    const currentPageType = ReactRedux.useSelector(state => _.get(state, 'appState.currentPageType', undefined));
     const dispatch = ReactRedux.useDispatch();
     const buildQuery = filters => {
         let filterStr = ``;
@@ -165,10 +164,13 @@ export default function Filter({ apiUrl }) {
         // TODO: field need to be changeable without overwriting this file
         return `{productFilterTool ${filterStr} {price {minPrice maxPrice } attributes {attribute_name attribute_code options {option_id option_text} } }}`;
     };
-    const [data, setData] = React.useState([]);
+    const [data, setData] = React.useState(() => {
+        dispatch({ 'type': PRODUCT_COLLECTION_FILTER_CHANGED, 'payload': { 'productCollectionFilter': [] } });
 
-    React.useLayoutEffect(() => {
-        if (currentPage !== 'Category' || categoryId === undefined) return;
+        return [];
+    });
+
+    React.useEffect(() => {
         let formData = new FormData();
         formData.append('query', buildQuery({ category: { operator: "IN", value: [categoryId] } }));
         Fetch(apiUrl, false, 'POST', formData, null, response => {
@@ -225,7 +227,7 @@ export default function Filter({ apiUrl }) {
         });
     };
 
-    if (currentPage !== 'Category') return null;
+    if (currentPageType !== 'Category') return null;
     return React.createElement(Area, {
         id: "category-info",
         addFilter: addFilter,
