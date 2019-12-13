@@ -15,6 +15,7 @@ export default function Pagination({ total }) {
     React.useEffect(() => {
         setInPutVal(current);
     }, [current]);
+
     const onKeyPress = e => {
         if (e.which !== 13) return;
         e.preventDefault();
