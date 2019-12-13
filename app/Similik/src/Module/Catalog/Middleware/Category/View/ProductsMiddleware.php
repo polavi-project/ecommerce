@@ -35,7 +35,7 @@ class ProductsMiddleware extends MiddlewareAbstract
             ->waitToExecute([
                 "query"=> <<< QUERY
                     {
-                        productCollection (filter: { category : {operator: "IN" value: "{$request->get('id')}"} limit: {operator: "=" value: "{$limit}"}}) {
+                        productCollection (filter: { category : {operator: "IN" value: "{$request->attributes->get('id')}"} limit: {operator: "=" value: "{$limit}"}}) {
                                 products {
                                     product_id
                                     name
@@ -66,7 +66,8 @@ QUERY
                             "ps" => $products,
                             "currentFilter" => json_decode($result->data['productCollection']['currentFilter'], true),
                             "_total" => $result->data['productCollection']['total'],
-                            "addItemApi" => generate_url('cart.add')
+                            "addItemApi" => generate_url('cart.add'),
+                            "categoryId" => $request->attributes->get('id')
                         ]
                     );
                 }

@@ -145,9 +145,11 @@ function Attributes({ attributes, areaProps }) {
 }
 
 export default function Filter({ categoryId, apiUrl }) {
+
     const productCollectionFilter = ReactRedux.useSelector(state => _.get(state, 'productCollectionFilter'));
     const currentPageType = ReactRedux.useSelector(state => _.get(state, 'appState.currentPageType', undefined));
     const dispatch = ReactRedux.useDispatch();
+
     const buildQuery = filters => {
         let filterStr = ``;
         for (let key in filters) {
@@ -180,16 +182,16 @@ export default function Filter({ categoryId, apiUrl }) {
         });
     }, [categoryId]);
 
-    const [filters, setFilters] = React.useState(() => {
-        let f = {};
-        for (let key in productCollectionFilter) {
-            if (productCollectionFilter.hasOwnProperty(key) && key !== 'page') {
-                f[key] = productCollectionFilter[key];
-            }
-        }
-
-        return f;
-    });
+    // const [filters, setFilters] = React.useState(() => {
+    //     let f = {};
+    //     for (let key in productCollectionFilter) {
+    //         if (productCollectionFilter.hasOwnProperty(key) && key !== 'page') {
+    //             f[key] = productCollectionFilter[key];
+    //         }
+    //     }
+    //
+    //     return f;
+    // });
 
     // React.useEffect(() => {
     //     if(filters.length !== 0)
@@ -198,15 +200,14 @@ export default function Filter({ categoryId, apiUrl }) {
 
     const addFilter = (key, operator, value) => {
         let f = {};
-        if (_.isEmpty(filters)) f[key] = { operator: operator, value: value };else for (let k in filters) {
-            if (filters.hasOwnProperty(k)) {
-                if (k !== key) f[k] = filters[k];else {
+        if (_.isEmpty(productCollectionFilter)) f[key] = { operator: operator, value: value };else for (let k in productCollectionFilter) {
+            if (productCollectionFilter.hasOwnProperty(k) && k !== 'page' && k !== 'limit') {
+                if (k !== key) f[k] = productCollectionFilter[k];else {
                     if (value !== undefined && !_.isEmpty(value)) f[key] = { operator: operator, value: value };
                 }
             }
         }
-        if (filters[key] === undefined) f[key] = { operator: operator, value: value };
-        setFilters(f);
+        if (productCollectionFilter[key] === undefined) f[key] = { operator: operator, value: value };
         dispatch({ 'type': PRODUCT_COLLECTION_FILTER_CHANGED, 'payload': { 'productCollectionFilter': f } });
     };
 
@@ -231,7 +232,7 @@ export default function Filter({ categoryId, apiUrl }) {
     return React.createElement(Area, {
         id: "category-info",
         addFilter: addFilter,
-        filters: filters,
+        filters: productCollectionFilter,
         coreWidgets: [{
             component: Price,
             props: { minPrice: _.get(data, 'price.minPrice', null), maxPrice: _.get(data, 'price.maxPrice', null) },

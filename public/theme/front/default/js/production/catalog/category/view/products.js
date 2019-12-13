@@ -24,7 +24,7 @@ function reducer(productCollectionFilter = [], action = {}) {
 
 ReducerRegistry.register('productCollectionFilter', reducer);
 
-export default function Products({ ps = [], _total, addItemApi }) {
+export default function Products({ ps = [], _total, addItemApi, categoryId }) {
     const dispatch = ReactRedux.useDispatch();
     const apiUrl = ReactRedux.useSelector(state => _.get(state, 'appState.graphqlApi'));
     const [products, setProducts] = React.useState(ps);
@@ -42,7 +42,6 @@ export default function Products({ ps = [], _total, addItemApi }) {
         Fetch(apiUrl, false, 'POST', formData, null, response => {
             if (_.get(response, 'payload.data.productCollection.products')) {
                 setProducts(_.get(response, 'payload.data.productCollection.products'));
-                //dispatch({'type' : PRODUCT_COLLECTION_FILTER_CHANGED, 'payload': {'productCollectionFilter': JSON.parse(_.get(response, 'payload.data.productCollection.currentFilter'))}});
                 setTotal(parseInt(_.get(response, 'payload.data.productCollection.total')));
             } else {
                 dispatch({ 'type': ADD_ALERT, 'payload': { alerts: [{ id: "filter_update_error", message: 'Something wrong, please try again', type: "error" }] } });
@@ -51,6 +50,7 @@ export default function Products({ ps = [], _total, addItemApi }) {
     };
 
     const buildQuery = filters => {
+        filters['category'] = { operator: 'IN', value: categoryId };
         let filterStr = ``;
 
         for (let key in filters) {
