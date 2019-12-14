@@ -13,7 +13,6 @@ use function Similik\generate_url;
 use function Similik\get_config;
 use function Similik\get_js_file_url;
 use Similik\Middleware\MiddlewareAbstract;
-use Similik\Module\Checkout\Services\Cart\Cart;
 use Similik\Services\Http\Request;
 use Similik\Services\Http\Response;
 
@@ -40,7 +39,7 @@ class FlatRateMiddleware extends MiddlewareAbstract
             [
                 "label" => get_config("shipment_flat_rate_title", "Flat rate", $request->getSession()->get('language', 0)),
                 "fee" => get_config("shipment_flat_rate_fee", 0),
-                "countries" => get_config("shipment_flat_rate_countries", [""]),
+                "countries" => get_config("shipment_flat_rate_countries", []),
                 "apiUrl" => generate_url("checkout.set.shipment")
             ]
         );

@@ -15,7 +15,7 @@ export default function FlatRate(props) {
         );
     };
 
-    if((allowCountries.length === 1 && allowCountries[0] === '') || allowCountries.indexOf(_.get(shippingAddress, 'country')) !== -1) {
+    if((allowCountries.length === 0) || allowCountries.indexOf(_.get(shippingAddress, 'country')) !== -1) {
         props.areaProps.setNoMethod(false);
         return <div className="shipping-method flat-rate">
             <label htmlFor={"free-shipping"}>
