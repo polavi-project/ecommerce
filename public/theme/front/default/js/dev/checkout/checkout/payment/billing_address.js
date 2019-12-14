@@ -30,6 +30,7 @@ function BillingAddress({needSelectAddress, setNeedSelectAddress}) {
 function UseShippingOrAnother({needSelectAddress, setNeedSelectAddress}) {
     const billingAddress = ReactRedux.useSelector(state => _.get(state, 'appState.cart.billingAddress'));
     const graphqlApi = ReactRedux.useSelector(state => _.get(state, 'appState.graphqlApi'));
+    const cart = ReactRedux.useSelector(state => _.get(state, 'appState.cart'));
     const cartId = ReactRedux.useSelector(state => _.get(state, 'appState.cart.cartId'));
     const dispatch = ReactRedux.useDispatch();
 
@@ -51,7 +52,8 @@ function UseShippingOrAnother({needSelectAddress, setNeedSelectAddress}) {
                         'payload': {
                             'appState': {
                                 'cart': {
-                                    'billingAddress': null
+                                    ...cart,
+                                    'billingAddress': false
                                 }
                             }
                         }
