@@ -35,6 +35,8 @@ class FlatRateSaveMiddleware extends MiddlewareAbstract
         $language = $language == get_default_language_Id() ? 0 : $language;
         try {
             $data = $request->request->all();
+            if(!isset($data['shipment_flat_rate_countries']))
+                $data['shipment_flat_rate_countries'] = [];
             foreach ($data as $name=> $value) {
                 if(is_array($value))
                     $processor->getTable('setting')
