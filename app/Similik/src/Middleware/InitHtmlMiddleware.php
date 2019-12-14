@@ -42,10 +42,10 @@ class InitHtmlMiddleware extends MiddlewareAbstract
             ->addScript(['src'=> get_js_file_url('production/redux.js'), 'type'=>'text/javascript'], 5)
             ->addScript(['src'=> get_js_file_url('production/react-redux.js'), 'type'=>'text/javascript'], 5)
             ->addScript(['src'=> get_js_file_url('production/pubsub.js'), 'type'=>'text/javascript'], 5)
-            ->addScript(['src'=> get_js_file_url('production/app.js'), 'type'=>'module'], 3)
-            ->addScript(['src'=> get_js_file_url('production/uikit.min.js'), 'type'=>'text/javascript'], 5)
-            ->addScript(['src'=> get_js_file_url('production/uikit-icons.min.js'), 'type'=>'text/javascript'], 5)
-            ->addScript(['src'=> get_js_file_url('production/jquery-3.3.1.min.js'), 'type'=>'text/javascript'], 5);
+            ->addScript(['src'=> get_js_file_url('production/app.js'), 'type'=>'module'], 8)
+            ->addScript(['src'=> get_js_file_url('production/uikit.min.js'), 'type'=>'text/javascript'], 9)
+            ->addScript(['src'=> get_js_file_url('production/uikit-icons.min.js'), 'type'=>'text/javascript'], 10)
+            ->addScript(['src'=> get_js_file_url('production/jquery-3.3.1.min.js'), 'type'=>'text/javascript'], 11);
 
         $this
             ->getContainer()

@@ -127,6 +127,11 @@ class Helmet
 
     public function getData()
     {
-        return (array) $this;
+        return [
+            'scripts'=> $this->getScripts(),
+            'metas'=> $this->getMetas(),
+            'links'=> $this->getLinks(),
+            'title'=> $this->getTitle()
+        ];
     }
 }
