@@ -1,8 +1,11 @@
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 import { ADD_ALERT, ADD_APP_STATE } from "../../../../../../../../js/production/event-types.js";
 import AddressForm from "../../../../production/customer/account/address.js";
 
 export default function ShippingAddressForm(props) {
     const dispatch = ReactRedux.useDispatch();
+    const cart = ReactRedux.useSelector(state => _.get(state, 'appState.cart'));
     const onComplete = response => {
         if (_.get(response, 'payload.data.addShippingAddress.status') === true) {
             let address = _.get(response, 'payload.data.addShippingAddress.address');
@@ -11,9 +14,9 @@ export default function ShippingAddressForm(props) {
                 'type': ADD_APP_STATE,
                 'payload': {
                     'appState': {
-                        'cart': {
+                        'cart': _extends({}, cart, {
                             'shippingAddress': address
-                        }
+                        })
                     }
                 }
             });
