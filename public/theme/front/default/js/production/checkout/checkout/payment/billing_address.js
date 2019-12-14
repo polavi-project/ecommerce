@@ -1,3 +1,5 @@
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 import Area from "../../../../../../../../js/production/area.js";
 import { Fetch } from "../../../../../../../../js/production/fetch.js";
 import { ADD_ALERT, ADD_APP_STATE } from "../../../../../../../../js/production/event-types.js";
@@ -80,6 +82,7 @@ function BillingAddress({ needSelectAddress, setNeedSelectAddress }) {
 function UseShippingOrAnother({ needSelectAddress, setNeedSelectAddress }) {
     const billingAddress = ReactRedux.useSelector(state => _.get(state, 'appState.cart.billingAddress'));
     const graphqlApi = ReactRedux.useSelector(state => _.get(state, 'appState.graphqlApi'));
+    const cart = ReactRedux.useSelector(state => _.get(state, 'appState.cart'));
     const cartId = ReactRedux.useSelector(state => _.get(state, 'appState.cart.cartId'));
     const dispatch = ReactRedux.useDispatch();
 
@@ -94,9 +97,9 @@ function UseShippingOrAnother({ needSelectAddress, setNeedSelectAddress }) {
                     'type': ADD_APP_STATE,
                     'payload': {
                         'appState': {
-                            'cart': {
-                                'billingAddress': null
-                            }
+                            'cart': _extends({}, cart, {
+                                'billingAddress': false
+                            })
                         }
                     }
                 });
