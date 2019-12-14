@@ -38,62 +38,82 @@ class Helmet
         return $this;
     }
 
-    public function addMeta(array $attributes)
+    public function addMeta(array $attributes, $sortOrder = 0)
     {
-        $this->metas[] = $attributes;
+        $this->metas[$sortOrder][] = $attributes;
 
         return $this;
     }
 
     public function getMetas()
     {
-        return $this->metas;
+        $metas = [];
+        ksort($this->metas);
+        foreach ($this->metas as $meta) {
+            foreach ($meta as $m)
+                $metas[] = $m;
+        }
+        return $metas;
     }
 
-    public function addLink(array $attributes)
+    public function addLink(array $attributes, $sortOrder = 0)
     {
-        $this->links[] = $attributes;
+        $this->links[$sortOrder][] = $attributes;
 
         return $this;
     }
 
     public function getLinks()
     {
-        return $this->links;
+        $links = [];
+        ksort($this->links);
+        foreach ($this->links as $link) {
+            foreach ($link as $l)
+                $links[] = $l;
+        }
+        return $links;
     }
 
-    public function addScript(array $attributes)
+    public function addScript(array $attributes, $sortOrder = 0)
     {
-        $this->scripts[] = $attributes;
+        $this->scripts[$sortOrder][] = $attributes;
 
         return $this;
     }
 
     public function getScripts()
     {
-        return $this->scripts;
+        $scripts = [];
+        ksort($this->scripts);
+        foreach ($this->scripts as $script) {
+            foreach ($script as $s)
+                $scripts[] = $s;
+        }
+        return $scripts;
     }
 
     public function render()
     {
         ob_start();
         echo "<title data-react-helmet=\"true\">{$this->title}</title>";
-        foreach ($this->metas as $meta) {
+        $metas = $this->getMetas();
+        foreach ($metas as $meta) {
             $m = "<meta ";
             foreach ($meta as $key=>$value)
                 $m .= "{$key}=\"{$value}\" ";
             $m .= "/>";
             echo $m;
         }
-        foreach ($this->links as $link) {
+        $links = $this->getLinks();
+        foreach ($links as $link) {
             $l = "<link ";
             foreach ($link as $key=>$value)
                 $l .= "{$key}=\"{$value}\" ";
             $l .= "/>";
             echo $l;
         }
-
-        foreach ($this->scripts as $script) {
+        $scripts = $this->getScripts();
+        foreach ($scripts as $script) {
             $s = "<script ";
             foreach ($script as $key=>$value)
                 $s .= "{$key}=\"{$value}\" ";

@@ -20,7 +20,8 @@ class AddRechartsMiddleware extends MiddlewareAbstract
 
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
-        $this->getContainer()->get(Helmet::class)->addScript(['src'=>get_js_file_url('production/recharts.min.js'), 'type'=>'text/javascript']);
+        if($request->isAdmin() == true)
+            $this->getContainer()->get(Helmet::class)->addScript(['src'=>get_js_file_url('production/recharts.min.js'), 'type'=>'text/javascript']);
 
         return $delegate;
     }
