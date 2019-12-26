@@ -85,13 +85,21 @@ export default function FeaturedProductWidget({ id, name, status, setting, displ
             React.createElement(
                 "div",
                 { className: "uk-margin-medium-top" },
-                "Select page layout"
+                React.createElement(
+                    "strong",
+                    null,
+                    "Select page layout"
+                )
             ),
             React.createElement(LayoutList, { formId: "text-widget-edit-form", selectedLayouts: layout }),
             React.createElement(
                 "div",
-                null,
-                "Select area"
+                { className: "uk-margin-small-top" },
+                React.createElement(
+                    "strong",
+                    null,
+                    "Select area"
+                )
             ),
             React.createElement(AreaList, { formId: "text-widget-edit-form", selectedAreas: area }),
             React.createElement(Text, {

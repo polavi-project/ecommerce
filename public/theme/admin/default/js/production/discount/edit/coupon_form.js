@@ -81,7 +81,8 @@ function General({ coupon, status = 1, description, discount_amount, discount_ty
                     name: "free_shipping",
                     value: free_shipping,
                     formId: "coupon-edit-form",
-                    label: "Free shipping?"
+                    label: "Free shipping?",
+                    isChecked: free_shipping === 1
                 },
                 'sort_order': 30,
                 'id': 'coupon_free_shipping'
