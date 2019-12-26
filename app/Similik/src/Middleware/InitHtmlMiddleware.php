@@ -26,26 +26,26 @@ class InitHtmlMiddleware extends MiddlewareAbstract
             ->getContainer()
             ->get(Helmet::class)
             ->addMeta(['charset'=>'utf-8', 'data-react-helmet'=>'true'])
-            ->addScript(['src'=> get_js_file_url('production/axios.min.js')]);
+            ->addScript(['src'=> get_js_file_url('production/axios.min.js')], 5);
         if($request->isAdmin())
             $this
                 ->getContainer()
                 ->get(Helmet::class)
-                ->addScript(['src'=> get_js_file_url('production/tinymce/tinymce.min.js')]);
+                ->addScript(['src'=> get_js_file_url('production/tinymce/tinymce.min.js')], 1);
         $this
             ->getContainer()
             ->get(Helmet::class)
-            ->addScript(['src'=> get_js_file_url('production/lodash.js'), 'type'=>'text/javascript'])
-            ->addScript(['src'=> get_js_file_url('production/react.production.min.js'), 'type'=>'text/javascript'])
-            ->addScript(['src'=> get_js_file_url('production/react-dom.production.min.js'), 'type'=>'text/javascript'])
-            ->addScript(['src'=> get_js_file_url('production/prop-types.js'), 'type'=>'text/javascript'])
-            ->addScript(['src'=> get_js_file_url('production/redux.js'), 'type'=>'text/javascript'])
-            ->addScript(['src'=> get_js_file_url('production/react-redux.js'), 'type'=>'text/javascript'])
-            ->addScript(['src'=> get_js_file_url('production/pubsub.js'), 'type'=>'text/javascript'])
-            ->addScript(['src'=> get_js_file_url('production/app.js'), 'type'=>'module'])
-            ->addScript(['src'=> get_js_file_url('production/uikit.min.js'), 'type'=>'text/javascript'])
-            ->addScript(['src'=> get_js_file_url('production/uikit-icons.min.js'), 'type'=>'text/javascript'])
-            ->addScript(['src'=> get_js_file_url('production/jquery-3.3.1.min.js'), 'type'=>'text/javascript']);
+            ->addScript(['src'=> get_js_file_url('production/lodash.js'), 'type'=>'text/javascript'], 1)
+            ->addScript(['src'=> get_js_file_url('production/react.production.min.js'), 'type'=>'text/javascript'], 5)
+            ->addScript(['src'=> get_js_file_url('production/react-dom.production.min.js'), 'type'=>'text/javascript'], 5)
+            ->addScript(['src'=> get_js_file_url('production/prop-types.js'), 'type'=>'text/javascript'], 5)
+            ->addScript(['src'=> get_js_file_url('production/redux.js'), 'type'=>'text/javascript'], 5)
+            ->addScript(['src'=> get_js_file_url('production/react-redux.js'), 'type'=>'text/javascript'], 5)
+            ->addScript(['src'=> get_js_file_url('production/pubsub.js'), 'type'=>'text/javascript'], 5)
+            ->addScript(['src'=> get_js_file_url('production/app.js'), 'type'=>'module'], 8)
+            ->addScript(['src'=> get_js_file_url('production/uikit.min.js'), 'type'=>'text/javascript'], 9)
+            ->addScript(['src'=> get_js_file_url('production/uikit-icons.min.js'), 'type'=>'text/javascript'], 10)
+            ->addScript(['src'=> get_js_file_url('production/jquery-3.3.1.min.js'), 'type'=>'text/javascript'], 11);
 
         $this
             ->getContainer()

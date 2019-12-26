@@ -3,6 +3,7 @@ import AddressForm from "../../../../production/customer/account/address.js";
 
 export default function ShippingAddressForm(props) {
     const dispatch = ReactRedux.useDispatch();
+    const cart = ReactRedux.useSelector(state => _.get(state, 'appState.cart'));
     const onComplete = (response) => {
         if(_.get(response, 'payload.data.addShippingAddress.status') === true) {
             let address = _.get(response, 'payload.data.addShippingAddress.address');
@@ -12,6 +13,7 @@ export default function ShippingAddressForm(props) {
                 'payload': {
                     'appState': {
                         'cart': {
+                            ...cart,
                             'shippingAddress': address
                         }
                     }

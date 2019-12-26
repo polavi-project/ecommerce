@@ -19,7 +19,7 @@ $router->addSiteRoute('checkout.cart', 'GET', '/cart', [
 ]);
 
 $router->addSiteRoute('coupon.add', 'POST', '/cart/coupon/add', [
-    \Similik\Module\Checkout\Middleware\Cart\Coupon\AddCouponMiddleware::class
+    \Similik\Module\Discount\Middleware\Cart\AddCouponMiddleware::class
 ]);
 
 $router->addSiteRoute('coupon.remove', 'POST', '/cart/coupon/remove', [
