@@ -6,7 +6,7 @@
 
 declare(strict_types=1);
 
-namespace Similik\Module\Checkout\Middleware\Cart\Coupon;
+namespace Similik\Module\Discount\Middleware\Cart;
 
 
 use Similik\Middleware\MiddlewareAbstract;
