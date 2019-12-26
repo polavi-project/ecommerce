@@ -166,28 +166,8 @@ class CouponHelper
 
 //        $this->addDiscountCalculator('free_shipping', function($coupon, Cart $cart) {
 //            $coupon = _mysql()->getTable('coupon')->loadByField('coupon', $coupon);
-//            $items = $cart->getItems();
-//            $targetProducts = trim($coupon['target_products']);
-//            $targetProducts = empty($targetProducts) ? [] : explode(',', $targetProducts);
-//            foreach ($items as $item) {
-//                $sku = $item->getData('product_sku');
-//                if(in_array($sku, $targetProducts)) {
-//                    $discountAmount = $item->getData('final_price') * $item->getData('qty') * $discountPercent / 100;
-//                    switch (get_config('sale_discount_calculation_rounding', 0)) {
-//                        case 1:
-//                            $discountAmount = ceil($discountAmount);
-//                            break;
-//                        case -1:
-//                            $discountAmount = floor($discountAmount);
-//                            break;
-//                    }
-//                } else {
-//                    $discountAmount = 0;
-//                }
-//                if(!isset($this->discounts[$item->getData('cart_item_id')]) or $this->discounts[$item->getData('cart_item_id')] != $discountAmount) {
-//                    $this->discounts[$item->getData('cart_item_id')] = $discountAmount;
-//                    $item->setData('discount_amount', $discountAmount);
-//                }
+//            if($coupon['free_shipping'] == 1) {
+//                $
 //            }
 //        });
     }
@@ -392,7 +372,7 @@ class CouponHelper
             }
         }
 
-        $this->coupon = $coupon;
+        $this->coupon = $_coupon;
         $this->calculateDiscount($coupon, $cart);
 
         return $coupon;
@@ -405,5 +385,10 @@ class CouponHelper
             $this->discountCalculators[$_coupon['discount_type']]($coupon, $cart);
 
         return $this;
+    }
+
+    public function getCoupon(): array
+    {
+        return $this->coupon;
     }
 }

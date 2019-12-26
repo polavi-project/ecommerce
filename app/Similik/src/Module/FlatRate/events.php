@@ -47,7 +47,9 @@ $eventDispatcher->addListener(
     function (Similik\Module\Checkout\Services\Cart\Cart $cart) {
         if($cart->getData('shipping_method') != 'flat_rate')
             return null;
-
+        $coupon = \Similik\the_container()->get(\Similik\Module\Discount\Services\CouponHelper::class)->getCoupon();
+        if($coupon and $coupon['free_shipping'] == 1)
+            return 0;
         return get_config('shipment_flat_rate_fee');
     },
     0

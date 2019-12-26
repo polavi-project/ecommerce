@@ -13,13 +13,16 @@ use Similik\Middleware\MiddlewareAbstract;
 use Similik\Services\Http\Request;
 use Similik\Services\Http\Response;
 use Similik\Services\Routing\Router;
-use Symfony\Component\Filesystem\Filesystem;
 
 class SaveMiddleware extends MiddlewareAbstract
 {
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
         $data = $request->request->all();
+        if(isset($data['free_shipping']))
+            $data['free_shipping'] = 1;
+        else
+            $data['free_shipping'] = 0;
         try {
             $conn = _mysql();
             if($request->attributes->get('id'))
