@@ -163,13 +163,6 @@ class CouponHelper
                 }
             }
         });
-
-//        $this->addDiscountCalculator('free_shipping', function($coupon, Cart $cart) {
-//            $coupon = _mysql()->getTable('coupon')->loadByField('coupon', $coupon);
-//            if($coupon['free_shipping'] == 1) {
-//                $
-//            }
-//        });
     }
 
     public function addDiscountCalculator($discountType, callable $callable)
