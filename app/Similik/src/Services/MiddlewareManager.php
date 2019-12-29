@@ -79,6 +79,28 @@ class MiddlewareManager
         return $this;
     }
 
+    public function registerMiddlewareAfter( $after, $middleware) : self
+    {
+        if($this->middlewareLocked == true)
+            throw new \Error('Can not add middleware once application is running');
+
+        if(is_string($middleware))
+            $middleware = new $middleware();
+        if(!$middleware instanceof MiddlewareAbstract)
+            throw new \InvalidArgumentException('Invalid middleware');
+
+        foreach ($this->middleware as $key => $m) {
+            foreach ($m as $k=>$v) {
+                if(get_class($v) == $after) {
+                    array_splice($m, $k+1, 0, [$middleware]);
+                    $this->middleware[$key] = $m;
+                    break;
+                }
+            }
+        }
+        return $this;
+    }
+
     public function removeMiddleware(string $className) : self
     {
         if($this->middlewareLocked == true)

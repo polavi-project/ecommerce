@@ -11,7 +11,7 @@ export default function LoginForm({ loginUrl }) {
 
     return React.createElement(
         "div",
-        null,
+        { className: "uk-width-1-1" },
         React.createElement(
             "p",
             null,

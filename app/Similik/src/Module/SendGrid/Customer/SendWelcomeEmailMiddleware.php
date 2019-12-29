@@ -25,6 +25,7 @@ class SendWelcomeEmailMiddleware extends MiddlewareAbstract
             if(isset($result->data['createCustomer']['status']) and $result->data['createCustomer']['status'] == true) {
                 $templateId = get_config('sendgrid_customer_welcome_email');
                 $this->getContainer()->get(SendGrid::class)->sendEmail(
+                    'customer_welcome',
                     $result->data['createCustomer']['customer']['email'],
                     $templateId,
                     $result->data['createCustomer']['customer']

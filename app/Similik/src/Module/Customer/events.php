@@ -17,49 +17,45 @@ use Similik\Services\Http\Request;
 use Similik\Services\Routing\Router;
 
 $eventDispatcher->addListener(
-        'before_execute_' . strtolower(str_replace('\\', '_', \Similik\Module\Graphql\Middleware\Graphql\GraphqlQLMiddleware::class)),
-        function (\Similik\Services\Di\Container $container) {
-            $container->get(\Similik\Module\Graphql\Services\ExecutionPromise::class)->then(
-                function(\GraphQL\Executor\ExecutionResult $result) use ($container) {
-                    if(isset($result->data['createCustomer']['status']) and $result->data['createCustomer']['status'] == true)
-                        $container->get(Request::class)->getCustomer()->forceLogin($result->data['createCustomer']['customer']['email']);
-
-                    if(isset($result->data['createCustomer']['status']) and $result->data['createCustomer']['status'] == false)
-                        $container->get(\Similik\Services\Http\Response::class)->addAlert('create_customer_error', 'error', $result->data['createCustomer']['message'])->notNewPage();
-
-                    if(empty($result->data)) {
-                        $flag = false;
-                        foreach ($result->errors as $error) {
-                            $source = $error->getSource();
-                            if (strpos($source, 'createCustomer') !== false) {
-                                $flag = true;
-                                break;
-                            }
-                        }
-
-                        if($flag == true)
-                            $container->get(\Similik\Services\Http\Response::class)->addAlert('create_customer_error', 'error', 'Something wrong. Please try again')->notNewPage();
-                    }
-                }
-            );
-        },
-        0
-);
-
-$eventDispatcher->addListener(
-    'register.core.middleware',
-    function (\Similik\Services\MiddlewareManager $middlewareManager) {
-        $middlewareManager->registerMiddleware(\Similik\Module\Customer\Middleware\HeaderIconMiddleware::class, 71);
-    },
-    5
-);
-
-$eventDispatcher->addListener(
     'register.core.middleware',
     function (\Similik\Services\MiddlewareManager $middlewareManager) {
         $middlewareManager->registerMiddleware(\Similik\Module\Customer\Middleware\HeaderIconMiddleware::class, 51);
     },
     5
+);
+
+$eventDispatcher->addListener('register.checkout.index.middleware', function(\Similik\Services\MiddlewareManager $mm) {
+    $mm->registerMiddleware(\Similik\Module\Customer\Middleware\Checkout\AccountMiddleware::class, 1);
+});
+
+$eventDispatcher->addListener(
+    'before_execute_' . strtolower(str_replace('\\', '_', \Similik\Module\Graphql\Middleware\Graphql\GraphqlQLMiddleware::class)),
+    function (\Similik\Services\Di\Container $container) {
+        $container->get(\Similik\Module\Graphql\Services\ExecutionPromise::class)->then(
+            function(\GraphQL\Executor\ExecutionResult $result) use ($container) {
+                if(isset($result->data['createCustomer']['status']) and $result->data['createCustomer']['status'] == true)
+                    $container->get(Request::class)->getCustomer()->forceLogin($result->data['createCustomer']['customer']['email']);
+
+                if(isset($result->data['createCustomer']['status']) and $result->data['createCustomer']['status'] == false)
+                    $container->get(\Similik\Services\Http\Response::class)->addAlert('create_customer_error', 'error', $result->data['createCustomer']['message'])->notNewPage();
+
+                if(empty($result->data)) {
+                    $flag = false;
+                    foreach ($result->errors as $error) {
+                        $source = $error->getSource();
+                        if (strpos($source, 'createCustomer') !== false) {
+                            $flag = true;
+                            break;
+                        }
+                    }
+
+                    if($flag == true)
+                        $container->get(\Similik\Services\Http\Response::class)->addAlert('create_customer_error', 'error', 'Something wrong. Please try again')->notNewPage();
+                }
+            }
+        );
+    },
+    0
 );
 
 $eventDispatcher->addListener(

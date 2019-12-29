@@ -18,14 +18,6 @@ $router->addSiteRoute('checkout.cart', 'GET', '/cart', [
     \Similik\Module\Checkout\Middleware\Cart\View\SummaryMiddleware::class
 ]);
 
-$router->addSiteRoute('coupon.add', 'POST', '/cart/coupon/add', [
-    \Similik\Module\Discount\Middleware\Cart\AddCouponMiddleware::class
-]);
-
-$router->addSiteRoute('coupon.remove', 'POST', '/cart/coupon/remove', [
-    \Similik\Module\Checkout\Middleware\Cart\Coupon\AddCouponMiddleware::class
-]);
-
 $router->addSiteRoute('cart.add', 'POST', '/cart/add', [
     \Similik\Module\Checkout\Middleware\Cart\Add\AddProductMiddleware::class
 ]);
@@ -39,6 +31,10 @@ $router->addSiteRoute('checkout.index', 'GET', '/checkout', [
     \Similik\Module\Checkout\Middleware\Checkout\Index\AddressBookMiddleware::class,
     \Similik\Module\Checkout\Middleware\Checkout\Index\AddressFormMiddleware::class,
     \Similik\Module\Checkout\Middleware\Checkout\Index\SubmitButtonMiddleware::class,
+]);
+
+$router->addSiteRoute('checkout.set.contact', 'POST', '/checkout/contact/add', [
+    \Similik\Module\Checkout\Middleware\Checkout\ContactInfo\AddContactInfoMiddleware::class
 ]);
 
 $router->addSiteRoute('checkout.set.payment', 'POST', '/checkout/payment/add', [

@@ -380,7 +380,10 @@ class CouponHelper
         return $this;
     }
 
-    public function getCoupon(): array
+    /**
+     * @return array|null
+     */
+    public function getCoupon()
     {
         return $this->coupon;
     }

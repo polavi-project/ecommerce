@@ -10,6 +10,7 @@ namespace Similik\Module\SendGrid\Services;
 
 
 use Monolog\Logger;
+use function Similik\dispatch_event;
 use function Similik\the_container;
 use SendGrid\Mail\Mail;
 
@@ -31,7 +32,7 @@ class SendGrid
         $this->enable = $enable;
     }
 
-    public function sendEmail($receiver, $templateId, array $data = [])
+    public function sendEmail(string $identity, $receiver, $templateId, array $data = [])
     {
         if($this->enable == 0) {
             the_container()->get(Logger::class)->addInfo('Send grid is disabled');
@@ -52,6 +53,8 @@ class SendGrid
                 $email->addDynamicTemplateData($key, $value);
 
             $sendGrid = new \SendGrid($this->apiKey);
+            dispatch_event('sendGrid_before_send', [$email, $receiver, &$data]);
+            dispatch_event('sendGrid_before_send_' . $identity, [$email, $receiver, &$data]);
             $sendGrid->send($email);
         } catch (\Exception $e) {
             the_container()->get(Logger::class)->addError($e->getMessage());

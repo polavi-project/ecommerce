@@ -123,6 +123,32 @@ class Cart
                 },
                 'dependencies' => ['customer_id']
             ],
+            'customer_email' => [
+                'resolver' => function(Cart $cart, $dataSource) {
+                    if($cart->request->getCustomer()->isLoggedIn())
+                        $email = $cart->request->getCustomer()->getData('email');
+                    else
+                        $email = $dataSource['customer_email'] ?? null;
+                    if(!$email)
+                        $this->error = "Customer email could not be empty";
+
+                    return $email;
+                },
+                'dependencies' => ['customer_id']
+            ],
+            'customer_full_name' => [
+                'resolver' => function(Cart $cart, $dataSource) {
+                    if($cart->request->getCustomer()->isLoggedIn())
+                        $name = $cart->request->getCustomer()->getData('full_name');
+                    else
+                        $name = $dataSource['customer_full_name'] ?? null;
+                    if(!$name)
+                        $this->error = "Customer name could not be empty";
+
+                    return $name;
+                },
+                'dependencies' => ['customer_id']
+            ],
             'user_ip' => [
                 'resolver' => function(Cart $cart) {
                     return $cart->request->getClientIp();
@@ -485,26 +511,26 @@ class Cart
 
         // Start saving order
         $customerId = $this->getData('customer_id');
-        if($customerId) {
-            $customer = $this->processor->getTable('customer')->load($customerId);
-            if(!$customer)
-                throw new \Exception("Customer does not exist");
-            $customerData = [
-                'customer_email' => $customer['email'],
-                'customer_full_name' => $customer['full_name'],
-            ];
-        } else {
-            $customerData = [
-                'customer_email' => null,
-                'customer_full_name' => null
-            ];
-        }
+//        if($customerId) {
+//            $customer = $this->processor->getTable('customer')->load($customerId);
+//            if(!$customer)
+//                throw new \Exception("Customer does not exist");
+//            $customerData = [
+//                'customer_email' => $customer['email'],
+//                'customer_full_name' => $customer['full_name'],
+//            ];
+//        } else {
+//            $customerData = [
+//                'customer_email' => null,
+//                'customer_full_name' => null
+//            ];
+//        }
         $autoIncrement = $this
             ->processor
             ->executeQuery("SELECT `AUTO_INCREMENT` FROM  INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = :database AND TABLE_NAME   = :table", ['database'=> DB_DATABASE, 'table'=>'order'])
             ->fetch(\PDO::FETCH_ASSOC);
 
-        $orderData = array_merge($this->data, $customerData, [
+        $orderData = array_merge($this->data, [
             'order_number' =>10000 + (int)$autoIncrement['AUTO_INCREMENT'],
             'shipment_status' => 'pending',
             'payment_status' => 'pending'

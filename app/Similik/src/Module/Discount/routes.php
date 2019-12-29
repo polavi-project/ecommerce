@@ -29,3 +29,7 @@ $router->addAdminRoute('coupon.save', "POST", '/coupon/save[/{id:\d+}]', [
 $router->addAdminRoute('discount.install', ["POST", "GET"], '/discount/migrate/install', [
     \Similik\Module\Discount\Middleware\Migrate\Install\InstallMiddleware::class
 ]);
+
+$router->addSiteRoute('coupon.add', 'POST', '/cart/coupon/add', [
+    \Similik\Module\Discount\Middleware\Cart\AddCouponMiddleware::class
+]);
