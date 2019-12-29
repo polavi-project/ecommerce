@@ -76,6 +76,8 @@ class SaveCartMiddleware extends MiddlewareAbstract
             }
             $response->addState('cart', [
                 'cartId' => $cart->getData('cart_id'),
+                'fullName' => $cart->getData('customer_full_name'),
+                'email' => $cart->getData('customer_email'),
                 'subTotal' => $cart->getData('sub_total'),
                 'taxAmount' => $cart->getData('tax_amount'),
                 'shippingFee' => $cart->getData('shipping_fee_excl_tax'),

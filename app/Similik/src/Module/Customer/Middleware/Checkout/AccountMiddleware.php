@@ -19,15 +19,15 @@ class AccountMiddleware extends MiddlewareAbstract
 {
     public function __invoke(Request $request, Response $response)
     {
-        if($request->getCustomer()->isLoggedIn() == false)
-            $response->addWidget(
-                'checkout.login.form',
-                'checkout.account',
-                10,
-                get_js_file_url("production/customer/checkout/login_form.js"),
-                [
-                    "loginUrl" => generate_url('customer.auth')
-                ]
-            );
+        $response->addWidget(
+            'checkout.login.form',
+            'checkout_page',
+            5,
+            get_js_file_url("production/customer/checkout/contact_form.js"),
+            [
+                "loginUrl" => generate_url('customer.auth'),
+                "setContactUrl" => generate_url('checkout.set.contact')
+            ]
+        );
     }
 }
