@@ -107,8 +107,8 @@ class App
         };
         // Log
         the_container()[Logger::class] = function($c) {
-            $logger = new Logger('logger');
-            $logger->pushHandler(new StreamHandler(LOG_PATH . '/app.log', Logger::DEBUG));
+            $logger = new Logger('system');
+            $logger->pushHandler(new StreamHandler(LOG_PATH . '/system.log', Logger::DEBUG));
 
             return $logger;
         };

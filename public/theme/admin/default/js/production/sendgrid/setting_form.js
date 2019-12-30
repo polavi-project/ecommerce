@@ -20,6 +20,7 @@ function General(props) {
                 'component': Text,
                 'props': {
                     name: 'sendgrid_sender_name',
+                    size: 'medium',
                     value: _.get(props, 'sendgrid_sender_name', ''),
                     label: 'Store Email',
                     comment: 'This will be used as a sender name in all transaction email.'
@@ -30,9 +31,10 @@ function General(props) {
                 'component': Text,
                 'props': {
                     name: 'sendgrid_sender_email',
+                    size: 'medium',
                     value: _.get(props, 'sendgrid_sender_email', ''),
                     label: 'Store Email',
-                    comment: 'This email will be used as a sender in all transaction email.'
+                    comment: 'This email will be used as a sender email in all transaction email.'
                 },
                 'sort_order': 20,
                 'id': 'sendgrid_sender_email'
@@ -40,11 +42,24 @@ function General(props) {
                 'component': Select,
                 'props': {
                     name: 'sendgrid_status',
+                    size: 'medium',
                     value: _.get(props, 'sendgrid_status', ''),
-                    label: 'Enable Transaction Email?'
+                    label: 'Enable Transaction Email?',
+                    options: [{ value: 1, text: 'Yes' }, { value: 0, text: 'No' }]
                 },
                 'sort_order': 30,
                 'id': 'sendgrid_status'
+            }, {
+                'component': Select,
+                'props': {
+                    name: 'sendgrid_log',
+                    size: 'medium',
+                    value: _.get(props, 'sendgrid_log', ''),
+                    label: 'Enable log?',
+                    options: [{ value: 1, text: 'Yes' }, { value: 0, text: 'No' }]
+                },
+                'sort_order': 40,
+                'id': 'sendgrid_log'
             }]
         })
     );
@@ -141,7 +156,7 @@ function Customer(props) {
                     name: 'sendgrid_customer_welcome_email',
                     value: _.get(props, 'sendgrid_customer_welcome_email', ''),
                     options: _.get(props, 'templates', []),
-                    label: 'Welcome email template'
+                    label: 'Customer welcome email template'
                 },
                 'sort_order': 10,
                 'id': 'send_grid_customer_welcome_email'

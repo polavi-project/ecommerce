@@ -13,6 +13,7 @@ function General(props) {
                     'component': Text,
                     'props': {
                         name: 'sendgrid_sender_name',
+                        size: 'medium',
                         value: _.get(props, 'sendgrid_sender_name', ''),
                         label: 'Store Email',
                         comment: 'This will be used as a sender name in all transaction email.'
@@ -24,6 +25,7 @@ function General(props) {
                     'component': Text,
                     'props': {
                         name: 'sendgrid_sender_email',
+                        size: 'medium',
                         value: _.get(props, 'sendgrid_sender_email', ''),
                         label: 'Store Email',
                         comment: 'This email will be used as a sender email in all transaction email.'
@@ -35,11 +37,25 @@ function General(props) {
                     'component': Select,
                     'props': {
                         name: 'sendgrid_status',
+                        size: 'medium',
                         value: _.get(props, 'sendgrid_status', ''),
-                        label: 'Enable Transaction Email?'
+                        label: 'Enable Transaction Email?',
+                        options: [{value: 1, text: 'Yes'}, {value: 0, text: 'No'}]
                     },
                     'sort_order': 30,
                     'id': 'sendgrid_status'
+                },
+                {
+                    'component': Select,
+                    'props': {
+                        name: 'sendgrid_log',
+                        size: 'medium',
+                        value: _.get(props, 'sendgrid_log', ''),
+                        label: 'Enable log?',
+                        options: [{value: 1, text: 'Yes'}, {value: 0, text: 'No'}]
+                    },
+                    'sort_order': 40,
+                    'id': 'sendgrid_log'
                 }
             ]}
         />
