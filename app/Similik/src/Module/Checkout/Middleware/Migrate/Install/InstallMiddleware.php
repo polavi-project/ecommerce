@@ -43,6 +43,8 @@ class InstallMiddleware extends MiddlewareAbstract
               `currency` varchar(11) NOT NULL,
               `customer_id` int(10) unsigned DEFAULT NULL,
               `customer_group_id` smallint(6) DEFAULT NULL,
+              `customer_email` varchar(255) DEFAULT NULL,
+              `customer_full_name` varchar(255) DEFAULT NULL,
               `user_ip` varchar(255) DEFAULT NULL,
               `user_agent` varchar(255) DEFAULT NULL,
               `status` tinyint(5) NOT NULL,
