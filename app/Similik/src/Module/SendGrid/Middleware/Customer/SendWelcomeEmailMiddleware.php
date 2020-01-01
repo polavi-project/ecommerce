@@ -6,7 +6,7 @@
 
 declare(strict_types=1);
 
-namespace Similik\Module\SendGrid\Customer;
+namespace Similik\Module\SendGrid\Middleware\Customer;
 
 
 use GuzzleHttp\Promise\Promise;
