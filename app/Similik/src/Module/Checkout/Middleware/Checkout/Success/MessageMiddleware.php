@@ -11,6 +11,7 @@ namespace Similik\Module\Checkout\Middleware\Checkout\Success;
 
 use function Similik\get_js_file_url;
 use Similik\Middleware\MiddlewareAbstract;
+use Similik\Services\Helmet;
 use Similik\Services\Http\Request;
 use Similik\Services\Http\Response;
 use Similik\Services\Routing\Router;
@@ -27,7 +28,8 @@ class MessageMiddleware extends MiddlewareAbstract
 
         if($request->isAjax())
             $request->getSession()->remove('orderId');
-        //TODO: make this a real page
+
+        $this->getContainer()->get(Helmet::class)->setTitle("Checkout success");
         $response->addWidget(
             'checkout_success_message',
             'content',
