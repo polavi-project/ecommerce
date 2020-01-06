@@ -101,7 +101,7 @@ class ProductType extends ObjectType
                         'type' => Type::nonNull(Type::int())
                     ],
                     'tax_class' => [
-                        'type' => Type::nonNull(Type::int())
+                        'type' => Type::int()
                     ],
                     'status' => [
                         'type' => Type::nonNull(Type::int())
