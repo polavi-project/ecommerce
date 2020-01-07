@@ -56,7 +56,7 @@ function NumberColumnHeader({areaProps}) {
                 <input
                     type={"text"}
                     ref={filterInput}
-                    onKeyPress={(e) => { if(e.key === 'Enter') areaProps.addFilter("orderNumber", "Equal", `%${e.target.value}%`);}}
+                    onKeyPress={(e) => { if(e.key === 'Enter') areaProps.addFilter("order_number", "=", `${e.target.value}`);}}
                     placeholder={"Order number"}
                     className="uk-input uk-form-small uk-form-width-small"
                 />
@@ -119,20 +119,22 @@ function PaymentStatusColumnHeader({areaProps})
         areaProps.addField("payment_status");
     }, []);
 
+    const onChange = (e)=> {
+        areaProps.addFilter("payment_status", "=", e.target.value);
+    };
+
     return <th>
         <div className="header status-header">
             <div className={"title"}><span>Payment status</span></div>
             <div className={"filter"}>
-                <select
-                    ref={filterInput}
-                    onChange={(e)=> {
-                        areaProps.addFilter("status", "Equal", e.target.value);
+                <PaymentStatus
+                    isDropdown={true}
+                    wrapperProps={{
+                        className: "uk-select uk-form-small uk-form-width-small",
+                        ref: filterInput,
+                        onChange: (e) => onChange(e)
                     }}
-                    className="uk-select uk-form-small uk-form-width-small"
-                >
-                    <option value={1}>Enabled</option>
-                    <option value={0}>Disabled</option>
-                </select>
+                />
             </div>
         </div>
     </th>
@@ -152,17 +154,21 @@ function ShipmentStatusColumnHeader({areaProps})
         areaProps.addField("shipment_status");
     }, []);
 
+    const onChange = (e)=> {
+        areaProps.addFilter("shipment_status", "=", e.target.value);
+    };
+
     return <th>
         <div className="header status-header">
             <div className={"title"}><span>Shipment status</span></div>
             <div className={"filter"}>
-                <input
-                    type={"text"}
-                    ref={filterInput}
-                    onKeyPress={(e) => {
-                        if(e.key === 'Enter') areaProps.addFilter("shipment_status", "Equal", e.target.value);
+                <ShipmentStatus
+                    isDropdown={true}
+                    wrapperProps={{
+                        className: "uk-select uk-form-small uk-form-width-small",
+                        ref: filterInput,
+                        onChange: (e) => onChange(e)
                     }}
-                    className="uk-input uk-form-small uk-form-width-small"
                 />
             </div>
         </div>
@@ -251,7 +257,7 @@ export default function OrderGrid({apiUrl})
     const buildQuery = () => {
         let filterStr = "";
         filters.forEach((f,i) => {
-            filterStr +=`${f.key} : {operator : ${f.operator} value: "${f.value}"} `;
+            filterStr +=`${f.key} : {operator : "${f.operator}" value: "${f.value}"} `;
         });
         filterStr = filterStr.trim();
         if(filterStr)
