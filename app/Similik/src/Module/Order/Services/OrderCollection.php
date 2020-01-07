@@ -36,16 +36,61 @@ class OrderCollection extends CollectionBuilder
     {
         $isAdmin = $this->container->get(Request::class)->isAdmin();
 
+        $this->addFilter('id', function($args) use ($isAdmin) {
+            if($isAdmin == false)
+                return;
+            if($args['operator'] == "BETWEEN") {
+                $arr = explode("AND", $args['value']);
+                $from = (int) trim($arr[0]);
+                $to = isset($arr[1]) ? (int) trim($arr[1]) : null;
+                $this->getCollection()->andWhere('order.order_id', '>=', $from);
+                if($to)
+                    $this->getCollection()->andWhere('order.order_id', '<=', $to);
+            } else {
+                $this->getCollection()->andWhere('order.order_id', $args['operator'], $args['value']);
+            }
+        });
+
+        $this->addFilter('order_number', function($args) use ($isAdmin) {
+            if($isAdmin == false)
+                return;
+            if($args['operator'] == "BETWEEN") {
+                $arr = explode("AND", $args['value']);
+                $from = (int) trim($arr[0]);
+                $to = isset($arr[1]) ? (int) trim($arr[1]) : null;
+                $this->getCollection()->andWhere('order.order_number', '>=', $from);
+                if($to)
+                    $this->getCollection()->andWhere('order.order_number', '<=', $to);
+            } else {
+                $this->getCollection()->andWhere('order.order_number', $args['operator'], $args['value']);
+            }
+        });
+
+        $this->addFilter('grand_total', function($args) use ($isAdmin) {
+            if($isAdmin == false)
+                return;
+            if($args['operator'] == "BETWEEN") {
+                $arr = explode("AND", $args['value']);
+                $from = (float) trim($arr[0]);
+                $to = isset($arr[1]) ? (float) trim($arr[1]) : null;
+                $this->getCollection()->andWhere('order.grand_total', '>=', $from);
+                if($to)
+                    $this->getCollection()->andWhere('order.grand_total', '<=', $to);
+            } else {
+                $this->getCollection()->andWhere('order.grand_total', $args['operator'], $args['value']);
+            }
+        });
+
         $this->addFilter('payment_status', function($args) use ($isAdmin) {
             if($isAdmin == false)
                 return;
-            $this->collection->andWhere('order.payment_status', $args['operator'], (int)$args['value']);
+            $this->collection->andWhere('order.payment_status', $args['operator'], $args['value']);
         });
 
         $this->addFilter('shipment_status', function($args) use ($isAdmin) {
             if($isAdmin == false)
                 return;
-            $this->collection->andWhere('order.shipment_status', $args['operator'], (int)$args['value']);
+            $this->collection->andWhere('order.shipment_status', $args['operator'], $args['value']);
         });
     }
 

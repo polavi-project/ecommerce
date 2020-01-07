@@ -101,7 +101,7 @@ function NumberColumnHeader({ areaProps }) {
                     type: "text",
                     ref: filterInput,
                     onKeyPress: e => {
-                        if (e.key === 'Enter') areaProps.addFilter("orderNumber", "Equal", `%${e.target.value}%`);
+                        if (e.key === 'Enter') areaProps.addFilter("order_number", "=", `${e.target.value}`);
                     },
                     placeholder: "Order number",
                     className: "uk-input uk-form-small uk-form-width-small"
@@ -200,6 +200,10 @@ function PaymentStatusColumnHeader({ areaProps }) {
         areaProps.addField("payment_status");
     }, []);
 
+    const onChange = e => {
+        areaProps.addFilter("payment_status", "=", e.target.value);
+    };
+
     return React.createElement(
         "th",
         null,
@@ -218,26 +222,14 @@ function PaymentStatusColumnHeader({ areaProps }) {
             React.createElement(
                 "div",
                 { className: "filter" },
-                React.createElement(
-                    "select",
-                    {
+                React.createElement(PaymentStatus, {
+                    isDropdown: true,
+                    wrapperProps: {
+                        className: "uk-select uk-form-small uk-form-width-small",
                         ref: filterInput,
-                        onChange: e => {
-                            areaProps.addFilter("status", "Equal", e.target.value);
-                        },
-                        className: "uk-select uk-form-small uk-form-width-small"
-                    },
-                    React.createElement(
-                        "option",
-                        { value: 1 },
-                        "Enabled"
-                    ),
-                    React.createElement(
-                        "option",
-                        { value: 0 },
-                        "Disabled"
-                    )
-                )
+                        onChange: e => onChange(e)
+                    }
+                })
             )
         )
     );
@@ -258,6 +250,10 @@ function ShipmentStatusColumnHeader({ areaProps }) {
         areaProps.addField("shipment_status");
     }, []);
 
+    const onChange = e => {
+        areaProps.addFilter("shipment_status", "=", e.target.value);
+    };
+
     return React.createElement(
         "th",
         null,
@@ -276,13 +272,13 @@ function ShipmentStatusColumnHeader({ areaProps }) {
             React.createElement(
                 "div",
                 { className: "filter" },
-                React.createElement("input", {
-                    type: "text",
-                    ref: filterInput,
-                    onKeyPress: e => {
-                        if (e.key === 'Enter') areaProps.addFilter("shipment_status", "Equal", e.target.value);
-                    },
-                    className: "uk-input uk-form-small uk-form-width-small"
+                React.createElement(ShipmentStatus, {
+                    isDropdown: true,
+                    wrapperProps: {
+                        className: "uk-select uk-form-small uk-form-width-small",
+                        ref: filterInput,
+                        onChange: e => onChange(e)
+                    }
                 })
             )
         )
@@ -381,7 +377,7 @@ export default function OrderGrid({ apiUrl }) {
     const buildQuery = () => {
         let filterStr = "";
         filters.forEach((f, i) => {
-            filterStr += `${f.key} : {operator : ${f.operator} value: "${f.value}"} `;
+            filterStr += `${f.key} : {operator : "${f.operator}" value: "${f.value}"} `;
         });
         filterStr = filterStr.trim();
         if (filterStr) filterStr = `(filter : {${filterStr}})`;

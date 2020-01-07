@@ -25,6 +25,8 @@ class OrderCollectionFilterType extends InputObjectType
             'fields' => function() use($container) {
                 $fields = [
                     'id' => $container->get(FilterFieldType::class),
+                    'order_number' => $container->get(FilterFieldType::class),
+                    'grand_total' => $container->get(FilterFieldType::class),
                     'payment_status' => $container->get(FilterFieldType::class),
                     'shipment_status' => $container->get(FilterFieldType::class),
                     'customer_email' => $container->get(FilterFieldType::class)

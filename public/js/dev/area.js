@@ -23,9 +23,15 @@ function Area(props) {
     };
 
     const widgets = ReactRedux.useSelector(state => getWidgets(state.widgets));
+    let wrapperProps = {};
+    if(typeof props.wrapperProps === 'object' && props.wrapperProps !== null)
+        wrapperProps = {className : props.className ? props.className : "" , ...props.wrapperProps};
+    else
+        wrapperProps = {className : props.className ? props.className : "" };
+
     let args = [
         Wrapper$Component,
-        {className : props.className ? props.className : "" }
+        wrapperProps
     ];
     widgets.forEach((w) => {
         args.push(w);

@@ -40,7 +40,7 @@ class Processor extends \PDO
 
     public function executeQuery($query, array $binding = [])
     {
-        //Logger::write($query);
+        Logger::write($query);
         $stmt = $this->prepare($query);
         $stmt->execute($binding);
         return $stmt;
