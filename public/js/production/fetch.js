@@ -1,4 +1,4 @@
-import { REQUEST_START, REQUEST_END, ADD_ALERT, UPDATE_WIDGETS, ADD_APP_STATE } from "./event-types.js";
+import { REQUEST_START, REQUEST_END, ADD_ALERT } from "./event-types.js";
 import { store } from "./redux_store.js";
 
 const Fetch = (url, pushState = false, method = "GET", data = {}, onStart = null, onComplete = null, onError = null, onFinally = null) => {
@@ -6,7 +6,7 @@ const Fetch = (url, pushState = false, method = "GET", data = {}, onStart = null
     url.searchParams.set('ajax', 1);
 
     PubSub.publishSync(REQUEST_START, { url, method, data });
-
+    store.dispatch({ 'type': REQUEST_START, 'payload': { data: { url, method, data } } });
     let config = {};
     if (method === "GET") config = {
         method: "GET",
@@ -61,7 +61,6 @@ const Fetch = (url, pushState = false, method = "GET", data = {}, onStart = null
                 // Override widgets
                 response.widgets = widgets;
             }
-            store.dispatch({ 'type': REQUEST_END, 'payload': { data: response } });
         }).catch(e => {
             console.log(e);
             console.log(e.message);
@@ -75,14 +74,15 @@ const Fetch = (url, pushState = false, method = "GET", data = {}, onStart = null
                 history.pushState(null, "", url);
             }
             PubSub.publishSync(REQUEST_END, { response });
+            store.dispatch({ 'type': REQUEST_END, 'payload': { data: response } });
         });
     }).catch(error => {
         console.log(error);
         if (typeof onError === 'function') onError(error);
         store.dispatch({ 'type': ADD_ALERT, 'payload': { alerts: [{ id: "server_error", message: 'Something wrong. Please try again', type: "error" }] } });
-        PubSub.publishSync(REQUEST_END);
     }).finally(() => {
         if (typeof onFinally === 'function') onFinally();
+        PubSub.publishSync(REQUEST_END);
     });
 };
 
