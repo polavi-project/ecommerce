@@ -1,6 +1,6 @@
 import {Fetch} from "./fetch.js";
 import Area from "./area.js";
-import LoadingIcon from "./loading_icon.js";
+import LoadingBar from "./loading_bar.js";
 import {store} from "./redux_store.js"
 import {Head} from "./head.js";
 import {REQUEST_END, INITIAL_PAGE_READY} from "./event-types.js"
@@ -55,7 +55,7 @@ const App = ()=> {
     return (
         <div className="wrapper">
             <Head/>
-            <LoadingIcon/>
+            <LoadingBar/>
             <Area
                 id="container" className="container"
             />
