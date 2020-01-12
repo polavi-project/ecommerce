@@ -43,13 +43,6 @@ const Fetch = (url, pushState = false, method = "GET", data = {}, onStart = null
                     window.location.assign(response.redirectUrl);
                     return true;
                 }
-                // Alerts
-                if(response.alerts)
-                    store.dispatch({'type': ADD_ALERT, 'payload': {alerts: response.alerts}});
-
-                // App state
-                if(response.appState)
-                    store.dispatch({'type': ADD_APP_STATE, 'payload': {appState: response.appState}});
 
                 let promises = [];
                 let widgets = [];
@@ -74,8 +67,11 @@ const Fetch = (url, pushState = false, method = "GET", data = {}, onStart = null
 
                 Promise.all(promises)
                     .then(() => {
-                        if(widgets.length > 0)
-                            store.dispatch({'type': UPDATE_WIDGETS, 'payload': {widgets: widgets, isNewPage: response.isNewPage === true}});
+                        if(widgets.length > 0) {
+                            // Override widgets
+                            response.widgets = widgets;
+                        }
+                            store.dispatch({'type': REQUEST_END, 'payload': {data: response}});
                     })
                     .catch((e) => {
                         console.log(e);

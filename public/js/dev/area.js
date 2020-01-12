@@ -1,4 +1,4 @@
-import {UPDATE_WIDGETS} from "./event-types.js";
+import {UPDATE_WIDGETS, REQUEST_END} from "./event-types.js";
 import {ReducerRegistry} from "./reducer_registry.js";
 
 function Area(props) {
@@ -50,6 +50,19 @@ function reducer(state = [], action = {}) {
             } else {
                 let widgets = state;
                 action.payload.widgets.forEach(w => {
+                    widgets = widgets.filter(widget => widget.org_id !== w.org_id);
+                    widgets.push(w);
+                });
+                return widgets;
+            }
+        }
+    } else if (action.type === REQUEST_END) {
+        if (_.get(action.payload, 'data.widgets') !== undefined) {
+            if (_.get(action.payload, 'data.isNewPage') === true) {
+                return _.get(action.payload, 'data.widgets');
+            } else {
+                let widgets = state;
+                action.payload.data.widgets.forEach(w => {
                     widgets = widgets.filter(widget => widget.org_id !== w.org_id);
                     widgets.push(w);
                 });

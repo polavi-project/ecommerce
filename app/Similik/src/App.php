@@ -171,7 +171,6 @@ class App
                 20 => RoutingMiddleware::class,
                 30 => AuthenticateMiddleware::class,
                 35 => CartInitMiddleware::class,
-                36 => InitHtmlMiddleware::class,
                 40 => HandlerMiddleware::class,
                 70 => SaveCartMiddleware::class,
                 80 => PromiseWaiterMiddleware::class,
@@ -186,7 +185,6 @@ class App
                 SessionMiddleware::class,
                 RoutingMiddleware::class,
                 HandlerMiddleware::class,
-                InitHtmlMiddleware::class,
                 FrontLayoutMiddleware::class,
                 ResponseMiddleware::class
             ];
