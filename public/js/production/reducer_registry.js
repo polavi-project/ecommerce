@@ -7,6 +7,8 @@ let reducers = {
     alerts: (state = [], action) => {
         if (action.type === ADD_ALERT) {
             if (action.payload.alerts !== undefined) return action.payload.alerts;
+        } else if (action.type === REQUEST_END) {
+            if (_.get(action.payload, 'data.alerts') !== undefined) return _.get(action.payload, 'data.alerts');
         }
         return state;
     },
@@ -14,6 +16,11 @@ let reducers = {
         if (action.type === ADD_APP_STATE) {
             let newState = action.payload.appState;
             if (newState !== undefined) {
+                return _extends({}, state, newState);
+            }
+        } else if (action.type === REQUEST_END) {
+            if (_.get(action.payload, 'data.appState') !== undefined) {
+                let newState = action.payload.data.appState;
                 return _extends({}, state, newState);
             }
         }
