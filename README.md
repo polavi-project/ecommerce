@@ -9,6 +9,15 @@ It follows client rendering approach. Json data will be sent from server and all
 
 ### Demo
 [Demo store](http://demo.similik.com/)
+#### Product
+* With custom option: [Beef - Salted](https://demo.similik.com/product/ozdeweq)
+* With tier price: [Kolrabi](https://demo.similik.com/product/zmicawc)
+
+#### Coupon
+* Ten percent discount to all order: TENPERCENTALL
+* Ten percent discount with free shipping to all order: TENPERCENTALLFREESHIPPING
+* Ten percent discount if order total is above $100: TENPERCENTABOVE100
+
 
 ### Prerequisites
 
