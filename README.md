@@ -8,7 +8,7 @@ Similik is a simple eCommerce platform. Similik uses PHP and Mysql as backend la
 It follows client rendering approach. Json data will be sent from server and all html will be rendered by using ReactJs. 
 
 ### Demo
-[Demo store](http://demo.similik.com/)
+[Demo store](https://www.similik.com/demo/)
 #### Product
 * With custom option: [Beef - Salted](https://demo.similik.com/product/ozdeweq)
 * With tier price: [Kolrabi](https://demo.similik.com/product/zmicawc)
