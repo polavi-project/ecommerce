@@ -22,6 +22,14 @@ class AdminLayoutMiddleware extends MiddlewareAbstract
             return $delegate;
 
         $response->addWidget(
+            'container',
+            'wrapper',
+            0,
+            get_js_file_url("production/area.js"),
+            ["id"=> "container", "className" => "container"]
+        );
+
+        $response->addWidget(
             'admin_header',
             'container',
             0,

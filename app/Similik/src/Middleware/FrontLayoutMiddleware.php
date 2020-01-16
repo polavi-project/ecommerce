@@ -27,11 +27,19 @@ class FrontLayoutMiddleware extends MiddlewareAbstract
             return $delegate;
 
         $response->addWidget(
+            'container',
+            'wrapper',
+            0,
+            get_js_file_url("production/area.js"),
+            ["id"=> "container", "className" => "uk-container"]
+        );
+
+        $response->addWidget(
             'header',
             'container',
             0,
             get_js_file_url("production/area.js"),
-            ["id"=> "header", "className" => "uk-width-1-1 header uk-clearfix"]
+            ["id"=> "header", "className" => "uk-clearfix header"]
         );
 
         $response->addWidget(
@@ -39,41 +47,42 @@ class FrontLayoutMiddleware extends MiddlewareAbstract
             'container',
             10,
             get_js_file_url("production/area.js"),
-            ["id"=> "menu", "className" => "uk-width-1-1"]
+            ["id"=> "menu", "className" => ""]
         );
         $response->addWidget(
             'content_grid',
             'container',
             20,
             get_js_file_url("production/area.js"),
-            ["id"=> "content_grid", "className" => "uk-grid uk-grid-small"]
+            ["id"=> "content_grid", "className" => "content uk-grid uk-grid-small"]
         );
         $response->addWidget(
             'leftColumn',
             'content_grid',
             10,
             get_js_file_url("production/area.js"),
-            ["id"=> "leftColumn", "className"=> "uk-width-1-6"]
+            ["id"=> "leftColumn", "className"=> "uk-width-1-4@m"]
         );
         $response->addWidget(
             'content',
             'content_grid',
             20,
-            get_js_file_url("production/cms/page/content_layout.js", false)
+            get_js_file_url("production/area.js"),
+            ["id"=>"content", "className"=>"uk-width-expand"]
         );
         $response->addWidget(
             'rightColumn',
             'content_grid',
             30,
             get_js_file_url("production/area.js"),
-            ["id"=> "rightColumn", "className"=> "uk-width-1-6"]
+            ["id"=> "rightColumn", "className"=> ""]
         );
         $response->addWidget(
             'footer',
             'container',
             30,
             get_js_file_url("production/area.js"),
-            ["id"=>"footer", "className" => "uk-width-1-1 uk-grid uk-grid-small footer"]
+            ["id"=>"footer", "className" => ""]
         );
 
         return $delegate;

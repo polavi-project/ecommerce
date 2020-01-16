@@ -20,11 +20,18 @@ class ResponseMiddleware extends MiddlewareAbstract
 {
     public function __invoke(Request $request, Response $response)
     {
-        if(!$request->isAjax()) {
+        if(
+            !$request->isAjax() &&
+            $request->attributes->get('_matched_route') != 'graphql.api' &&
+            $request->attributes->get('_matched_route') != 'admin.graphql.api' &&
+            $request->isMethod("GET")
+        ) {
             $this
                 ->getContainer()
                 ->get(Helmet::class)
                 ->addMeta(['charset'=>'utf-8', 'data-react-helmet'=>'true'])
+                ->addMeta(['name'=>'viewport', 'content'=>'width=device-width, initial-scale=1'])
+                ->addMeta(['name'=>'robots', 'content'=>'INDEX,FOLLOW'])
                 ->addScript(['src'=> get_js_file_url('production/axios.min.js')], 5);
             if($request->isAdmin())
                 $this

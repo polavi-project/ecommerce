@@ -15,7 +15,7 @@ function Title() {
 function ShoppingCart() {
     return React.createElement(Area, {
         id: "shopping-cart-page",
-        className: "uk-grid uk-grid-small uk-width-1-1",
+        className: "uk-grid uk-grid-small",
         coreWidgets: [{
             component: Title,
             props: {},

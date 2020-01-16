@@ -75,7 +75,7 @@ function Guest({loginUrl, setContactUrl}) {
 }
 export default function ContactInformationForm({loginUrl, setContactUrl}) {
     const email = ReactRedux.useSelector(state => _.get(state, 'appState.customer.email', null));
-    return <div className="uk-width-1-1">
+    return <div className="uk-width-1-1 checkout-contact">
         {email === null && <Guest loginUrl={loginUrl} setContactUrl={setContactUrl}/>}
         {email !== null && <LoggedInCustomer/>}
     </div>

@@ -46,15 +46,21 @@ const App = () => {
         }).finally(function () {});
     }, []);
 
-    return React.createElement(
-        "div",
-        { className: "wrapper" },
-        React.createElement(Head, null),
-        React.createElement(LoadingBar, null),
-        React.createElement(Area, {
-            id: "container", className: "container"
-        })
-    );
+    return React.createElement(Area, {
+        id: "wrapper",
+        className: "wrapper",
+        coreWidgets: [{
+            'component': Head,
+            'props': {},
+            'sort_order': 0,
+            'id': 'head'
+        }, {
+            'component': LoadingBar,
+            'props': {},
+            'sort_order': 1,
+            'id': 'loading_bar'
+        }]
+    });
 };
 const Provider = ReactRedux.Provider;
 
