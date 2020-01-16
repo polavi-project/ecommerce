@@ -53,13 +53,26 @@ const App = ()=> {
     }, []);
 
     return (
-        <div className="wrapper">
-            <Head/>
-            <LoadingBar/>
-            <Area
-                id="container" className="container"
-            />
-        </div>
+        <Area
+            id="wrapper"
+            className="wrapper"
+            coreWidgets={[
+                {
+                    'component': Head,
+                    'props': {
+                    },
+                    'sort_order': 0,
+                    'id': 'head'
+                },
+                {
+                    'component': LoadingBar,
+                    'props': {
+                    },
+                    'sort_order': 1,
+                    'id': 'loading_bar'
+                }
+            ]}
+        />
     )
 };
 const Provider = ReactRedux.Provider;

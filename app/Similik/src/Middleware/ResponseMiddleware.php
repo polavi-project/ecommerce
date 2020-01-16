@@ -25,6 +25,8 @@ class ResponseMiddleware extends MiddlewareAbstract
                 ->getContainer()
                 ->get(Helmet::class)
                 ->addMeta(['charset'=>'utf-8', 'data-react-helmet'=>'true'])
+                ->addMeta(['name'=>'viewport', 'content'=>'width=device-width, initial-scale=1'])
+                ->addMeta(['name'=>'robots', 'content'=>'INDEX,FOLLOW'])
                 ->addScript(['src'=> get_js_file_url('production/axios.min.js')], 5);
             if($request->isAdmin())
                 $this
