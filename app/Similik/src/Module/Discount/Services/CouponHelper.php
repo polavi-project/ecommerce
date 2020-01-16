@@ -231,7 +231,7 @@ class CouponHelper
             return true;
         })->addValidator('subTotal', function($coupon, Cart $cart) {
             $conditions = json_decode($coupon['condition'], true);
-            $minimumSubTotal = isset($conditions['sub_total']) ? floatval($conditions['sub_total']) : null;
+            $minimumSubTotal = isset($conditions['order_total']) ? floatval($conditions['order_total']) : null;
             if($minimumSubTotal and floatval($this->getCartTotalBeforeDiscount($cart)) < $minimumSubTotal)
                 return false;
 

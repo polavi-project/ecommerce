@@ -20,7 +20,12 @@ class ResponseMiddleware extends MiddlewareAbstract
 {
     public function __invoke(Request $request, Response $response)
     {
-        if(!$request->isAjax()) {
+        if(
+            !$request->isAjax() &&
+            $request->attributes->get('_matched_route') != 'graphql.api' &&
+            $request->attributes->get('_matched_route') != 'admin.graphql.api' &&
+            $request->isMethod("GET")
+        ) {
             $this
                 ->getContainer()
                 ->get(Helmet::class)
