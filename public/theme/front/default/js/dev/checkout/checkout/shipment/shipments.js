@@ -9,7 +9,7 @@ function Title() {
 function Shipment() {
     return <Area
         id={"checkout_shipment"}
-        className="uk-width-1-3"
+        className="uk-width-1-3@m"
         coreWidgets={[
             {
                 'component': Title,

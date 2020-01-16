@@ -38,7 +38,7 @@ function Items({items}) {
     if(items.length === 0)
         return <Empty homeUrl={baseUrl}/>;
     else
-        return <div id="shopping-cart-items" className="uk-width-3-4">
+        return <div id="shopping-cart-items" className="uk-width-3-4@m">
             <table className="uk-table uk-table-divider">
                 <thead>
                     <tr>

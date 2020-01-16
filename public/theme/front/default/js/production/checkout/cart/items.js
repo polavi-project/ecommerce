@@ -79,7 +79,7 @@ function Items({ items }) {
 
     if (items.length === 0) return React.createElement(Empty, { homeUrl: baseUrl });else return React.createElement(
         "div",
-        { id: "shopping-cart-items", className: "uk-width-3-4" },
+        { id: "shopping-cart-items", className: "uk-width-3-4@m" },
         React.createElement(
             "table",
             { className: "uk-table uk-table-divider" },

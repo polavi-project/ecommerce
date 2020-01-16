@@ -167,7 +167,7 @@ export default function ContactInformationForm({ loginUrl, setContactUrl }) {
     const email = ReactRedux.useSelector(state => _.get(state, 'appState.customer.email', null));
     return React.createElement(
         "div",
-        { className: "uk-width-1-1" },
+        { className: "uk-width-1-1 checkout-contact" },
         email === null && React.createElement(Guest, { loginUrl: loginUrl, setContactUrl: setContactUrl }),
         email !== null && React.createElement(LoggedInCustomer, null)
     );

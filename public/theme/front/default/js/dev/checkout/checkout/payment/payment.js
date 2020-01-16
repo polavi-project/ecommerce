@@ -9,7 +9,7 @@ function Title() {
 function Payment() {
     return <Area
         id={"checkout_payment"}
-        className="uk-width-1-3"
+        className="uk-width-1-3@m"
         coreWidgets={[
             {
                 'component': Title,

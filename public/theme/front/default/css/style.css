@@ -49,6 +49,7 @@ ul{margin: 10px 0 !important;}
 /* SHOPPING CART PAGE*/
 .cart-item-thumb{ float: left; padding-right: 10px}
 .cart-tem-info{overflow: hidden}
+.checkout-shipping-address, .checkout-shipping-methods,.checkout-payment-methods, .checkout-billing-address, .checkout-contact{margin-bottom: 20px!important;}
 
 /* HEADER */
 .header{padding-top: 20px; position: relative}

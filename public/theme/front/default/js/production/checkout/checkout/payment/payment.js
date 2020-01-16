@@ -13,7 +13,7 @@ function Title() {
 function Payment() {
     return React.createElement(Area, {
         id: "checkout_payment",
-        className: "uk-width-1-3",
+        className: "uk-width-1-3@m",
         coreWidgets: [{
             'component': Title,
             'props': {},
