@@ -581,7 +581,8 @@ class CouponHelper
             $conditions = json_decode($coupon['user_condition'], true);
             if(!isset($conditions['email']) || trim((string)($conditions['email'])) == '')
                 return true;
-            if($cart->getData('customer_email') != $conditions['email'] || $cart->getData('customer_id') == null)
+            $emails = str_getcsv($conditions['email']);
+            if(!in_array($cart->getData('customer_email'),  $emails) || $cart->getData('customer_id') == null)
                 return false;
             return true;
         });
