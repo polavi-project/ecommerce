@@ -11,7 +11,6 @@ namespace Similik\Module\Discount\Services;
 
 use function Similik\_mysql;
 use function Similik\dispatch_event;
-use function Similik\flatten_array;
 use function Similik\get_config;
 use Similik\Module\Checkout\Services\Cart\Cart;
 
@@ -568,6 +567,40 @@ class CouponHelper
             return true;
         });
 
+        // Customer condition validators
+        $this->addValidator('customerGroup', function($coupon, Cart $cart) {
+            $conditions = json_decode($coupon['user_condition'], true);
+            if(!isset($conditions['group']) || $conditions['group'] == 999)
+                return true;
+            if($cart->getData('customer_group_id') != $conditions['group'])
+                return false;
+            return true;
+        });
+
+        $this->addValidator('customerEmail', function($coupon, Cart $cart) {
+            $conditions = json_decode($coupon['user_condition'], true);
+            if(!isset($conditions['email']) || trim((string)($conditions['email'])) == '')
+                return true;
+            if($cart->getData('customer_email') != $conditions['email'] || $cart->getData('customer_id') == null)
+                return false;
+            return true;
+        });
+
+        $this->addValidator('customerPurchasedAmount', function($coupon, Cart $cart) {
+            $conditions = json_decode($coupon['user_condition'], true);
+            if(!isset($conditions['purchased']) || trim((string)($conditions['purchased'])) == '')
+                return true;
+            $amount = floatval($conditions['purchased']);
+            $conn = _mysql();
+            $total = $conn->getTable('order')
+                ->addFieldToSelect('SUM(grand_total)', 'total')
+                ->where('customer_id','=', $cart->getData('customer_id'))
+                ->andWhere('payment_status', '=', 'paid')
+                ->fetchOneAssoc();
+            if($total['total'] < $amount)
+                return false;
+            return true;
+        });
         dispatch_event('register_coupon_validator', [$this]);
     }
 
