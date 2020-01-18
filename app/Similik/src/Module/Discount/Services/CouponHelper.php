@@ -247,6 +247,13 @@ class CouponHelper
                 return false;
 
             return true;
+        })->addValidator('minimumQty', function($coupon, Cart $cart) {
+            $conditions = json_decode($coupon['condition'], true);
+            $minimumQty = isset($conditions['order_qty']) ? (int)$conditions['order_qty'] : null;
+            if($minimumQty and $cart->getData('total_qty') < $minimumQty)
+                return false;
+
+            return true;
         })->addValidator('requiredProductByCategory', function($coupon, Cart $cart) {
             $conditions = json_decode($coupon['condition'], true);
             if(!isset($conditions['required_product']))
