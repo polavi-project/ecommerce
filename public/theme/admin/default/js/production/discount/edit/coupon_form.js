@@ -9,27 +9,17 @@ import Area from "../../../../../../../js/production/area.js";
 import { FORM_FIELD_CREATED, FORM_FIELD_UPDATED } from "../../../../../../../js/dev/event-types.js";
 import Checkbox from "../../../../../../../js/production/form/fields/checkbox.js";
 
-function General({ coupon, status = 1, description, discount_amount, discount_type, free_shipping }) {
-
-    // React.useEffect(() => {
-    //     let tokenOne = PubSub.subscribe(FORM_FIELD_CREATED, function(message, data) {
-    //         console.log(data);
-    //     });
-    //
-    //     return function cleanup() {
-    //         PubSub.unsubscribe(tokenOne);
-    //     };
-    // });
+function GeneralLeft(props) {
     return React.createElement(
         "div",
-        { className: "uk-column-1-2" },
+        { className: "uk-width-1-2" },
         React.createElement(Area, {
             id: "coupon-general-content",
             coreWidgets: [{
                 'component': Text,
                 'props': {
                     name: "coupon",
-                    value: coupon,
+                    value: _.get(props, 'coupon'),
                     validation_rules: ['notEmpty'],
                     formId: "coupon-edit-form",
                     label: "Coupon code"
@@ -40,7 +30,7 @@ function General({ coupon, status = 1, description, discount_amount, discount_ty
                 'component': Radio,
                 'props': {
                     name: "status",
-                    value: status.toString(),
+                    value: _.get(props, 'status').toString(),
                     options: [{
                         'value': '1',
                         'text': 'Enable'
@@ -58,17 +48,28 @@ function General({ coupon, status = 1, description, discount_amount, discount_ty
                 'component': Textarea,
                 'props': {
                     name: "description",
-                    value: description,
+                    value: _.get(props, 'description'),
                     formId: "coupon-edit-form",
                     label: "Description"
                 },
                 'sort_order': 20,
                 'id': 'coupon_description'
-            }, {
+            }]
+        })
+    );
+}
+
+function GeneralRight(props) {
+    return React.createElement(
+        "div",
+        { className: "uk-width-1-2" },
+        React.createElement(Area, {
+            id: "coupon-general-content",
+            coreWidgets: [{
                 'component': Text,
                 'props': {
                     name: "discount_amount",
-                    value: discount_amount,
+                    value: _.get(props, 'discount_amount'),
                     validation_rules: ['notEmpty'],
                     formId: "coupon-edit-form",
                     label: "Discount amount"
@@ -79,10 +80,10 @@ function General({ coupon, status = 1, description, discount_amount, discount_ty
                 'component': Checkbox,
                 'props': {
                     name: "free_shipping",
-                    value: free_shipping,
+                    value: _.get(props, 'free_shipping'),
                     formId: "coupon-edit-form",
                     label: "Free shipping?",
-                    isChecked: free_shipping === 1
+                    isChecked: _.get(props, 'free_shipping') === 1
                 },
                 'sort_order': 30,
                 'id': 'coupon_free_shipping'
@@ -90,7 +91,7 @@ function General({ coupon, status = 1, description, discount_amount, discount_ty
                 'component': Radio,
                 'props': {
                     name: "discount_type",
-                    value: discount_type,
+                    value: _.get(props, 'discount_type'),
                     options: [{
                         'value': 'fixed_discount_to_entire_order',
                         'text': 'Fixed discount to entire order'
@@ -118,14 +119,57 @@ function General({ coupon, status = 1, description, discount_amount, discount_ty
     );
 }
 
-function RequiredProducts({ requiredProducts: requiredProducts }) {
+function General(props) {
+
+    // React.useEffect(() => {
+    //     let tokenOne = PubSub.subscribe(FORM_FIELD_CREATED, function(message, data) {
+    //         console.log(data);
+    //     });
+    //
+    //     return function cleanup() {
+    //         PubSub.unsubscribe(tokenOne);
+    //     };
+    // });
+    return React.createElement(
+        "div",
+        { className: "uk-width-1-1" },
+        React.createElement(
+            "div",
+            null,
+            React.createElement(
+                "strong",
+                null,
+                "General"
+            )
+        ),
+        React.createElement(Area, {
+            id: "coupon-general-content",
+            className: "uk-grid uk-grid-small",
+            coreWidgets: [{
+                'component': GeneralLeft,
+                'props': _extends({}, props),
+                'sort_order': 10,
+                'id': 'general_left'
+            }, {
+                'component': GeneralRight,
+                'props': _extends({}, props),
+                'sort_order': 15,
+                'id': 'general_right'
+            }]
+        })
+    );
+}
+
+function RequiredProducts({ requiredProducts }) {
     const [products, setProducts] = React.useState(requiredProducts);
 
     const addProduct = e => {
         e.persist();
         e.preventDefault();
         setProducts(products.concat({
-            sku: "",
+            key: "",
+            operator: "",
+            value: "",
             qty: ""
         }));
     };
@@ -134,6 +178,17 @@ function RequiredProducts({ requiredProducts: requiredProducts }) {
         e.persist();
         e.preventDefault();
         const newProducts = products.filter((_, i) => i !== index);
+        setProducts(newProducts);
+    };
+
+    const updateProduct = (e, key, index) => {
+        e.persist();
+        e.preventDefault();
+        const newProducts = products.map((p, i) => {
+            if (i === index) {
+                return _extends({}, p, { [key]: e.target.value });
+            } else return p;
+        });
         setProducts(newProducts);
     };
 
@@ -146,12 +201,12 @@ function RequiredProducts({ requiredProducts: requiredProducts }) {
             React.createElement(
                 "span",
                 null,
-                "Order must contains bellow products"
+                "Order must contains product matched bellow condition(All)"
             )
         ),
         React.createElement(
             "table",
-            { className: "uk-table uk-table-small" },
+            { className: "uk-table uk-table-small", style: { "marginTop": 0 } },
             React.createElement(
                 "thead",
                 null,
@@ -164,7 +219,25 @@ function RequiredProducts({ requiredProducts: requiredProducts }) {
                         React.createElement(
                             "span",
                             null,
-                            "Sku"
+                            "Key"
+                        )
+                    ),
+                    React.createElement(
+                        "th",
+                        null,
+                        React.createElement(
+                            "span",
+                            null,
+                            "Operator"
+                        )
+                    ),
+                    React.createElement(
+                        "th",
+                        null,
+                        React.createElement(
+                            "span",
+                            null,
+                            "Value"
                         )
                     ),
                     React.createElement(
@@ -189,10 +262,152 @@ function RequiredProducts({ requiredProducts: requiredProducts }) {
                         React.createElement(
                             "td",
                             null,
+                            React.createElement(Area, {
+                                id: "coupon_required_product_key_list",
+                                reactcomponent: "select",
+                                wrapperProps: {
+                                    name: `condition[required_product][${i}][key]`,
+                                    className: 'uk-select uk-form-small uk-form-width-small',
+                                    value: p.key,
+                                    onChange: e => updateProduct(e, 'key', i)
+                                },
+                                coreWidgets: [{
+                                    component: () => {
+                                        return React.createElement(
+                                            "option",
+                                            { value: "category" },
+                                            "CategoryId"
+                                        );
+                                    },
+                                    props: {},
+                                    sort_order: 10,
+                                    id: "required_product_key_category"
+                                }, {
+                                    component: () => {
+                                        return React.createElement(
+                                            "option",
+                                            { value: "attribute_group" },
+                                            "Attribute Group"
+                                        );
+                                    },
+                                    props: {},
+                                    sort_order: 20,
+                                    id: "required_product_key_attribute_group"
+                                }, {
+                                    component: () => React.createElement(
+                                        "option",
+                                        { value: "price" },
+                                        "Price"
+                                    ),
+                                    props: {},
+                                    sort_order: 30,
+                                    id: "required_product_key_price"
+                                }, {
+                                    component: () => React.createElement(
+                                        "option",
+                                        { value: "sku" },
+                                        "Sku"
+                                    ),
+                                    props: {},
+                                    sort_order: 40,
+                                    id: "required_product_key_sku"
+                                }]
+                            })
+                        ),
+                        React.createElement(
+                            "td",
+                            null,
+                            React.createElement(Area, {
+                                id: "coupon_required_product_operator_list",
+                                reactcomponent: "select",
+                                wrapperProps: {
+                                    name: `condition[required_product][${i}][operator]`,
+                                    className: 'uk-select uk-form-small uk-form-width-small',
+                                    value: p.operator,
+                                    onChange: e => updateProduct(e, 'operator', i)
+                                },
+                                coreWidgets: [{
+                                    component: () => React.createElement(
+                                        "option",
+                                        { value: "=" },
+                                        "Equal"
+                                    ),
+                                    props: {},
+                                    sort_order: 10,
+                                    id: "coupon_required_product_operator_equal"
+                                }, {
+                                    component: () => React.createElement(
+                                        "option",
+                                        { value: "<>" },
+                                        "Not equal"
+                                    ),
+                                    props: {},
+                                    sort_order: 10,
+                                    id: "coupon_required_product_operator_equal"
+                                }, {
+                                    component: () => React.createElement(
+                                        "option",
+                                        { value: ">" },
+                                        "Greater"
+                                    ),
+                                    props: {},
+                                    sort_order: 20,
+                                    id: "coupon_required_product_operator_greater"
+                                }, {
+                                    component: () => React.createElement(
+                                        "option",
+                                        { value: ">=" },
+                                        "Greater or equal"
+                                    ),
+                                    props: {},
+                                    sort_order: 30,
+                                    id: "coupon_required_product_operator_greater_or_equal"
+                                }, {
+                                    component: () => React.createElement(
+                                        "option",
+                                        { value: "<" },
+                                        "Smaller"
+                                    ),
+                                    props: {},
+                                    sort_order: 40,
+                                    id: "coupon_required_product_operator_smaller"
+                                }, {
+                                    component: () => React.createElement(
+                                        "option",
+                                        { value: "<=" },
+                                        "Equal or smaller"
+                                    ),
+                                    props: {},
+                                    sort_order: 40,
+                                    id: "coupon_required_product_operator_equal_or_smaller"
+                                }, {
+                                    component: () => React.createElement(
+                                        "option",
+                                        { value: "IN" },
+                                        "In"
+                                    ),
+                                    props: {},
+                                    sort_order: 40,
+                                    id: "coupon_required_product_operator_in"
+                                }, {
+                                    component: () => React.createElement(
+                                        "option",
+                                        { value: "NOT IN" },
+                                        "Not in"
+                                    ),
+                                    props: {},
+                                    sort_order: 40,
+                                    id: "coupon_required_product_operator_not_in"
+                                }]
+                            })
+                        ),
+                        React.createElement(
+                            "td",
+                            null,
                             React.createElement(Text, {
-                                name: `condition[required_product][${i}][sku]`,
+                                name: `condition[required_product][${i}][value]`,
                                 formId: "coupon-edit-form",
-                                value: p.sku,
+                                value: p.value,
                                 validation_rules: ['notEmpty']
                             })
                         ),
@@ -222,7 +437,7 @@ function RequiredProducts({ requiredProducts: requiredProducts }) {
         React.createElement(
             "a",
             { onClick: e => addProduct(e) },
-            "Add product"
+            "Add condition"
         )
     );
 }
@@ -417,53 +632,61 @@ function BuyXGetY({ _products }) {
 function OrderCondition(props) {
     return React.createElement(
         "div",
-        null,
+        { className: "uk-width-1-2 uk-margin-medium-top" },
         React.createElement(
             "div",
-            null,
+            { className: "border-block" },
             React.createElement(
-                "span",
+                "div",
                 null,
-                "Order condition"
-            )
-        ),
-        React.createElement(Text, {
-            name: "condition[order_total]",
-            label: "Minimum purchase amount",
-            value: props.order_total ? props.order_total : ''
-        }),
-        React.createElement(Text, {
-            name: "condition[order_qty]",
-            label: "Minimum purchase qty",
-            value: props.order_qty ? props.order_qty : ''
-        }),
-        React.createElement(RequiredProducts, { requiredProducts: props.required_product ? props.required_product : [] })
+                React.createElement(
+                    "strong",
+                    null,
+                    "Order condition"
+                )
+            ),
+            React.createElement(Text, {
+                name: "condition[order_total]",
+                label: "Minimum purchase amount",
+                value: props.order_total ? props.order_total : ''
+            }),
+            React.createElement(Text, {
+                name: "condition[order_qty]",
+                label: "Minimum purchase qty",
+                value: props.order_qty ? props.order_qty : ''
+            }),
+            React.createElement(RequiredProducts, { requiredProducts: props.required_product ? props.required_product : [] })
+        )
     );
 }
 
 function CustomerCondition(props) {
     return React.createElement(
         "div",
-        null,
+        { className: "uk-width-1-2 uk-margin-medium-top" },
         React.createElement(
             "div",
-            null,
+            { className: "border-block" },
             React.createElement(
-                "span",
+                "div",
                 null,
-                "Customer condition"
-            )
-        ),
-        React.createElement(Text, {
-            name: "customer_condition[order_total]",
-            label: "Minimum purchase amount",
-            value: props.order_total ? props.order_total : ''
-        }),
-        React.createElement(Text, {
-            name: "customer_condition[order_qty]",
-            label: "Minimum purchase qty",
-            value: props.order_qty ? props.order_qty : ''
-        })
+                React.createElement(
+                    "strong",
+                    null,
+                    "Customer condition"
+                )
+            ),
+            React.createElement(Text, {
+                name: "customer_condition[order_total]",
+                label: "Minimum purchase amount",
+                value: props.order_total ? props.order_total : ''
+            }),
+            React.createElement(Text, {
+                name: "customer_condition[order_qty]",
+                label: "Minimum purchase qty",
+                value: props.order_qty ? props.order_qty : ''
+            })
+        )
     );
 }
 
@@ -519,6 +742,7 @@ export default function CouponForm(props) {
             _extends({ id: "coupon-edit-form" }, props),
             React.createElement(Area, {
                 id: "coupon-general",
+                className: "uk-grid uk-grid-small",
                 coreWidgets: [{
                     component: General,
                     props: props,
@@ -529,6 +753,11 @@ export default function CouponForm(props) {
                     props: condition,
                     sort_order: 20,
                     id: "coupon-order-condition"
+                }, {
+                    component: CustomerCondition,
+                    props: condition,
+                    sort_order: 25,
+                    id: "coupon-customer-condition"
                 }, {
                     component: TargetProduct,
                     props: { products: props.target_products ? props.target_products : "", "discount_type": props.discount_type },
