@@ -15,10 +15,12 @@ $router->addAdminRoute('coupon.list', 'GET', '/coupons', [
 ]);
 
 $router->addAdminRoute('coupon.create', 'GET', '/coupon/create', [
+    \Similik\Module\Discount\Middleware\Edit\LoadCustomerGroupMiddleware::class,
     \Similik\Module\Discount\Middleware\Edit\FormMiddleware::class
 ]);
 
 $router->addAdminRoute('coupon.edit', 'GET', '/coupon/edit/{id:\d+}', [
+    \Similik\Module\Discount\Middleware\Edit\LoadCustomerGroupMiddleware::class,
     \Similik\Module\Discount\Middleware\Edit\FormMiddleware::class
 ]);
 

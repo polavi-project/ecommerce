@@ -30,7 +30,7 @@ function GeneralLeft(props) {
                 'component': Radio,
                 'props': {
                     name: "status",
-                    value: _.get(props, 'status').toString(),
+                    value: _.get(props, 'status', 1).toString(),
                     options: [{
                         'value': '1',
                         'text': 'Enable'
@@ -661,6 +661,7 @@ function OrderCondition(props) {
 }
 
 function CustomerCondition(props) {
+    const customerGroups = ReactRedux.useSelector(state => _.get(state, 'appState.customerGroups'));
     return React.createElement(
         "div",
         { className: "uk-width-1-2 uk-margin-medium-top" },
@@ -676,15 +677,41 @@ function CustomerCondition(props) {
                     "Customer condition"
                 )
             ),
-            React.createElement(Text, {
-                name: "customer_condition[order_total]",
-                label: "Minimum purchase amount",
-                value: props.order_total ? props.order_total : ''
-            }),
-            React.createElement(Text, {
-                name: "customer_condition[order_qty]",
-                label: "Minimum purchase qty",
-                value: props.order_qty ? props.order_qty : ''
+            React.createElement(Area, {
+                id: "coupon_customer_condition",
+                coreWidgets: [{
+                    component: Select,
+                    props: {
+                        name: "user_condition[group]",
+                        label: "Customer group",
+                        value: props.group ? props.group : 999,
+                        options: customerGroups
+                    },
+                    sort_order: 10,
+                    id: "coupon_customer_condition_group"
+                }, {
+                    component: Text,
+                    props: {
+                        name: "user_condition[email]",
+                        label: "Customer email",
+                        value: props.email ? props.email : '',
+                        validation_rules: ['email'],
+                        comment: "Use comma when you have multi email"
+                    },
+                    sort_order: 20,
+                    id: "coupon_customer_condition_email"
+                }, {
+                    component: Text,
+                    props: {
+                        name: "user_condition[purchased]",
+                        label: "Customer's purchase",
+                        value: props.purchased ? props.purchased : '',
+                        validation_rules: ['number'],
+                        comment: "Minimum purchased amount"
+                    },
+                    sort_order: 30,
+                    id: "coupon_customer_condition_purchased"
+                }]
             })
         )
     );
@@ -733,6 +760,7 @@ function TargetProduct({ products, discount_type }) {
 
 export default function CouponForm(props) {
     const condition = props.condition ? JSON.parse(props.condition) : {};
+    const user_condition = props.user_condition ? JSON.parse(props.user_condition) : {};
     const buyx_gety = props.buyx_gety ? JSON.parse(props.buyx_gety) : [];
     return React.createElement(
         "div",
@@ -755,7 +783,7 @@ export default function CouponForm(props) {
                     id: "coupon-order-condition"
                 }, {
                     component: CustomerCondition,
-                    props: condition,
+                    props: user_condition,
                     sort_order: 25,
                     id: "coupon-customer-condition"
                 }, {
