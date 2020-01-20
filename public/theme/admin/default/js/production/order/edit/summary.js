@@ -18,19 +18,19 @@ function OrderSummary() {
         { className: "uk-width-1-1" },
         React.createElement(
             'div',
-            { className: 'uk-overflow-auto' },
+            { className: 'uk-overflow-auto border-block' },
             React.createElement(
                 'div',
                 null,
                 React.createElement(
-                    'strong',
+                    'h3',
                     null,
                     'Summary'
                 )
             ),
             React.createElement(
                 'table',
-                { className: 'uk-table uk-table-small' },
+                { className: 'uk-table uk-table-small uk-table-divider' },
                 React.createElement(Area, {
                     id: "order_summary_block",
                     orderId: orderId,

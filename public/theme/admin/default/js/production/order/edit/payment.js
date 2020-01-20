@@ -246,33 +246,37 @@ function Payment() {
     const grandTotal = ReactRedux.useSelector(state => _.get(state, 'appState.orderData.grand_total'));
     return React.createElement(
         "div",
-        { className: "uk-width-1-1" },
+        { className: "uk-width-1-1 uk-margin-top" },
         React.createElement(
             "div",
-            null,
+            { className: "border-block" },
             React.createElement(
-                "h3",
+                "div",
                 null,
-                "Payment"
+                React.createElement(
+                    "h3",
+                    null,
+                    "Payment"
+                )
+            ),
+            React.createElement(
+                "div",
+                { className: "uk-overflow-auto" },
+                React.createElement(Area, {
+                    id: "order_payment_block",
+                    orderId: orderId,
+                    method: method,
+                    methodName: methodName,
+                    grandTotal: grandTotal,
+                    status: status,
+                    coreWidgets: [{
+                        'component': Info,
+                        'props': { orderId, method, methodName, status, grandTotal },
+                        'sort_order': 10,
+                        'id': 'order_payment_fo'
+                    }]
+                })
             )
-        ),
-        React.createElement(
-            "div",
-            { className: "uk-overflow-auto" },
-            React.createElement(Area, {
-                id: "order_payment_block",
-                orderId: orderId,
-                method: method,
-                methodName: methodName,
-                grandTotal: grandTotal,
-                status: status,
-                coreWidgets: [{
-                    'component': Info,
-                    'props': { orderId, method, methodName, status, grandTotal },
-                    'sort_order': 10,
-                    'id': 'order_payment_fo'
-                }]
-            })
         )
     );
 }

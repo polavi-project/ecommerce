@@ -115,25 +115,27 @@ function Payment() {
     const methodName = ReactRedux.useSelector(state => _.get(state, 'appState.orderData.payment_method_name'));
     const status = ReactRedux.useSelector(state => _.get(state, 'appState.orderData.payment_status'));
     const grandTotal = ReactRedux.useSelector(state => _.get(state, 'appState.orderData.grand_total'));
-    return <div className={"uk-width-1-1"}>
-        <div><h3>Payment</h3></div>
-        <div className="uk-overflow-auto">
-            <Area
-                id={"order_payment_block"}
-                orderId={orderId}
-                method={method}
-                methodName={methodName}
-                grandTotal={grandTotal}
-                status={status}
-                coreWidgets={[
-                    {
-                        'component': Info,
-                        'props': {orderId, method, methodName, status, grandTotal},
-                        'sort_order': 10,
-                        'id': 'order_payment_fo'
-                    }
-                ]}
-            />
+    return <div className="uk-width-1-1 uk-margin-top">
+        <div className="border-block">
+            <div><h3>Payment</h3></div>
+            <div className="uk-overflow-auto">
+                <Area
+                    id={"order_payment_block"}
+                    orderId={orderId}
+                    method={method}
+                    methodName={methodName}
+                    grandTotal={grandTotal}
+                    status={status}
+                    coreWidgets={[
+                        {
+                            'component': Info,
+                            'props': {orderId, method, methodName, status, grandTotal},
+                            'sort_order': 10,
+                            'id': 'order_payment_fo'
+                        }
+                    ]}
+                />
+            </div>
         </div>
     </div>
 }
