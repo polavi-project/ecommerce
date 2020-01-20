@@ -35,7 +35,7 @@ class PriceMiddleware extends MiddlewareAbstract
                     $response->addWidget(
                         'product_view_price',
                         'product_view_general_info',
-                        15,
+                        25,
                         get_js_file_url("production/catalog/product/view/price.js", false),
                         ['tierPrices' => $result->data['productTierPrice']]
                     );

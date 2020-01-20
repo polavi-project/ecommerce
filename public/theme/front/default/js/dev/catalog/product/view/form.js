@@ -20,11 +20,12 @@ export default function ProductForm(props) {
                 {
                     'component': Text,
                     'props': {
-                        formId:"product-form",
-                        name:"qty",
-                        value:"",
-                        validation_rules:['notEmpty', 'number'],
-                        label:"Quantity"
+                        formId: "product-form",
+                        name: "qty",
+                        value: "",
+                        validation_rules: ['notEmpty', 'number'],
+                        label: "Quantity",
+                        size: "small"
                     },
                     'sort_order': 20,
                     'id': 'product-single-quantity'

@@ -24,7 +24,8 @@ export default function ProductForm(props) {
                     name: "qty",
                     value: "",
                     validation_rules: ['notEmpty', 'number'],
-                    label: "Quantity"
+                    label: "Quantity",
+                    size: "small"
                 },
                 'sort_order': 20,
                 'id': 'product-single-quantity'
