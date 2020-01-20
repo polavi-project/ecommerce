@@ -78,124 +78,128 @@ export default function Shipment({ startShipUrl, completeShipUrl }) {
     const weight = ReactRedux.useSelector(state => _.get(state, 'appState.orderData.total_weight'));
     return React.createElement(
         "div",
-        { className: "shipment-info uk-width-1-1" },
+        { className: "shipment-info uk-width-1-1 uk-margin-top" },
         React.createElement(
             "div",
-            null,
+            { className: "border-block" },
             React.createElement(
-                "strong",
+                "div",
                 null,
-                "Shipment"
-            )
-        ),
-        React.createElement(
-            "table",
-            { className: "uk-table uk-table-small" },
-            React.createElement(
-                "thead",
-                null,
-                React.createElement(Area, {
-                    id: "order_shipment_block_info_header",
-                    orderId: orderId,
-                    method: method,
-                    shippingNote: shippingNote,
-                    methodName: methodName,
-                    grandTotal: grandTotal,
-                    weight: weight,
-                    status: status,
-                    reactcomponent: "tr",
-                    coreWidgets: [{
-                        'component': "th",
-                        'props': { children: React.createElement(
-                                "span",
-                                null,
-                                "Status"
-                            ) },
-                        'sort_order': 10,
-                        'id': 'shipment_status_header'
-                    }, {
-                        'component': "th",
-                        'props': { children: React.createElement(
-                                "span",
-                                null,
-                                "Method"
-                            ) },
-                        'sort_order': 20,
-                        'id': 'shipment_method_header'
-                    }, {
-                        'component': "th",
-                        'props': { children: React.createElement(
-                                "span",
-                                null,
-                                "Total weight"
-                            ) },
-                        'sort_order': 30,
-                        'id': 'shipment_weight_header'
-                    }, {
-                        'component': "th",
-                        'props': { children: React.createElement(
-                                "span",
-                                null,
-                                "Customer notes"
-                            ) },
-                        'sort_order': 40,
-                        'id': 'shipment_notes_header'
-                    }, {
-                        'component': "th",
-                        'props': { children: React.createElement(
-                                "span",
-                                null,
-                                "Actions"
-                            ) },
-                        'sort_order': 50,
-                        'id': 'shipment_action_header'
-                    }]
-                })
+                React.createElement(
+                    "h3",
+                    null,
+                    "Shipment"
+                )
             ),
             React.createElement(
-                "tbody",
-                null,
-                React.createElement(Area, {
-                    id: "order_shipment_info",
-                    orderId: orderId,
-                    method: method,
-                    shippingNote: shippingNote,
-                    methodName: methodName,
-                    grandTotal: grandTotal,
-                    weight: weight,
-                    status: status,
-                    reactcomponent: "tr",
-                    coreWidgets: [{
-                        'component': Status,
-                        'props': { status: status },
-                        'sort_order': 10,
-                        'id': 'order_shipment_status'
-                    }, {
-                        'component': "td",
-                        'props': { children: React.createElement(
-                                "span",
-                                null,
-                                methodName
-                            ) },
-                        'sort_order': 20,
-                        'id': 'order_shipment_method'
-                    }, {
-                        'component': Weight,
-                        'props': { weight: weight },
-                        'sort_order': 30,
-                        'id': 'order_shipment_weight'
-                    }, {
-                        'component': Note,
-                        'props': { note: shippingNote },
-                        'sort_order': 40,
-                        'id': 'order_shipment_note'
-                    }, {
-                        'component': Actions,
-                        'props': { status: status, startShipUrl, completeShipUrl },
-                        'sort_order': 50,
-                        'id': 'order_shipment_action'
-                    }]
-                })
+                "table",
+                { className: "uk-table uk-table-small" },
+                React.createElement(
+                    "thead",
+                    null,
+                    React.createElement(Area, {
+                        id: "order_shipment_block_info_header",
+                        orderId: orderId,
+                        method: method,
+                        shippingNote: shippingNote,
+                        methodName: methodName,
+                        grandTotal: grandTotal,
+                        weight: weight,
+                        status: status,
+                        reactcomponent: "tr",
+                        coreWidgets: [{
+                            'component': "th",
+                            'props': { children: React.createElement(
+                                    "span",
+                                    null,
+                                    "Status"
+                                ) },
+                            'sort_order': 10,
+                            'id': 'shipment_status_header'
+                        }, {
+                            'component': "th",
+                            'props': { children: React.createElement(
+                                    "span",
+                                    null,
+                                    "Method"
+                                ) },
+                            'sort_order': 20,
+                            'id': 'shipment_method_header'
+                        }, {
+                            'component': "th",
+                            'props': { children: React.createElement(
+                                    "span",
+                                    null,
+                                    "Total weight"
+                                ) },
+                            'sort_order': 30,
+                            'id': 'shipment_weight_header'
+                        }, {
+                            'component': "th",
+                            'props': { children: React.createElement(
+                                    "span",
+                                    null,
+                                    "Customer notes"
+                                ) },
+                            'sort_order': 40,
+                            'id': 'shipment_notes_header'
+                        }, {
+                            'component': "th",
+                            'props': { children: React.createElement(
+                                    "span",
+                                    null,
+                                    "Actions"
+                                ) },
+                            'sort_order': 50,
+                            'id': 'shipment_action_header'
+                        }]
+                    })
+                ),
+                React.createElement(
+                    "tbody",
+                    null,
+                    React.createElement(Area, {
+                        id: "order_shipment_info",
+                        orderId: orderId,
+                        method: method,
+                        shippingNote: shippingNote,
+                        methodName: methodName,
+                        grandTotal: grandTotal,
+                        weight: weight,
+                        status: status,
+                        reactcomponent: "tr",
+                        coreWidgets: [{
+                            'component': Status,
+                            'props': { status: status },
+                            'sort_order': 10,
+                            'id': 'order_shipment_status'
+                        }, {
+                            'component': "td",
+                            'props': { children: React.createElement(
+                                    "span",
+                                    null,
+                                    methodName
+                                ) },
+                            'sort_order': 20,
+                            'id': 'order_shipment_method'
+                        }, {
+                            'component': Weight,
+                            'props': { weight: weight },
+                            'sort_order': 30,
+                            'id': 'order_shipment_weight'
+                        }, {
+                            'component': Note,
+                            'props': { note: shippingNote },
+                            'sort_order': 40,
+                            'id': 'order_shipment_note'
+                        }, {
+                            'component': Actions,
+                            'props': { status: status, startShipUrl, completeShipUrl },
+                            'sort_order': 50,
+                            'id': 'order_shipment_action'
+                        }]
+                    })
+                )
             )
         )
     );

@@ -106,8 +106,10 @@ function TotalColumnHeader({areaProps})
 }
 
 function TotalColumnRow({row}) {
+    const currency = ReactRedux.useSelector(state => _.get(state, 'appState.currency'));
+    const _grandTotal = new Intl.NumberFormat('en', { style: 'currency', currency: currency }).format(_.get(row, "grand_total"));
     return <td>
-        <span>{_.get(row, "grand_total")}</span>
+        <span>{_grandTotal}</span>
     </td>
 }
 

@@ -11,6 +11,7 @@ namespace Similik\Module\Discount\Middleware\Edit;
 use function Similik\_mysql;
 use function Similik\get_js_file_url;
 use Similik\Module\Graphql\Services\GraphqlExecutor;
+use Similik\Services\Helmet;
 use Similik\Services\Http\Request;
 use Similik\Services\Http\Response;
 use Similik\Middleware\MiddlewareAbstract;
@@ -57,6 +58,7 @@ QUERY
                 $advancedPrice = [];
                 /**@var \GraphQL\Executor\ExecutionResult $result */
                 if (isset($result->data['coupon'])) {
+                    $this->getContainer()->get(Helmet::class)->setTitle("Edit coupon {$result->data['coupon']['coupon']}");
                     $response->addWidget(
                         'coupon_edit_form',
                         'content',

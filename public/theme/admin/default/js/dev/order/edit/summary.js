@@ -15,9 +15,9 @@ function OrderSummary() {
     const _subTotal = new Intl.NumberFormat('en', { style: 'currency', currency: currency }).format(subTotal);
     const _grandTotal = new Intl.NumberFormat('en', { style: 'currency', currency: currency }).format(grandTotal);
     return <div className={"uk-width-1-1"}>
-        <div className="uk-overflow-auto">
-            <div><strong>Summary</strong></div>
-            <table className="uk-table uk-table-small">
+        <div className="uk-overflow-auto border-block">
+            <div><h3>Summary</h3></div>
+            <table className="uk-table uk-table-small uk-table-divider">
                 <Area
                     id={"order_summary_block"}
                     orderId={orderId}

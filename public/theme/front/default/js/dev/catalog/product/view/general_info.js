@@ -9,7 +9,7 @@ function Description({description}) {
 }
 
 function Sku({sku}) {
-    return <div className="product-single-sku">{sku}</div>
+    return <div className="product-single-sku"><span>SKU</span><span>: </span>{sku}</div>
 }
 
 
@@ -24,21 +24,20 @@ export default function GeneralInfo({name, price, description, sku, stock_availa
             'id': 'product-single-name'
         },
         {
-            'component': Description,
-            'props': {
-                description: description
-            },
-            'sort_order': 20,
-            'id': 'product-single-description'
-        }
-        ,
-        {
             'component': Sku,
             'props': {
                 sku: sku
             },
-            'sort_order': 30,
+            'sort_order': 20,
             'id': 'product-single-sku'
+        },
+        {
+            'component': Description,
+            'props': {
+                description: description
+            },
+            'sort_order': 30,
+            'id': 'product-single-description'
         }
     ]}/>
 }
