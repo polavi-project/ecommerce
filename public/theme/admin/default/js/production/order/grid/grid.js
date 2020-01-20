@@ -182,13 +182,15 @@ function TotalColumnHeader({ areaProps }) {
 }
 
 function TotalColumnRow({ row }) {
+    const currency = ReactRedux.useSelector(state => _.get(state, 'appState.currency'));
+    const _grandTotal = new Intl.NumberFormat('en', { style: 'currency', currency: currency }).format(_.get(row, "grand_total"));
     return React.createElement(
         "td",
         null,
         React.createElement(
             "span",
             null,
-            _.get(row, "grand_total")
+            _grandTotal
         )
     );
 }
