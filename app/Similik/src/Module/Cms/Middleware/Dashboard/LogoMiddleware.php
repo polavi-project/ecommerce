@@ -33,7 +33,7 @@ class LogoMiddleware extends MiddlewareAbstract
                 "adminUrl" => generate_url('dashboard'),
                 "logoUrl" => \Similik\get_base_url_scheme_less() . '/public/theme/admin/default/image/logo.png',
                 "storeName" => get_config('general_store_name', 'Similik store admin'),
-                "logoWidth" => 50
+                "logoWidth" => 55
             ]
         );
 

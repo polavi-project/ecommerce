@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Similik\Middleware;
 
+use function Similik\get_admin_theme_url;
 use function Similik\get_css_file_url;
 use function Similik\get_current_language_id;
 use function Similik\get_js_file_url;
@@ -26,6 +27,7 @@ class ResponseMiddleware extends MiddlewareAbstract
             $request->attributes->get('_matched_route') != 'admin.graphql.api' &&
             $request->isMethod("GET")
         ) {
+            // TODO: Improve Helmet to to support remove tag
             $this
                 ->getContainer()
                 ->get(Helmet::class)
@@ -33,6 +35,15 @@ class ResponseMiddleware extends MiddlewareAbstract
                 ->addMeta(['name'=>'viewport', 'content'=>'width=device-width, initial-scale=1'])
                 ->addMeta(['name'=>'robots', 'content'=>'INDEX,FOLLOW'])
                 ->addScript(['src'=> get_js_file_url('production/axios.min.js')], 5);
+
+            $this
+                ->getContainer()
+                ->get(Helmet::class)
+                ->addLink(["rel"=>"apple-touch-icon", "sizes"=>"180x180", "href"=> get_admin_theme_url() . "/image/apple-touch-icon.png"])
+                ->addLink(["rel"=>"icon", "type"=>"image/png", "sizes"=>"32x32", "href"=> get_admin_theme_url() . "/image/favicon-32x32.png"])
+                ->addLink(["rel"=>"icon", "type"=>"image/png", "sizes"=>"16x16", "href"=> get_admin_theme_url() . "/image/favicon-16x16.png"])
+                ->addLink(["rel"=>"shortcut icon", "href"=> get_admin_theme_url() . "/image/favicon.ico"]);
+
             if($request->isAdmin())
                 $this
                     ->getContainer()

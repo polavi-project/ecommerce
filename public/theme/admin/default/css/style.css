@@ -87,10 +87,9 @@ table.uk-table thead th{vertical-align: top}
 html .uk-table-small td, html .uk-table-small th{padding: 5px}
 
 /* HEADER */
-.container > .header{padding: 12px 10px; background: #1d1b1b; margin-bottom: 15px; overflow: hidden}
+.container > .header{padding: 12px 10px; border-bottom: 1px solid var(--borderColor); margin-bottom: 15px; overflow: hidden}
 .container > .header .logo{float: left}
 .container > .header .admin-user-greeting{float: right}
-.container > .header .admin-user-greeting div > span {color: #fff}
 
 /**/
 .sale-statistic-header ul {list-style: none; margin-top: 6px; margin-bottom:0px}
