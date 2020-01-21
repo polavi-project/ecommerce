@@ -7,7 +7,7 @@ export default function Logo({ adminUrl, logoUrl, storeName, logoWidth, logoHeig
         logoUrl && React.createElement(
             A,
             { url: adminUrl },
-            React.createElement("img", { src: logoUrl, alt: storeName, style: { width: logoWidth + 'px', height: logoHeight + 'px' } })
+            React.createElement("img", { src: logoUrl, alt: storeName, title: storeName, style: { width: logoWidth + 'px', height: logoHeight + 'px' } })
         ),
         !logoUrl && React.createElement(
             A,
