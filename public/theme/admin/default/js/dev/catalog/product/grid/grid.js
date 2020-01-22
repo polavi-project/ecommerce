@@ -40,6 +40,32 @@ function IdColumnRow({row}) {
     return <td>{row.product_id}</td>
 }
 
+function SkuColumnHeader({areaProps}) {
+    const filterInput = React.useRef(null);
+
+    React.useEffect(() => {
+        areaProps.addField("sku");
+    }, []);
+
+    return <th className={"column"}>
+        <div className="header id-header">
+            <div className={"title"}><span>SKU</span></div>
+            <div className={"filter"}>
+                <input
+                    type={"text"}
+                    ref={filterInput}
+                    onKeyPress={(e) => { if(e.key === 'Enter') areaProps.addFilter("sku", "LIKE", `${e.target.value}`);}}
+                    placeholder={"Sku"}
+                    className="uk-input uk-form-small uk-form-width-small"
+                />
+            </div>
+        </div>
+    </th>
+}
+
+function SkuColumnRow({row}) {
+    return <td>{row.sku}</td>
+}
 function PriceColumnHeader({areaProps}) {
     const filterFrom = React.useRef(null);
     const filterTo = React.useRef(null);
@@ -301,6 +327,12 @@ export default function ProductGrid({apiUrl, defaultFilter})
                         id: "id"
                     },
                     {
+                        component: SkuColumnHeader,
+                        props : {addFilter, cleanFilter, addField, applyFilter},
+                        sort_order: 15,
+                        id: "sku"
+                    },
+                    {
                         component: ThumbColumnHeader,
                         props : {},
                         sort_order: 20,
@@ -347,6 +379,12 @@ export default function ProductGrid({apiUrl, defaultFilter})
                             props : {row: p},
                             sort_order: 10,
                             id: "id"
+                        },
+                        {
+                            component: SkuColumnRow,
+                            props : {row: p},
+                            sort_order: 15,
+                            id: "sku"
                         },
                         {
                             component: ThumbColumnRow,
