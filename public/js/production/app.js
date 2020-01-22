@@ -15,6 +15,7 @@ const App = () => {
     React.useEffect(() => {
         let promises = [];
         let widgets = [];
+        var t0 = performance.now();
         if (window.pageData.widgets !== undefined) {
             let temps = window.pageData.widgets;
             temps.forEach((widget, index) => {
@@ -38,6 +39,8 @@ const App = () => {
             window.pageData.widgets = widgets;
             dispatch({ 'type': INITIAL_PAGE_READY, 'payload': { data: window.pageData } });
             dispatch({ 'type': REQUEST_END, 'payload': { data: window.pageData } });
+            var t1 = performance.now();
+            console.log("Call to doSomething took " + (t1 - t0) + " milliseconds.");
         }).catch(e => {
             console.log(e);
             console.log(e.message);
