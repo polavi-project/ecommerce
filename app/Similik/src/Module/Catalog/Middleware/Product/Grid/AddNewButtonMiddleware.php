@@ -25,7 +25,7 @@ class AddNewButtonMiddleware extends MiddlewareAbstract
     {
         $response->addWidget(
             'product-grid-add-new',
-            'content',
+            'product_grid_container',
             5,
             get_js_file_url("production/catalog/product/grid/add_new_button.js", true),
             [

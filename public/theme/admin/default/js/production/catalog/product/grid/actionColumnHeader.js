@@ -7,6 +7,10 @@ export default function ActionColumnHeader({ areaProps }) {
         areaProps.addField('editUrl');
     }, []);
 
+    const onClick = () => {
+        areaProps.cleanFilter();
+    };
+
     return React.createElement(
         "th",
         { className: "column" },
@@ -21,6 +25,11 @@ export default function ActionColumnHeader({ areaProps }) {
                     null,
                     "Action"
                 )
+            ),
+            React.createElement(
+                "a",
+                { onClick: () => onClick() },
+                "Clean filter"
             )
         )
     );

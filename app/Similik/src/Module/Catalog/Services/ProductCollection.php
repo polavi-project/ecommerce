@@ -128,33 +128,71 @@ class ProductCollection extends CollectionBuilder
     protected function defaultFilters()
     {
         $isAdmin = $this->container->get(Request::class)->isAdmin();
-        $this->addFilter('price', function($args) {
-            if($args['operator'] == "BETWEEN") {
-                $arr = explode("AND", $args['value']);
-                $from = (float) trim($arr[0]);
-                $to = isset($arr[1]) ? (float) trim($arr[1]) : null;
-                $this->getCollection()->andWhere('product_price.tier_price', '>=', $from);
-                if($to)
-                    $this->getCollection()->andWhere('product_price.tier_price', '<=', $to);
+
+        $this->addFilter('id', function($args) use($isAdmin) {
+            if($isAdmin == true) {
+                if($args['operator'] == "BETWEEN") {
+                    $arr = explode("AND", $args['value']);
+                    $from = (float) trim($arr[0]);
+                    $to = isset($arr[1]) ? (float) trim($arr[1]) : null;
+                    $this->getCollection()->andWhere('product.product_id', '>=', $from);
+                    if($to)
+                        $this->getCollection()->andWhere('product.product_id', '<=', $to);
+                } else {
+                    $this->getCollection()->andWhere('product.product_id', $args['operator'], $args['value']);
+                }
+            }
+        });
+
+        $this->addFilter('price', function($args) use($isAdmin) {
+            if($isAdmin == true) {
+                if($args['operator'] == "BETWEEN") {
+                    $arr = explode("AND", $args['value']);
+                    $from = (float) trim($arr[0]);
+                    $to = isset($arr[1]) ? (float) trim($arr[1]) : null;
+                    $this->getCollection()->andWhere('product.price', '>=', $from);
+                    if($to)
+                        $this->getCollection()->andWhere('product.price', '<=', $to);
+                } else {
+                    $this->getCollection()->andWhere('product.price', $args['operator'], $args['value']);
+                }
             } else {
-                $this->getCollection()->andWhere('product_price.tier_price', $args['operator'], $args['value']);
+                if($args['operator'] == "BETWEEN") {
+                    $arr = explode("AND", $args['value']);
+                    $from = (float) trim($arr[0]);
+                    $to = isset($arr[1]) ? (float) trim($arr[1]) : null;
+                    $this->getCollection()->andWhere('product_price.tier_price', '>=', $from);
+                    if($to)
+                        $this->getCollection()->andWhere('product_price.tier_price', '<=', $to);
+                } else {
+                    $this->getCollection()->andWhere('product_price.tier_price', $args['operator'], $args['value']);
+                }
             }
         });
 
         $this->addFilter('qty', function($args) use ($isAdmin) {
             if($isAdmin == false)
                 return;
-            $this->collection->andWhere('product.qty', $args['operator'], $args['value']);
+            if($args['operator'] == "BETWEEN") {
+                $arr = explode("AND", $args['value']);
+                $from = (float) trim($arr[0]);
+                $to = isset($arr[1]) ? (float) trim($arr[1]) : null;
+                $this->getCollection()->andWhere('product.qty', '>=', $from);
+                if($to)
+                    $this->getCollection()->andWhere('product.qty', '<=', $to);
+            } else {
+                $this->getCollection()->andWhere('product.qty', $args['operator'], $args['value']);
+            }
         });
 
         $this->addFilter('name', function($args) {
-            $this->collection->andWhere('product_description.name', $args['operator'], $args['value']);
+            $this->getCollection()->andWhere('product_description.name', $args['operator'], $args['value']);
         });
 
         $this->addFilter('status', function($args) use ($isAdmin) {
             if($isAdmin == false)
                 return;
-            $this->collection->andWhere('product.status', $args['operator'], (int)$args['value']);
+            $this->getCollection()->andWhere('product.status', $args['operator'], (int)$args['value']);
         });
 
         $this->addFilter('category', function($args) use ($isAdmin) {
@@ -176,7 +214,7 @@ class ProductCollection extends CollectionBuilder
                 $skus = explode(',', $args['value']);
                 $this->getCollection()->andWhere('product.sku', 'IN', $skus);
             } else {
-                $this->getCollection()->andWhere('product.sku', $args['operator'], (int)$args['value']);
+                $this->getCollection()->andWhere('product.sku', $args['operator'], $args['value']);
             }
         });
 

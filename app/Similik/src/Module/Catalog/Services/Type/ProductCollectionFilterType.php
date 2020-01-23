@@ -27,7 +27,7 @@ class ProductCollectionFilterType extends InputObjectType
                     'id' => $container->get(FilterFieldType::class),
                     'status' => $container->get(FilterFieldType::class),
                     'price' => $container->get(FilterFieldType::class),
-                    'stock' => $container->get(FilterFieldType::class),
+                    'qty' => $container->get(FilterFieldType::class),
                     'name' => $container->get(FilterFieldType::class),
                     'sku' => $container->get(FilterFieldType::class),
                     'category' => $container->get(FilterFieldType::class),
