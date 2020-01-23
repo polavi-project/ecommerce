@@ -1,6 +1,3 @@
-import A from "../../../../../../../../js/production/a.js";
-import { ADD_ALERT } from "../../../../../../../../js/production/event-types.js";
-
 export default function ActionColumnHeader({ areaProps }) {
     React.useEffect(() => {
         areaProps.addField('product_id');
@@ -12,24 +9,24 @@ export default function ActionColumnHeader({ areaProps }) {
     };
 
     return React.createElement(
-        "th",
+        'th',
         { className: "column" },
         React.createElement(
-            "div",
-            { className: "header" },
+            'div',
+            { className: 'header' },
             React.createElement(
-                "div",
+                'div',
                 { className: "title" },
                 React.createElement(
-                    "span",
+                    'span',
                     null,
-                    "Action"
+                    'Action'
                 )
             ),
             React.createElement(
-                "a",
+                'a',
                 { onClick: () => onClick() },
-                "Clean filter"
+                'Clean filter'
             )
         )
     );
