@@ -1,13 +1,26 @@
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 import Area from "../../../../../../../../js/production/area.js";
 import { Fetch } from "../../../../../../../../js/production/fetch.js";
 
-function IdColumnHeader({ areaProps }) {
+function IdColumnHeader({ filters, removeFilter, updateFilter, areaProps }) {
     const filterFrom = React.useRef(null);
     const filterTo = React.useRef(null);
+
+    const onKeyPress = e => {
+        if (e.key === 'Enter') {
+            if (filterTo.current.value == "" && filterFrom.current.value == "") removeFilter("id");else updateFilter("id", "BETWEEN", `${filterFrom.current.value} AND ${filterTo.current.value}`);
+        }
+    };
 
     React.useEffect(() => {
         areaProps.addField("product_id");
     }, []);
+
+    React.useEffect(() => {
+        filterFrom.current.value = filters.findIndex(e => e.key === 'id') === -1 ? "" : filterFrom.current.value;
+        filterTo.current.value = filters.findIndex(e => e.key === 'id') === -1 ? "" : filterTo.current.value;
+    });
 
     return React.createElement(
         "th",
@@ -33,9 +46,7 @@ function IdColumnHeader({ areaProps }) {
                     React.createElement("input", {
                         type: "text",
                         ref: filterFrom,
-                        onKeyPress: e => {
-                            if (e.key === 'Enter') areaProps.addFilter("id", "BETWEEN", `${e.target.value} AND ${filterTo.current.value}`);
-                        },
+                        onKeyPress: e => onKeyPress(e),
                         placeholder: "From",
                         className: "uk-input uk-form-small uk-form-width-small"
                     })
@@ -46,9 +57,7 @@ function IdColumnHeader({ areaProps }) {
                     React.createElement("input", {
                         type: "text",
                         ref: filterTo,
-                        onKeyPress: e => {
-                            if (e.key === 'Enter') areaProps.addFilter("id", "BETWEEN", `${filterFrom.current.value} AND ${e.target.value}`);
-                        },
+                        onKeyPress: e => onKeyPress(e),
                         placeholder: "To",
                         className: "uk-input uk-form-small uk-form-width-small"
                     })
@@ -66,12 +75,22 @@ function IdColumnRow({ row }) {
     );
 }
 
-function SkuColumnHeader({ areaProps }) {
+function SkuColumnHeader({ filters, removeFilter, updateFilter, areaProps }) {
     const filterInput = React.useRef(null);
+
+    const onKeyPress = e => {
+        if (e.key === 'Enter') {
+            if (e.target.value == "") removeFilter("sku");else updateFilter("sku", "LIKE", `%${e.target.value}%`);
+        }
+    };
 
     React.useEffect(() => {
         areaProps.addField("sku");
     }, []);
+
+    React.useEffect(() => {
+        filterInput.current.value = filters.findIndex(e => e.key === 'sku') === -1 ? "" : filterInput.current.value;
+    });
 
     return React.createElement(
         "th",
@@ -94,9 +113,7 @@ function SkuColumnHeader({ areaProps }) {
                 React.createElement("input", {
                     type: "text",
                     ref: filterInput,
-                    onKeyPress: e => {
-                        if (e.key === 'Enter') areaProps.addFilter("sku", "LIKE", `${e.target.value}`);
-                    },
+                    onKeyPress: e => onKeyPress(e),
                     placeholder: "Sku",
                     className: "uk-input uk-form-small uk-form-width-small"
                 })
@@ -112,13 +129,25 @@ function SkuColumnRow({ row }) {
         row.sku
     );
 }
-function PriceColumnHeader({ areaProps }) {
+
+function PriceColumnHeader({ removeFilter, filters, updateFilter, areaProps }) {
     const filterFrom = React.useRef(null);
     const filterTo = React.useRef(null);
+
+    const onKeyPress = e => {
+        if (e.key === 'Enter') {
+            if (filterTo.current.value == "" && filterFrom.current.value == "") removeFilter("price");else updateFilter("price", "BETWEEN", `${filterFrom.current.value} AND ${filterTo.current.value}`);
+        }
+    };
 
     React.useEffect(() => {
         areaProps.addField("price");
     }, []);
+
+    React.useEffect(() => {
+        filterFrom.current.value = filters.findIndex(e => e.key === 'price') === -1 ? "" : filterFrom.current.value;
+        filterTo.current.value = filters.findIndex(e => e.key === 'price') === -1 ? "" : filterTo.current.value;
+    });
 
     return React.createElement(
         "th",
@@ -144,9 +173,7 @@ function PriceColumnHeader({ areaProps }) {
                     React.createElement("input", {
                         type: "text",
                         ref: filterFrom,
-                        onKeyPress: e => {
-                            if (e.key === 'Enter') areaProps.addFilter("price", "BETWEEN", `${e.target.value} AND ${filterTo.current.value}`);
-                        },
+                        onKeyPress: e => onKeyPress(e),
                         placeholder: "From",
                         className: "uk-input uk-form-small uk-form-width-small"
                     })
@@ -157,9 +184,7 @@ function PriceColumnHeader({ areaProps }) {
                     React.createElement("input", {
                         type: "text",
                         ref: filterTo,
-                        onKeyPress: e => {
-                            if (e.key === 'Enter') areaProps.addFilter("price", "BETWEEN", `${filterFrom.current.value} AND ${e.target.value}`);
-                        },
+                        onKeyPress: e => onKeyPress(e),
                         placeholder: "To",
                         className: "uk-input uk-form-small uk-form-width-small"
                     })
@@ -179,12 +204,22 @@ function PriceColumnRow({ row }) {
     );
 }
 
-function NameColumnHeader({ areaProps }) {
+function NameColumnHeader({ filters, removeFilter, updateFilter, areaProps }) {
     const filterInput = React.useRef(null);
+
+    const onKeyPress = e => {
+        if (e.key === 'Enter') {
+            if (e.target.value == "") removeFilter("name");else updateFilter("name", "LIKE", `%${e.target.value}%`);
+        }
+    };
 
     React.useEffect(() => {
         areaProps.addField('name');
     }, []);
+
+    React.useEffect(() => {
+        filterInput.current.value = filters.findIndex(e => e.key === 'name') === -1 ? "" : filterInput.current.value;
+    });
 
     return React.createElement(
         "th",
@@ -207,9 +242,7 @@ function NameColumnHeader({ areaProps }) {
                 React.createElement("input", {
                     type: "text",
                     ref: filterInput,
-                    onKeyPress: e => {
-                        if (e.key === 'Enter') areaProps.addFilter("name", "LIKE", `%${e.target.value}%`);
-                    },
+                    onKeyPress: e => onKeyPress(e),
                     placeholder: "Product name",
                     className: "uk-input uk-form-small uk-form-width-medium"
                 })
@@ -226,13 +259,24 @@ function NameColumnRow({ row }) {
     );
 }
 
-function QtyColumnHeader({ areaProps }) {
+function QtyColumnHeader({ areaProps, filters, removeFilter, updateFilter }) {
     const filterFrom = React.useRef(null);
     const filterTo = React.useRef(null);
+
+    const onKeyPress = e => {
+        if (e.key === 'Enter') {
+            if (filterTo.current.value == "" && filterFrom.current.value == "") removeFilter("qty");else updateFilter("qty", "BETWEEN", `${filterFrom.current.value} AND ${filterTo.current.value}`);
+        }
+    };
 
     React.useEffect(() => {
         areaProps.addField('qty');
     }, []);
+
+    React.useEffect(() => {
+        filterFrom.current.value = filters.findIndex(e => e.key === 'qty') === -1 ? "" : filterFrom.current.value;
+        filterTo.current.value = filters.findIndex(e => e.key === 'qty') === -1 ? "" : filterTo.current.value;
+    });
 
     return React.createElement(
         "th",
@@ -258,9 +302,7 @@ function QtyColumnHeader({ areaProps }) {
                     React.createElement("input", {
                         type: "text",
                         ref: filterFrom,
-                        onKeyPress: e => {
-                            if (e.key === 'Enter') areaProps.addFilter("qty", "BETWEEN", `${e.target.value} AND ${filterTo.current.value}`);
-                        },
+                        onKeyPress: e => onKeyPress(e),
                         placeholder: "From",
                         className: "uk-input uk-form-small uk-form-width-small"
                     })
@@ -271,9 +313,7 @@ function QtyColumnHeader({ areaProps }) {
                     React.createElement("input", {
                         type: "text",
                         ref: filterTo,
-                        onKeyPress: e => {
-                            if (e.key === 'Enter') areaProps.addFilter("qty", "BETWEEN", `${filterFrom.current.value} AND ${e.target.value}`);
-                        },
+                        onKeyPress: e => onKeyPress(e),
                         placeholder: "To",
                         className: "uk-input uk-form-small uk-form-width-small"
                     })
@@ -326,12 +366,20 @@ function ThumbColumnRow({ row }) {
     );
 }
 
-function StatusColumnHeader({ areaProps }) {
+function StatusColumnHeader({ areaProps, filters, updateFilter }) {
     const filterInput = React.useRef(null);
+
+    const onChange = e => {
+        updateFilter("status", "=", `${e.target.value}`);
+    };
 
     React.useEffect(() => {
         areaProps.addField("status");
     }, []);
+
+    React.useEffect(() => {
+        filterInput.current.value = filters.findIndex(e => e.key === 'status') === -1 ? null : filterInput.current.value;
+    });
 
     return React.createElement(
         "th",
@@ -355,9 +403,7 @@ function StatusColumnHeader({ areaProps }) {
                     "select",
                     {
                         ref: filterInput,
-                        onChange: e => {
-                            areaProps.addFilter("status", "Equal", e.target.value);
-                        },
+                        onChange: e => onChange(e),
                         className: "uk-select uk-form-small uk-form-width-small"
                     },
                     React.createElement(
@@ -396,34 +442,10 @@ function StatusColumnRow({ row }) {
     );
 }
 
-export default function ProductGrid({ apiUrl, defaultFilter }) {
+export default function ProductGrid({ apiUrl, areaProps }) {
     const [products, setProducts] = React.useState([]);
-    const [filters, setFilters] = React.useState(() => {
-        if (defaultFilter !== undefined) return defaultFilter;else return [];
-    });
     const [fields, setFields] = React.useState([]);
 
-    const addFilter = (key, operator, value) => {
-        let flag = 0;
-        filters.forEach((f, i) => {
-            if (f.key === key && !value) flag = 1; // Remove
-            if (f.key === key && value) flag = 2; // Update
-        });
-        if (flag === 0) setFilters(prevFilters => prevFilters.concat({ key: key, operator: operator, value: value }));else if (flag === 1) {
-            const setFilters = prevFilters.filter((f, index) => f.key !== key);
-            setFilters(newFilters);
-        } else setFilters(prevFilters => prevFilters.map((f, i) => {
-            if (f.key === key) {
-                f.operator = operator;
-                f.value = value;
-            }
-            return f;
-        }));
-    };
-
-    const cleanFilter = () => {
-        setFilters([]);
-    };
     const addField = field => {
         setFields(prevFields => prevFields.concat(field));
     };
@@ -441,8 +463,8 @@ export default function ProductGrid({ apiUrl, defaultFilter }) {
 
     const buildQuery = () => {
         let filterStr = "";
-        filters.forEach((f, i) => {
-            filterStr += `${f.key} : {operator : ${f.operator} value: "${f.value}"} `;
+        areaProps.filters.forEach((f, i) => {
+            filterStr += `${f.key} : {operator : "${f.operator}" value: "${f.value}"} `;
         });
         filterStr = filterStr.trim();
         if (filterStr) filterStr = `(filter : {${filterStr}})`;
@@ -458,7 +480,7 @@ export default function ProductGrid({ apiUrl, defaultFilter }) {
     React.useEffect(() => {
         if (fields.length === 0) return;
         applyFilter();
-    }, [fields, filters]);
+    }, [fields, areaProps.filters]);
 
     return React.createElement(
         "div",
@@ -472,44 +494,47 @@ export default function ProductGrid({ apiUrl, defaultFilter }) {
                 React.createElement(Area, {
                     className: "",
                     id: "product_grid_header",
-                    addFilter: addFilter,
-                    cleanFilter: cleanFilter,
+                    filters: areaProps.filters,
+                    addFilter: areaProps.addFilter,
+                    updateFilter: areaProps.updateFilter,
+                    removeFilter: areaProps.removeFilter,
+                    cleanFilter: areaProps.cleanFilter,
                     addField: addField,
                     applyFilter: applyFilter,
                     reactcomponent: "tr",
                     coreWidgets: [{
                         component: IdColumnHeader,
-                        props: { addFilter, cleanFilter, addField, applyFilter },
+                        props: _extends({}, areaProps, { addField, applyFilter }),
                         sort_order: 10,
                         id: "id"
                     }, {
                         component: SkuColumnHeader,
-                        props: { addFilter, cleanFilter, addField, applyFilter },
+                        props: _extends({}, areaProps, { addField, applyFilter }),
                         sort_order: 15,
                         id: "sku"
                     }, {
                         component: ThumbColumnHeader,
-                        props: {},
+                        props: _extends({}, areaProps, { addField, applyFilter }),
                         sort_order: 20,
                         id: "thumb"
                     }, {
                         component: NameColumnHeader,
-                        props: {},
+                        props: _extends({}, areaProps, { addField, applyFilter }),
                         sort_order: 30,
                         id: "name"
                     }, {
                         component: StatusColumnHeader,
-                        props: {},
+                        props: _extends({}, areaProps, { addField, applyFilter }),
                         sort_order: 40,
                         id: "status"
                     }, {
                         component: QtyColumnHeader,
-                        props: {},
+                        props: _extends({}, areaProps, { addField, applyFilter }),
                         sort_order: 50,
                         id: "qty"
                     }, {
                         component: PriceColumnHeader,
-                        props: {},
+                        props: _extends({}, areaProps, { addField, applyFilter }),
                         sort_order: 60,
                         id: "price"
                     }]
