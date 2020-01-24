@@ -25,8 +25,8 @@ class AddNewButtonMiddleware extends MiddlewareAbstract
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
         $response->addWidget(
-            'attribute-grid-add-new',
-            'content',
+            'attribute_grid_add_new',
+            'attribute_grid_container',
             5,
             get_js_file_url("production/catalog/attribute/grid/add_new_button.js", true),
             [

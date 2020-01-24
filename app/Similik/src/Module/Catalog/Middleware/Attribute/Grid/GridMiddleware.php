@@ -30,15 +30,22 @@ class GridMiddleware extends MiddlewareAbstract
         $this->getContainer()->get(Helmet::class)->setTitle("Product attributes");
 
         $response->addWidget(
-            'attribute_grid_title',
+            'attribute_grid_container',
             'content',
+            0, get_js_file_url("production/grid/grid.js", true),
+            ['id'=>"attribute_grid_container"]
+        );
+
+        $response->addWidget(
+            'attribute_grid_title',
+            'attribute_grid_container',
             0, get_js_file_url("production/catalog/attribute/grid/title.js", true)
         );
 
         $response->addWidget(
-            'attribute-grid',
-            'content',
-            20, get_js_file_url("production/catalog/attribute/grid/grid.js", true),
+            'attribute_grid',
+            'attribute_grid_container',
+            10, get_js_file_url("production/catalog/attribute/grid/grid.js", true),
             [
                 "apiUrl" => generate_url('admin.graphql.api')
             ]

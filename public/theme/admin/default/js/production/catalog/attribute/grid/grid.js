@@ -1,5 +1,8 @@
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 import Area from "../../../../../../../../js/production/area.js";
 import A from "../../../../../../../../js/production/a.js";
+import { Fetch } from "../../../../../../../../js/production/fetch.js";
 
 function IdColumnHeader({ areaProps }) {
     React.useEffect(() => {
@@ -37,12 +40,20 @@ function IdColumnRow({ row }) {
     );
 }
 
-function TypeColumnHeader({ areaProps }) {
+function TypeColumnHeader({ areaProps, filters, updateFilter }) {
     const filterInput = React.useRef(null);
 
     React.useEffect(() => {
         areaProps.addField("type");
     }, []);
+
+    const onChange = e => {
+        updateFilter("type", "=", `${e.target.value}`);
+    };
+
+    React.useEffect(() => {
+        filterInput.current.value = filters.findIndex(e => e.key === 'type') === -1 ? null : filterInput.current.value;
+    });
 
     return React.createElement(
         "th",
@@ -67,9 +78,7 @@ function TypeColumnHeader({ areaProps }) {
                     {
                         className: "uk-select uk-form-small uk-form-width-small",
                         ref: filterInput,
-                        onChange: e => {
-                            areaProps.addFilter("type", "Equal", e.target.value);
-                        }
+                        onChange: e => onChange(e)
                     },
                     React.createElement(
                         "option",
@@ -134,12 +143,20 @@ function TypeColumnRow({ row }) {
     );
 }
 
-function IsRequiredColumnHeader({ areaProps }) {
+function IsRequiredColumnHeader({ areaProps, filters, updateFilter }) {
     const filterInput = React.useRef(null);
 
     React.useEffect(() => {
         areaProps.addField("is_required");
     }, []);
+
+    const onChange = e => {
+        updateFilter("is_required", "=", `${e.target.value}`);
+    };
+
+    React.useEffect(() => {
+        filterInput.current.value = filters.findIndex(e => e.key === 'is_required') === -1 ? null : filterInput.current.value;
+    });
 
     return React.createElement(
         "th",
@@ -164,9 +181,7 @@ function IsRequiredColumnHeader({ areaProps }) {
                     {
                         className: "uk-select uk-form-small uk-form-width-small",
                         ref: filterInput,
-                        onChange: e => {
-                            areaProps.addFilter("is_required", "Equal", e.target.value);
-                        }
+                        onChange: e => onChange(e)
                     },
                     React.createElement(
                         "option",
@@ -208,12 +223,20 @@ function IsRequiredColumnRow({ row }) {
     }
 }
 
-function IsFilterableColumnHeader({ areaProps }) {
+function IsFilterableColumnHeader({ areaProps, filters, updateFilter }) {
     const filterInput = React.useRef(null);
 
     React.useEffect(() => {
         areaProps.addField("is_filterable");
     }, []);
+
+    const onChange = e => {
+        updateFilter("is_filterable", "=", `${e.target.value}`);
+    };
+
+    React.useEffect(() => {
+        filterInput.current.value = filters.findIndex(e => e.key === 'is_filterable') === -1 ? null : filterInput.current.value;
+    });
 
     return React.createElement(
         "th",
@@ -238,9 +261,7 @@ function IsFilterableColumnHeader({ areaProps }) {
                     {
                         className: "uk-select uk-form-small uk-form-width-small",
                         ref: filterInput,
-                        onChange: e => {
-                            areaProps.addFilter("is_filterable", "Equal", e.target.value);
-                        }
+                        onChange: e => onChange(e)
                     },
                     React.createElement(
                         "option",
@@ -282,12 +303,102 @@ function IsFilterableColumnRow({ row }) {
     }
 }
 
-function NameColumnHeader({ areaProps }) {
+function DisplayOnFrontendColumnHeader({ areaProps, filters, updateFilter }) {
+    const filterInput = React.useRef(null);
+
+    React.useEffect(() => {
+        areaProps.addField("display_on_frontend");
+    }, []);
+
+    const onChange = e => {
+        updateFilter("display_on_frontend", "=", `${e.target.value}`);
+    };
+
+    React.useEffect(() => {
+        filterInput.current.value = filters.findIndex(e => e.key === 'display_on_frontend') === -1 ? null : filterInput.current.value;
+    });
+
+    return React.createElement(
+        "th",
+        null,
+        React.createElement(
+            "div",
+            { className: "header status-header" },
+            React.createElement(
+                "div",
+                { className: "title" },
+                React.createElement(
+                    "span",
+                    null,
+                    "Display on frontend?"
+                )
+            ),
+            React.createElement(
+                "div",
+                { className: "filter" },
+                React.createElement(
+                    "select",
+                    {
+                        className: "uk-select uk-form-small uk-form-width-small",
+                        ref: filterInput,
+                        onChange: e => onChange(e)
+                    },
+                    React.createElement(
+                        "option",
+                        { value: 1 },
+                        "Yes"
+                    ),
+                    React.createElement(
+                        "option",
+                        { value: 0 },
+                        "No"
+                    )
+                )
+            )
+        )
+    );
+}
+
+function DisplayOnFrontendColumnRow({ row }) {
+    if (row.display_on_frontend == 1) {
+        return React.createElement(
+            "td",
+            null,
+            React.createElement(
+                "span",
+                null,
+                "Yes"
+            )
+        );
+    } else {
+        return React.createElement(
+            "td",
+            null,
+            React.createElement(
+                "span",
+                null,
+                "No"
+            )
+        );
+    }
+}
+
+function NameColumnHeader({ areaProps, filters, updateFilter }) {
     const filterInput = React.useRef(null);
 
     React.useEffect(() => {
         areaProps.addField('attribute_name');
     }, []);
+
+    const onKeyPress = e => {
+        if (e.key === 'Enter') {
+            if (e.target.value == "") removeFilter("attribute_name");else updateFilter("attribute_name", "LIKE", `%${e.target.value}%`);
+        }
+    };
+
+    React.useEffect(() => {
+        filterInput.current.value = filters.findIndex(e => e.key === 'attribute_name') === -1 ? "" : filterInput.current.value;
+    });
 
     return React.createElement(
         "th",
@@ -310,9 +421,7 @@ function NameColumnHeader({ areaProps }) {
                 React.createElement("input", {
                     type: "text",
                     ref: filterInput,
-                    onKeyPress: e => {
-                        if (e.key === 'Enter') areaProps.addFilter("name", "LIKE", `%${e.target.value}%`);
-                    },
+                    onKeyPress: e => onKeyPress(e),
                     placeholder: "Attribute name",
                     className: "uk-input uk-form-small uk-form-width-small"
                 })
@@ -333,10 +442,74 @@ function NameColumnRow({ row }) {
     );
 }
 
+function CodeColumnHeader({ areaProps, filters, updateFilter }) {
+    const filterInput = React.useRef(null);
+
+    React.useEffect(() => {
+        areaProps.addField('attribute_code');
+    }, []);
+
+    const onKeyPress = e => {
+        if (e.key === 'Enter') {
+            if (e.target.value == "") removeFilter("attribute_code");else updateFilter("attribute_code", "LIKE", `%${e.target.value}%`);
+        }
+    };
+
+    React.useEffect(() => {
+        filterInput.current.value = filters.findIndex(e => e.key === 'attribute_code') === -1 ? "" : filterInput.current.value;
+    });
+
+    return React.createElement(
+        "th",
+        null,
+        React.createElement(
+            "div",
+            { className: "header name-header" },
+            React.createElement(
+                "div",
+                { className: "title" },
+                React.createElement(
+                    "span",
+                    null,
+                    "Attribute code"
+                )
+            ),
+            React.createElement(
+                "div",
+                { className: "filter" },
+                React.createElement("input", {
+                    type: "text",
+                    ref: filterInput,
+                    onKeyPress: e => onKeyPress(e),
+                    placeholder: "Attribute code",
+                    className: "uk-input uk-form-small uk-form-width-small"
+                })
+            )
+        )
+    );
+}
+
+function CodeColumnRow({ row }) {
+    return React.createElement(
+        "td",
+        null,
+        React.createElement(
+            "span",
+            null,
+            row.attribute_code
+        )
+    );
+}
+
 function ActionColumnHeader({ areaProps }) {
     React.useEffect(() => {
         areaProps.addField('editUrl');
     }, []);
+
+    const onClick = () => {
+        areaProps.cleanFilter();
+    };
+
     return React.createElement(
         "th",
         null,
@@ -351,6 +524,11 @@ function ActionColumnHeader({ areaProps }) {
                     null,
                     "Action"
                 )
+            ),
+            React.createElement(
+                "a",
+                { onClick: () => onClick() },
+                "Clean filter"
             )
         )
     );
@@ -368,32 +546,10 @@ function ActionColumnRow({ row }) {
     );
 }
 
-export default function AttributeGrid({ apiUrl }) {
+export default function AttributeGrid({ apiUrl, areaProps }) {
     const [attributes, setAttributes] = React.useState([]);
-    const [filters, setFilters] = React.useState([]);
     const [fields, setFields] = React.useState([]);
 
-    const addFilter = (key, operator, value) => {
-        let flag = 0;
-        filters.forEach((f, i) => {
-            if (f.key === key && !value) flag = 1; // Remove
-            if (f.key === key && value) flag = 2; // Update
-        });
-        if (flag === 0) setFilters(prevFilters => prevFilters.concat({ key: key, operator: operator, value: value }));else if (flag === 1) {
-            const setFilters = prevFilters.filter((f, index) => f.key !== key);
-            setFilters(newFilters);
-        } else setFilters(prevFilters => prevFilters.map((f, i) => {
-            if (f.key === key) {
-                f.operator = operator;
-                f.value = value;
-            }
-            return f;
-        }));
-    };
-
-    const cleanFilter = () => {
-        setFilters([]);
-    };
     const addField = field => {
         setFields(prevFields => prevFields.concat(field));
     };
@@ -401,26 +557,18 @@ export default function AttributeGrid({ apiUrl }) {
     const applyFilter = () => {
         let formData = new FormData();
         formData.append('query', buildQuery());
-        axios({
-            method: 'post',
-            url: apiUrl,
-            headers: { 'content-type': 'multipart/form-data' },
-            data: formData
-        }).then(function (response) {
-            if (response.headers['content-type'] !== "application/json") throw new Error('Something wrong, please try again');
-            if (_.get(response, 'data.payload.data.attributeCollection.attributes')) {
-                setAttributes(_.get(response, 'data.payload.data.attributeCollection.attributes'));
+
+        Fetch(apiUrl, false, 'POST', formData, null, response => {
+            if (_.get(response, 'payload.data.attributeCollection.attributes')) {
+                setAttributes(_.get(response, 'payload.data.attributeCollection.attributes'));
             }
-        }).catch(function (error) {}).finally(function () {
-            // e.target.value = null;
-            // setUploading(false);
         });
     };
 
     const buildQuery = () => {
         let filterStr = "";
-        filters.forEach((f, i) => {
-            filterStr += `${f.key} : {operator : ${f.operator} value: "${f.value}"} `;
+        areaProps.filters.forEach((f, i) => {
+            filterStr += `${f.key} : {operator : "${f.operator}" value: "${f.value}"} `;
         });
         filterStr = filterStr.trim();
         if (filterStr) filterStr = `(filter : {${filterStr}})`;
@@ -436,7 +584,7 @@ export default function AttributeGrid({ apiUrl }) {
     React.useEffect(() => {
         if (fields.length === 0) return;
         applyFilter();
-    }, [fields, filters]);
+    }, [fields, areaProps.filters]);
 
     return React.createElement(
         "div",
@@ -450,40 +598,53 @@ export default function AttributeGrid({ apiUrl }) {
                 React.createElement(Area, {
                     className: "",
                     id: "attribute_grid_header",
-                    addFilter: addFilter,
-                    cleanFilter: cleanFilter,
+                    filters: areaProps.filters,
+                    addFilter: areaProps.addFilter,
+                    updateFilter: areaProps.updateFilter,
+                    removeFilter: areaProps.removeFilter,
+                    cleanFilter: areaProps.cleanFilter,
                     addField: addField,
                     applyFilter: applyFilter,
                     reactcomponent: "tr",
                     coreWidgets: [{
                         component: IdColumnHeader,
-                        props: { addFilter, cleanFilter, addField, applyFilter },
+                        props: _extends({}, areaProps, { addField, applyFilter }),
                         sort_order: 10,
                         id: "id"
                     }, {
                         component: NameColumnHeader,
-                        props: {},
+                        props: _extends({}, areaProps, { addField, applyFilter }),
                         sort_order: 20,
                         id: "name"
                     }, {
+                        component: CodeColumnHeader,
+                        props: _extends({}, areaProps, { addField, applyFilter }),
+                        sort_order: 25,
+                        id: "code"
+                    }, {
                         component: TypeColumnHeader,
-                        props: {},
+                        props: _extends({}, areaProps, { addField, applyFilter }),
                         sort_order: 30,
                         id: "type"
                     }, {
                         component: IsRequiredColumnHeader,
-                        props: {},
+                        props: _extends({}, areaProps, { addField, applyFilter }),
                         sort_order: 40,
                         id: "isRequired"
                     }, {
                         component: IsFilterableColumnHeader,
-                        props: {},
+                        props: _extends({}, areaProps, { addField, applyFilter }),
                         sort_order: 45,
                         id: "isFilterable"
                     }, {
-                        component: ActionColumnHeader,
-                        props: {},
+                        component: DisplayOnFrontendColumnHeader,
+                        props: _extends({}, areaProps, { addField, applyFilter }),
                         sort_order: 50,
+                        id: "display_on_frontend"
+                    }, {
+                        component: ActionColumnHeader,
+                        props: _extends({}, areaProps, { addField, applyFilter }),
+                        sort_order: 60,
                         id: "action"
                     }]
                 })
@@ -509,6 +670,11 @@ export default function AttributeGrid({ apiUrl }) {
                             sort_order: 20,
                             id: "name"
                         }, {
+                            component: CodeColumnRow,
+                            props: { row: a },
+                            sort_order: 25,
+                            id: "code"
+                        }, {
                             component: TypeColumnRow,
                             props: { row: a },
                             sort_order: 30,
@@ -524,9 +690,14 @@ export default function AttributeGrid({ apiUrl }) {
                             sort_order: 45,
                             id: "isFilterable"
                         }, {
-                            component: ActionColumnRow,
+                            component: DisplayOnFrontendColumnRow,
                             props: { row: a },
                             sort_order: 50,
+                            id: "display_on_frontend"
+                        }, {
+                            component: ActionColumnRow,
+                            props: { row: a },
+                            sort_order: 60,
                             id: "action"
                         }]
                     });

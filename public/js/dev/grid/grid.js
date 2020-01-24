@@ -32,7 +32,7 @@ export default function Grid({id, defaultFilter = []})
     };
 
     const cleanFilter = () => {
-        setFilters([]);
+        setFilters(defaultFilter);
     };
 
     return <div className={"uk-overflow-auto"}>

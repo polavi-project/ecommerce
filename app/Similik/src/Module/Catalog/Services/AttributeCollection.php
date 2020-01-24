@@ -33,8 +33,28 @@ class AttributeCollection extends CollectionBuilder
 
     protected function defaultFilters()
     {
-        $this->addFilter('name', function($args) {
-            $this->collection->andWhere('attribute.attribute_name', $args['operator'], $args['value']);
+        $this->addFilter('attribute_name', function($args) {
+            $this->getCollection()->andWhere('attribute.attribute_name', $args['operator'], $args['value']);
+        });
+
+        $this->addFilter('attribute_code', function($args) {
+            $this->getCollection()->andWhere('attribute.attribute_code', $args['operator'], $args['value']);
+        });
+
+        $this->addFilter('is_required', function($args) {
+            $this->getCollection()->andWhere('attribute.is_required', $args['operator'], $args['value']);
+        });
+
+        $this->addFilter('is_filterable', function($args) {
+            $this->getCollection()->andWhere('attribute.is_filterable', $args['operator'], $args['value']);
+        });
+
+        $this->addFilter('display_on_frontend', function($args) {
+            $this->getCollection()->andWhere('attribute.display_on_frontend', $args['operator'], $args['value']);
+        });
+
+        $this->addFilter('type', function($args) {
+            $this->getCollection()->andWhere('attribute.type', $args['operator'], $args['value']);
         });
     }
 
