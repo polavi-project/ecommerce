@@ -25,7 +25,12 @@ class AttributeCollectionFilterType extends InputObjectType
             'fields' => function() use($container) {
                 $fields = [
                     'id' => $container->get(FilterFieldType::class),
-                    'name' => $container->get(FilterFieldType::class)
+                    'attribute_code' => $container->get(FilterFieldType::class),
+                    'attribute_name' => $container->get(FilterFieldType::class),
+                    'type' => $container->get(FilterFieldType::class),
+                    'is_required' => $container->get(FilterFieldType::class),
+                    'display_on_frontend' => $container->get(FilterFieldType::class),
+                    'is_filterable' => $container->get(FilterFieldType::class),
                 ];
 
                 dispatch_event('filter.attributeCollectionFilter.input', [&$fields]);
