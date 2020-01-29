@@ -1,8 +1,8 @@
 import ProductGrid from "../../../../production/catalog/product/grid/grid.js";
 
-export default function ProductList({categoryId, apiUrl}) {
-    return <div id="category_edit_product_list" className="group-form">
+export default function ProductList({apiUrl, areaProps}) {
+    return <div id="category_edit_product_list">
         <div className="group-form-title"><strong>Products</strong></div>
-        <ProductGrid apiUrl={apiUrl} defaultFilter={[{key: 'category', operator: 'IN', value: [categoryId]}]}/>
+        <ProductGrid apiUrl={apiUrl} areaProps={areaProps}/>
     </div>
 }
