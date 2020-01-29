@@ -1,4 +1,3 @@
-import {Fetch} from "./fetch.js";
 import Area from "./area.js";
 import LoadingBar from "./loading_bar.js";
 import {store} from "./redux_store.js"
@@ -78,7 +77,3 @@ const App = ()=> {
 const Provider = ReactRedux.Provider;
 
 ReactDOM.render(<Provider store={store}><App /></Provider>, window.document.getElementById("app"));
-
-window.onpopstate = function(event) {
-    Fetch(document.location, false);
-};

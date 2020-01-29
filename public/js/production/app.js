@@ -1,4 +1,3 @@
-import { Fetch } from "./fetch.js";
 import Area from "./area.js";
 import LoadingBar from "./loading_bar.js";
 import { store } from "./redux_store.js";
@@ -69,7 +68,3 @@ ReactDOM.render(React.createElement(
     { store: store },
     React.createElement(App, null)
 ), window.document.getElementById("app"));
-
-window.onpopstate = function (event) {
-    Fetch(document.location, false);
-};

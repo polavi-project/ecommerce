@@ -25,18 +25,13 @@ export default function Grid({ id, defaultFilter = [] }) {
     };
 
     const cleanFilter = () => {
-        setFilters([]);
-    };
-
-    const addField = field => {
-        setFields(prevFields => prevFields.concat(field));
+        setFilters(defaultFilter);
     };
 
     return React.createElement(
         "div",
         { className: "uk-overflow-auto" },
         React.createElement(Area, {
-            className: "",
             id: id,
             filters: filters,
             addFilter: addFilter,
