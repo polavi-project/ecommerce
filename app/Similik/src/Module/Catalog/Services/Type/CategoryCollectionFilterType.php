@@ -26,7 +26,8 @@ class CategoryCollectionFilterType extends InputObjectType
                 $fields = [
                     'id' => $container->get(FilterFieldType::class),
                     'status' => $container->get(FilterFieldType::class),
-                    'name' => $container->get(FilterFieldType::class)
+                    'name' => $container->get(FilterFieldType::class),
+                    'include_in_nav' => $container->get(FilterFieldType::class)
                 ];
 
                 dispatch_event('filter.categoryCollectionFilter.input', [&$fields]);

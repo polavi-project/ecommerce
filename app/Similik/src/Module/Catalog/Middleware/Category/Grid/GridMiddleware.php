@@ -30,13 +30,20 @@ class GridMiddleware extends MiddlewareAbstract
         $this->getContainer()->get(Helmet::class)->setTitle("Categories");
 
         $response->addWidget(
-            'category_grid_title',
+            'category_grid_container',
             'content',
+            0, get_js_file_url("production/grid/grid.js", true),
+            ['id'=>"category_grid_container"]
+        );
+
+        $response->addWidget(
+            'category_grid_title',
+            'category_grid_container',
             0, get_js_file_url("production/catalog/category/grid/title.js", true)
         );
         $response->addWidget(
             'category-grid',
-            'content',
+            'category_grid_container',
             20, get_js_file_url("production/catalog/category/grid/grid.js", true),
             [
                 "apiUrl" => generate_url('admin.graphql.api')

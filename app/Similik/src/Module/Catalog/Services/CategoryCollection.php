@@ -60,6 +60,10 @@ class CategoryCollection extends CollectionBuilder
                 return;
             $this->collection->andWhere('category.status', $args['operator'], (int)$args['value']);
         });
+
+        $this->addFilter('include_in_nav', function($args) use ($isAdmin) {
+            $this->collection->andWhere('category.include_in_nav', $args['operator'], (int)$args['value']);
+        });
     }
 
     public function getData($rootValue, $args, Container $container, ResolveInfo $info)
