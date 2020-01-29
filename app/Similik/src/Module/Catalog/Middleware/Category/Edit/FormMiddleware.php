@@ -39,18 +39,6 @@ class FormMiddleware extends MiddlewareAbstract
                 "currentLanguage" => $request->query->get('language') != null ? $request->query->get('language') : get_default_language_Id()
             ]
         );
-//        $languages = get_display_languages();
-//        $response->addWidget(
-//            'category_edit_form_language_switcher',
-//            'admin_category_edit_before',
-//            10,
-//            get_js_file_url("production/language-switcher.js", true),
-//            [
-//                "id"=> 'category_edit_form_language_switcher',
-//                'languages' => $languages,
-//                "current" => in_array($request->query->get('language'), get_config('general_languages', [])) ? $request->query->get('language') : get_default_language_Id()
-//            ]
-//        );
 
         return $delegate;
     }

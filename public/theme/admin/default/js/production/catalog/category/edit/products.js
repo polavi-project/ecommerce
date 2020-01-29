@@ -1,9 +1,9 @@
 import ProductGrid from "../../../../production/catalog/product/grid/grid.js";
 
-export default function ProductList({ categoryId, apiUrl }) {
+export default function ProductList({ apiUrl, areaProps }) {
     return React.createElement(
         "div",
-        { id: "category_edit_product_list", className: "group-form" },
+        { id: "category_edit_product_list" },
         React.createElement(
             "div",
             { className: "group-form-title" },
@@ -13,6 +13,6 @@ export default function ProductList({ categoryId, apiUrl }) {
                 "Products"
             )
         ),
-        React.createElement(ProductGrid, { apiUrl: apiUrl, defaultFilter: [{ key: 'category', operator: 'IN', value: [categoryId] }] })
+        React.createElement(ProductGrid, { apiUrl: apiUrl, areaProps: areaProps })
     );
 }
