@@ -1,5 +1,6 @@
 import { Form } from "../../../../../../../js/production/form/form.js";
-import { Text, Password } from "../../../../../../../js/production/form/fields.js";
+import Text from "../../../../../../../js/production/form/fields/text.js";
+import Password from "../../../../../../../js/production/form/fields/password.js";
 import Area from "../../../../../../../js/production/area.js";
 
 export default function AdminLoginForm(props) {
@@ -14,10 +15,11 @@ export default function AdminLoginForm(props) {
                 name: "email",
                 formId: "admin_login_form",
                 label: "Email",
-                validation_rules: ['notEmpty']
+                validation_rules: ['email']
             }),
             React.createElement(Password, {
                 name: "password",
+                formId: "admin_login_form",
                 label: "Password",
                 validation_rules: ['notEmpty']
             })

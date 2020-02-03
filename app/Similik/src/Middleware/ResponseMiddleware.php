@@ -52,7 +52,7 @@ class ResponseMiddleware extends MiddlewareAbstract
             $this
                 ->getContainer()
                 ->get(Helmet::class)
-                ->addScript(['src'=> get_js_file_url('production/lodash.js'), 'type'=>'text/javascript'], 1)
+                ->addScript(['src'=> get_js_file_url('production/lodash.min.js'), 'type'=>'text/javascript'], 1)
                 ->addScript(['src'=> get_js_file_url('production/react.production.min.js'), 'type'=>'text/javascript'], 5)
                 ->addScript(['src'=> get_js_file_url('production/react-dom.production.min.js'), 'type'=>'text/javascript'], 5)
                 ->addScript(['src'=> get_js_file_url('production/prop-types.js'), 'type'=>'text/javascript'], 5)
