@@ -36,4 +36,4 @@ Please check [here](https://www.similik.com/document/installation-guide/) for mo
 * [Graphql-php](https://github.com/webonyx/graphql-php/) - A great php framework for graphql
 
 ## Contributing
-For now, please submit an issue if you found a bug or having any suggestion. You can also submit a pull requests to us. Thanks
+For now, please submit an issue if you found a bug or having any suggestion. You can also use [this feedback page](https://www.similik.com/feedback) to submit your suggestion. Thanks
