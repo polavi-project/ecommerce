@@ -35,7 +35,7 @@ function Sku({ sku }) {
 }
 
 export default function GeneralInfo({ name, price, description, sku, stock_availability }) {
-    return React.createElement(Area, { className: "uk-width-1-2", id: "product_view_general_info", coreWidgets: [{
+    return React.createElement(Area, { id: "product_view_general_info", coreWidgets: [{
             'component': Name,
             'props': {
                 name: name
