@@ -6,7 +6,7 @@ export default function ProductPageLayout() {
             id="product_page_top"
             className="product-page-top"
         />
-        <div className="product-page-middle uk-grid uk-grid-small">
+        <div className="product-page-middle uk-grid uk-grid-small uk-width-1-1">
             <Area
                 id="product_page_middle_left"
                 className="uk-width-1-2@m product-page-middle-left"
