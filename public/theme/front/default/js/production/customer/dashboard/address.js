@@ -1,7 +1,6 @@
 import { Form } from "../../../../../../../js/production/form/form.js";
 import Area from "../../../../../../../js/production/area.js";
 import Text from "../../../../../../../js/production/form/fields/text.js";
-import Hidden from "../../../../../../../js/production/form/fields/hidden.js";
 import { ProvinceOptions } from "../../../../../../../js/production/locale/province_option.js";
 import Select from "../../../../../../../js/production/form/fields/select.js";
 import { CountryOptions } from "../../../../../../../js/production/locale/country_option.js";

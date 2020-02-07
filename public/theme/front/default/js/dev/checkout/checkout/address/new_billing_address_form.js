@@ -1,5 +1,5 @@
 import {ADD_ALERT, ADD_APP_STATE} from "../../../../../../../../js/production/event-types.js";
-import AddressForm from "../../../../production/customer/account/address.js";
+import AddressForm from "../../../../production/customer/dashboard/address.js";
 
 export default function BillingAddressForm(props) {
     const dispatch = ReactRedux.useDispatch();
