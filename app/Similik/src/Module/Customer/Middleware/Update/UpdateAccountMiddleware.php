@@ -9,9 +9,7 @@ declare(strict_types=1);
 namespace Similik\Module\Customer\Middleware\Update;
 
 
-use GraphQL\Type\Definition\InputObjectType;
-use GraphQL\Type\Schema;
-use function Similik\buildInputQuery;
+use function Similik\dispatch_event;
 use Similik\Middleware\MiddlewareAbstract;
 use Similik\Module\Graphql\Services\GraphqlExecutor;
 use Similik\Services\Http\Request;
@@ -22,45 +20,28 @@ class UpdateAccountMiddleware extends MiddlewareAbstract
 
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
-        $data = $request->request->all();
-        if(!$request->isAdmin())
-            $data['customer_id'] = $request->getCustomer()->getData('customer_id');
-        else
-            $data['customer_id'] = $request->attributes->get('id');
-        /**@var InputObjectType $customerInputType*/
-        $customerInputType = $this->getContainer()->get(Schema::class)->getType('updateCustomerInput');
-        $customer = buildInputQuery($customerInputType, $data);
+        $variables = $request->get('variables', []);
+        $variables['customer']['customer_id'] = $request->attributes->get('id');
+
+        $query = "mutation UpdateCustomer(\$customer: CustomerInput!) { updateCustomer (customer: \$customer) {status message customer {full_name email}}}";
+        dispatch_event("filter_customer_update_query", [&$query]);
 
         $promise = $this->getContainer()
             ->get(GraphqlExecutor::class)
             ->waitToExecute([
-                "query"=>"mutation {
-                        updateCustomer (
-                            customer : $customer
-                        ) 
-                        {
-                            status
-                            message 
-                            customer {
-                                full_name
-                                email
-                            }
-                        }
-                        
-                    }"
-            ])
-            ->then(function($result) use ($request, $response) {
+                "query" => $query,
+                "variables" => $variables
+            ]);
+        $promise->then(function($result) use ($request, $response) {
                 if($result->errors)
                     throw new \Exception($result->errors[0]->message);
 
                 if($result->data['updateCustomer']['status'] == false)
                     throw new \Exception($result->data['updateCustomer']['message']);
-
-                //->getSession()->getFlashBag()->add('success', 'Account updated');
-                $response->addData('updateCustomer', $result->data['updateCustomer'])->notNewPage();
-            })->otherwise(function(\Exception $reason) use($request, $response) {
-                $response->addAlert('customer_update_error', 'error', $reason->getMessage())->notNewPage();
-                throw $reason;
+                $response->addData('customerUpdate', ['status'=> true]);
+                $response->addState('customer', $result->data['updateCustomer']['customer'])->notNewPage();
+            })->otherwise(function($reason) use($request, $response) {
+                $response->addData('customerUpdate', ['status'=> false, 'message'=> $reason[0]['message']]);
             });
 
         return $promise;

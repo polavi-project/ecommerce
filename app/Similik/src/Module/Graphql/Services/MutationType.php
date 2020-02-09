@@ -15,6 +15,7 @@ use GraphQL\Type\Definition\Type;
 use function Similik\_mysql;
 use function Similik\dispatch_event;
 use Similik\Module\Customer\Services\Type\CustomerGroupType;
+use Similik\Module\Customer\Services\Type\CustomerInputType;
 use Similik\Module\Customer\Services\Type\CustomerType;
 use Similik\Services\Di\Container;
 use Similik\Services\Http\Request;
@@ -110,20 +111,7 @@ class MutationType extends ObjectType
                 'createCustomer' => [
                     'args'=> [
                         'customer' => [
-                            'type'=> new InputObjectType([
-                                'name'=> 'CustomerInput',
-                                'fields'=> function() use ($container) {
-                                    $fields = [
-                                        'full_name' => Type::string(),
-                                        'email' => Type::nonNull(Type::string()),
-                                        'password' => Type::nonNull(Type::string()),
-                                        'group_id' => Type::int()
-                                    ];
-                                    dispatch_event('filter.createCustomer.input', [&$fields]);
-
-                                    return $fields;
-                                }
-                            ])
+                            'type'=> $container->get(CustomerInputType::class)
                         ]
                     ],
                     'type' => new ObjectType([
@@ -150,22 +138,7 @@ class MutationType extends ObjectType
                 'updateCustomer' => [
                     'args'=> [
                         'customer' => [
-                            'type'=> new InputObjectType([
-                                'name'=> 'updateCustomerInput',
-                                'fields'=> function() use ($container) {
-                                    $fields = [
-                                        'customer_id' => Type::nonNull(Type::int()),
-                                        'full_name' => Type::nonNull(Type::string()),
-                                        'email' => Type::nonNull(Type::string()),
-                                        'status' => Type::nonNull(Type::int()),
-                                        'password' => Type::string(),
-                                        'group_id' => Type::int()
-                                    ];
-                                    dispatch_event('filter.update_customer.input', [&$fields]);
-
-                                    return $fields;
-                                }
-                            ])
+                            'type'=> $container->get(CustomerInputType::class)
                         ]
                     ],
                     'type' => new ObjectType([

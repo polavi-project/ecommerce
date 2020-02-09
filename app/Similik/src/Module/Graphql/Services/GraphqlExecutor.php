@@ -47,6 +47,9 @@ class GraphqlExecutor extends Promise
             $this->execute();
             $promise = settle($this->promises);
             $promise->wait();
+            $promise->then(function($result) {
+                $this->resolve($result);
+            });
         });
     }
 
