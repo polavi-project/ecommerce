@@ -13,6 +13,10 @@ $container[\Similik\Module\Customer\Services\Type\CustomerType::class] = functio
     return new \Similik\Module\Customer\Services\Type\CustomerType($container);
 };
 
+$container[\Similik\Module\Customer\Services\Type\CustomerInputType::class] = function() use ($container){
+    return new \Similik\Module\Customer\Services\Type\CustomerInputType($container);
+};
+
 $container[\Similik\Module\Customer\Services\Type\CustomerGroupType::class] = function() use ($container){
     return new \Similik\Module\Customer\Services\Type\CustomerGroupType($container);
 };

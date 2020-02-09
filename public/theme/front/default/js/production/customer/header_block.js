@@ -1,5 +1,3 @@
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
 import A from "../../../../../../js/production/a.js";
 
 function GuestGreeting({ loginUrl, registerUrl }) {
@@ -27,11 +25,9 @@ function GuestGreeting({ loginUrl, registerUrl }) {
         )
     );
 }
-const mapStateToProps = (state, ownProps) => {
-    return state.customerInfo && state.customerInfo.email ? _extends({}, state.customerInfo) : ownProps;
-};
 
-function UserGreeting({ fullName, logoutUrl, myAccountUrl }) {
+function UserGreeting({ logoutUrl, myAccountUrl }) {
+    const customerInfo = ReactRedux.useSelector(state => _.get(state, 'appState.customer'));
     return React.createElement(
         "div",
         { className: "uk-inline" },
@@ -47,7 +43,7 @@ function UserGreeting({ fullName, logoutUrl, myAccountUrl }) {
             React.createElement(
                 "span",
                 null,
-                fullName,
+                _.get(customerInfo, 'full_name'),
                 "!"
             )
         ),
@@ -73,7 +69,6 @@ function UserGreeting({ fullName, logoutUrl, myAccountUrl }) {
         )
     );
 }
-const UserGreetingComponent = ReactRedux.connect(mapStateToProps)(UserGreeting);
 
 export default function HeaderBlock(props) {
     const isLoggedIn = props.isLoggedIn;
@@ -81,7 +76,7 @@ export default function HeaderBlock(props) {
     return React.createElement(
         "div",
         { className: "customer-area-header" },
-        isLoggedIn && React.createElement(UserGreetingComponent, props),
+        isLoggedIn && React.createElement(UserGreeting, props),
         !isLoggedIn && React.createElement(GuestGreeting, props)
     );
 }

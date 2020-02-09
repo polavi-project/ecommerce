@@ -1,7 +1,7 @@
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 import { ADD_ALERT, ADD_APP_STATE } from "../../../../../../../../js/production/event-types.js";
-import Address from "../../../../production/customer/account/address.js";
+import Address from "../../../customer/dashboard/address.js";
 import { Fetch } from "../../../../../../../../js/production/fetch.js";
 
 function AddressForm(props) {

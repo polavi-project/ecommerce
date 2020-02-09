@@ -43,7 +43,7 @@ $router->addSiteRoute('customer.auth', 'POST', '/customer/auth', [
     \Similik\Module\Customer\Middleware\Auth\AuthMiddleware::class,
 ]);
 
-$router->addSiteRoute('customer.update', 'POST', '/customer/update', [
+$router->addSiteRoute('customer.update', 'POST', '/customer/update/{id:\d+}', [
     \Similik\Module\Customer\Middleware\Update\UpdateAccountMiddleware::class,
 ]);
 

@@ -14,7 +14,6 @@ use function Similik\generate_url;
 use function Similik\get_config;
 use function Similik\get_js_file_url;
 use Similik\Module\Checkout\Services\Cart\Cart;
-use Similik\Module\Graphql\Services\GraphqlExecutor;
 use Similik\Services\Http\Request;
 use Similik\Middleware\MiddlewareAbstract;
 use Similik\Services\Http\Response;

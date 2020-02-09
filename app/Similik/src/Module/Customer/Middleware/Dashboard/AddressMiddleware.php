@@ -10,12 +10,12 @@ namespace Similik\Module\Customer\Middleware\Dashboard;
 
 
 use function Similik\generate_url;
+use function Similik\get_config;
 use function Similik\get_js_file_url;
 use Similik\Middleware\MiddlewareAbstract;
 use Similik\Module\Graphql\Services\GraphqlExecutor;
 use Similik\Services\Http\Request;
 use Similik\Services\Http\Response;
-use Similik\Services\Routing\Router;
 
 class AddressMiddleware extends MiddlewareAbstract
 {
@@ -53,7 +53,8 @@ class AddressMiddleware extends MiddlewareAbstract
                             'addresses' => $result->data['customerAddresses'],
                             'deleteUrl' => generate_url('admin.graphql.api', ['type'=>'deleteCustomerAddress']),
                             'updateUrl' => generate_url('admin.graphql.api', ['type'=>'updateCustomerAddress']),
-                            'createUrl' => generate_url('admin.graphql.api', ['type'=>'createCustomerAddress'])
+                            'createUrl' => generate_url('admin.graphql.api', ['type'=>'createCustomerAddress']),
+                            'countries' => get_config('general_allow_countries', ["US"])
                         ]
                     );
                 }

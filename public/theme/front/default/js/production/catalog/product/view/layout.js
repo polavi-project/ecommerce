@@ -10,7 +10,7 @@ export default function ProductPageLayout() {
         }),
         React.createElement(
             "div",
-            { className: "product-page-middle uk-grid uk-grid-small" },
+            { className: "product-page-middle uk-grid uk-grid-small uk-width-1-1" },
             React.createElement(Area, {
                 id: "product_page_middle_left",
                 className: "uk-width-1-2@m product-page-middle-left"

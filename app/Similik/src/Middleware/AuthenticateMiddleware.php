@@ -50,7 +50,7 @@ class AuthenticateMiddleware extends MiddlewareAbstract
             // Create customer object and let it do the authorization
             $request->setCustomer(new Customer($request->getSession()));
             $response->addState('customer', [
-                'fullName' => $request->getCustomer()->getData('full_name'),
+                'full_name' => $request->getCustomer()->getData('full_name'),
                 'email' => $request->getCustomer()->getData('email')
             ]);
         }
