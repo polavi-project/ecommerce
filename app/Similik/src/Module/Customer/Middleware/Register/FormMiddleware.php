@@ -22,6 +22,11 @@ class FormMiddleware extends MiddlewareAbstract
 
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
+        if($request->getCustomer()->isLoggedIn() == true) {
+            $response->redirect($this->getContainer()->get(Router::class)->generateUrl('homepage'));
+            return $response;
+        }
+
         $this->getContainer()->get(Helmet::class)->setTitle("Register for an account");
 
         $response->addWidget(

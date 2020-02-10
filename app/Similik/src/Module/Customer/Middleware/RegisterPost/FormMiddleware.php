@@ -6,9 +6,10 @@
 
 declare(strict_types=1);
 
-namespace Similik\Module\Customer\Middleware\Login;
+namespace Similik\Module\Customer\Middleware\Register;
 
 
+use function Similik\get_base_url;
 use function Similik\get_js_file_url;
 use Similik\Middleware\MiddlewareAbstract;
 use Similik\Services\Helmet;
@@ -18,23 +19,22 @@ use Similik\Services\Routing\Router;
 
 class FormMiddleware extends MiddlewareAbstract
 {
+
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
-        if($request->getCustomer()->isLoggedIn()) {
-            $response->redirect($this->getContainer()->get(Router::class)->generateUrl('homepage'));
-            return $response;
-        }
+        $this->getContainer()->get(Helmet::class)->setTitle("Register for an account");
+
         $response->addWidget(
             'customer_registration_form',
             'content',
             10,
-            get_js_file_url("production/customer/login_form.js", false),
+            get_js_file_url("production/customer/registration_form.js", false),
             [
-                'action' => $this->getContainer()->get(Router::class)->generateUrl('customer.auth'),
-                'registerUrl' => $this->getContainer()->get(Router::class)->generateUrl('customer.register')
+                'action' => $this->getContainer()->get(Router::class)->generateUrl('graphql.api'),
+                'redirectUrl' => get_base_url(false)
             ]
         );
-        $this->getContainer()->get(Helmet::class)->setTitle('Login');
+
         return $delegate;
     }
 }

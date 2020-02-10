@@ -33,6 +33,14 @@ $eventDispatcher->addListener(
 );
 
 $eventDispatcher->addListener(
+    'register.customer.logout.middleware',
+    function (\Similik\Services\MiddlewareManager $middlewareManager) {
+        $middlewareManager->registerMiddlewareAfter(\Similik\Module\Customer\Middleware\Logout\LogoutMiddleware::class, \Similik\Module\Checkout\Middleware\Logout\ClearCartMiddleware::class);
+    },
+    0
+);
+
+$eventDispatcher->addListener(
     'filter.mutation.type',
     function (&$fields, Container $container) {
         $fields['addShippingAddress'] = [

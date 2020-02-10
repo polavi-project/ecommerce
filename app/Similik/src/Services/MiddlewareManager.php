@@ -137,10 +137,7 @@ class MiddlewareManager
                 };
             $m[] = function (Request $request, Response $response, $delegate = null) use ($callable, $next) {
                 if($delegate instanceof Response) {
-                    if(!$request->isAjax()) {
-                        $response->sendHtml();
-                    } else
-                        $response->send($response->getStatusCode());
+                    $response->send($this->container->get(Request::class)->isAjax(), $response->getStatusCode());
                     exit();
                 } else {
                     if(!in_array(get_class($callable), $this->removedMiddleware)) {
