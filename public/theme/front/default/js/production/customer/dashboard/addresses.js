@@ -66,6 +66,10 @@ export default function Addresses(props) {
         });
     };
 
+    const onStart = config => {
+        config.body.append('variables[customerId]', parseInt(props.customer_id));
+    };
+
     return React.createElement(
         "div",
         { className: "uk-grid-small uk-width-1-2@m" },
@@ -82,9 +86,10 @@ export default function Addresses(props) {
                 a.editing && React.createElement(Address, {
                     address: a,
                     id: "customer-address-form-" + i,
+                    onStart: onStart,
                     onComplete: a.customer_address_id ? updateAddress : addresses,
                     countries: _.get(props, 'countries'),
-                    action: a.customer_address_id ? props.updateUrl : props.createUrl
+                    action: a.customer_address_id ? a.update_url : props.createUrl
                 }),
                 !a.editing && React.createElement(
                     "a",

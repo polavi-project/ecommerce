@@ -38,6 +38,8 @@ class AddressMiddleware extends MiddlewareAbstract
                         province
                         country
                         is_default
+                        update_url
+                        delete_url
                     }
                 }"
             ])
@@ -50,10 +52,9 @@ class AddressMiddleware extends MiddlewareAbstract
                         20,
                         get_js_file_url("production/customer/dashboard/addresses.js", false),
                         [
+                            'customer_id' => $request->getCustomer()->getData('customer_id'),
                             'addresses' => $result->data['customerAddresses'],
-                            'deleteUrl' => generate_url('admin.graphql.api', ['type'=>'deleteCustomerAddress']),
-                            'updateUrl' => generate_url('admin.graphql.api', ['type'=>'updateCustomerAddress']),
-                            'createUrl' => generate_url('admin.graphql.api', ['type'=>'createCustomerAddress']),
+                            'createUrl' => generate_url('customer.address.create'),
                             'countries' => get_config('general_allow_countries', ["US"])
                         ]
                     );

@@ -85,7 +85,7 @@ $eventDispatcher->addListener(
         ];
 
         $fields['customerAddresses'] = [
-            'type' => Type::listOf($container->get(\Similik\Module\Customer\Services\Type\CustomerAddressType::class)),
+            'type' => Type::listOf($container->get(\Similik\Module\Customer\Services\Type\AddressType::class)),
             'description' => "Return a list of customer addresses",
             'args' => [
                 'customerId' => Type::nonNull(Type::int())
@@ -112,14 +112,14 @@ $eventDispatcher->addListener(
                 'address' => [
                     'type' => $container->get(\Similik\Module\Customer\Services\Type\AddressInputType::class)
                 ],
-                'customerId' => Type::int()
+                'customerId' => Type::nonNull(Type::int())
             ],
             'type' => new ObjectType([
                 'name'=> 'createCustomerAddressOutput',
                 'fields' => [
                     'status' => Type::nonNull(Type::boolean()),
                     'message'=> Type::string(),
-                    'address' => $container->get(\Similik\Module\Customer\Services\Type\CustomerAddressType::class)
+                    'address' => $container->get(\Similik\Module\Customer\Services\Type\AddressType::class)
                 ]
             ]),
             'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
@@ -162,7 +162,7 @@ $eventDispatcher->addListener(
                 'fields' => [
                     'status' => Type::nonNull(Type::boolean()),
                     'message'=> Type::string(),
-                    'address' => $container->get(\Similik\Module\Customer\Services\Type\CustomerAddressType::class)
+                    'address' => $container->get(\Similik\Module\Customer\Services\Type\AddressType::class)
                 ]
             ]),
             'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {

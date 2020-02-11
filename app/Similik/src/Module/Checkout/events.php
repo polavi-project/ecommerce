@@ -53,7 +53,7 @@ $eventDispatcher->addListener(
                 'fields' => [
                     'status' => Type::nonNull(Type::boolean()),
                     'message'=> Type::string(),
-                    'address' => $container->get(\Similik\Module\Customer\Services\Type\CustomerAddressType::class)
+                    'address' => $container->get(\Similik\Module\Customer\Services\Type\AddressType::class)
                 ]
             ]),
             'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
@@ -102,7 +102,7 @@ $eventDispatcher->addListener(
                 'fields' => [
                     'status' => Type::nonNull(Type::boolean()),
                     'message'=> Type::string(),
-                    'address' => $container->get(\Similik\Module\Customer\Services\Type\CustomerAddressType::class)
+                    'address' => $container->get(\Similik\Module\Customer\Services\Type\AddressType::class)
                 ]
             ]),
             'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {

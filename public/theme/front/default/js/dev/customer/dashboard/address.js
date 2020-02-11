@@ -55,6 +55,7 @@ export default function Address(props) {
     const id = props.id !== undefined ? props.id : "customer_address_form";
     return <Form
         id={id}
+        onStart={props.onStart}
         onComplete={props.onComplete}
         onError={props.onError}
         action={props.action}>

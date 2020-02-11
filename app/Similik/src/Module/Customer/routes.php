@@ -54,3 +54,17 @@ $router->addSiteRoute('customer.update', 'POST', '/customer/update/{id:\d+}', [
 $router->addSiteRoute('customer.logout', 'GET', '/customer/logout', [
     \Similik\Module\Customer\Middleware\Logout\LogoutMiddleware::class,
 ]);
+
+// ADDRESS
+
+$router->addSiteRoute('customer.address.create', 'POST', '/customer/address/create', [
+    \Similik\Module\Customer\Middleware\Address\CreateMiddleware::class,
+]);
+
+$router->addSiteRoute('customer.address.update', 'POST', '/customer/address/update', [
+    \Similik\Module\Customer\Middleware\Address\UpdateMiddleware::class,
+]);
+
+$router->addSiteRoute('customer.address.delete', 'POST', '/customer/address/delete', [
+    \Similik\Module\Customer\Middleware\Address\DeleteMiddleware::class,
+]);

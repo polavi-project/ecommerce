@@ -25,7 +25,7 @@ const Fetch = (url, pushState = false, method = "GET", data = {}, onStart = null
             credentials: 'same-origin'
         };
     }
-    if (typeof onStart === 'function') onStart();
+    if (typeof onStart === 'function') onStart(config);
     fetch(url, config).then(response => {
         const contentType = response.headers.get('content-type');
         if (!contentType || !contentType.includes('application/json')) {

@@ -19,7 +19,7 @@ class AddressInputType extends InputObjectType
     public function __construct(Container $container)
     {
         $config = [
-            'name'=> 'CustomerAddressInput',
+            'name'=> 'AddressInput',
             'fields' => function() use($container) {
                 $fields = [
                     'full_name' => Type::nonNull(Type::string()),
