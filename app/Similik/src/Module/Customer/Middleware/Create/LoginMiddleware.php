@@ -6,7 +6,7 @@
 
 declare(strict_types=1);
 
-namespace Similik\Module\SendGrid\Middleware\Customer;
+namespace Similik\Module\Customer\Middleware\Create;
 
 
 use GuzzleHttp\Promise\Promise;
@@ -16,8 +16,9 @@ use Similik\Module\SendGrid\Services\SendGrid;
 use Similik\Services\Http\Request;
 use Similik\Services\Http\Response;
 
-class SendWelcomeEmailMiddleware extends MiddlewareAbstract
+class LoginMiddleware extends MiddlewareAbstract
 {
+
     public function __invoke(Request $request, Response $response, Promise $promise = null)
     {
         if(!$promise instanceof Promise)
@@ -25,13 +26,8 @@ class SendWelcomeEmailMiddleware extends MiddlewareAbstract
 
         $promise->then(function($result) {
             if(isset($result->data['createCustomer']['status']) and $result->data['createCustomer']['status'] == true) {
-                $templateId = get_config('sendgrid_customer_welcome_email');
-                $this->getContainer()->get(SendGrid::class)->sendEmail(
-                    'customer_welcome',
-                    $result->data['createCustomer']['customer']['email'],
-                    $templateId,
-                    $result->data['createCustomer']['customer']
-                );
+                if(isset($result->data['createCustomer']['status']) and $result->data['createCustomer']['status'] == true)
+                    $this->getContainer()->get(Request::class)->getCustomer()->forceLogin($result->data['createCustomer']['customer']['email']);
             }
         });
 

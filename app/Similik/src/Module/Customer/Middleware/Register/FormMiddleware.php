@@ -35,7 +35,7 @@ class FormMiddleware extends MiddlewareAbstract
             10,
             get_js_file_url("production/customer/registration_form.js", false),
             [
-                'action' => $this->getContainer()->get(Router::class)->generateUrl('graphql.api'),
+                'action' => $this->getContainer()->get(Router::class)->generateUrl('customer.register.post'),
                 'redirectUrl' => get_base_url(false)
             ]
         );

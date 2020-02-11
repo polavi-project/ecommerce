@@ -24,8 +24,8 @@ $eventDispatcher->addListener(
         0
 );
 
-$eventDispatcher->addListener('register.graphql.api.middleware', function(\Similik\Services\MiddlewareManager $mm) {
-    $mm->registerMiddleware(\Similik\Module\SendGrid\Middleware\Customer\SendWelcomeEmailMiddleware::class, 1);
+$eventDispatcher->addListener('register.customer.register.post.middleware', function(\Similik\Services\MiddlewareManager $mm) {
+    $mm->registerMiddlewareAfter(\Similik\Module\Customer\Middleware\Create\CreateAccountMiddleware::class, \Similik\Module\SendGrid\Middleware\Customer\SendWelcomeEmailMiddleware::class);
 });
 
 $eventDispatcher->addListener('register.checkout.order.middleware', function(\Similik\Services\MiddlewareManager $mm) {

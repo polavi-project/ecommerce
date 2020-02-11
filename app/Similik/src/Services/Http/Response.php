@@ -61,7 +61,7 @@ class Response extends \Symfony\Component\HttpFoundation\Response
     public function send($isAjax = true, $status = 200, $isApi = false, $headers = [])
     {
         if($isAjax == true)
-            $this->sendJson();
+            $this->sendJson($status, $isApi, $headers);
         else
             $this->sendHtml();
     }

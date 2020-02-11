@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 /** @var \Similik\Services\Routing\Router $router */
 
-
 $router->addAdminRoute('customer.grid', 'GET', '/customers', [
     \Similik\Module\Customer\Middleware\Grid\GridMiddleware::class,
 ]);
@@ -27,6 +26,11 @@ $router->addAdminRoute('customer.install', ["POST", "GET"], '/customer/migrate/i
 
 $router->addSiteRoute('customer.register', 'GET', '/customer/register', [
     \Similik\Module\Customer\Middleware\Register\FormMiddleware::class,
+]);
+
+$router->addSiteRoute('customer.register.post', 'POST', '/customer/register', [
+    \Similik\Module\Customer\Middleware\Create\CreateAccountMiddleware::class,
+    \Similik\Module\Customer\Middleware\Create\LoginMiddleware::class
 ]);
 
 $router->addSiteRoute('customer.login', 'GET', '/customer/login', [
