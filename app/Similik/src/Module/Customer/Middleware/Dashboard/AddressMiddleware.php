@@ -48,7 +48,7 @@ class AddressMiddleware extends MiddlewareAbstract
                 if(isset($result->data['customerAddresses'])) {
                     $response->addWidget(
                         'customer_address',
-                        'content',
+                        'customer_dashboard_layout',
                         20,
                         get_js_file_url("production/customer/dashboard/addresses.js", false),
                         [

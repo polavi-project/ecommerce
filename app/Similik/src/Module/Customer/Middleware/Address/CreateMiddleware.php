@@ -20,7 +20,7 @@ class CreateMiddleware extends MiddlewareAbstract
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
         $variables = $request->get('variables', []);
-        $query = "mutation CreateCustomerAddress(\$address: AddressInput! \$customerId: Int!) { createCustomerAddress (address: \$address customerId: \$customerId) {status message address {customer_address_id full_name telephone address_1 address_2 postcode city province country is_default}}}";
+        $query = "mutation CreateCustomerAddress(\$address: AddressInput! \$customerId: Int!) { createCustomerAddress (address: \$address customerId: \$customerId) {status message address {customer_address_id full_name telephone address_1 address_2 postcode city province country is_default update_url delete_url}}}";
 
         dispatch_event("filter_create_customer_address_query", [&$query]);
 

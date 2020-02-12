@@ -38,6 +38,7 @@ $router->addSiteRoute('customer.login', 'GET', '/customer/login', [
 ]);
 
 $router->addSiteRoute('customer.dashboard', 'GET', '/customer/dashboard', [
+    \Similik\Module\Customer\Middleware\Dashboard\LayoutMiddleware::class,
     \Similik\Module\Customer\Middleware\Dashboard\InfoMiddleware::class,
     \Similik\Module\Customer\Middleware\Dashboard\AddressMiddleware::class,
     \Similik\Module\Customer\Middleware\Dashboard\OrderMiddleware::class,
@@ -61,10 +62,10 @@ $router->addSiteRoute('customer.address.create', 'POST', '/customer/address/crea
     \Similik\Module\Customer\Middleware\Address\CreateMiddleware::class,
 ]);
 
-$router->addSiteRoute('customer.address.update', 'POST', '/customer/address/update', [
+$router->addSiteRoute('customer.address.update', 'POST', '/customer/address/update/{id:\d+}', [
     \Similik\Module\Customer\Middleware\Address\UpdateMiddleware::class,
 ]);
 
-$router->addSiteRoute('customer.address.delete', 'POST', '/customer/address/delete', [
+$router->addSiteRoute('customer.address.delete', 'POST', '/customer/address/delete/{id:\d+}', [
     \Similik\Module\Customer\Middleware\Address\DeleteMiddleware::class,
 ]);
