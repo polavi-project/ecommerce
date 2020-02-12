@@ -9,7 +9,6 @@ declare(strict_types=1);
 namespace Similik\Module\Customer\Middleware\Dashboard;
 
 
-use function Similik\dispatch_event;
 use function Similik\generate_url;
 use function Similik\get_js_file_url;
 use Similik\Middleware\MiddlewareAbstract;
@@ -23,12 +22,13 @@ class OrderMiddleware extends MiddlewareAbstract
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
         $response->addWidget(
-            'orders',
-            'customer_dashboard_layout',
-            30,
-            get_js_file_url("production/customer/dashboard/orders.js", false),
+            'order_information_container',
+            'content',
+            10,
+            get_js_file_url("production/area.js", true),
             [
-                'query' => dispatch_event()
+                "id"=>"order_information_container",
+                "className"=>"uk-child-width-expand@s uk-grid uk-grid-small"
             ]
         );
         // Loading data by using GraphQL
@@ -61,7 +61,15 @@ class OrderMiddleware extends MiddlewareAbstract
             ->then(function($result) use ($response) {
                 /**@var \GraphQL\Executor\ExecutionResult $result */
                 if(isset($result->data['customer']['orders'])) {
-
+                    $response->addWidget(
+                        'orders',
+                        'content',
+                        30,
+                        get_js_file_url("production/customer/dashboard/orders.js", false),
+                        [
+                            'orders' => $result->data['customer']['orders']
+                        ]
+                    );
                 }
             });
 
