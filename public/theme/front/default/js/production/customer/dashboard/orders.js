@@ -1,26 +1,10 @@
 import A from "../../../../../../../js/production/a.js";
+import { Fetch } from "../../../../../../../js/production/fetch.js";
 
 function OrderInfo(props) {
-    let date = new Date(props.created_at);
     return React.createElement(
         "div",
         { className: "uk-width-1-1" },
-        React.createElement(
-            "div",
-            null,
-            React.createElement(
-                "strong",
-                null,
-                "#",
-                props.order_number
-            ),
-            " ",
-            React.createElement(
-                "i",
-                null,
-                date.toDateString()
-            )
-        ),
         React.createElement(
             "div",
             null,
@@ -57,9 +41,12 @@ function OrderInfo(props) {
 }
 
 function Summary({ tax_amount, discount_amount, coupon, grand_total }) {
-    const _tax_amount = new Intl.NumberFormat(window.language, { style: 'currency', currency: window.currency }).format(tax_amount);
-    const _discount_amount = new Intl.NumberFormat(window.language, { style: 'currency', currency: window.currency }).format(discount_amount);
-    const _grand_total = new Intl.NumberFormat(window.language, { style: 'currency', currency: window.currency }).format(grand_total);
+    const currency = ReactRedux.useSelector(state => _.get(state, 'appState.currency', 'USD'));
+    const language = ReactRedux.useSelector(state => _.get(state, 'appState.language[0]', 'en'));
+
+    const _tax_amount = new Intl.NumberFormat(language, { style: 'currency', currency: currency }).format(tax_amount);
+    const _discount_amount = new Intl.NumberFormat(language, { style: 'currency', currency: currency }).format(discount_amount);
+    const _grand_total = new Intl.NumberFormat(language, { style: 'currency', currency: currency }).format(grand_total);
     return React.createElement(
         "div",
         { className: "uk-width-1-3" },
@@ -204,8 +191,11 @@ function Items({ items }) {
             "tbody",
             null,
             items.map((i, k) => {
-                const _price = new Intl.NumberFormat(window.language, { style: 'currency', currency: window.currency }).format(i.product_price);
-                const _finalPrice = new Intl.NumberFormat(window.language, { style: 'currency', currency: window.currency }).format(i.final_price);
+                const currency = ReactRedux.useSelector(state => _.get(state, 'appState.currency', 'USD'));
+                const language = ReactRedux.useSelector(state => _.get(state, 'appState.language[0]', 'en'));
+                const _price = new Intl.NumberFormat(language, { style: 'currency', currency: currency }).format(i.product_price);
+                const _finalPrice = new Intl.NumberFormat(language, { style: 'currency', currency: currency }).format(i.final_price);
+                const _total = new Intl.NumberFormat(language, { style: 'currency', currency: currency }).format(i.total);
                 return React.createElement(
                     "tr",
                     { key: k },
@@ -228,11 +218,11 @@ function Items({ items }) {
                                         i.product_name
                                     )
                                 ),
-                                React.createElement(
+                                parseFloat(i.final_price) < parseFloat(i.product_price) && React.createElement(
                                     "div",
                                     null,
                                     React.createElement(
-                                        "span",
+                                        "del",
                                         null,
                                         _price
                                     )
@@ -264,7 +254,7 @@ function Items({ items }) {
                         React.createElement(
                             "span",
                             null,
-                            i.total
+                            _total
                         )
                     )
                 );
@@ -272,6 +262,7 @@ function Items({ items }) {
         )
     );
 }
+
 function Order({ index, order }) {
     let date = new Date(order.created_at);
     return React.createElement(
@@ -299,21 +290,96 @@ function Order({ index, order }) {
     );
 }
 
-export default function Orders({ orders }) {
+function Loader() {
+    return React.createElement(
+        "ul",
+        { "uk-accordion": "1" },
+        React.createElement(
+            "li",
+            null,
+            React.createElement(
+                "div",
+                { className: "ph-item" },
+                React.createElement(
+                    "div",
+                    null,
+                    React.createElement(
+                        "div",
+                        { className: "ph-row" },
+                        React.createElement("div", { className: "ph-col-12" })
+                    )
+                )
+            )
+        ),
+        React.createElement(
+            "li",
+            null,
+            React.createElement(
+                "div",
+                { className: "ph-item" },
+                React.createElement(
+                    "div",
+                    null,
+                    React.createElement(
+                        "div",
+                        { className: "ph-row" },
+                        React.createElement("div", { className: "ph-col-12" })
+                    )
+                )
+            )
+        ),
+        React.createElement(
+            "li",
+            null,
+            React.createElement(
+                "div",
+                { className: "ph-item" },
+                React.createElement(
+                    "div",
+                    null,
+                    React.createElement(
+                        "div",
+                        { className: "ph-row" },
+                        React.createElement("div", { className: "ph-col-12" })
+                    )
+                )
+            )
+        )
+    );
+}
+
+export default function Orders({ query }) {
+    const [loading, setLoading] = React.useState(true);
+    const [orders, setOrders] = React.useState([]);
+    const api = ReactRedux.useSelector(state => _.get(state, 'appState.graphqlApi'));
+    React.useEffect(function () {
+        Fetch(api, false, 'POST', { query: query }, null, response => {
+            if (_.get(response, 'payload.success') === true) {
+                setOrders(_.get(response, 'payload.data.customer.orders'));
+                setLoading(false);
+            }
+        });
+    }, []);
     return React.createElement(
         "div",
-        { className: "uk-width-1-1@m" },
+        { className: "uk-margin-medium-top my-orders" },
         React.createElement(
             "h2",
             null,
-            "Orders"
+            "Your orders"
         ),
-        React.createElement(
+        loading === true && React.createElement(Loader, null),
+        loading === false && React.createElement(
             "ul",
             { "uk-accordion": "1" },
             orders.map((o, i) => {
                 return React.createElement(Order, { index: i, key: i, order: o });
             })
+        ),
+        loading === false && orders.length === 0 && React.createElement(
+            "p",
+            null,
+            "You have no order to show"
         )
     );
 }

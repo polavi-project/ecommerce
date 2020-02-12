@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Similik\Module\Customer\Middleware\Dashboard;
 
 
-use function Similik\generate_url;
+use function Similik\dispatch_event;
 use function Similik\get_js_file_url;
 use Similik\Middleware\MiddlewareAbstract;
 use Similik\Module\Graphql\Services\GraphqlExecutor;
@@ -21,25 +21,12 @@ class OrderMiddleware extends MiddlewareAbstract
 
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
-        $response->addWidget(
-            'order_information_container',
-            'content',
-            10,
-            get_js_file_url("production/area.js", true),
-            [
-                "id"=>"order_information_container",
-                "className"=>"uk-child-width-expand@s uk-grid uk-grid-small"
-            ]
-        );
-        // Loading data by using GraphQL
-        $this->getContainer()
-            ->get(GraphqlExecutor::class)
-            ->waitToExecute([
-                "query"=>"{
+        $query = "{
                     customer (id: {$request->getCustomer()->getData('customer_id')}) {
                         orders {
                             order_number 
-                            status
+                            payment_status
+                            shipment_status
                             created_at 
                             tax_amount
                             discount_amount 
@@ -53,26 +40,23 @@ class OrderMiddleware extends MiddlewareAbstract
                                 product_price
                                 qty
                                 final_price
+                                total
                             }
                         }
                     }
-                }"
-            ])
-            ->then(function($result) use ($response) {
-                /**@var \GraphQL\Executor\ExecutionResult $result */
-                if(isset($result->data['customer']['orders'])) {
-                    $response->addWidget(
-                        'orders',
-                        'content',
-                        30,
-                        get_js_file_url("production/customer/dashboard/orders.js", false),
-                        [
-                            'orders' => $result->data['customer']['orders']
-                        ]
-                    );
-                }
-            });
+                }";
 
+        dispatch_event("filter_customer_get_orders_query", [&$query]);
+
+        $response->addWidget(
+            'orders',
+            'customer_dashboard_layout',
+            30,
+            get_js_file_url("production/customer/dashboard/orders.js", false),
+            [
+                'query' => $query
+            ]
+        );
         return $delegate;
     }
 }
