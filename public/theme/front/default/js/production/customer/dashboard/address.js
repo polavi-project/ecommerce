@@ -60,6 +60,7 @@ export default function Address(props) {
         Form,
         {
             id: id,
+            onStart: props.onStart,
             onComplete: props.onComplete,
             onError: props.onError,
             action: props.action },

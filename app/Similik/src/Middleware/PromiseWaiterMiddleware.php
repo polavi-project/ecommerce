@@ -19,6 +19,7 @@ class PromiseWaiterMiddleware extends MiddlewareAbstract
     {
         $this->getContainer()->get(PromiseWaiter::class)->wait();
 
+        $promises = $this->getContainer()->get(PromiseWaiter::class)->getPromises();
         return $delegate;
     }
 }

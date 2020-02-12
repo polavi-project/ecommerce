@@ -28,7 +28,7 @@ const Fetch = (url, pushState = false, method = "GET", data = {}, onStart = null
         };
     }
     if(typeof onStart === 'function')
-        onStart();
+        onStart(config);
     fetch(url, config)
         .then(response => {
             const contentType = response.headers.get('content-type');

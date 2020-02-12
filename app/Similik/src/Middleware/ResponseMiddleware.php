@@ -71,15 +71,15 @@ class ResponseMiddleware extends MiddlewareAbstract
                 ->addLink(['rel'=>'stylesheet', 'href'=> get_css_file_url('uikit.min.css', $request->isAdmin())]);
 
             $response->setContent($this->renderHtml($response));
-            $response->sendHtml();
+            $response->send($request->isAjax(), $response->getStatusCode());
         } else {
             if(
                 $request->attributes->get('_matched_route') != 'graphql.api' &&
                 $request->attributes->get('_matched_route') != 'admin.graphql.api'
             )
-                $response->send($response->getStatusCode());
+                $response->send($request->isAjax(), $response->getStatusCode());
             else
-                $response->send($response->getStatusCode(), true);
+                $response->send($request->isAjax(), $response->getStatusCode(), true);
         }
         exit();
     }

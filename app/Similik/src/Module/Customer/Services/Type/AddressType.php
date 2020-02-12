@@ -14,8 +14,9 @@ use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
 use function Similik\dispatch_event;
 use Similik\Services\Di\Container;
+use Similik\Services\Routing\Router;
 
-class CustomerAddressType extends ObjectType
+class AddressType extends ObjectType
 {
     public function __construct(Container $container)
     {
@@ -52,6 +53,18 @@ class CustomerAddressType extends ObjectType
                     ],
                     'is_default' => [
                         'type' => Type::int()
+                    ],
+                    'update_url' => [
+                        'type' => Type::string(),
+                        'resolve' => function($value, $args, Container $container, ResolveInfo $info) {
+                            return $container->get(Router::class)->generateUrl('customer.address.update', ['id' => $value['customer_address_id']]);
+                        }
+                    ],
+                    'delete_url' => [
+                        'type' => Type::string(),
+                        'resolve' => function($value, $args, Container $container, ResolveInfo $info) {
+                            return $container->get(Router::class)->generateUrl('customer.address.delete', ['id' => $value['customer_address_id']]);
+                        }
                     ]
                 ];
 

@@ -21,8 +21,8 @@ $container[\Similik\Module\Customer\Services\Type\CustomerGroupType::class] = fu
     return new \Similik\Module\Customer\Services\Type\CustomerGroupType($container);
 };
 
-$container[\Similik\Module\Customer\Services\Type\CustomerAddressType::class] = function() use ($container){
-    return new \Similik\Module\Customer\Services\Type\CustomerAddressType($container);
+$container[\Similik\Module\Customer\Services\Type\AddressType::class] = function() use ($container){
+    return new \Similik\Module\Customer\Services\Type\AddressType($container);
 };
 
 $container[\Similik\Module\Customer\Services\Type\CustomerGridType::class] = function() use ($container){

@@ -10,12 +10,11 @@ namespace Similik\Services\Http;
 
 use function Similik\get_base_url;
 use function Similik\get_config;
-use function Similik\get_current_language_id;
 use Similik\Services\DataObject;
 use Similik\Services\Helmet;
-use Similik\Services\Locale\Language;
 use function Similik\the_container;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class Response extends \Symfony\Component\HttpFoundation\Response
 {
@@ -38,21 +37,33 @@ class Response extends \Symfony\Component\HttpFoundation\Response
         $this->addState('baseUrlAdmin', get_base_url(true));
     }
 
-    public function sendHtml()
+    protected function sendHtml()
     {
-        $this->headers->set('Content-Type', 'text/html');
-        $this->setCharset('utf-8');
-        return parent::send();
+        if($this->jsonData->has('redirectUrl')) {
+            $redirect = new RedirectResponse($this->jsonData->get('redirectUrl'), $this->getStatusCode());
+            return $redirect->send();
+        } else {
+            $this->headers->set('Content-Type', 'text/html');
+            $this->setCharset('utf-8');
+            return parent::send();
+        }
     }
 
-    public function send($status = 200, $isApi = false, $headers = [])
-    {
+    protected function sendJson($status = 200, $isApi = false, $headers = []) {
         if($isApi == false)
             $jsonResponse = new JsonResponse($this->getData(), $status, $headers, false);
         else
             $jsonResponse = new JsonResponse($this->jsonData->toArray(), $status, $headers, false);
 
         $jsonResponse->send();
+    }
+
+    public function send($isAjax = true, $status = 200, $isApi = false, $headers = [])
+    {
+        if($isAjax == true || $isApi == true)
+            $this->sendJson($status, $isApi, $headers);
+        else
+            $this->sendHtml();
     }
 
     public function getData()
@@ -184,7 +195,6 @@ class Response extends \Symfony\Component\HttpFoundation\Response
     {
         return $this->isNewPage;
     }
-
 
     public function redirect($url, $status = 302)
     {

@@ -33,6 +33,14 @@ $eventDispatcher->addListener(
 );
 
 $eventDispatcher->addListener(
+    'register.customer.logout.middleware',
+    function (\Similik\Services\MiddlewareManager $middlewareManager) {
+        $middlewareManager->registerMiddlewareAfter(\Similik\Module\Customer\Middleware\Logout\LogoutMiddleware::class, \Similik\Module\Checkout\Middleware\Logout\ClearCartMiddleware::class);
+    },
+    0
+);
+
+$eventDispatcher->addListener(
     'filter.mutation.type',
     function (&$fields, Container $container) {
         $fields['addShippingAddress'] = [
@@ -45,7 +53,7 @@ $eventDispatcher->addListener(
                 'fields' => [
                     'status' => Type::nonNull(Type::boolean()),
                     'message'=> Type::string(),
-                    'address' => $container->get(\Similik\Module\Customer\Services\Type\CustomerAddressType::class)
+                    'address' => $container->get(\Similik\Module\Customer\Services\Type\AddressType::class)
                 ]
             ]),
             'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
@@ -94,7 +102,7 @@ $eventDispatcher->addListener(
                 'fields' => [
                     'status' => Type::nonNull(Type::boolean()),
                     'message'=> Type::string(),
-                    'address' => $container->get(\Similik\Module\Customer\Services\Type\CustomerAddressType::class)
+                    'address' => $container->get(\Similik\Module\Customer\Services\Type\AddressType::class)
                 ]
             ]),
             'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {

@@ -14,17 +14,14 @@ function Heading() {
     );
 }
 
-function Query() {
-    return React.createElement("input", { type: "text", name: "query", value: "mutation CreateCustomer($customer: CustomerInput!) { createCustomer (customer: $customer) {status message customer {customer_id group_id status full_name email}}}", readOnly: true, style: { display: 'none' } });
-}
 export default function RegistrationForm(props) {
     const dispatch = ReactRedux.useDispatch();
 
     const onComplete = response => {
-        if (_.get(response, 'payload.data.createCustomer.status') === true) {
+        if (_.get(response, 'customerCreation.status') === true) {
             dispatch({ 'type': ADD_ALERT, 'payload': { alerts: [{ id: "customer_register_success", message: 'Account created successfully', type: "success" }] } });
             if (props.redirectUrl) window.location.assign(props.redirectUrl);
-        } else dispatch({ 'type': ADD_ALERT, 'payload': { alerts: [{ id: "customer_register_error", message: _.get(response, 'payload.data.createCustomer.message', 'Something wrong, please try again'), type: "error" }] } });
+        } else dispatch({ 'type': ADD_ALERT, 'payload': { alerts: [{ id: "customer_register_error", message: _.get(response, 'customerCreation.message', 'Something wrong, please try again'), type: "error" }] } });
     };
     return React.createElement(
         Form,
@@ -69,11 +66,6 @@ export default function RegistrationForm(props) {
                 },
                 'sort_order': 50,
                 'id': 'password'
-            }, {
-                'component': Query,
-                'props': {},
-                'sort_order': 60,
-                'id': 'query'
             }]
         })
     );

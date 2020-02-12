@@ -15,7 +15,6 @@ use Similik\Services\Helmet;
 use Similik\Services\Http\Request;
 use Similik\Services\Http\Response;
 use Similik\Services\Routing\Router;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class FormMiddleware extends MiddlewareAbstract
 {
@@ -24,19 +23,18 @@ class FormMiddleware extends MiddlewareAbstract
         if($request->getCustomer()->isLoggedIn()) {
             $response->redirect($this->getContainer()->get(Router::class)->generateUrl('homepage'));
             return $response;
-        } else {
-            $response->addWidget(
-                'customer_registration_form',
-                'content',
-                10,
-                get_js_file_url("production/customer/login_form.js", false),
-                [
-                    'action' => $this->getContainer()->get(Router::class)->generateUrl('customer.auth'),
-                    'registerUrl' => $this->getContainer()->get(Router::class)->generateUrl('customer.register')
-                ]
-            );
-            $this->getContainer()->get(Helmet::class)->setTitle('Login');
-            return $delegate;
         }
+        $response->addWidget(
+            'customer_registration_form',
+            'content',
+            10,
+            get_js_file_url("production/customer/login_form.js", false),
+            [
+                'action' => $this->getContainer()->get(Router::class)->generateUrl('customer.auth'),
+                'registerUrl' => $this->getContainer()->get(Router::class)->generateUrl('customer.register')
+            ]
+        );
+        $this->getContainer()->get(Helmet::class)->setTitle('Login');
+        return $delegate;
     }
 }

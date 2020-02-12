@@ -8,11 +8,8 @@ declare(strict_types=1);
 
 namespace Similik\Module\Graphql\Services;
 
-use GraphQL\Error\Debug;
 use GraphQL\Error\Error;
-use GraphQL\Error\FormattedError;
 use GraphQL\Executor\ExecutionResult;
-use GraphQL\GraphQL;
 use GraphQL\Server\OperationParams;
 use GraphQL\Server\ServerConfig;
 use GraphQL\Server\StandardServer;
@@ -67,7 +64,7 @@ class GraphqlExecutor extends Promise
         $id = count($this->operationParams) - 1;
         $promise = new Promise(function() use (&$promise, $id) {
             $result = $this->results[$id];
-            if($result->data)
+            if(!$result->errors)
                 $promise->resolve($result);
             else
                 $promise->reject($result->errors);
@@ -89,8 +86,7 @@ class GraphqlExecutor extends Promise
             ->setErrorsHandler(function(Error $error) {
                 return new \Exception($error->getMessage());
             })
-            ->setDebug(true)
-        ;
+            ->setDebug(true);
 
         $server = new StandardServer($config);
 

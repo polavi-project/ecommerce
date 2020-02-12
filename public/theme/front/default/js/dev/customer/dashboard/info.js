@@ -64,7 +64,7 @@ function Info(props) {
         }
     };
 
-    return <div className="uk-grid-small uk-width-1-2@m">
+    return <div>
         <h2>Customer information</h2>
         <div><span>Full name</span>: {_.get(customerInfo, 'full_name')}</div>
         <div><span>Email</span>: {_.get(customerInfo, 'email')}</div>

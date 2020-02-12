@@ -66,7 +66,7 @@ function Info(props) {
 
     return React.createElement(
         "div",
-        { className: "uk-grid-small uk-width-1-2@m" },
+        null,
         React.createElement(
             "h2",
             null,

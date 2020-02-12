@@ -21,11 +21,6 @@ class InfoMiddleware extends MiddlewareAbstract
 {
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
-        if(!$request->getCustomer()->isLoggedIn()) {
-            $redirect = new RedirectResponse($this->getContainer()->get(Router::class)->generateUrl('customer.login'));
-            return $redirect->send();
-        }
-
         $query = "{customer (id: {$request->getCustomer()->getData('customer_id')}) {full_name email}}";
         dispatch_event("filter_customer_info_query", [&$query]);
 
@@ -40,7 +35,7 @@ class InfoMiddleware extends MiddlewareAbstract
                 if(isset($result->data['customer'])) {
                     $response->addWidget(
                         'customer_info',
-                        'content',
+                        'customer_dashboard_layout',
                         10,
                         get_js_file_url("production/customer/dashboard/info.js", false),
                         ['action' => $this->getContainer()->get(Router::class)->generateUrl('customer.update', ['id'=>$request->getCustomer()->getData('customer_id')])]

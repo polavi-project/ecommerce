@@ -29,36 +29,6 @@ $eventDispatcher->addListener('register.checkout.index.middleware', function(\Si
 });
 
 $eventDispatcher->addListener(
-    'before_execute_' . strtolower(str_replace('\\', '_', \Similik\Module\Graphql\Middleware\Graphql\GraphqlQLMiddleware::class)),
-    function (\Similik\Services\Di\Container $container) {
-        $container->get(\Similik\Module\Graphql\Services\ExecutionPromise::class)->then(
-            function(\GraphQL\Executor\ExecutionResult $result) use ($container) {
-                if(isset($result->data['createCustomer']['status']) and $result->data['createCustomer']['status'] == true)
-                    $container->get(Request::class)->getCustomer()->forceLogin($result->data['createCustomer']['customer']['email']);
-
-                if(isset($result->data['createCustomer']['status']) and $result->data['createCustomer']['status'] == false)
-                    $container->get(\Similik\Services\Http\Response::class)->addAlert('create_customer_error', 'error', $result->data['createCustomer']['message'])->notNewPage();
-
-                if(empty($result->data)) {
-                    $flag = false;
-                    foreach ($result->errors as $error) {
-                        $source = $error->getSource();
-                        if (strpos($source, 'createCustomer') !== false) {
-                            $flag = true;
-                            break;
-                        }
-                    }
-
-                    if($flag == true)
-                        $container->get(\Similik\Services\Http\Response::class)->addAlert('create_customer_error', 'error', 'Something wrong. Please try again')->notNewPage();
-                }
-            }
-        );
-    },
-    0
-);
-
-$eventDispatcher->addListener(
     'filter.query.type',
     function (&$fields, Container $container) {
         $fields += [
@@ -115,7 +85,7 @@ $eventDispatcher->addListener(
         ];
 
         $fields['customerAddresses'] = [
-            'type' => Type::listOf($container->get(\Similik\Module\Customer\Services\Type\CustomerAddressType::class)),
+            'type' => Type::listOf($container->get(\Similik\Module\Customer\Services\Type\AddressType::class)),
             'description' => "Return a list of customer addresses",
             'args' => [
                 'customerId' => Type::nonNull(Type::int())
@@ -142,14 +112,14 @@ $eventDispatcher->addListener(
                 'address' => [
                     'type' => $container->get(\Similik\Module\Customer\Services\Type\AddressInputType::class)
                 ],
-                'customerId' => Type::int()
+                'customerId' => Type::nonNull(Type::int())
             ],
             'type' => new ObjectType([
                 'name'=> 'createCustomerAddressOutput',
                 'fields' => [
                     'status' => Type::nonNull(Type::boolean()),
                     'message'=> Type::string(),
-                    'address' => $container->get(\Similik\Module\Customer\Services\Type\CustomerAddressType::class)
+                    'address' => $container->get(\Similik\Module\Customer\Services\Type\AddressType::class)
                 ]
             ]),
             'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
@@ -192,7 +162,7 @@ $eventDispatcher->addListener(
                 'fields' => [
                     'status' => Type::nonNull(Type::boolean()),
                     'message'=> Type::string(),
-                    'address' => $container->get(\Similik\Module\Customer\Services\Type\CustomerAddressType::class)
+                    'address' => $container->get(\Similik\Module\Customer\Services\Type\AddressType::class)
                 ]
             ]),
             'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {

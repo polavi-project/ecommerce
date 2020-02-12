@@ -2,6 +2,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 import { Fetch } from "../../../../../../../js/production/fetch.js";
 import Address from "./address.js";
+import { ADD_ALERT } from "../../../../../../../js/production/event-types.js";
 
 function AddressInfo({ address }) {
     return React.createElement(
@@ -39,36 +40,52 @@ function AddressInfo({ address }) {
 
 export default function Addresses(props) {
     const [addresses, setAddresses] = React.useState(props.addresses ? props.addresses : []);
+    const dispatch = ReactRedux.useDispatch();
+
     const addAddress = e => {
         e.preventDefault();
         setAddresses(addresses.concat({
-            index: addresses.length,
-            is_default: false,
+            customer_address_id: Date.now(),
+            is_default: 0,
             editing: true
         }));
     };
 
-    const deleteAddress = id => {
-        Fetch(props.deleteUrl, false, 'POST', { id: id }, null, response => {
-            if (_.get(response, "payload.data.deleteCustomerAddress.status") === true) {
-                const newAddresses = addresses.filter((addr, index) => parseInt(addr.customer_address_id) !== parseInt(id));
+    const deleteAddress = address => {
+        console.log(address);
+        if (address.delete_url) Fetch(address.delete_url, false, 'POST', {}, null, response => {
+            if (_.get(response, "addressDelete.status") === true) {
+                const newAddresses = addresses.filter(addr => parseInt(addr.customer_address_id) !== parseInt(address.customer_address_id));
                 setAddresses(newAddresses);
+            } else {
+                dispatch({ 'type': ADD_ALERT, 'payload': { alerts: [{ id: "delete_customer_address_error", message: _.get(response, 'addressDelete.message', "Something wrong. Please try again"), type: "error" }] } });
             }
-        });
+        });else {
+            const newAddresses = addresses.filter(addr => parseInt(addr.customer_address_id) !== parseInt(address.customer_address_id));
+            setAddresses(newAddresses);
+        }
     };
 
-    const updateAddress = (index, address) => {
-        setAddresses(() => {
-            return addresses.map((a, i) => {
-                if (parseInt(i) === parseInt(index)) return address;
-                return a;
-            });
-        });
+    const updateAddress = (address, response) => {
+        let newAddress = null;
+        if (address.update_url) newAddress = _.get(response, 'addressUpdate');else newAddress = _.get(response, 'addressCreation');
+        if (_.get(newAddress, 'status') === true) {
+            setAddresses(addresses.map(a => {
+                if (parseInt(a.customer_address_id) === parseInt(address.customer_address_id)) return _extends({}, a, newAddress.address, { editing: false });else return a;
+            }));
+            dispatch({ 'type': ADD_ALERT, 'payload': { alerts: [{ id: "save_customer_address_success", message: "Address saved successfully", type: "success" }] } });
+        } else {
+            dispatch({ 'type': ADD_ALERT, 'payload': { alerts: [{ id: "save_customer_address_error", message: _.get(newAddress, 'message', 'Something wrong, please try again'), type: "error" }] } });
+        }
+    };
+
+    const onStart = (config, address) => {
+        config.body.append('variables[customerId]', parseInt(props.customer_id));
     };
 
     return React.createElement(
         "div",
-        { className: "uk-grid-small uk-width-1-2@m" },
+        { className: "" },
         React.createElement(
             "h2",
             null,
@@ -77,28 +94,32 @@ export default function Addresses(props) {
         addresses.map((a, i) => {
             return React.createElement(
                 "div",
-                { key: i },
+                { key: i, className: "border-block" },
                 React.createElement(AddressInfo, { address: a }),
                 a.editing && React.createElement(Address, {
                     address: a,
                     id: "customer-address-form-" + i,
-                    onComplete: a.customer_address_id ? updateAddress : addresses,
+                    onStart: config => onStart(config, a),
+                    onComplete: response => updateAddress(a, response),
                     countries: _.get(props, 'countries'),
-                    action: a.customer_address_id ? props.updateUrl : props.createUrl
+                    action: a.update_url ? a.update_url : props.createUrl
                 }),
                 !a.editing && React.createElement(
                     "a",
                     {
                         href: "#",
                         onClick: e => {
-                            e.preventDefault();updateAddress(i, _extends({}, a, { editing: true }));
+                            e.preventDefault();
+                            setAddresses(addresses.map(_a => {
+                                if (parseInt(_a.customer_address_id) === parseInt(a.customer_address_id)) return _extends({}, _a, { editing: true });else return _a;
+                            }));
                         } },
                     React.createElement("span", { "uk-icon": "icon: file-edit; ratio: 0.8" })
                 ),
-                a.customer_address_id && React.createElement(
+                React.createElement(
                     "a",
                     { href: "#", onClick: e => {
-                            e.preventDefault();deleteAddress(a.customer_address_id);
+                            e.preventDefault();deleteAddress(a);
                         } },
                     React.createElement("span", { "uk-icon": "icon: trash; ratio: 0.8" })
                 )

@@ -26,8 +26,6 @@ class LogoutMiddleware extends MiddlewareAbstract
         }
 
         $request->getCustomer()->logOut();
-        $this->getContainer()->get(Cart::class)->destroy();
-        $request->getSession()->remove('cart_id');
         $response->redirect($this->getContainer()->get(Router::class)->generateUrl('homepage'));
 
         return $delegate;

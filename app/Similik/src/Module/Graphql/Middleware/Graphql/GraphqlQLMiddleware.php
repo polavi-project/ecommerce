@@ -56,8 +56,6 @@ class GraphqlQLMiddleware extends MiddlewareAbstract
             )->setErrorFormatter($myErrorFormatter)->setErrorsHandler($myErrorHandler);
 
             $this->getContainer()->set(ExecutionResult::class, $delegate);
-            // TODO: Make this better
-            $this->getContainer()->get(ExecutionPromise::class)->wait();
 
             $response->addData('payload', array_merge($delegate->toArray(false), ['success'=> true, 'message'=> '']));
         } catch (\Exception $error) {
