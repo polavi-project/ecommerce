@@ -1,9 +1,8 @@
 import A from "../../../../../../../js/production/a.js";
+import {Fetch} from "../../../../../../../js/production/fetch.js";
 
 function OrderInfo(props) {
-    let date = new Date(props.created_at);
     return <div className={"uk-width-1-1"}>
-        <div><strong>#{props.order_number}</strong> <i>{date.toDateString()}</i></div>
         <div>
             <span>
                 {
@@ -24,9 +23,12 @@ function OrderInfo(props) {
 }
 
 function Summary({tax_amount, discount_amount, coupon, grand_total}) {
-    const _tax_amount = new Intl.NumberFormat(window.language, { style: 'currency', currency: window.currency }).format(tax_amount);
-    const _discount_amount = new Intl.NumberFormat(window.language, { style: 'currency', currency: window.currency }).format(discount_amount);
-    const _grand_total = new Intl.NumberFormat(window.language, { style: 'currency', currency: window.currency }).format(grand_total);
+    const currency = ReactRedux.useSelector(state => _.get(state, 'appState.currency', 'USD'));
+    const language = ReactRedux.useSelector(state => _.get(state, 'appState.language[0]', 'en'));
+
+    const _tax_amount = new Intl.NumberFormat(language, { style: 'currency', currency: currency }).format(tax_amount);
+    const _discount_amount = new Intl.NumberFormat(language, { style: 'currency', currency: currency }).format(discount_amount);
+    const _grand_total = new Intl.NumberFormat(language, { style: 'currency', currency: currency }).format(grand_total);
     return <div className={"uk-width-1-3"}>
         <div className="uk-overflow-auto">
             <div><strong>Summary</strong></div>
@@ -60,8 +62,11 @@ function Items({items}) {
         </thead>
         <tbody>
         { items.map((i, k) => {
-            const _price = new Intl.NumberFormat(window.language, { style: 'currency', currency: window.currency }).format(i.product_price);
-            const _finalPrice = new Intl.NumberFormat(window.language, { style: 'currency', currency: window.currency }).format(i.final_price);
+            const currency = ReactRedux.useSelector(state => _.get(state, 'appState.currency', 'USD'));
+            const language = ReactRedux.useSelector(state => _.get(state, 'appState.language[0]', 'en'));
+            const _price = new Intl.NumberFormat(language, { style: 'currency', currency: currency }).format(i.product_price);
+            const _finalPrice = new Intl.NumberFormat(language, { style: 'currency', currency: currency }).format(i.final_price);
+            const _total = new Intl.NumberFormat(language, { style: 'currency', currency: currency }).format(i.total);
             return <tr key={k}>
                 <td>
                     <div className="uk-child-width-expand@s uk-grid uk-grid-small">
@@ -70,18 +75,19 @@ function Items({items}) {
                         </div>
                         <div className="uk-width-expand@m">
                             <A url={i.product_url}><span>{i.product_name}</span></A>
-                            <div><span>{_price}</span></div>
+                            {parseFloat(i.final_price) < parseFloat(i.product_price) && <div><del>{_price}</del></div>}
                             <div><span>{_finalPrice}</span></div>
                         </div>
                     </div>
                 </td>
                 <td><span>{i.qty}</span></td>
-                <td><span>{i.total}</span></td>
+                <td><span>{_total}</span></td>
             </tr>
         })}
         </tbody>
     </table>
 }
+
 function Order({index, order}) {
     let date = new Date(order.created_at);
     return <li className={index === 0 ? "uk-open" : ""}>
@@ -94,13 +100,59 @@ function Order({index, order}) {
     </li>
 }
 
-export default function Orders({orders}) {
-    return <div className="uk-width-1-1@m">
-        <h2>Orders</h2>
-        <ul uk-accordion="1">
+function Loader() {
+    return <ul uk-accordion="1">
+        <li>
+            <div className="ph-item">
+                <div>
+                    <div className="ph-row">
+                        <div className="ph-col-12"></div>
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li>
+            <div className="ph-item">
+                <div>
+                    <div className="ph-row">
+                        <div className="ph-col-12"></div>
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li>
+            <div className="ph-item">
+                <div>
+                    <div className="ph-row">
+                        <div className="ph-col-12"></div>
+                    </div>
+                </div>
+            </div>
+        </li>
+    </ul>
+
+}
+
+export default function Orders({query}) {
+    const [loading, setLoading] = React.useState(true);
+    const [orders, setOrders] = React.useState([]);
+    const api = ReactRedux.useSelector(state => _.get(state, 'appState.graphqlApi'));
+    React.useEffect(function() {
+        Fetch(api, false, 'POST', {query: query}, null, (response)=> {
+            if(_.get(response, 'payload.success') === true) {
+                setOrders(_.get(response, 'payload.data.customer.orders'));
+                setLoading(false);
+            }
+        })
+    }, []);
+    return <div className="uk-margin-medium-top my-orders">
+        <h2>Your orders</h2>
+        {loading === true && <Loader/>}
+        {loading === false && <ul uk-accordion="1">
             {orders.map((o,i) => {
                 return <Order index={i} key={i} order={o}/>;
             })}
-        </ul>
+        </ul>}
+        {(loading === false && orders.length === 0) && <p>You have no order to show</p>}
     </div>
 }
