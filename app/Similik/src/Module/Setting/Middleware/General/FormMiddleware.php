@@ -23,6 +23,7 @@ class FormMiddleware extends MiddlewareAbstract
     {
         if($request->getMethod() == 'POST')
             return $delegate;
+
         $this->getContainer()->get(Helmet::class)->setTitle('General setting');
         $stm = _mysql()
             ->executeQuery("SELECT * FROM `setting`

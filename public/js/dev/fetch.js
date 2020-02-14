@@ -84,6 +84,12 @@ const Fetch = (url, pushState = false, method = "GET", data = {}, onStart = null
                         if(pushState === true) {
                             url.searchParams.delete('ajax');
                             history.pushState(null, "", url);
+                            // Google analytics
+                            if(window.gtag !== undefined) {
+                                window.gtag('config', window.google_analytics_code, {
+                                    page_path: url.pathname,
+                                });
+                            }
                         }
                         PubSub.publishSync(REQUEST_END, {response});
                         store.dispatch({'type': REQUEST_END, 'payload': {data: response}});

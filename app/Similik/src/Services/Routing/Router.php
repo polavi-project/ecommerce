@@ -31,11 +31,11 @@ class Router
         $this->parser = $parser;
     }
 
-    public function addAdminRoute(string $name, $method, string $pattern, array $middleware)
+    public function addAdminRoute(string $id, $method, string $pattern, array $middleware)
     {
-        if(isset($this->adminRoutes[$name]))
-            throw new \Error("{$name} route already existed");
-        $this->adminRoutes[$name] = [
+        if(isset($this->adminRoutes[$id]))
+            throw new \Error("{$id} route already existed");
+        $this->adminRoutes[$id] = [
             $method,
             $pattern == '/'? '/' . ADMIN_PATH : '/' . ADMIN_PATH . $pattern,
             $middleware
@@ -43,11 +43,11 @@ class Router
         return $this;
     }
 
-    public function addSiteRoute(string $name, $method, string $pattern, array $middleware)
+    public function addSiteRoute(string $id, $method, string $pattern, array $middleware)
     {
-        if(isset($this->siteRoutes[$name]))
-            throw new \Error("{$name} route already existed");
-        $this->siteRoutes[$name] = [
+        if(isset($this->siteRoutes[$id]))
+            throw new \Error("{$id} route already existed");
+        $this->siteRoutes[$id] = [
             $method,
             $pattern,
             $middleware
@@ -102,14 +102,14 @@ class Router
         }
     }
 
-    public function generateUrl(string $routeName, array $params = [], array $query = null) : string
+    public function generateUrl(string $routeId, array $params = [], array $query = null) : string
     {
-        $route = $this->siteRoutes[$routeName] ?? $this->adminRoutes[$routeName] ?? null;
+        $route = $this->siteRoutes[$routeId] ?? $this->adminRoutes[$routeId] ?? null;
 
         if($route == null)
             throw new \RuntimeException(sprintf(
                 'Cannot generate URI for route "%s"; route not found',
-                $routeName
+                $routeId
             ));
 
         $routes = $this->parser->parse($route[1]);

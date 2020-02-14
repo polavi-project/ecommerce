@@ -28,7 +28,6 @@ use Similik\Middleware\ConfigMiddleware;
 use Similik\Middleware\SessionMiddleware;
 use Similik\Middleware\RoutingMiddleware;
 use Similik\Middleware\AuthenticateMiddleware;
-use Similik\Middleware\InitHtmlMiddleware;
 use Similik\Middleware\HandlerMiddleware;
 use Similik\Middleware\AdminLayoutMiddleware;
 use Similik\Middleware\FrontLayoutMiddleware;
@@ -130,7 +129,8 @@ class App
             'User',
             'Setting',
             'SendGrid',
-            'Graphql'
+            'Graphql',
+            'GoogleAnalytics'
         ];
         if(!file_exists(CONFIG_PATH . DS . 'config.php'))
             $coreModules[] = 'Install';
