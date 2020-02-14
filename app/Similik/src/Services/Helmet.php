@@ -19,6 +19,8 @@ class Helmet
 
     public $scripts = [];
 
+    protected $htmlBeforeCloseHead = [];
+
     /**
      * @return mixed
      */
@@ -133,5 +135,20 @@ class Helmet
             'links'=> $this->getLinks(),
             'title'=> $this->getTitle()
         ];
+    }
+
+    public function addHtmlBeforeCloseHead(string $html)
+    {
+        $this->htmlBeforeCloseHead[] = $html;
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getHtmlBeforeCloseHead(): array
+    {
+        return $this->htmlBeforeCloseHead;
     }
 }

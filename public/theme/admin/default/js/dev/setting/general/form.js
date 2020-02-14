@@ -8,7 +8,6 @@ import {LanguageOptions} from "../../../../../../../js/production/locale/languag
 import {CurrencyOptions} from "../../../../../../../js/production/locale/currency_option.js";
 import {TimezoneOptions} from "../../../../../../../js/production/locale/timezone_option.js";
 import {Fetch} from "../../../../../../../js/production/fetch.js";
-import TextArea from "../../../../../../../js/production/form/fields/textarea.js";
 
 function Logo({value = null}) {
     const uploadApi = ReactRedux.useSelector(state => _.get(state, 'appState.graphqlApi'));
@@ -188,16 +187,6 @@ function Ecommerce(props) {
                         },
                         sort_order: 30,
                         id: "general_timezone"
-                    },
-                    {
-                        component: Text,
-                        props : {
-                            name: "general_google_tag",
-                            label: "Google tag manage ID",
-                            value: _.get(props, 'general_google_tag')
-                        },
-                        sort_order: 35,
-                        id: "general_google_tag"
                     }
                 ]}
             />
@@ -291,7 +280,7 @@ export default function GeneralSettingForms(props) {
                         ...props.data
                     },
                     sort_order: 30,
-                    id: "general_setting_web"
+                    id: "general_setting_form_web"
                 }
             ]}/>
         </Form>

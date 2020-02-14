@@ -102,14 +102,14 @@ class Router
         }
     }
 
-    public function generateUrl(string $routeName, array $params = [], array $query = null) : string
+    public function generateUrl(string $routeId, array $params = [], array $query = null) : string
     {
-        $route = $this->siteRoutes[$routeName] ?? $this->adminRoutes[$routeName] ?? null;
+        $route = $this->siteRoutes[$routeId] ?? $this->adminRoutes[$routeId] ?? null;
 
         if($route == null)
             throw new \RuntimeException(sprintf(
                 'Cannot generate URI for route "%s"; route not found',
-                $routeName
+                $routeId
             ));
 
         $routes = $this->parser->parse($route[1]);

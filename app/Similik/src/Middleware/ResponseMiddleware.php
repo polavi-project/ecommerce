@@ -90,11 +90,16 @@ class ResponseMiddleware extends MiddlewareAbstract
         $data = $response->getData();
         unset($data['isNewPage']);
         $payload = json_encode($data, 15);
+
+        $htmlBeforeHead = $this->getContainer()->get(Helmet::class)->getHtmlBeforeCloseHead();
+
         ob_start();
         echo "<!DOCTYPE html><html lang='{$language}'>";
         echo "<head>";
         echo $this->getContainer()->get(Helmet::class)->render();
         echo "<script>var pageData = $payload</script>";
+        foreach ($htmlBeforeHead as $html)
+            echo $html;
         echo "</head>";
         echo "<body>";
         echo "<div id=\"app\"></div>";
