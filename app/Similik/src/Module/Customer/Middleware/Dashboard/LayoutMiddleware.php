@@ -10,6 +10,7 @@ namespace Similik\Module\Customer\Middleware\Dashboard;
 
 use function Similik\get_js_file_url;
 use Similik\Middleware\MiddlewareAbstract;
+use Similik\Services\Helmet;
 use Similik\Services\Http\Request;
 use Similik\Services\Http\Response;
 use Similik\Services\Routing\Router;
@@ -24,6 +25,7 @@ class LayoutMiddleware extends MiddlewareAbstract
             return $redirect->send();
         }
 
+        $this->getContainer()->get(Helmet::class)->setTitle("Account dashboard");
         $response->addWidget(
             'customer_dashboard_layout',
             'content',
