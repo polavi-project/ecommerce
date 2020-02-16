@@ -26,7 +26,6 @@ use Similik\Module\Catalog\Services\Type\CategoryCollectionFilterType;
 use Similik\Module\Catalog\Services\Type\CategoryCollectionType;
 use Similik\Module\Catalog\Services\Type\ProductCollectionFilterType;
 use Similik\Module\Catalog\Services\Type\ProductCollectionType;
-use Similik\Module\Discount\Services\CouponCollection;
 use Similik\Module\Catalog\Services\DataLoader;
 use Similik\Module\Catalog\Services\Type\AttributeGroupType;
 use Similik\Module\Catalog\Services\Type\CategoryType;
@@ -34,9 +33,6 @@ use Similik\Module\Catalog\Services\Type\ProductAttributeIndex;
 use Similik\Module\Catalog\Services\Type\ProductType;
 use Similik\Module\Checkout\Services\Cart\Cart;
 use Similik\Module\Checkout\Services\Type\CartType;
-use Similik\Module\Discount\Services\Type\CouponCollectionFilterType;
-use Similik\Module\Discount\Services\Type\CouponCollectionType;
-use Similik\Module\Discount\Services\Type\CouponType;
 use Similik\Module\Order\Services\OrderCollection;
 use Similik\Module\Order\Services\Type\OrderCollectionFilterType;
 use Similik\Module\Order\Services\Type\OrderCollectionType;
@@ -254,34 +250,6 @@ class QueryType extends ObjectType
                             return [];
                         else
                             return _mysql()->getTable('tax_class')->fetchAllAssoc();
-                    }
-                ],
-                'coupon' => [
-                    'type' => $container->get(CouponType::class),
-                    'description' => 'Return a coupon',
-                    'args' => [
-                        'id' => Type::nonNull(Type::id())
-                    ],
-                    'resolve' => function($value, $args, Container $container, ResolveInfo $info) {
-                        if($container->get(Request::class)->isAdmin() == false)
-                            return false;
-
-                        return _mysql()->getTable('coupon')->load($args['id']);
-                    }
-                ],
-                'couponCollection' => [
-                    'type' => $container->get(CouponCollectionType::class),
-                    'description' => "Return list of coupon and total count",
-                    'args' => [
-                        'filter' =>  [
-                            'type' => $container->get(CouponCollectionFilterType::class)
-                        ]
-                    ],
-                    'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
-                        if($container->get(Request::class)->isAdmin() == false)
-                            return [];
-                        else
-                            return $container->get(CouponCollection::class)->getData($rootValue, $args, $container, $info);
                     }
                 ]
             ];
