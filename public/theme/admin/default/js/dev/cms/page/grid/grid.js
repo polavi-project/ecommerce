@@ -1,10 +1,8 @@
 import Area from "../../../../../../../../js/production/area.js";
 import A from "../../../../../../../../js/production/a.js";
+import {Fetch} from "../../../../../../../../js/production/fetch.js";
 
 function IdColumnHeader({areaProps}) {
-    const filterFrom = React.useRef(null);
-    const filterTo = React.useRef(null);
-
     React.useEffect(() => {
         areaProps.addField("cms_page_id");
     }, []);
@@ -20,23 +18,36 @@ function IdColumnRow({row}) {
     return <td><span>{row.cms_page_id}</span></td>;
 }
 
-function NameColumnHeader({areaProps}) {
+function NameColumnHeader({filters, removeFilter, updateFilter, areaProps}) {
     const filterInput = React.useRef(null);
 
+    const onKeyPress = (e) => {
+        if(e.key === 'Enter') {
+            if(e.target.value == "")
+                removeFilter("name");
+            else
+                updateFilter("name", "LIKE", `%${e.target.value}%`)
+        }
+    };
+
     React.useEffect(() => {
-        areaProps.addField('name');
+        areaProps.addField("name");
     }, []);
 
-    return <th>
-        <div className="header name-header">
-            <div className={"title"}><span>Page name</span></div>
+    React.useEffect(() => {
+        filterInput.current.value = filters.findIndex((e)=> e.key === 'name') === -1 ? "" : filterInput.current.value;
+    });
+
+    return <th className={"column"}>
+        <div className="header coupon-header">
+            <div className={"title"}><span>Name</span></div>
             <div className={"filter"}>
                 <input
-                    className="uk-input uk-form-small uk-form-width-medium"
                     type={"text"}
                     ref={filterInput}
-                    onKeyPress={(e) => { if(e.key === 'Enter') areaProps.addFilter("name", "LIKE", `%${e.target.value}%`);}}
-                    placeholder={"Page name"}
+                    onKeyPress={(e) => onKeyPress(e)}
+                    placeholder={"Name"}
+                    className="uk-input uk-form-small uk-form-width-small"
                 />
             </div>
         </div>
@@ -48,14 +59,19 @@ function NameColumnRow({row}) {
 }
 
 function ActionColumnHeader({areaProps}) {
-
     React.useEffect(() => {
+        areaProps.addField('cms_page_id');
         areaProps.addField('editUrl');
     }, []);
 
-    return <th>
+    const onClick = () => {
+        areaProps.cleanFilter();
+    };
+
+    return <th className={"column"}>
         <div className="header">
             <div className={"title"}><span>Action</span></div>
+            <a onClick={()=>onClick()}>Clean filter</a>
         </div>
     </th>
 }
@@ -64,21 +80,31 @@ function ActionColumnRow({row}) {
     return <td><A url={_.get(row, 'editUrl' , '')} text={"Edit"}/></td>;
 }
 
-function StatusColumnHeader({areaProps})
+function StatusColumnHeader({areaProps, filters, updateFilter})
 {
     const filterInput = React.useRef(null);
+
+    const onChange = (e) => {
+        updateFilter("status", "=", `${e.target.value}`)
+    };
 
     React.useEffect(() => {
         areaProps.addField("status");
     }, []);
 
-    return <th>
+    React.useEffect(() => {
+        filterInput.current.value = filters.findIndex((e)=> e.key === 'status') === -1 ? null : filterInput.current.value;
+    });
+
+    return <th className={"column"}>
         <div className="header status-header">
             <div className={"title"}><span>Status</span></div>
             <div className={"filter"}>
-                <select className="uk-select uk-form-small uk-form-width-small" ref={filterInput} onChange={(e)=> {
-                    areaProps.addFilter("status", "Equal", e.target.value);
-                }}>
+                <select
+                    ref={filterInput}
+                    onChange={(e)=> onChange(e)}
+                    className="uk-select uk-form-small uk-form-width-small"
+                >
                     <option value={1}>Enabled</option>
                     <option value={0}>Disabled</option>
                 </select>
@@ -94,38 +120,11 @@ function StatusColumnRow({row}) {
         return <td><span className="uk-label uk-label-danger">Disabled</span></td>;
 }
 
-export default function CmsPageGrid({apiUrl})
+export default function CmsPageGrid({apiUrl, areaProps})
 {
     const [pages, setPages] = React.useState([]);
-    const [filters, setFilters] = React.useState([]);
     const [fields, setFields] = React.useState([]);
 
-    const addFilter = (key, operator, value) => {
-        let flag = 0;
-        filters.forEach((f, i) => {
-            if(f.key === key && !value)
-                flag = 1; // Remove
-            if(f.key === key && value)
-                flag = 2; // Update
-        });
-        if(flag === 0)
-            setFilters(prevFilters => prevFilters.concat({key: key, operator: operator, value: value}));
-        else if(flag === 1) {
-            const setFilters = prevFilters.filter((f, index) => f.key !== key);
-            setFilters(newFilters);
-        } else
-            setFilters(prevFilters => prevFilters.map((f, i) => {
-                if(f.key === key) {
-                    f.operator = operator;
-                    f.value = value;
-                }
-                return f;
-            }));
-    };
-
-    const cleanFilter = () => {
-        setFilters([]);
-    };
     const addField = (field) => {
         setFields(prevFields => prevFields.concat(field));
     };
@@ -133,28 +132,25 @@ export default function CmsPageGrid({apiUrl})
     const applyFilter = () => {
         let formData = new FormData();
         formData.append('query', buildQuery());
-        axios({
-            method: 'post',
-            url: apiUrl,
-            headers: { 'content-type': 'multipart/form-data' },
-            data: formData
-        }).then(function (response) {
-            if(response.headers['content-type'] !== "application/json")
-                throw new Error('Something wrong, please try again');
-            if(_.get(response, 'data.payload.data.pageCollection.pages')) {
-                setPages(_.get(response, 'data.payload.data.pageCollection.pages'));
+
+        Fetch(
+            apiUrl,
+            false,
+            'POST',
+            formData,
+            null,
+            (response) => {
+                if(_.get(response, 'payload.data.pageCollection.pages')) {
+                    setPages(_.get(response, 'payload.data.pageCollection.pages'));
+                }
             }
-        }).catch(function (error) {
-        }).finally(function() {
-            // e.target.value = null;
-            // setUploading(false);
-        });
+        );
     };
 
     const buildQuery = () => {
         let filterStr = "";
-        filters.forEach((f,i) => {
-            filterStr +=`${f.key} : {operator : ${f.operator} value: "${f.value}"} `;
+        areaProps.filters.forEach((f,i) => {
+            filterStr +=`${f.key} : {operator : "${f.operator}" value: "${f.value}"} `;
         });
         filterStr = filterStr.trim();
         if(filterStr)
@@ -172,7 +168,7 @@ export default function CmsPageGrid({apiUrl})
         if(fields.length === 0)
             return;
         applyFilter();
-    }, [fields, filters]);
+    }, [fields, areaProps.filters]);
 
     return <div className={"uk-overflow-auto"}>
         <table className="uk-table uk-table-small uk-table-divider">
@@ -180,33 +176,36 @@ export default function CmsPageGrid({apiUrl})
             <Area
                 className={""}
                 id={"page_grid_header"}
-                addFilter={addFilter}
-                cleanFilter={cleanFilter}
+                filters={areaProps.filters}
+                addFilter={areaProps.addFilter}
+                updateFilter={areaProps.updateFilter}
+                removeFilter={areaProps.removeFilter}
+                cleanFilter={areaProps.cleanFilter}
                 addField={addField}
                 applyFilter={applyFilter}
                 reactcomponent={"tr"}
                 coreWidgets={[
                     {
                         component: IdColumnHeader,
-                        props : {addFilter, cleanFilter, addField, applyFilter},
+                        props : {...areaProps, addField, applyFilter},
                         sort_order: 10,
                         id: "id"
                     },
                     {
                         component: NameColumnHeader,
-                        props : {},
+                        props : {...areaProps, addField, applyFilter},
                         sort_order: 20,
                         id: "name"
                     },
                     {
                         component: StatusColumnHeader,
-                        props : {},
+                        props : {...areaProps, addField, applyFilter},
                         sort_order: 30,
                         id: "status"
                     },
                     {
                         component: ActionColumnHeader,
-                        props : {},
+                        props : {...areaProps, addField, applyFilter},
                         sort_order: 40,
                         id: "action"
                     }
@@ -243,7 +242,7 @@ export default function CmsPageGrid({apiUrl})
                         {
                             component: ActionColumnRow,
                             props : {row: p},
-                            sort_order: 50,
+                            sort_order: 40,
                             id: "action"
                         }
                     ]}

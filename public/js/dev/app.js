@@ -3,6 +3,7 @@ import LoadingBar from "./loading_bar.js";
 import {store} from "./redux_store.js"
 import {Head} from "./head.js";
 import {REQUEST_END, INITIAL_PAGE_READY} from "./event-types.js"
+import {Fetch} from "./fetch.js";
 
 console.log(store);
 store.subscribe(()=> {
@@ -77,3 +78,7 @@ const App = ()=> {
 const Provider = ReactRedux.Provider;
 
 ReactDOM.render(<Provider store={store}><App /></Provider>, window.document.getElementById("app"));
+
+window.onpopstate = function(event) {
+    Fetch(document.location, false);
+};

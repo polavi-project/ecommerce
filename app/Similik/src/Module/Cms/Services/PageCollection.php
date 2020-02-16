@@ -37,6 +37,8 @@ class PageCollection extends CollectionBuilder
         $this->init(
             $collection
         );
+        if($this->container->get(Request::class)->isAdmin() == false)
+            $this->collection->andWhere('cms_page.status', '=', 1);
 
         $this->defaultFilters();
     }

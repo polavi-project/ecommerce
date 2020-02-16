@@ -3,6 +3,7 @@ import LoadingBar from "./loading_bar.js";
 import { store } from "./redux_store.js";
 import { Head } from "./head.js";
 import { REQUEST_END, INITIAL_PAGE_READY } from "./event-types.js";
+import { Fetch } from "./fetch.js";
 
 console.log(store);
 store.subscribe(() => {
@@ -68,3 +69,7 @@ ReactDOM.render(React.createElement(
     { store: store },
     React.createElement(App, null)
 ), window.document.getElementById("app"));
+
+window.onpopstate = function (event) {
+    Fetch(document.location, false);
+};
