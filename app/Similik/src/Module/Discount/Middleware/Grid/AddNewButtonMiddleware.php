@@ -25,7 +25,7 @@ class AddNewButtonMiddleware extends MiddlewareAbstract
     {
         $response->addWidget(
             'coupon-grid-add-new',
-            'content',
+            'coupon_grid_container',
             5,
             get_js_file_url("production/discount/grid/add_new_button.js", true),
             [

@@ -32,44 +32,29 @@ class CouponCollection extends CollectionBuilder
 
     protected function defaultFilters()
     {
-        $isAdmin = $this->container->get(Request::class)->isAdmin();
-        $this->addFilter('description', function($args) {
-            $this->collection->andWhere('coupon.description', $args['operator'], $args['value']);
+        $this->addFilter('coupon', function($args) {
+            $this->collection->andWhere('coupon.coupon', $args['operator'], $args['value']);
         });
 
-        $this->addFilter('discount_amount', function($args) use ($isAdmin) {
-            $this->collection->andWhere('coupon.discount_amount', $args['operator'], $args['value']);
+        $this->addFilter('description', function($args) {
+            $this->collection->andWhere('coupon.description', $args['operator'], $args['value']);
         });
 
         $this->addFilter('free_shipping', function($args) {
             $this->collection->andWhere('coupon.free_shipping', $args['operator'], $args['value']);
         });
 
-        $this->addFilter('status', function($args) use ($isAdmin) {
-            if($isAdmin == false)
-                return;
-            $this->collection->andWhere('product.status', $args['operator'], (int)$args['value']);
+        $this->addFilter('status', function($args) {
+            $this->collection->andWhere('coupon.status', $args['operator'], (int)$args['value']);
         });
 
-        $this->addFilter('discount_type', function($args) use ($isAdmin) {
-            $this->collection->andWhere('coupon.discount_type', $args['operator'], (int)$args['value']);
-        });
-
-        $this->addFilter('coupon', function($args) use ($isAdmin) {
-            $this->collection->andWhere('coupon.coupon', $args['operator'], (int)$args['value']);
-        });
-
-        $this->addFilter('used_time', function($args) use ($isAdmin) {
-            $this->collection->andWhere('coupon.used_time', $args['operator'], (int)$args['value']);
-        });
-
-        $this->addFilter('start_date', function($args) use ($isAdmin) {
-            $this->collection->andWhere('coupon.start_date', $args['operator'], (int)$args['value']);
-        });
-
-        $this->addFilter('end_date', function($args) use ($isAdmin) {
-            $this->collection->andWhere('coupon.end_date', $args['operator'], (int)$args['value']);
-        });
+//        $this->addFilter('start_date', function($args) use ($isAdmin) {
+//            $this->collection->andWhere('coupon.start_date', $args['operator'], (int)$args['value']);
+//        });
+//
+//        $this->addFilter('end_date', function($args) use ($isAdmin) {
+//            $this->collection->andWhere('coupon.end_date', $args['operator'], (int)$args['value']);
+//        });
     }
 
     public function getData($rootValue, $args, Container $container, ResolveInfo $info)

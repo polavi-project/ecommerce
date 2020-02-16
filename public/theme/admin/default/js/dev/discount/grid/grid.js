@@ -1,10 +1,8 @@
 import Area from "../../../../../../../js/production/area.js";
 import A from "../../../../../../../js/production/a.js";
+import {Fetch} from "../../../../../../../js/production/fetch.js";
 
 function IdColumnHeader({areaProps}) {
-    const filterFrom = React.useRef(null);
-    const filterTo = React.useRef(null);
-
     React.useEffect(() => {
         areaProps.addField("coupon_id");
     }, []);
@@ -12,26 +10,6 @@ function IdColumnHeader({areaProps}) {
     return <th>
         <div className="header id-header">
             <div className={"title"}><span>ID</span></div>
-            <div className={"filter"}>
-                <div>
-                    <input
-                        className="uk-input uk-form-small uk-form-width-small"
-                        type={"text"}
-                        ref={filterFrom}
-                        onKeyPress={(e) => { if(e.key === 'Enter') areaProps.addFilter("id", "BETWEEN", `${e.target.value} AND ${filterTo.current.value}`);}}
-                        placeholder={"From"}
-                    />
-                </div>
-                <div>
-                    <input
-                        className="uk-input uk-form-small uk-form-width-small"
-                        type={"text"}
-                        ref={filterTo}
-                        onKeyPress={(e) => { if(e.key === 'Enter') areaProps.addFilter("id", "BETWEEN", `${filterFrom.current.value} AND ${e.target.value}`);}}
-                        placeholder={"To"}
-                    />
-                </div>
-            </div>
         </div>
     </th>
 }
@@ -39,23 +17,77 @@ function IdColumnHeader({areaProps}) {
 function IdColumnRow({row}) {
     return <td><span>{row.coupon_id}</span></td>;
 }
-function DescriptionColumnHeader({areaProps}) {
+
+function CouponColumnHeader({filters, removeFilter, updateFilter, areaProps}) {
     const filterInput = React.useRef(null);
 
+    const onKeyPress = (e) => {
+        if(e.key === 'Enter') {
+            if(e.target.value == "")
+                removeFilter("coupon");
+            else
+                updateFilter("coupon", "LIKE", `%${e.target.value}%`)
+        }
+    };
+
     React.useEffect(() => {
-        areaProps.addField('description');
+        areaProps.addField("coupon");
     }, []);
 
-    return <th>
-        <div className="header name-header">
+    React.useEffect(() => {
+        filterInput.current.value = filters.findIndex((e)=> e.key === 'coupon') === -1 ? "" : filterInput.current.value;
+    });
+
+    return <th className={"column"}>
+        <div className="header coupon-header">
+            <div className={"title"}><span>Coupon</span></div>
+            <div className={"filter"}>
+                <input
+                    type={"text"}
+                    ref={filterInput}
+                    onKeyPress={(e) => onKeyPress(e)}
+                    placeholder={"Coupon"}
+                    className="uk-input uk-form-small uk-form-width-small"
+                />
+            </div>
+        </div>
+    </th>
+}
+
+function CouponColumnRow({row}) {
+    return <td>{row.coupon}</td>
+}
+
+function DescriptionColumnHeader({filters, removeFilter, updateFilter, areaProps}) {
+    const filterInput = React.useRef(null);
+
+    const onKeyPress = (e) => {
+        if(e.key === 'Enter') {
+            if(e.target.value == "")
+                removeFilter("description");
+            else
+                updateFilter("description", "LIKE", `%${e.target.value}%`)
+        }
+    };
+
+    React.useEffect(() => {
+        areaProps.addField("description");
+    }, []);
+
+    React.useEffect(() => {
+        filterInput.current.value = filters.findIndex((e)=> e.key === 'description') === -1 ? "" : filterInput.current.value;
+    });
+
+    return <th className={"column"}>
+        <div className="header coupon-header">
             <div className={"title"}><span>Description</span></div>
             <div className={"filter"}>
                 <input
-                    className="uk-input uk-form-small uk-form-width-medium"
                     type={"text"}
                     ref={filterInput}
-                    onKeyPress={(e) => { if(e.key === 'Enter') areaProps.addFilter("description", "LIKE", `%${e.target.value}%`);}}
+                    onKeyPress={(e) => onKeyPress(e)}
                     placeholder={"Description"}
+                    className="uk-input uk-form-small uk-form-width-small"
                 />
             </div>
         </div>
@@ -68,34 +100,53 @@ function DescriptionColumnRow({row}) {
 
 function ActionColumnHeader({areaProps}) {
     React.useEffect(() => {
+        areaProps.addField('coupon_id');
         areaProps.addField('editUrl');
     }, []);
-    return <th>
+
+    const onClick = () => {
+        areaProps.cleanFilter();
+    };
+
+    return <th className={"column"}>
         <div className="header">
             <div className={"title"}><span>Action</span></div>
+            <a onClick={()=>onClick()}>Clean filter</a>
         </div>
     </th>
 }
 
 function ActionColumnRow({row}) {
-    return <td><A url={_.get(row, 'editUrl' , '')} text={"Edit"}/></td>;
+    return <td>
+        <div><A url={_.get(row, 'editUrl' , '')} text={"Edit"}/></div>
+    </td>
 }
 
-function StatusColumnHeader({areaProps})
+function StatusColumnHeader({areaProps, filters, updateFilter})
 {
     const filterInput = React.useRef(null);
+
+    const onChange = (e) => {
+        updateFilter("status", "=", `${e.target.value}`)
+    };
 
     React.useEffect(() => {
         areaProps.addField("status");
     }, []);
 
-    return <th>
+    React.useEffect(() => {
+        filterInput.current.value = filters.findIndex((e)=> e.key === 'status') === -1 ? null : filterInput.current.value;
+    });
+
+    return <th className={"column"}>
         <div className="header status-header">
             <div className={"title"}><span>Status</span></div>
             <div className={"filter"}>
-                <select className="uk-select uk-form-small uk-form-width-small" ref={filterInput} onChange={(e)=> {
-                    areaProps.addFilter("status", "Equal", e.target.value);
-                }}>
+                <select
+                    ref={filterInput}
+                    onChange={(e)=> onChange(e)}
+                    className="uk-select uk-form-small uk-form-width-small"
+                >
                     <option value={1}>Enabled</option>
                     <option value={0}>Disabled</option>
                 </select>
@@ -109,41 +160,53 @@ function StatusColumnRow({row}) {
         return <td><span className="uk-label uk-label-success">Enable</span></td>;
     else
         return <td><span className="uk-label uk-label-danger">Disabled</span></td>;
-
 }
 
-export default function CouponGrid({apiUrl})
+function FreeShippingColumnHeader({areaProps, filters, updateFilter})
+{
+    const filterInput = React.useRef(null);
+
+    const onChange = (e) => {
+        updateFilter("free_shipping", "=", `${e.target.value}`)
+    };
+
+    React.useEffect(() => {
+        areaProps.addField("free_shipping");
+    }, []);
+
+    React.useEffect(() => {
+        filterInput.current.value = filters.findIndex((e)=> e.key === 'free_shipping') === -1 ? null : filterInput.current.value;
+    });
+
+    return <th className={"column"}>
+        <div className="header status-header">
+            <div className={"title"}><span>Free shipping?</span></div>
+            <div className={"filter"}>
+                <select
+                    ref={filterInput}
+                    onChange={(e)=> onChange(e)}
+                    className="uk-select uk-form-small uk-form-width-small"
+                >
+                    <option value={1}>Yes</option>
+                    <option value={0}>No</option>
+                </select>
+            </div>
+        </div>
+    </th>
+}
+
+function FreeShippingColumnRow({row}) {
+    if(parseInt(_.get(row, "free_shipping")) === 1)
+        return <td><span className="uk-label uk-label-success">Yes</span></td>;
+    else
+        return <td><span className="uk-label uk-label-danger">No</span></td>;
+}
+
+export default function CouponGrid({apiUrl, areaProps})
 {
     const [coupons, setCoupons] = React.useState([]);
-    const [filters, setFilters] = React.useState([]);
     const [fields, setFields] = React.useState([]);
 
-    const addFilter = (key, operator, value) => {
-        let flag = 0;
-        filters.forEach((f, i) => {
-            if(f.key === key && !value)
-                flag = 1; // Remove
-            if(f.key === key && value)
-                flag = 2; // Update
-        });
-        if(flag === 0)
-            setFilters(prevFilters => prevFilters.concat({key: key, operator: operator, value: value}));
-        else if(flag === 1) {
-            const setFilters = prevFilters.filter((f, index) => f.key !== key);
-            setFilters(newFilters);
-        } else
-            setFilters(prevFilters => prevFilters.map((f, i) => {
-                if(f.key === key) {
-                    f.operator = operator;
-                    f.value = value;
-                }
-                return f;
-            }));
-    };
-
-    const cleanFilter = () => {
-        setFilters([]);
-    };
     const addField = (field) => {
         setFields(prevFields => prevFields.concat(field));
     };
@@ -151,28 +214,25 @@ export default function CouponGrid({apiUrl})
     const applyFilter = () => {
         let formData = new FormData();
         formData.append('query', buildQuery());
-        axios({
-            method: 'post',
-            url: apiUrl,
-            headers: { 'content-type': 'multipart/form-data' },
-            data: formData
-        }).then(function (response) {
-            if(response.headers['content-type'] !== "application/json")
-                throw new Error('Something wrong, please try again');
-            if(_.get(response, 'data.payload.data.couponCollection.coupons')) {
-                setCoupons(_.get(response, 'data.payload.data.couponCollection.coupons'));
+
+        Fetch(
+            apiUrl,
+            false,
+            'POST',
+            formData,
+            null,
+            (response) => {
+                if(_.get(response, 'payload.data.couponCollection.coupons')) {
+                    setCoupons(_.get(response, 'payload.data.couponCollection.coupons'));
+                }
             }
-        }).catch(function (error) {
-        }).finally(function() {
-            // e.target.value = null;
-            // setUploading(false);
-        });
+        );
     };
 
     const buildQuery = () => {
         let filterStr = "";
-        filters.forEach((f,i) => {
-            filterStr +=`${f.key} : {operator : ${f.operator} value: "${f.value}"} `;
+        areaProps.filters.forEach((f,i) => {
+            filterStr +=`${f.key} : {operator : "${f.operator}" value: "${f.value}"} `;
         });
         filterStr = filterStr.trim();
         if(filterStr)
@@ -190,7 +250,7 @@ export default function CouponGrid({apiUrl})
         if(fields.length === 0)
             return;
         applyFilter();
-    }, [fields, filters]);
+    }, [fields, areaProps.filters]);
 
     return <div className={"uk-overflow-auto"}>
         <table className="uk-table uk-table-small uk-table-divider">
@@ -198,34 +258,49 @@ export default function CouponGrid({apiUrl})
             <Area
                 className={""}
                 id={"coupon_grid_header"}
-                addFilter={addFilter}
-                cleanFilter={cleanFilter}
+                filters={areaProps.filters}
+                addFilter={areaProps.addFilter}
+                updateFilter={areaProps.updateFilter}
+                removeFilter={areaProps.removeFilter}
+                cleanFilter={areaProps.cleanFilter}
                 addField={addField}
                 applyFilter={applyFilter}
                 reactcomponent={"tr"}
                 coreWidgets={[
                     {
                         component: IdColumnHeader,
-                        props : {addFilter, cleanFilter, addField, applyFilter},
+                        props : {...areaProps, addField, applyFilter},
                         sort_order: 10,
                         id: "id"
                     },
                     {
-                        component: DescriptionColumnHeader,
-                        props : {},
+                        component: CouponColumnHeader,
+                        props : {...areaProps, addField, applyFilter},
                         sort_order: 20,
-                        id: "name"
+                        id: "coupon"
+                    },
+                    {
+                        component: DescriptionColumnHeader,
+                        props : {...areaProps, addField, applyFilter},
+                        sort_order: 30,
+                        id: "description"
+                    },
+                    {
+                        component: FreeShippingColumnHeader,
+                        props : {...areaProps, addField, applyFilter},
+                        sort_order: 40,
+                        id: "free_shipping"
                     },
                     {
                         component: StatusColumnHeader,
-                        props : {},
-                        sort_order: 30,
+                        props : {...areaProps, addField, applyFilter},
+                        sort_order: 50,
                         id: "status"
                     },
                     {
                         component: ActionColumnHeader,
-                        props : {},
-                        sort_order: 40,
+                        props : {...areaProps, addField, applyFilter},
+                        sort_order: 60,
                         id: "action"
                     }
                 ]}
@@ -247,21 +322,33 @@ export default function CouponGrid({apiUrl})
                             id: "id"
                         },
                         {
-                            component: DescriptionColumnRow,
+                            component: CouponColumnRow,
                             props : {row: c},
                             sort_order: 20,
+                            id: "coupon"
+                        },
+                        {
+                            component: DescriptionColumnRow,
+                            props : {row: c},
+                            sort_order: 30,
                             id: "name"
+                        },
+                        {
+                            component: FreeShippingColumnRow,
+                            props : {row: c},
+                            sort_order: 40,
+                            id: "free_shipping"
                         },
                         {
                             component: StatusColumnRow,
                             props : {row: c},
-                            sort_order: 30,
+                            sort_order: 50,
                             id: "status"
                         },
                         {
                             component: ActionColumnRow,
                             props : {row: c},
-                            sort_order: 40,
+                            sort_order: 60,
                             id: "action"
                         }
                     ]}

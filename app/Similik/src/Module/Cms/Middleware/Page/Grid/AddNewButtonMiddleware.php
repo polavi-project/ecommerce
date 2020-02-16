@@ -24,8 +24,8 @@ class AddNewButtonMiddleware extends MiddlewareAbstract
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
         $response->addWidget(
-            'page-grid-add-new',
-            'content',
+            'cms_page_add_new_button',
+            'cms_page_grid_container',
             5,
             get_js_file_url("production/cms/page/grid/add_new_button.js", true),
             [

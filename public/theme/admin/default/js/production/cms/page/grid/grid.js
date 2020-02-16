@@ -1,10 +1,10 @@
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 import Area from "../../../../../../../../js/production/area.js";
 import A from "../../../../../../../../js/production/a.js";
+import { Fetch } from "../../../../../../../../js/production/fetch.js";
 
 function IdColumnHeader({ areaProps }) {
-    const filterFrom = React.useRef(null);
-    const filterTo = React.useRef(null);
-
     React.useEffect(() => {
         areaProps.addField("cms_page_id");
     }, []);
@@ -40,39 +40,47 @@ function IdColumnRow({ row }) {
     );
 }
 
-function NameColumnHeader({ areaProps }) {
+function NameColumnHeader({ filters, removeFilter, updateFilter, areaProps }) {
     const filterInput = React.useRef(null);
 
+    const onKeyPress = e => {
+        if (e.key === 'Enter') {
+            if (e.target.value == "") removeFilter("name");else updateFilter("name", "LIKE", `%${e.target.value}%`);
+        }
+    };
+
     React.useEffect(() => {
-        areaProps.addField('name');
+        areaProps.addField("name");
     }, []);
+
+    React.useEffect(() => {
+        filterInput.current.value = filters.findIndex(e => e.key === 'name') === -1 ? "" : filterInput.current.value;
+    });
 
     return React.createElement(
         "th",
-        null,
+        { className: "column" },
         React.createElement(
             "div",
-            { className: "header name-header" },
+            { className: "header coupon-header" },
             React.createElement(
                 "div",
                 { className: "title" },
                 React.createElement(
                     "span",
                     null,
-                    "Page name"
+                    "Name"
                 )
             ),
             React.createElement(
                 "div",
                 { className: "filter" },
                 React.createElement("input", {
-                    className: "uk-input uk-form-small uk-form-width-medium",
                     type: "text",
                     ref: filterInput,
-                    onKeyPress: e => {
-                        if (e.key === 'Enter') areaProps.addFilter("name", "LIKE", `%${e.target.value}%`);
-                    },
-                    placeholder: "Page name"
+                    onKeyPress: e => onKeyPress(e),
+                    placeholder: "Name",
+                    className: "uk-input uk-form-small uk-form-width-small"
                 })
             )
         )
@@ -92,14 +100,18 @@ function NameColumnRow({ row }) {
 }
 
 function ActionColumnHeader({ areaProps }) {
-
     React.useEffect(() => {
+        areaProps.addField('cms_page_id');
         areaProps.addField('editUrl');
     }, []);
 
+    const onClick = () => {
+        areaProps.cleanFilter();
+    };
+
     return React.createElement(
         "th",
-        null,
+        { className: "column" },
         React.createElement(
             "div",
             { className: "header" },
@@ -111,6 +123,11 @@ function ActionColumnHeader({ areaProps }) {
                     null,
                     "Action"
                 )
+            ),
+            React.createElement(
+                "a",
+                { onClick: () => onClick() },
+                "Clean filter"
             )
         )
     );
@@ -124,16 +141,24 @@ function ActionColumnRow({ row }) {
     );
 }
 
-function StatusColumnHeader({ areaProps }) {
+function StatusColumnHeader({ areaProps, filters, updateFilter }) {
     const filterInput = React.useRef(null);
+
+    const onChange = e => {
+        updateFilter("status", "=", `${e.target.value}`);
+    };
 
     React.useEffect(() => {
         areaProps.addField("status");
     }, []);
 
+    React.useEffect(() => {
+        filterInput.current.value = filters.findIndex(e => e.key === 'status') === -1 ? null : filterInput.current.value;
+    });
+
     return React.createElement(
         "th",
-        null,
+        { className: "column" },
         React.createElement(
             "div",
             { className: "header status-header" },
@@ -151,9 +176,11 @@ function StatusColumnHeader({ areaProps }) {
                 { className: "filter" },
                 React.createElement(
                     "select",
-                    { className: "uk-select uk-form-small uk-form-width-small", ref: filterInput, onChange: e => {
-                            areaProps.addFilter("status", "Equal", e.target.value);
-                        } },
+                    {
+                        ref: filterInput,
+                        onChange: e => onChange(e),
+                        className: "uk-select uk-form-small uk-form-width-small"
+                    },
                     React.createElement(
                         "option",
                         { value: 1 },
@@ -190,32 +217,10 @@ function StatusColumnRow({ row }) {
     );
 }
 
-export default function CmsPageGrid({ apiUrl }) {
+export default function CmsPageGrid({ apiUrl, areaProps }) {
     const [pages, setPages] = React.useState([]);
-    const [filters, setFilters] = React.useState([]);
     const [fields, setFields] = React.useState([]);
 
-    const addFilter = (key, operator, value) => {
-        let flag = 0;
-        filters.forEach((f, i) => {
-            if (f.key === key && !value) flag = 1; // Remove
-            if (f.key === key && value) flag = 2; // Update
-        });
-        if (flag === 0) setFilters(prevFilters => prevFilters.concat({ key: key, operator: operator, value: value }));else if (flag === 1) {
-            const setFilters = prevFilters.filter((f, index) => f.key !== key);
-            setFilters(newFilters);
-        } else setFilters(prevFilters => prevFilters.map((f, i) => {
-            if (f.key === key) {
-                f.operator = operator;
-                f.value = value;
-            }
-            return f;
-        }));
-    };
-
-    const cleanFilter = () => {
-        setFilters([]);
-    };
     const addField = field => {
         setFields(prevFields => prevFields.concat(field));
     };
@@ -223,26 +228,18 @@ export default function CmsPageGrid({ apiUrl }) {
     const applyFilter = () => {
         let formData = new FormData();
         formData.append('query', buildQuery());
-        axios({
-            method: 'post',
-            url: apiUrl,
-            headers: { 'content-type': 'multipart/form-data' },
-            data: formData
-        }).then(function (response) {
-            if (response.headers['content-type'] !== "application/json") throw new Error('Something wrong, please try again');
-            if (_.get(response, 'data.payload.data.pageCollection.pages')) {
-                setPages(_.get(response, 'data.payload.data.pageCollection.pages'));
+
+        Fetch(apiUrl, false, 'POST', formData, null, response => {
+            if (_.get(response, 'payload.data.pageCollection.pages')) {
+                setPages(_.get(response, 'payload.data.pageCollection.pages'));
             }
-        }).catch(function (error) {}).finally(function () {
-            // e.target.value = null;
-            // setUploading(false);
         });
     };
 
     const buildQuery = () => {
         let filterStr = "";
-        filters.forEach((f, i) => {
-            filterStr += `${f.key} : {operator : ${f.operator} value: "${f.value}"} `;
+        areaProps.filters.forEach((f, i) => {
+            filterStr += `${f.key} : {operator : "${f.operator}" value: "${f.value}"} `;
         });
         filterStr = filterStr.trim();
         if (filterStr) filterStr = `(filter : {${filterStr}})`;
@@ -258,7 +255,7 @@ export default function CmsPageGrid({ apiUrl }) {
     React.useEffect(() => {
         if (fields.length === 0) return;
         applyFilter();
-    }, [fields, filters]);
+    }, [fields, areaProps.filters]);
 
     return React.createElement(
         "div",
@@ -272,29 +269,32 @@ export default function CmsPageGrid({ apiUrl }) {
                 React.createElement(Area, {
                     className: "",
                     id: "page_grid_header",
-                    addFilter: addFilter,
-                    cleanFilter: cleanFilter,
+                    filters: areaProps.filters,
+                    addFilter: areaProps.addFilter,
+                    updateFilter: areaProps.updateFilter,
+                    removeFilter: areaProps.removeFilter,
+                    cleanFilter: areaProps.cleanFilter,
                     addField: addField,
                     applyFilter: applyFilter,
                     reactcomponent: "tr",
                     coreWidgets: [{
                         component: IdColumnHeader,
-                        props: { addFilter, cleanFilter, addField, applyFilter },
+                        props: _extends({}, areaProps, { addField, applyFilter }),
                         sort_order: 10,
                         id: "id"
                     }, {
                         component: NameColumnHeader,
-                        props: {},
+                        props: _extends({}, areaProps, { addField, applyFilter }),
                         sort_order: 20,
                         id: "name"
                     }, {
                         component: StatusColumnHeader,
-                        props: {},
+                        props: _extends({}, areaProps, { addField, applyFilter }),
                         sort_order: 30,
                         id: "status"
                     }, {
                         component: ActionColumnHeader,
-                        props: {},
+                        props: _extends({}, areaProps, { addField, applyFilter }),
                         sort_order: 40,
                         id: "action"
                     }]
@@ -328,7 +328,7 @@ export default function CmsPageGrid({ apiUrl }) {
                         }, {
                             component: ActionColumnRow,
                             props: { row: p },
-                            sort_order: 50,
+                            sort_order: 40,
                             id: "action"
                         }]
                     });

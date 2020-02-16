@@ -28,15 +28,27 @@ class GridMiddleware extends MiddlewareAbstract
             return $delegate;
 
         $this->getContainer()->get(Helmet::class)->setTitle("Coupons");
+
+        $response->addWidget(
+            'coupon_grid_container',
+            'content',
+            0,
+            get_js_file_url("production/grid/grid.js", true),
+            ['id'=>"coupon_grid_container"]
+        );
+
         $response->addWidget(
             'coupon_grid_title',
-            'content',
-            0, get_js_file_url("production/discount/grid/title.js", true)
+            'coupon_grid_container',
+            0,
+            get_js_file_url("production/discount/grid/title.js", true)
         );
+
         $response->addWidget(
             'coupon-grid',
-            'content',
-            20, get_js_file_url("production/discount/grid/grid.js", true),
+            'coupon_grid_container',
+            20,
+            get_js_file_url("production/discount/grid/grid.js", true),
             [
                 "apiUrl" => generate_url('admin.graphql.api')
             ]
