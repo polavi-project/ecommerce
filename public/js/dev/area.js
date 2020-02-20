@@ -22,7 +22,7 @@ function Area(props) {
         });
     };
 
-    const widgets = ReactRedux.useSelector(state => getWidgets(state.widgets));
+    const widgets = ReactRedux.useSelector(state => getWidgets(state.widgets), _.isEqual);
     let wrapperProps = {};
     if(typeof props.wrapperProps === 'object' && props.wrapperProps !== null)
         wrapperProps = {className : props.className ? props.className : "" , ...props.wrapperProps};
@@ -36,6 +36,11 @@ function Area(props) {
     widgets.forEach((w) => {
         args.push(w);
     });
+
+    React.useEffect(()=>{
+        console.log("Area is rerendering", props.id);
+    });
+
     if(widgets.length === 0)
         return null;
     else
