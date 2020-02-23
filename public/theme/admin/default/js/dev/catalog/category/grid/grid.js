@@ -215,92 +215,96 @@ export default function CategoryGrid({apiUrl, areaProps})
     return <div className={"uk-overflow-auto"}>
         <table className="uk-table uk-table-small uk-table-divider">
             <thead>
-            <Area
-                className={""}
-                id={"category_grid_header"}
-                filters={areaProps.filters}
-                addFilter={areaProps.addFilter}
-                updateFilter={areaProps.updateFilter}
-                removeFilter={areaProps.removeFilter}
-                cleanFilter={areaProps.cleanFilter}
-                addField={addField}
-                applyFilter={applyFilter}
-                reactcomponent={"tr"}
-                coreWidgets={[
-                    {
-                        component: IdColumnHeader,
-                        props : {...areaProps, addField, applyFilter},
-                        sort_order: 10,
-                        id: "id"
-                    },
-                    {
-                        component: NameColumnHeader,
-                        props : {...areaProps, addField, applyFilter},
-                        sort_order: 20,
-                        id: "name"
-                    },
-                    {
-                        component: StatusColumnHeader,
-                        props : {...areaProps, addField, applyFilter},
-                        sort_order: 30,
-                        id: "status"
-                    },
-                    {
-                        component: ShowNavColumnHeader,
-                        props : {...areaProps, addField, applyFilter},
-                        sort_order: 40,
-                        id: "show_nav"
-                    },
-                    {
-                        component: ActionColumnHeader,
-                        props : {...areaProps, addField, applyFilter},
-                        sort_order: 50,
-                        id: "action"
-                    }
-                ]}
-            />
+                <tr>
+                    <Area
+                        className={""}
+                        id={"category_grid_header"}
+                        filters={areaProps.filters}
+                        addFilter={areaProps.addFilter}
+                        updateFilter={areaProps.updateFilter}
+                        removeFilter={areaProps.removeFilter}
+                        cleanFilter={areaProps.cleanFilter}
+                        addField={addField}
+                        applyFilter={applyFilter}
+                        noOuter={true}
+                        coreWidgets={[
+                            {
+                                component: IdColumnHeader,
+                                props : {...areaProps, addField, applyFilter},
+                                sort_order: 10,
+                                id: "id"
+                            },
+                            {
+                                component: NameColumnHeader,
+                                props : {...areaProps, addField, applyFilter},
+                                sort_order: 20,
+                                id: "name"
+                            },
+                            {
+                                component: StatusColumnHeader,
+                                props : {...areaProps, addField, applyFilter},
+                                sort_order: 30,
+                                id: "status"
+                            },
+                            {
+                                component: ShowNavColumnHeader,
+                                props : {...areaProps, addField, applyFilter},
+                                sort_order: 40,
+                                id: "show_nav"
+                            },
+                            {
+                                component: ActionColumnHeader,
+                                props : {...areaProps, addField, applyFilter},
+                                sort_order: 50,
+                                id: "action"
+                            }
+                        ]}
+                    />
+                </tr>
             </thead>
             <tbody>
             {categories.map((c, i)=> {
-                return <Area
-                    key={i}
-                    className={""}
-                    id={"category_grid_row"}
-                    row={c}
-                    reactcomponent={"tr"}
-                    coreWidgets={[
-                        {
-                            component: IdColumnRow,
-                            props : {row: c},
-                            sort_order: 10,
-                            id: "id"
-                        },
-                        {
-                            component: NameColumnRow,
-                            props : {row: c},
-                            sort_order: 20,
-                            id: "name"
-                        },
-                        {
-                            component: StatusColumnRow,
-                            props : {row: c},
-                            sort_order: 30,
-                            id: "status"
-                        },
-                        {
-                            component: ShowNavColumnRow,
-                            props : {row: c},
-                            sort_order: 40,
-                            id: "show_nav"
-                        },
-                        {
-                            component: ActionColumnRow,
-                            props : {row: c},
-                            sort_order: 50,
-                            id: "action"
-                        }
-                    ]}
-                />
+                return <tr>
+                    <Area
+                        key={i}
+                        className={""}
+                        id={"category_grid_row"}
+                        row={c}
+                        noOuter={true}
+                        coreWidgets={[
+                            {
+                                component: IdColumnRow,
+                                props : {row: c},
+                                sort_order: 10,
+                                id: "id"
+                            },
+                            {
+                                component: NameColumnRow,
+                                props : {row: c},
+                                sort_order: 20,
+                                id: "name"
+                            },
+                            {
+                                component: StatusColumnRow,
+                                props : {row: c},
+                                sort_order: 30,
+                                id: "status"
+                            },
+                            {
+                                component: ShowNavColumnRow,
+                                props : {row: c},
+                                sort_order: 40,
+                                id: "show_nav"
+                            },
+                            {
+                                component: ActionColumnRow,
+                                props : {row: c},
+                                sort_order: 50,
+                                id: "action"
+                            }
+                        ]}
+                    />
+                </tr>
             })}
             </tbody>
         </table>

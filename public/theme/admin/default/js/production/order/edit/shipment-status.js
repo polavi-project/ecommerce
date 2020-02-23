@@ -1,7 +1,9 @@
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 import Area from "../../../../../../../js/production/area.js";
 
-function Pending({ status, isDropdown }) {
-    if (isDropdown === true) return React.createElement(
+function Pending({ status, noOuter = false }) {
+    if (noOuter === true) return React.createElement(
         'option',
         { value: 'pending' },
         'Pending'
@@ -13,8 +15,8 @@ function Pending({ status, isDropdown }) {
     );else return null;
 }
 
-function Delivering({ status, isDropdown }) {
-    if (isDropdown === true) return React.createElement(
+function Delivering({ status, noOuter = false }) {
+    if (noOuter === true) return React.createElement(
         'option',
         { value: 'delivering' },
         'Delivering'
@@ -26,8 +28,8 @@ function Delivering({ status, isDropdown }) {
     );else return null;
 }
 
-function Delivered({ status, isDropdown }) {
-    if (isDropdown === true) return React.createElement(
+function Delivered({ status, noOuter = false }) {
+    if (noOuter === true) return React.createElement(
         'option',
         { value: 'delivered' },
         'Delivered'
@@ -39,59 +41,41 @@ function Delivered({ status, isDropdown }) {
     );else return null;
 }
 
-function ShipmentStatus({ status, isDropdown = false, wrapperProps = {} }) {
-    if (isDropdown === false) return React.createElement(Area, {
-        id: 'shipment-status',
-        status: status,
+function ShipmentStatus(props) {
+    if (props.noOuter === false) return React.createElement(Area, {
+        id: 'shipment_status',
         coreWidgets: [{
             component: Pending,
-            props: {
-                status
-            },
+            props: _extends({}, props),
             sort_order: 10,
             id: "shipment-status-pending"
         }, {
             component: Delivering,
-            props: {
-                status
-            },
+            props: _extends({}, props),
             sort_order: 20,
             id: "shipment-status-delivering"
         }, {
             component: Delivered,
-            props: {
-                status
-            },
+            props: _extends({}, props),
             sort_order: 30,
             id: "shipment-status-delivered"
         }]
     });else return React.createElement(Area, {
-        id: 'shipment-status',
-        status: status,
-        reactcomponent: "select",
-        wrapperProps: wrapperProps,
+        id: 'shipment_status',
+        noOuter: true,
         coreWidgets: [{
             component: Pending,
-            props: {
-                status,
-                isDropdown
-            },
+            props: _extends({}, props),
             sort_order: 10,
             id: "shipment-status-pending"
         }, {
             component: Delivering,
-            props: {
-                status,
-                isDropdown
-            },
+            props: _extends({}, props),
             sort_order: 20,
             id: "shipment-status-delivering"
         }, {
             component: Delivered,
-            props: {
-                status,
-                isDropdown
-            },
+            props: _extends({}, props),
             sort_order: 30,
             id: "shipment-status-delivered"
         }]

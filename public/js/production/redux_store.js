@@ -15,7 +15,7 @@ const combineReducer = reducers => {
 
 const reducer = combineReducer(ReducerRegistry.getReducers());
 
-const store = Redux.createStore(reducer, {});
+const store = Redux.createStore(reducer, {}, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
 ReducerRegistry.setChangeListener(reducers => {
     store.replaceReducer(combineReducer(reducers));
 });

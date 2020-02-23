@@ -8,7 +8,8 @@ function EditForm({ displayForm, requestUrl }) {
         React.createElement(Area, { id: "widget-edit-form", displayForm: displayForm, requestUrl: requestUrl })
     );
 }
-function WidgetTypeSelector({ types, selectedType = '', requestUrl, showEdit = 0 }) {
+
+export default function WidgetTypeSelector({ types, selectedType = '', requestUrl, showEdit = 0 }) {
     const [showEditForm, setShowEditForm] = React.useState(showEdit);
     const [type, setType] = React.useState(selectedType);
     const [showError, setShowError] = React.useState(false);
@@ -81,5 +82,3 @@ function WidgetTypeSelector({ types, selectedType = '', requestUrl, showEdit = 0
         )
     );
 }
-
-export { WidgetTypeSelector };

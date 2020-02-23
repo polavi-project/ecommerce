@@ -1,19 +1,33 @@
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 import Area from "../../../../../../../js/production/area.js";
 import A from "../../../../../../../js/production/a.js";
 import { PaymentStatus } from "../edit/payment-status.js";
 import { ShipmentStatus } from "../edit/shipment-status.js";
+import { Fetch } from "../../../../../../../js/production/fetch.js";
 
-function IdColumnHeader({ areaProps }) {
+function IdColumnHeader({ areaProps, filters, updateFilter }) {
     const filterFrom = React.useRef(null);
     const filterTo = React.useRef(null);
+
+    const onKeyPress = e => {
+        if (e.key === 'Enter') {
+            if (filterTo.current.value == "" && filterFrom.current.value == "") removeFilter("id");else updateFilter("id", "BETWEEN", `${filterFrom.current.value} AND ${filterTo.current.value}`);
+        }
+    };
 
     React.useEffect(() => {
         areaProps.addField("order_id");
     }, []);
 
+    React.useEffect(() => {
+        filterFrom.current.value = filters.findIndex(e => e.key === 'id') === -1 ? "" : filterFrom.current.value;
+        filterTo.current.value = filters.findIndex(e => e.key === 'id') === -1 ? "" : filterTo.current.value;
+    });
+
     return React.createElement(
         "th",
-        null,
+        { className: "column" },
         React.createElement(
             "div",
             { className: "header id-header" },
@@ -35,9 +49,7 @@ function IdColumnHeader({ areaProps }) {
                     React.createElement("input", {
                         type: "text",
                         ref: filterFrom,
-                        onKeyPress: e => {
-                            if (e.key === 'Enter') areaProps.addFilter("id", "BETWEEN", `${e.target.value} AND ${filterTo.current.value}`);
-                        },
+                        onKeyPress: e => onKeyPress(e),
                         placeholder: "From",
                         className: "uk-input uk-form-small uk-form-width-small"
                     })
@@ -48,9 +60,7 @@ function IdColumnHeader({ areaProps }) {
                     React.createElement("input", {
                         type: "text",
                         ref: filterTo,
-                        onKeyPress: e => {
-                            if (e.key === 'Enter') areaProps.addFilter("id", "BETWEEN", `${filterFrom.current.value} AND ${e.target.value}`);
-                        },
+                        onKeyPress: e => onKeyPress(e),
                         placeholder: "To",
                         className: "uk-input uk-form-small uk-form-width-small"
                     })
@@ -72,16 +82,26 @@ function IdColumnRow({ row }) {
     );
 }
 
-function NumberColumnHeader({ areaProps }) {
+function NumberColumnHeader({ areaProps, filters, updateFilter }) {
     const filterInput = React.useRef(null);
+
+    const onKeyPress = e => {
+        if (e.key === 'Enter') {
+            if (e.target.value == "") removeFilter("order_number");else updateFilter("order_number", "=", `%${e.target.value}%`);
+        }
+    };
 
     React.useEffect(() => {
         areaProps.addField('order_number');
     }, []);
 
+    React.useEffect(() => {
+        filterInput.current.value = filters.findIndex(e => e.key === 'order_number') === -1 ? "" : filterInput.current.value;
+    });
+
     return React.createElement(
         "th",
-        null,
+        { className: "column" },
         React.createElement(
             "div",
             { className: "header name-header" },
@@ -100,11 +120,9 @@ function NumberColumnHeader({ areaProps }) {
                 React.createElement("input", {
                     type: "text",
                     ref: filterInput,
-                    onKeyPress: e => {
-                        if (e.key === 'Enter') areaProps.addFilter("order_number", "=", `${e.target.value}`);
-                    },
+                    onKeyPress: e => onKeyPress(e),
                     placeholder: "Order number",
-                    className: "uk-input uk-form-small uk-form-width-small"
+                    className: "uk-input uk-form-small uk-form-width-medium"
                 })
             )
         )
@@ -124,20 +142,31 @@ function NumberColumnRow({ row }) {
     );
 }
 
-function TotalColumnHeader({ areaProps }) {
+function TotalColumnHeader({ areaProps, filters, updateFilter }) {
     const filterFrom = React.useRef(null);
     const filterTo = React.useRef(null);
+
+    const onKeyPress = e => {
+        if (e.key === 'Enter') {
+            if (filterTo.current.value == "" && filterFrom.current.value == "") removeFilter("grand_total");else updateFilter("grand_total", "BETWEEN", `${filterFrom.current.value} AND ${filterTo.current.value}`);
+        }
+    };
 
     React.useEffect(() => {
         areaProps.addField("grand_total");
     }, []);
+
+    React.useEffect(() => {
+        filterFrom.current.value = filters.findIndex(e => e.key === 'grand_total') === -1 ? "" : filterFrom.current.value;
+        filterTo.current.value = filters.findIndex(e => e.key === 'grand_total') === -1 ? "" : filterTo.current.value;
+    });
 
     return React.createElement(
         "th",
         null,
         React.createElement(
             "div",
-            { className: "header id-header" },
+            { className: "header price-header" },
             React.createElement(
                 "div",
                 { className: "title" },
@@ -156,9 +185,7 @@ function TotalColumnHeader({ areaProps }) {
                     React.createElement("input", {
                         type: "text",
                         ref: filterFrom,
-                        onKeyPress: e => {
-                            if (e.key === 'Enter') areaProps.addFilter("grand_total", "BETWEEN", `${e.target.value} AND ${filterTo.current.value}`);
-                        },
+                        onKeyPress: e => onKeyPress(e),
                         placeholder: "From",
                         className: "uk-input uk-form-small uk-form-width-small"
                     })
@@ -169,9 +196,7 @@ function TotalColumnHeader({ areaProps }) {
                     React.createElement("input", {
                         type: "text",
                         ref: filterTo,
-                        onKeyPress: e => {
-                            if (e.key === 'Enter') areaProps.addFilter("grand_total", "BETWEEN", `${filterFrom.current.value} AND ${e.target.value}`);
-                        },
+                        onKeyPress: e => onKeyPress(e),
                         placeholder: "To",
                         className: "uk-input uk-form-small uk-form-width-small"
                     })
@@ -195,23 +220,27 @@ function TotalColumnRow({ row }) {
     );
 }
 
-function PaymentStatusColumnHeader({ areaProps }) {
+function PaymentStatusColumnHeader({ areaProps, filters, updateFilter }) {
     const filterInput = React.useRef(null);
+
+    const onChange = e => {
+        updateFilter("payment_status", "=", `${e.target.value}`);
+    };
 
     React.useEffect(() => {
         areaProps.addField("payment_status");
     }, []);
 
-    const onChange = e => {
-        areaProps.addFilter("payment_status", "=", e.target.value);
-    };
+    React.useEffect(() => {
+        filterInput.current.value = filters.findIndex(e => e.key === 'payment_status') === -1 ? null : filterInput.current.value;
+    });
 
     return React.createElement(
         "th",
-        null,
+        { className: "column" },
         React.createElement(
             "div",
-            { className: "header status-header" },
+            { className: "header payment-status-header" },
             React.createElement(
                 "div",
                 { className: "title" },
@@ -224,14 +253,15 @@ function PaymentStatusColumnHeader({ areaProps }) {
             React.createElement(
                 "div",
                 { className: "filter" },
-                React.createElement(PaymentStatus, {
-                    isDropdown: true,
-                    wrapperProps: {
-                        className: "uk-select uk-form-small uk-form-width-small",
+                React.createElement(
+                    "select",
+                    {
                         ref: filterInput,
-                        onChange: e => onChange(e)
-                    }
-                })
+                        onChange: e => onChange(e),
+                        className: "uk-select uk-form-small uk-form-width-small"
+                    },
+                    React.createElement(PaymentStatus, { noOuter: true })
+                )
             )
         )
     );
@@ -245,23 +275,27 @@ function PaymentStatusColumnRow({ row }) {
     );
 }
 
-function ShipmentStatusColumnHeader({ areaProps }) {
+function ShipmentStatusColumnHeader({ areaProps, filters, updateFilter }) {
     const filterInput = React.useRef(null);
+
+    const onChange = e => {
+        updateFilter("shipment_status", "=", `${e.target.value}`);
+    };
 
     React.useEffect(() => {
         areaProps.addField("shipment_status");
     }, []);
 
-    const onChange = e => {
-        areaProps.addFilter("shipment_status", "=", e.target.value);
-    };
+    React.useEffect(() => {
+        filterInput.current.value = filters.findIndex(e => e.key === 'shipment_status') === -1 ? null : filterInput.current.value;
+    });
 
     return React.createElement(
         "th",
-        null,
+        { className: "column" },
         React.createElement(
             "div",
-            { className: "header status-header" },
+            { className: "header shipment-status-header" },
             React.createElement(
                 "div",
                 { className: "title" },
@@ -274,14 +308,15 @@ function ShipmentStatusColumnHeader({ areaProps }) {
             React.createElement(
                 "div",
                 { className: "filter" },
-                React.createElement(ShipmentStatus, {
-                    isDropdown: true,
-                    wrapperProps: {
-                        className: "uk-select uk-form-small uk-form-width-small",
+                React.createElement(
+                    "select",
+                    {
                         ref: filterInput,
-                        onChange: e => onChange(e)
-                    }
-                })
+                        onChange: e => onChange(e),
+                        className: "uk-select uk-form-small uk-form-width-small"
+                    },
+                    React.createElement(ShipmentStatus, { noOuter: true })
+                )
             )
         )
     );
@@ -295,14 +330,95 @@ function ShipmentStatusColumnRow({ row }) {
     );
 }
 
-function ActionColumnHeader({ areaProps }) {
+function OrderDateColumnHeader({ areaProps, filters, updateFilter }) {
+    const filterFrom = React.useRef(null);
+    const filterTo = React.useRef(null);
+
+    const onKeyPress = e => {
+        if (e.key === 'Enter') {
+            if (filterTo.current.value == "" && filterFrom.current.value == "") removeFilter("created_at");else updateFilter("created_at", "BETWEEN", `${filterFrom.current.value} AND ${filterTo.current.value}`);
+        }
+    };
+
     React.useEffect(() => {
-        areaProps.addField('editUrl');
+        areaProps.addField("created_at");
     }, []);
+
+    React.useEffect(() => {
+        filterFrom.current.value = filters.findIndex(e => e.key === 'created_at') === -1 ? "" : filterFrom.current.value;
+        filterTo.current.value = filters.findIndex(e => e.key === 'created_at') === -1 ? "" : filterTo.current.value;
+    });
 
     return React.createElement(
         "th",
         null,
+        React.createElement(
+            "div",
+            { className: "header price-header" },
+            React.createElement(
+                "div",
+                { className: "title" },
+                React.createElement(
+                    "span",
+                    null,
+                    "Order date"
+                )
+            ),
+            React.createElement(
+                "div",
+                { className: "filter" },
+                React.createElement(
+                    "div",
+                    null,
+                    React.createElement("input", {
+                        type: "text",
+                        ref: filterFrom,
+                        onKeyPress: e => onKeyPress(e),
+                        placeholder: "From",
+                        className: "uk-input uk-form-small uk-form-width-small"
+                    })
+                ),
+                React.createElement(
+                    "div",
+                    null,
+                    React.createElement("input", {
+                        type: "text",
+                        ref: filterTo,
+                        onKeyPress: e => onKeyPress(e),
+                        placeholder: "To",
+                        className: "uk-input uk-form-small uk-form-width-small"
+                    })
+                )
+            )
+        )
+    );
+}
+
+function OrderDateColumnRow({ row }) {
+    return React.createElement(
+        "td",
+        null,
+        React.createElement(
+            "span",
+            null,
+            _.get(row, "created_at")
+        )
+    );
+}
+
+function ActionColumnHeader({ areaProps, filters, updateFilter }) {
+    React.useEffect(() => {
+        areaProps.addField('order_id');
+        areaProps.addField('editUrl');
+    }, []);
+
+    const onClick = () => {
+        areaProps.cleanFilter();
+    };
+
+    return React.createElement(
+        "th",
+        { className: "column" },
         React.createElement(
             "div",
             { className: "header" },
@@ -314,6 +430,11 @@ function ActionColumnHeader({ areaProps }) {
                     null,
                     "Action"
                 )
+            ),
+            React.createElement(
+                "a",
+                { onClick: () => onClick() },
+                "Clean filter"
             )
         )
     );
@@ -327,32 +448,10 @@ function ActionColumnRow({ row }) {
     );
 }
 
-export default function OrderGrid({ apiUrl }) {
+export default function OrderGrid({ apiUrl, areaProps }) {
     const [orders, setOrders] = React.useState([]);
-    const [filters, setFilters] = React.useState([]);
     const [fields, setFields] = React.useState([]);
 
-    const addFilter = (key, operator, value) => {
-        let flag = 0;
-        filters.forEach((f, i) => {
-            if (f.key === key && !value) flag = 1; // Remove
-            if (f.key === key && value) flag = 2; // Update
-        });
-        if (flag === 0) setFilters(prevFilters => prevFilters.concat({ key: key, operator: operator, value: value }));else if (flag === 1) {
-            const setFilters = prevFilters.filter((f, index) => f.key !== key);
-            setFilters(newFilters);
-        } else setFilters(prevFilters => prevFilters.map((f, i) => {
-            if (f.key === key) {
-                f.operator = operator;
-                f.value = value;
-            }
-            return f;
-        }));
-    };
-
-    const cleanFilter = () => {
-        setFilters([]);
-    };
     const addField = field => {
         setFields(prevFields => prevFields.concat(field));
     };
@@ -360,25 +459,17 @@ export default function OrderGrid({ apiUrl }) {
     const applyFilter = () => {
         let formData = new FormData();
         formData.append('query', buildQuery());
-        axios({
-            method: 'post',
-            url: apiUrl,
-            headers: { 'content-type': 'multipart/form-data' },
-            data: formData
-        }).then(function (response) {
-            if (response.headers['content-type'] !== "application/json") throw new Error('Something wrong, please try again');
-            if (_.get(response, 'data.payload.data.orderCollection.orders')) {
-                setOrders(_.get(response, 'data.payload.data.orderCollection.orders'));
+
+        Fetch(apiUrl, false, 'POST', formData, null, response => {
+            if (_.get(response, 'payload.data.orderCollection.orders')) {
+                setOrders(_.get(response, 'payload.data.orderCollection.orders'));
             }
-        }).catch(function (error) {}).finally(function () {
-            // e.target.value = null;
-            // setUploading(false);
         });
     };
 
     const buildQuery = () => {
         let filterStr = "";
-        filters.forEach((f, i) => {
+        areaProps.filters.forEach((f, i) => {
             filterStr += `${f.key} : {operator : "${f.operator}" value: "${f.value}"} `;
         });
         filterStr = filterStr.trim();
@@ -395,7 +486,7 @@ export default function OrderGrid({ apiUrl }) {
     React.useEffect(() => {
         if (fields.length === 0) return;
         applyFilter();
-    }, [fields, filters]);
+    }, [fields, areaProps.filters]);
 
     return React.createElement(
         "div",
@@ -406,89 +497,110 @@ export default function OrderGrid({ apiUrl }) {
             React.createElement(
                 "thead",
                 null,
-                React.createElement(Area, {
-                    className: "",
-                    id: "order_grid_header",
-                    addFilter: addFilter,
-                    cleanFilter: cleanFilter,
-                    addField: addField,
-                    applyFilter: applyFilter,
-                    reactcomponent: "tr",
-                    coreWidgets: [{
-                        component: IdColumnHeader,
-                        props: { addFilter, cleanFilter, addField, applyFilter },
-                        sort_order: 10,
-                        id: "id"
-                    }, {
-                        component: NumberColumnHeader,
-                        props: {},
-                        sort_order: 20,
-                        id: "number"
-                    }, {
-                        component: TotalColumnHeader,
-                        props: {},
-                        sort_order: 30,
-                        id: "grand_total"
-                    }, {
-                        component: PaymentStatusColumnHeader,
-                        props: {},
-                        sort_order: 40,
-                        id: "payment_status"
-                    }, {
-                        component: ShipmentStatusColumnHeader,
-                        props: {},
-                        sort_order: 50,
-                        id: "shipment_status"
-                    }, {
-                        component: ActionColumnHeader,
-                        props: {},
-                        sort_order: 60,
-                        id: "action"
-                    }]
-                })
+                React.createElement(
+                    "tr",
+                    null,
+                    React.createElement(Area, {
+                        className: "",
+                        id: "order_grid_header",
+                        filters: areaProps.filters,
+                        addFilter: areaProps.addFilter,
+                        updateFilter: areaProps.updateFilter,
+                        removeFilter: areaProps.removeFilter,
+                        cleanFilter: areaProps.cleanFilter,
+                        addField: addField,
+                        applyFilter: applyFilter,
+                        noOuter: true,
+                        coreWidgets: [{
+                            component: IdColumnHeader,
+                            props: _extends({}, areaProps, { addField, applyFilter }),
+                            sort_order: 10,
+                            id: "id"
+                        }, {
+                            component: NumberColumnHeader,
+                            props: _extends({}, areaProps, { addField, applyFilter }),
+                            sort_order: 20,
+                            id: "number"
+                        }, {
+                            component: TotalColumnHeader,
+                            props: _extends({}, areaProps, { addField, applyFilter }),
+                            sort_order: 30,
+                            id: "grand_total"
+                        }, {
+                            component: PaymentStatusColumnHeader,
+                            props: _extends({}, areaProps, { addField, applyFilter }),
+                            sort_order: 40,
+                            id: "payment_status"
+                        }, {
+                            component: ShipmentStatusColumnHeader,
+                            props: _extends({}, areaProps, { addField, applyFilter }),
+                            sort_order: 50,
+                            id: "shipment_status"
+                        }, {
+                            component: OrderDateColumnHeader,
+                            props: _extends({}, areaProps, { addField, applyFilter }),
+                            sort_order: 60,
+                            id: "order_date"
+                        }, {
+                            component: ActionColumnHeader,
+                            props: _extends({}, areaProps, { addField, applyFilter }),
+                            sort_order: 70,
+                            id: "action"
+                        }]
+                    })
+                )
             ),
             React.createElement(
                 "tbody",
                 null,
                 orders.map((o, i) => {
-                    return React.createElement(Area, {
-                        key: i,
-                        className: "",
-                        id: "order_grid_row",
-                        row: o,
-                        reactcomponent: "tr",
-                        coreWidgets: [{
-                            component: IdColumnRow,
-                            props: { row: o },
-                            sort_order: 10,
-                            id: "id"
-                        }, {
-                            component: NumberColumnRow,
-                            props: { row: o },
-                            sort_order: 20,
-                            id: "number"
-                        }, {
-                            component: TotalColumnRow,
-                            props: { row: o },
-                            sort_order: 30,
-                            id: "grand_total"
-                        }, {
-                            component: PaymentStatusColumnRow,
-                            props: { row: o },
-                            sort_order: 40,
-                            id: "payment_status"
-                        }, {
-                            component: ShipmentStatusColumnRow,
-                            props: { row: o },
-                            sort_order: 50,
-                            id: "shipment_status"
-                        }, {
-                            component: ActionColumnRow,
-                            props: { row: o },
-                            sort_order: 60,
-                            id: "action"
-                        }]
-                    });
+                    return React.createElement(
+                        "tr",
+                        null,
+                        React.createElement(Area, {
+                            key: i,
+                            className: "",
+                            id: "order_grid_row",
+                            row: o,
+                            noOuter: true,
+                            coreWidgets: [{
+                                component: IdColumnRow,
+                                props: { row: o },
+                                sort_order: 10,
+                                id: "id"
+                            }, {
+                                component: NumberColumnRow,
+                                props: { row: o },
+                                sort_order: 20,
+                                id: "number"
+                            }, {
+                                component: TotalColumnRow,
+                                props: { row: o },
+                                sort_order: 30,
+                                id: "grand_total"
+                            }, {
+                                component: PaymentStatusColumnRow,
+                                props: { row: o },
+                                sort_order: 40,
+                                id: "payment_status"
+                            }, {
+                                component: ShipmentStatusColumnRow,
+                                props: { row: o },
+                                sort_order: 50,
+                                id: "shipment_status"
+                            }, {
+                                component: OrderDateColumnRow,
+                                props: { row: o },
+                                sort_order: 60,
+                                id: "order_date"
+                            }, {
+                                component: ActionColumnRow,
+                                props: { row: o },
+                                sort_order: 70,
+                                id: "action"
+                            }]
+                        })
+                    );
                 })
             )
         ),

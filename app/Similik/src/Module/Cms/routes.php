@@ -31,15 +31,23 @@ $router->addAdminRoute('page.save', 'POST', '/page/save[/{id:\d+}]', [
     \Similik\Module\Cms\Middleware\Page\Edit\FormMiddleware::class
 ]);
 
-$router->addAdminRoute('widget.grid', 'GET', '/widgets[/{type}]', [
-    \Similik\Module\Cms\Middleware\Widget\TextWidgetMiddleware::class,
-    \Similik\Module\Cms\Middleware\Widget\MenuWidgetMiddleware::class,
-    \Similik\Module\Cms\Middleware\Widget\WidgetManagerMiddleware::class
+$router->addAdminRoute('widget.grid', 'GET', '/widgets', [
+    \Similik\Module\Cms\Middleware\Widget\Grid\GridMiddleware::class,
+    \Similik\Module\Cms\Middleware\Widget\Grid\AddNewButtonMiddleware::class
+]);
+
+$router->addAdminRoute('widget.create', 'GET', '/widget/create', [
+    \Similik\Module\Cms\Middleware\Widget\Edit\EditMiddleware::class
+]);
+
+$router->addAdminRoute('widget.edit', 'GET', '/widget/edit/{type}/{id:\d+}', [
+    \Similik\Module\Cms\Middleware\Widget\Edit\EditMiddleware::class
 ]);
 
 $router->addAdminRoute('cms.install', ["POST", "GET"], '/cms/migrate/install', [
     \Similik\Module\Cms\Middleware\Migrate\Install\InstallMiddleware::class
 ]);
+
 ////////////////////////////////////////////
 ///            SITE ROUTERS           //////
 ////////////////////////////////////////////

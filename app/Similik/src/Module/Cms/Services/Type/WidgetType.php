@@ -29,6 +29,9 @@ class WidgetType extends ObjectType
                     'cms_widget_id' => [
                         'type' => Type::nonNull(Type::id())
                     ],
+                    'type' => [
+                        'type' => Type::string()
+                    ],
                     'name' => [
                         'type' => Type::string()
                     ],
@@ -55,7 +58,7 @@ class WidgetType extends ObjectType
                         'resolve' => function($widget, $args, Container $container, ResolveInfo $info) {
                             if($container->get(Request::class)->isAdmin() == false)
                                 return null;
-                            return $container->get(Router::class)->generateUrl('widget.grid', ["type"=>$widget['type']], ['id'=> $widget['cms_widget_id']]);
+                            return $container->get(Router::class)->generateUrl('widget.edit', ["type"=>$widget['type'], 'id'=> $widget['cms_widget_id']]);
                         }
                     ]
                 ];

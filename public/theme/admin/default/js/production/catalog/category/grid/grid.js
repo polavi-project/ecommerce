@@ -346,82 +346,90 @@ export default function CategoryGrid({ apiUrl, areaProps }) {
             React.createElement(
                 "thead",
                 null,
-                React.createElement(Area, {
-                    className: "",
-                    id: "category_grid_header",
-                    filters: areaProps.filters,
-                    addFilter: areaProps.addFilter,
-                    updateFilter: areaProps.updateFilter,
-                    removeFilter: areaProps.removeFilter,
-                    cleanFilter: areaProps.cleanFilter,
-                    addField: addField,
-                    applyFilter: applyFilter,
-                    reactcomponent: "tr",
-                    coreWidgets: [{
-                        component: IdColumnHeader,
-                        props: _extends({}, areaProps, { addField, applyFilter }),
-                        sort_order: 10,
-                        id: "id"
-                    }, {
-                        component: NameColumnHeader,
-                        props: _extends({}, areaProps, { addField, applyFilter }),
-                        sort_order: 20,
-                        id: "name"
-                    }, {
-                        component: StatusColumnHeader,
-                        props: _extends({}, areaProps, { addField, applyFilter }),
-                        sort_order: 30,
-                        id: "status"
-                    }, {
-                        component: ShowNavColumnHeader,
-                        props: _extends({}, areaProps, { addField, applyFilter }),
-                        sort_order: 40,
-                        id: "show_nav"
-                    }, {
-                        component: ActionColumnHeader,
-                        props: _extends({}, areaProps, { addField, applyFilter }),
-                        sort_order: 50,
-                        id: "action"
-                    }]
-                })
+                React.createElement(
+                    "tr",
+                    null,
+                    React.createElement(Area, {
+                        className: "",
+                        id: "category_grid_header",
+                        filters: areaProps.filters,
+                        addFilter: areaProps.addFilter,
+                        updateFilter: areaProps.updateFilter,
+                        removeFilter: areaProps.removeFilter,
+                        cleanFilter: areaProps.cleanFilter,
+                        addField: addField,
+                        applyFilter: applyFilter,
+                        noOuter: true,
+                        coreWidgets: [{
+                            component: IdColumnHeader,
+                            props: _extends({}, areaProps, { addField, applyFilter }),
+                            sort_order: 10,
+                            id: "id"
+                        }, {
+                            component: NameColumnHeader,
+                            props: _extends({}, areaProps, { addField, applyFilter }),
+                            sort_order: 20,
+                            id: "name"
+                        }, {
+                            component: StatusColumnHeader,
+                            props: _extends({}, areaProps, { addField, applyFilter }),
+                            sort_order: 30,
+                            id: "status"
+                        }, {
+                            component: ShowNavColumnHeader,
+                            props: _extends({}, areaProps, { addField, applyFilter }),
+                            sort_order: 40,
+                            id: "show_nav"
+                        }, {
+                            component: ActionColumnHeader,
+                            props: _extends({}, areaProps, { addField, applyFilter }),
+                            sort_order: 50,
+                            id: "action"
+                        }]
+                    })
+                )
             ),
             React.createElement(
                 "tbody",
                 null,
                 categories.map((c, i) => {
-                    return React.createElement(Area, {
-                        key: i,
-                        className: "",
-                        id: "category_grid_row",
-                        row: c,
-                        reactcomponent: "tr",
-                        coreWidgets: [{
-                            component: IdColumnRow,
-                            props: { row: c },
-                            sort_order: 10,
-                            id: "id"
-                        }, {
-                            component: NameColumnRow,
-                            props: { row: c },
-                            sort_order: 20,
-                            id: "name"
-                        }, {
-                            component: StatusColumnRow,
-                            props: { row: c },
-                            sort_order: 30,
-                            id: "status"
-                        }, {
-                            component: ShowNavColumnRow,
-                            props: { row: c },
-                            sort_order: 40,
-                            id: "show_nav"
-                        }, {
-                            component: ActionColumnRow,
-                            props: { row: c },
-                            sort_order: 50,
-                            id: "action"
-                        }]
-                    });
+                    return React.createElement(
+                        "tr",
+                        null,
+                        React.createElement(Area, {
+                            key: i,
+                            className: "",
+                            id: "category_grid_row",
+                            row: c,
+                            noOuter: true,
+                            coreWidgets: [{
+                                component: IdColumnRow,
+                                props: { row: c },
+                                sort_order: 10,
+                                id: "id"
+                            }, {
+                                component: NameColumnRow,
+                                props: { row: c },
+                                sort_order: 20,
+                                id: "name"
+                            }, {
+                                component: StatusColumnRow,
+                                props: { row: c },
+                                sort_order: 30,
+                                id: "status"
+                            }, {
+                                component: ShowNavColumnRow,
+                                props: { row: c },
+                                sort_order: 40,
+                                id: "show_nav"
+                            }, {
+                                component: ActionColumnRow,
+                                props: { row: c },
+                                sort_order: 50,
+                                id: "action"
+                            }]
+                        })
+                    );
                 })
             )
         ),

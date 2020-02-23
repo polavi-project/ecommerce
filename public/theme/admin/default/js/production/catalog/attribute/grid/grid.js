@@ -595,112 +595,120 @@ export default function AttributeGrid({ apiUrl, areaProps }) {
             React.createElement(
                 "thead",
                 null,
-                React.createElement(Area, {
-                    className: "",
-                    id: "attribute_grid_header",
-                    filters: areaProps.filters,
-                    addFilter: areaProps.addFilter,
-                    updateFilter: areaProps.updateFilter,
-                    removeFilter: areaProps.removeFilter,
-                    cleanFilter: areaProps.cleanFilter,
-                    addField: addField,
-                    applyFilter: applyFilter,
-                    reactcomponent: "tr",
-                    coreWidgets: [{
-                        component: IdColumnHeader,
-                        props: _extends({}, areaProps, { addField, applyFilter }),
-                        sort_order: 10,
-                        id: "id"
-                    }, {
-                        component: NameColumnHeader,
-                        props: _extends({}, areaProps, { addField, applyFilter }),
-                        sort_order: 20,
-                        id: "name"
-                    }, {
-                        component: CodeColumnHeader,
-                        props: _extends({}, areaProps, { addField, applyFilter }),
-                        sort_order: 25,
-                        id: "code"
-                    }, {
-                        component: TypeColumnHeader,
-                        props: _extends({}, areaProps, { addField, applyFilter }),
-                        sort_order: 30,
-                        id: "type"
-                    }, {
-                        component: IsRequiredColumnHeader,
-                        props: _extends({}, areaProps, { addField, applyFilter }),
-                        sort_order: 40,
-                        id: "isRequired"
-                    }, {
-                        component: IsFilterableColumnHeader,
-                        props: _extends({}, areaProps, { addField, applyFilter }),
-                        sort_order: 45,
-                        id: "isFilterable"
-                    }, {
-                        component: DisplayOnFrontendColumnHeader,
-                        props: _extends({}, areaProps, { addField, applyFilter }),
-                        sort_order: 50,
-                        id: "display_on_frontend"
-                    }, {
-                        component: ActionColumnHeader,
-                        props: _extends({}, areaProps, { addField, applyFilter }),
-                        sort_order: 60,
-                        id: "action"
-                    }]
-                })
+                React.createElement(
+                    "tr",
+                    null,
+                    React.createElement(Area, {
+                        className: "",
+                        id: "attribute_grid_header",
+                        filters: areaProps.filters,
+                        addFilter: areaProps.addFilter,
+                        updateFilter: areaProps.updateFilter,
+                        removeFilter: areaProps.removeFilter,
+                        cleanFilter: areaProps.cleanFilter,
+                        addField: addField,
+                        applyFilter: applyFilter,
+                        noOuter: true,
+                        coreWidgets: [{
+                            component: IdColumnHeader,
+                            props: _extends({}, areaProps, { addField, applyFilter }),
+                            sort_order: 10,
+                            id: "id"
+                        }, {
+                            component: NameColumnHeader,
+                            props: _extends({}, areaProps, { addField, applyFilter }),
+                            sort_order: 20,
+                            id: "name"
+                        }, {
+                            component: CodeColumnHeader,
+                            props: _extends({}, areaProps, { addField, applyFilter }),
+                            sort_order: 25,
+                            id: "code"
+                        }, {
+                            component: TypeColumnHeader,
+                            props: _extends({}, areaProps, { addField, applyFilter }),
+                            sort_order: 30,
+                            id: "type"
+                        }, {
+                            component: IsRequiredColumnHeader,
+                            props: _extends({}, areaProps, { addField, applyFilter }),
+                            sort_order: 40,
+                            id: "isRequired"
+                        }, {
+                            component: IsFilterableColumnHeader,
+                            props: _extends({}, areaProps, { addField, applyFilter }),
+                            sort_order: 45,
+                            id: "isFilterable"
+                        }, {
+                            component: DisplayOnFrontendColumnHeader,
+                            props: _extends({}, areaProps, { addField, applyFilter }),
+                            sort_order: 50,
+                            id: "display_on_frontend"
+                        }, {
+                            component: ActionColumnHeader,
+                            props: _extends({}, areaProps, { addField, applyFilter }),
+                            sort_order: 60,
+                            id: "action"
+                        }]
+                    })
+                )
             ),
             React.createElement(
                 "tbody",
                 null,
                 attributes.map((a, i) => {
-                    return React.createElement(Area, {
-                        key: i,
-                        className: "",
-                        id: "attribute_grid_row",
-                        row: a,
-                        reactcomponent: "tr",
-                        coreWidgets: [{
-                            component: IdColumnRow,
-                            props: { row: a },
-                            sort_order: 10,
-                            id: "id"
-                        }, {
-                            component: NameColumnRow,
-                            props: { row: a },
-                            sort_order: 20,
-                            id: "name"
-                        }, {
-                            component: CodeColumnRow,
-                            props: { row: a },
-                            sort_order: 25,
-                            id: "code"
-                        }, {
-                            component: TypeColumnRow,
-                            props: { row: a },
-                            sort_order: 30,
-                            id: "type"
-                        }, {
-                            component: IsRequiredColumnRow,
-                            props: { row: a },
-                            sort_order: 40,
-                            id: "isRequired"
-                        }, {
-                            component: IsFilterableColumnRow,
-                            props: { row: a },
-                            sort_order: 45,
-                            id: "isFilterable"
-                        }, {
-                            component: DisplayOnFrontendColumnRow,
-                            props: { row: a },
-                            sort_order: 50,
-                            id: "display_on_frontend"
-                        }, {
-                            component: ActionColumnRow,
-                            props: { row: a },
-                            sort_order: 60,
-                            id: "action"
-                        }]
-                    });
+                    return React.createElement(
+                        "tr",
+                        null,
+                        React.createElement(Area, {
+                            key: i,
+                            className: "",
+                            id: "attribute_grid_row",
+                            row: a,
+                            noOuter: true,
+                            coreWidgets: [{
+                                component: IdColumnRow,
+                                props: { row: a },
+                                sort_order: 10,
+                                id: "id"
+                            }, {
+                                component: NameColumnRow,
+                                props: { row: a },
+                                sort_order: 20,
+                                id: "name"
+                            }, {
+                                component: CodeColumnRow,
+                                props: { row: a },
+                                sort_order: 25,
+                                id: "code"
+                            }, {
+                                component: TypeColumnRow,
+                                props: { row: a },
+                                sort_order: 30,
+                                id: "type"
+                            }, {
+                                component: IsRequiredColumnRow,
+                                props: { row: a },
+                                sort_order: 40,
+                                id: "isRequired"
+                            }, {
+                                component: IsFilterableColumnRow,
+                                props: { row: a },
+                                sort_order: 45,
+                                id: "isFilterable"
+                            }, {
+                                component: DisplayOnFrontendColumnRow,
+                                props: { row: a },
+                                sort_order: 50,
+                                id: "display_on_frontend"
+                            }, {
+                                component: ActionColumnRow,
+                                props: { row: a },
+                                sort_order: 60,
+                                id: "action"
+                            }]
+                        })
+                    );
                 })
             )
         ),

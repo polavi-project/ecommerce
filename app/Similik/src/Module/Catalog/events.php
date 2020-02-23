@@ -37,8 +37,20 @@ $eventDispatcher->addListener(
 );
 
 $eventDispatcher->addListener('register.widget.grid.middleware', function(\Similik\Services\MiddlewareManager $mm) {
-    $mm->registerMiddleware(\Similik\Module\Catalog\Middleware\Widget\FeaturedProduct\EditMiddleware::class, 1);
-    $mm->registerMiddleware(\Similik\Module\Catalog\Middleware\Widget\ProductFilter\EditMiddleware::class, 1);
+    $mm->registerMiddleware(\Similik\Module\Catalog\Middleware\Widget\FeaturedProduct\RegisterTypeMiddleware::class, 0);
+    $mm->registerMiddleware(\Similik\Module\Catalog\Middleware\Widget\ProductFilter\RegisterTypeMiddleware::class, 0);
+});
+
+$eventDispatcher->addListener('register.widget.create.middleware', function(\Similik\Services\MiddlewareManager $mm) {
+    $mm->registerMiddleware(\Similik\Module\Catalog\Middleware\Widget\FeaturedProduct\RegisterTypeMiddleware::class, 0);
+    $mm->registerMiddleware(\Similik\Module\Catalog\Middleware\Widget\FeaturedProduct\FormMiddleware::class, 0);
+    $mm->registerMiddleware(\Similik\Module\Catalog\Middleware\Widget\ProductFilter\RegisterTypeMiddleware::class, 0);
+    $mm->registerMiddleware(\Similik\Module\Catalog\Middleware\Widget\ProductFilter\FormMiddleware::class, 0);
+});
+
+$eventDispatcher->addListener('register.widget.edit.middleware', function(\Similik\Services\MiddlewareManager $mm) {
+    $mm->registerMiddleware(\Similik\Module\Catalog\Middleware\Widget\FeaturedProduct\FormMiddleware::class, 0);
+    $mm->registerMiddleware(\Similik\Module\Catalog\Middleware\Widget\ProductFilter\FormMiddleware::class, 0);
 });
 
 $eventDispatcher->addListener('register.core.middleware', function(\Similik\Services\MiddlewareManager $mm) {

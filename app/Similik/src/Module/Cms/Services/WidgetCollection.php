@@ -40,6 +40,10 @@ class WidgetCollection extends CollectionBuilder
             $this->collection->andWhere('cms_widget.type', $args['operator'], $args['value']);
         });
 
+        $this->addFilter('name', function($args) {
+            $this->collection->andWhere('cms_widget.name', $args['operator'], $args['value']);
+        });
+
         $this->addFilter('status', function($args) {
             $this->collection->andWhere('cms_widget.status', $args['operator'], $args['value']);
         });

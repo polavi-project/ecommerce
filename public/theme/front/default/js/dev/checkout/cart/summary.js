@@ -47,37 +47,39 @@ function Summary(props) {
     return <div className="uk-width-1-4@m">
         <p><span>Summary</span></p>
         <table className={"uk-table"}>
-            <Area
-                id="shopping-cart-summary"
-                reactcomponent={"tbody"}
-                cart={cart}
-                coreWidgets={[
-                    {
-                        component: Subtotal,
-                        props : {subTotal: cart.subTotal},
-                        sort_order: 10,
-                        id: "shopping-cart-subtotal"
-                    },
-                    {
-                        component: Discount,
-                        props : {discountAmount : cart.discountAmount},
-                        sort_order: 20,
-                        id: "shopping-cart-discount"
-                    },
-                    {
-                        component: Tax,
-                        props : {taxAmount : cart.taxAmount},
-                        sort_order: 30,
-                        id: "shopping-cart-tax"
-                    },
-                    {
-                        component: GrandTotal,
-                        props : {grandTotal : cart.grandTotal},
-                        sort_order: 40,
-                        id: "shopping-cart-grand-total"
-                    }
-                ]}
-            />
+            <tbody>
+                <Area
+                    id="shopping-cart-summary"
+                    noOuter={true}
+                    cart={cart}
+                    coreWidgets={[
+                        {
+                            component: Subtotal,
+                            props : {subTotal: cart.subTotal},
+                            sort_order: 10,
+                            id: "shopping-cart-subtotal"
+                        },
+                        {
+                            component: Discount,
+                            props : {discountAmount : cart.discountAmount},
+                            sort_order: 20,
+                            id: "shopping-cart-discount"
+                        },
+                        {
+                            component: Tax,
+                            props : {taxAmount : cart.taxAmount},
+                            sort_order: 30,
+                            id: "shopping-cart-tax"
+                        },
+                        {
+                            component: GrandTotal,
+                            props : {grandTotal : cart.grandTotal},
+                            sort_order: 40,
+                            id: "shopping-cart-grand-total"
+                        }
+                    ]}
+                />
+            </tbody>
         </table>
         <p>
             <A className={"uk-button uk-button-primary uk-button-small"} url={props.checkoutUrl} text={"Checkout"}/>

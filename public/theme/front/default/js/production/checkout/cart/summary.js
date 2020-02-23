@@ -99,32 +99,36 @@ function Summary(props) {
         React.createElement(
             "table",
             { className: "uk-table" },
-            React.createElement(Area, {
-                id: "shopping-cart-summary",
-                reactcomponent: "tbody",
-                cart: cart,
-                coreWidgets: [{
-                    component: Subtotal,
-                    props: { subTotal: cart.subTotal },
-                    sort_order: 10,
-                    id: "shopping-cart-subtotal"
-                }, {
-                    component: Discount,
-                    props: { discountAmount: cart.discountAmount },
-                    sort_order: 20,
-                    id: "shopping-cart-discount"
-                }, {
-                    component: Tax,
-                    props: { taxAmount: cart.taxAmount },
-                    sort_order: 30,
-                    id: "shopping-cart-tax"
-                }, {
-                    component: GrandTotal,
-                    props: { grandTotal: cart.grandTotal },
-                    sort_order: 40,
-                    id: "shopping-cart-grand-total"
-                }]
-            })
+            React.createElement(
+                "tbody",
+                null,
+                React.createElement(Area, {
+                    id: "shopping-cart-summary",
+                    noOuter: true,
+                    cart: cart,
+                    coreWidgets: [{
+                        component: Subtotal,
+                        props: { subTotal: cart.subTotal },
+                        sort_order: 10,
+                        id: "shopping-cart-subtotal"
+                    }, {
+                        component: Discount,
+                        props: { discountAmount: cart.discountAmount },
+                        sort_order: 20,
+                        id: "shopping-cart-discount"
+                    }, {
+                        component: Tax,
+                        props: { taxAmount: cart.taxAmount },
+                        sort_order: 30,
+                        id: "shopping-cart-tax"
+                    }, {
+                        component: GrandTotal,
+                        props: { grandTotal: cart.grandTotal },
+                        sort_order: 40,
+                        id: "shopping-cart-grand-total"
+                    }]
+                })
+            )
         ),
         React.createElement(
             "p",

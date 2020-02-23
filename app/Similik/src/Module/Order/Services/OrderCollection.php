@@ -92,6 +92,21 @@ class OrderCollection extends CollectionBuilder
                 return;
             $this->collection->andWhere('order.shipment_status', $args['operator'], $args['value']);
         });
+
+        $this->addFilter('created_at', function($args) use ($isAdmin) {
+            if($isAdmin == false)
+                return;
+            if($args['operator'] == "BETWEEN") {
+                $arr = explode("AND", $args['value']);
+                $from = trim($arr[0]);
+                $to = isset($arr[1]) ? trim($arr[1]) : null;
+                $this->getCollection()->andWhere('order.created_at', '>=', $from);
+                if($to)
+                    $this->getCollection()->andWhere('order.created_at', '<=', $to);
+            } else {
+                $this->getCollection()->andWhere('order.created_at', $args['operator'], $args['value']);
+            }
+        });
     }
 
     public function getData($rootValue, $args, Container $container, ResolveInfo $info)

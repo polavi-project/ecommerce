@@ -354,116 +354,120 @@ export default function ProductGrid({apiUrl, areaProps})
     return <div className={"uk-overflow-auto"}>
         <table className="uk-table uk-table-small uk-table-divider">
             <thead>
-            <Area
-                className={""}
-                id={"product_grid_header"}
-                filters={areaProps.filters}
-                addFilter={areaProps.addFilter}
-                updateFilter={areaProps.updateFilter}
-                removeFilter={areaProps.removeFilter}
-                cleanFilter={areaProps.cleanFilter}
-                addField={addField}
-                applyFilter={applyFilter}
-                reactcomponent={"tr"}
-                coreWidgets={[
-                    {
-                        component: IdColumnHeader,
-                        props : {...areaProps, addField, applyFilter},
-                        sort_order: 10,
-                        id: "id"
-                    },
-                    {
-                        component: SkuColumnHeader,
-                        props : {...areaProps, addField, applyFilter},
-                        sort_order: 15,
-                        id: "sku"
-                    },
-                    {
-                        component: ThumbColumnHeader,
-                        props : {...areaProps, addField, applyFilter},
-                        sort_order: 20,
-                        id: "thumb"
-                    },
-                    {
-                        component: NameColumnHeader,
-                        props : {...areaProps, addField, applyFilter},
-                        sort_order: 30,
-                        id: "name"
-                    },
-                    {
-                        component: StatusColumnHeader,
-                        props : {...areaProps, addField, applyFilter},
-                        sort_order: 40,
-                        id: "status"
-                    },
-                    {
-                        component: QtyColumnHeader,
-                        props : {...areaProps, addField, applyFilter},
-                        sort_order: 50,
-                        id: "qty"
-                    },
-                    {
-                        component: PriceColumnHeader,
-                        props : {...areaProps, addField, applyFilter},
-                        sort_order: 60,
-                        id: "price"
-                    }
-                ]}
-            />
+                <tr>
+                    <Area
+                        className={""}
+                        id={"product_grid_header"}
+                        filters={areaProps.filters}
+                        addFilter={areaProps.addFilter}
+                        updateFilter={areaProps.updateFilter}
+                        removeFilter={areaProps.removeFilter}
+                        cleanFilter={areaProps.cleanFilter}
+                        addField={addField}
+                        applyFilter={applyFilter}
+                        noOuter={true}
+                        coreWidgets={[
+                            {
+                                component: IdColumnHeader,
+                                props : {...areaProps, addField, applyFilter},
+                                sort_order: 10,
+                                id: "id"
+                            },
+                            {
+                                component: SkuColumnHeader,
+                                props : {...areaProps, addField, applyFilter},
+                                sort_order: 15,
+                                id: "sku"
+                            },
+                            {
+                                component: ThumbColumnHeader,
+                                props : {...areaProps, addField, applyFilter},
+                                sort_order: 20,
+                                id: "thumb"
+                            },
+                            {
+                                component: NameColumnHeader,
+                                props : {...areaProps, addField, applyFilter},
+                                sort_order: 30,
+                                id: "name"
+                            },
+                            {
+                                component: StatusColumnHeader,
+                                props : {...areaProps, addField, applyFilter},
+                                sort_order: 40,
+                                id: "status"
+                            },
+                            {
+                                component: QtyColumnHeader,
+                                props : {...areaProps, addField, applyFilter},
+                                sort_order: 50,
+                                id: "qty"
+                            },
+                            {
+                                component: PriceColumnHeader,
+                                props : {...areaProps, addField, applyFilter},
+                                sort_order: 60,
+                                id: "price"
+                            }
+                        ]}
+                    />
+                </tr>
             </thead>
             <tbody>
             {products.map((p, i)=> {
-                return <Area
-                    key={i}
-                    className={""}
-                    id={"product_grid_row"}
-                    row={p}
-                    reactcomponent={"tr"}
-                    coreWidgets={[
-                        {
-                            component: IdColumnRow,
-                            props : {row: p},
-                            sort_order: 10,
-                            id: "id"
-                        },
-                        {
-                            component: SkuColumnRow,
-                            props : {row: p},
-                            sort_order: 15,
-                            id: "sku"
-                        },
-                        {
-                            component: ThumbColumnRow,
-                            props : {row: p},
-                            sort_order: 20,
-                            id: "thumb"
-                        },
-                        {
-                            component: NameColumnRow,
-                            props : {row: p},
-                            sort_order: 30,
-                            id: "name"
-                        },
-                        {
-                            component: StatusColumnRow,
-                            props : {row: p},
-                            sort_order: 40,
-                            id: "status"
-                        },
-                        {
-                            component: QtyColumnRow,
-                            props : {row: p},
-                            sort_order: 50,
-                            id: "qty"
-                        },
-                        {
-                            component: PriceColumnRow,
-                            props : {row: p},
-                            sort_order: 60,
-                            id: "price"
-                        }
-                    ]}
-                />
+                return <tr>
+                    <Area
+                        key={i}
+                        className={""}
+                        id={"product_grid_row"}
+                        row={p}
+                        noOuter={true}
+                        coreWidgets={[
+                            {
+                                component: IdColumnRow,
+                                props : {row: p},
+                                sort_order: 10,
+                                id: "id"
+                            },
+                            {
+                                component: SkuColumnRow,
+                                props : {row: p},
+                                sort_order: 15,
+                                id: "sku"
+                            },
+                            {
+                                component: ThumbColumnRow,
+                                props : {row: p},
+                                sort_order: 20,
+                                id: "thumb"
+                            },
+                            {
+                                component: NameColumnRow,
+                                props : {row: p},
+                                sort_order: 30,
+                                id: "name"
+                            },
+                            {
+                                component: StatusColumnRow,
+                                props : {row: p},
+                                sort_order: 40,
+                                id: "status"
+                            },
+                            {
+                                component: QtyColumnRow,
+                                props : {row: p},
+                                sort_order: 50,
+                                id: "qty"
+                            },
+                            {
+                                component: PriceColumnRow,
+                                props : {row: p},
+                                sort_order: 60,
+                                id: "price"
+                            }
+                        ]}
+                    />
+                </tr>
             })}
             </tbody>
         </table>

@@ -18,6 +18,7 @@ function OrderSummary() {
         <div className="uk-overflow-auto border-block">
             <div><h3>Summary</h3></div>
             <table className="uk-table uk-table-small uk-table-divider">
+                <tbody>
                 <Area
                     id={"order_summary_block"}
                     orderId={orderId}
@@ -26,7 +27,7 @@ function OrderSummary() {
                     coupon={coupon}
                     discountAmount={discountAmount}
                     taxAmount={taxAmount}
-                    reactcomponent={"tbody"}
+                    noOuter={true}
                     coreWidgets={[
                         {
                             'component': "tr",
@@ -54,6 +55,7 @@ function OrderSummary() {
                         }
                     ]}
                 />
+                </tbody>
             </table>
         </div>
     </div>

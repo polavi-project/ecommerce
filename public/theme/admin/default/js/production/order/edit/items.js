@@ -109,47 +109,51 @@ export default function Items({ items }) {
                 React.createElement(
                     'thead',
                     null,
-                    React.createElement(Area, {
-                        id: 'order_item_table_header',
-                        reactcomponent: "tr",
-                        coreWidgets: [{
-                            component: "th",
-                            props: { children: React.createElement(
-                                    'span',
-                                    null,
-                                    'Product'
-                                ), 'key': 'product' },
-                            sort_order: 10,
-                            id: "product"
-                        }, {
-                            component: "th",
-                            props: { children: React.createElement(
-                                    'span',
-                                    null,
-                                    'Price'
-                                ), 'key': 'price' },
-                            sort_order: 20,
-                            id: "price"
-                        }, {
-                            component: "th",
-                            props: { children: React.createElement(
-                                    'span',
-                                    null,
-                                    'Qty'
-                                ), 'key': 'qty' },
-                            sort_order: 30,
-                            id: "qty"
-                        }, {
-                            component: "th",
-                            props: { children: React.createElement(
-                                    'span',
-                                    null,
-                                    'Total'
-                                ), 'key': 'total' },
-                            sort_order: 40,
-                            id: "total"
-                        }]
-                    })
+                    React.createElement(
+                        'tr',
+                        null,
+                        React.createElement(Area, {
+                            id: 'order_item_table_header',
+                            noOuter: true,
+                            coreWidgets: [{
+                                component: "th",
+                                props: { children: React.createElement(
+                                        'span',
+                                        null,
+                                        'Product'
+                                    ), 'key': 'product' },
+                                sort_order: 10,
+                                id: "product"
+                            }, {
+                                component: "th",
+                                props: { children: React.createElement(
+                                        'span',
+                                        null,
+                                        'Price'
+                                    ), 'key': 'price' },
+                                sort_order: 20,
+                                id: "price"
+                            }, {
+                                component: "th",
+                                props: { children: React.createElement(
+                                        'span',
+                                        null,
+                                        'Qty'
+                                    ), 'key': 'qty' },
+                                sort_order: 30,
+                                id: "qty"
+                            }, {
+                                component: "th",
+                                props: { children: React.createElement(
+                                        'span',
+                                        null,
+                                        'Total'
+                                    ), 'key': 'total' },
+                                sort_order: 40,
+                                id: "total"
+                            }]
+                        })
+                    )
                 ),
                 React.createElement(
                     'tbody',
@@ -158,49 +162,53 @@ export default function Items({ items }) {
                         const _price = new Intl.NumberFormat('en', { style: 'currency', currency: currency }).format(i.product_price);
                         const _finalPrice = new Intl.NumberFormat('en', { style: 'currency', currency: currency }).format(i.final_price);
                         const _total = new Intl.NumberFormat('en', { style: 'currency', currency: currency }).format(i.total);
-                        return React.createElement(Area, {
-                            key: k,
-                            id: "order_item_row_" + i.itemId,
-                            reactcomponent: "tr",
-                            item: i,
-                            coreWidgets: [{
-                                component: ProductColumn,
-                                props: { name: i.product_name, sku: i.product_sku, options: i.options },
-                                sort_order: 10,
-                                id: "product"
-                            }, {
-                                component: "td",
-                                props: { children: [React.createElement(
-                                        'div',
-                                        { key: 1 },
-                                        _price
-                                    ), React.createElement(
-                                        'div',
-                                        { key: 2 },
-                                        _finalPrice
-                                    )], 'key': 'price' },
-                                sort_order: 20,
-                                id: "price"
-                            }, {
-                                component: "td",
-                                props: { children: React.createElement(
-                                        'span',
-                                        null,
-                                        i.qty
-                                    ), 'key': 'qty' },
-                                sort_order: 30,
-                                id: "qty"
-                            }, {
-                                component: "td",
-                                props: { children: React.createElement(
-                                        'span',
-                                        null,
-                                        _total
-                                    ), 'key': 'total' },
-                                sort_order: 40,
-                                id: "total"
-                            }]
-                        });
+                        return React.createElement(
+                            'tr',
+                            null,
+                            React.createElement(Area, {
+                                key: k,
+                                id: "order_item_row_" + i.itemId,
+                                noOuter: true,
+                                item: i,
+                                coreWidgets: [{
+                                    component: ProductColumn,
+                                    props: { name: i.product_name, sku: i.product_sku, options: i.options },
+                                    sort_order: 10,
+                                    id: "product"
+                                }, {
+                                    component: "td",
+                                    props: { children: [React.createElement(
+                                            'div',
+                                            { key: 1 },
+                                            _price
+                                        ), React.createElement(
+                                            'div',
+                                            { key: 2 },
+                                            _finalPrice
+                                        )], 'key': 'price' },
+                                    sort_order: 20,
+                                    id: "price"
+                                }, {
+                                    component: "td",
+                                    props: { children: React.createElement(
+                                            'span',
+                                            null,
+                                            i.qty
+                                        ), 'key': 'qty' },
+                                    sort_order: 30,
+                                    id: "qty"
+                                }, {
+                                    component: "td",
+                                    props: { children: React.createElement(
+                                            'span',
+                                            null,
+                                            _total
+                                        ), 'key': 'total' },
+                                    sort_order: 40,
+                                    id: "total"
+                                }]
+                            })
+                        );
                     })
                 )
             )

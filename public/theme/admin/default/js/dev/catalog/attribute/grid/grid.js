@@ -339,128 +339,132 @@ export default function AttributeGrid({apiUrl, areaProps})
     return <div className={"uk-overflow-auto"}>
         <table className="uk-table uk-table-small uk-table-divider">
             <thead>
-            <Area
-                className={""}
-                id={"attribute_grid_header"}
-                filters={areaProps.filters}
-                addFilter={areaProps.addFilter}
-                updateFilter={areaProps.updateFilter}
-                removeFilter={areaProps.removeFilter}
-                cleanFilter={areaProps.cleanFilter}
-                addField={addField}
-                applyFilter={applyFilter}
-                reactcomponent={"tr"}
-                coreWidgets={[
-                    {
-                        component: IdColumnHeader,
-                        props : {...areaProps, addField, applyFilter},
-                        sort_order: 10,
-                        id: "id"
-                    },
-                    {
-                        component: NameColumnHeader,
-                        props : {...areaProps, addField, applyFilter},
-                        sort_order: 20,
-                        id: "name"
-                    },
-                    {
-                        component: CodeColumnHeader,
-                        props : {...areaProps, addField, applyFilter},
-                        sort_order: 25,
-                        id: "code"
-                    },
-                    {
-                        component: TypeColumnHeader,
-                        props : {...areaProps, addField, applyFilter},
-                        sort_order: 30,
-                        id: "type"
-                    },
-                    {
-                        component: IsRequiredColumnHeader,
-                        props : {...areaProps, addField, applyFilter},
-                        sort_order: 40,
-                        id: "isRequired"
-                    },
-                    {
-                        component: IsFilterableColumnHeader,
-                        props : {...areaProps, addField, applyFilter},
-                        sort_order: 45,
-                        id: "isFilterable"
-                    },
-                    {
-                        component: DisplayOnFrontendColumnHeader,
-                        props : {...areaProps, addField, applyFilter},
-                        sort_order: 50,
-                        id: "display_on_frontend"
-                    },
-                    {
-                        component: ActionColumnHeader,
-                        props : {...areaProps, addField, applyFilter},
-                        sort_order: 60,
-                        id: "action"
-                    }
-                ]}
-            />
+                <tr>
+                    <Area
+                        className={""}
+                        id={"attribute_grid_header"}
+                        filters={areaProps.filters}
+                        addFilter={areaProps.addFilter}
+                        updateFilter={areaProps.updateFilter}
+                        removeFilter={areaProps.removeFilter}
+                        cleanFilter={areaProps.cleanFilter}
+                        addField={addField}
+                        applyFilter={applyFilter}
+                        noOuter={true}
+                        coreWidgets={[
+                            {
+                                component: IdColumnHeader,
+                                props : {...areaProps, addField, applyFilter},
+                                sort_order: 10,
+                                id: "id"
+                            },
+                            {
+                                component: NameColumnHeader,
+                                props : {...areaProps, addField, applyFilter},
+                                sort_order: 20,
+                                id: "name"
+                            },
+                            {
+                                component: CodeColumnHeader,
+                                props : {...areaProps, addField, applyFilter},
+                                sort_order: 25,
+                                id: "code"
+                            },
+                            {
+                                component: TypeColumnHeader,
+                                props : {...areaProps, addField, applyFilter},
+                                sort_order: 30,
+                                id: "type"
+                            },
+                            {
+                                component: IsRequiredColumnHeader,
+                                props : {...areaProps, addField, applyFilter},
+                                sort_order: 40,
+                                id: "isRequired"
+                            },
+                            {
+                                component: IsFilterableColumnHeader,
+                                props : {...areaProps, addField, applyFilter},
+                                sort_order: 45,
+                                id: "isFilterable"
+                            },
+                            {
+                                component: DisplayOnFrontendColumnHeader,
+                                props : {...areaProps, addField, applyFilter},
+                                sort_order: 50,
+                                id: "display_on_frontend"
+                            },
+                            {
+                                component: ActionColumnHeader,
+                                props : {...areaProps, addField, applyFilter},
+                                sort_order: 60,
+                                id: "action"
+                            }
+                        ]}
+                    />
+                </tr>
             </thead>
             <tbody>
             {attributes.map((a, i)=> {
-                return <Area
-                    key={i}
-                    className={""}
-                    id={"attribute_grid_row"}
-                    row={a}
-                    reactcomponent={"tr"}
-                    coreWidgets={[
-                        {
-                            component: IdColumnRow,
-                            props : {row: a},
-                            sort_order: 10,
-                            id: "id"
-                        },
-                        {
-                            component: NameColumnRow,
-                            props : {row: a},
-                            sort_order: 20,
-                            id: "name"
-                        },
-                        {
-                            component: CodeColumnRow,
-                            props : {row: a},
-                            sort_order: 25,
-                            id: "code"
-                        },
-                        {
-                            component: TypeColumnRow,
-                            props : {row: a},
-                            sort_order: 30,
-                            id: "type"
-                        },
-                        {
-                            component: IsRequiredColumnRow,
-                            props : {row: a},
-                            sort_order: 40,
-                            id: "isRequired"
-                        },
-                        {
-                            component: IsFilterableColumnRow,
-                            props : {row: a},
-                            sort_order: 45,
-                            id: "isFilterable"
-                        },
-                        {
-                            component: DisplayOnFrontendColumnRow,
-                            props : {row: a},
-                            sort_order: 50,
-                            id: "display_on_frontend"
-                        },
-                        {
-                            component: ActionColumnRow,
-                            props : {row: a},
-                            sort_order: 60,
-                            id: "action"
-                        }
-                    ]}
-                />
+                return <tr>
+                    <Area
+                        key={i}
+                        className={""}
+                        id={"attribute_grid_row"}
+                        row={a}
+                        noOuter={true}
+                        coreWidgets={[
+                            {
+                                component: IdColumnRow,
+                                props : {row: a},
+                                sort_order: 10,
+                                id: "id"
+                            },
+                            {
+                                component: NameColumnRow,
+                                props : {row: a},
+                                sort_order: 20,
+                                id: "name"
+                            },
+                            {
+                                component: CodeColumnRow,
+                                props : {row: a},
+                                sort_order: 25,
+                                id: "code"
+                            },
+                            {
+                                component: TypeColumnRow,
+                                props : {row: a},
+                                sort_order: 30,
+                                id: "type"
+                            },
+                            {
+                                component: IsRequiredColumnRow,
+                                props : {row: a},
+                                sort_order: 40,
+                                id: "isRequired"
+                            },
+                            {
+                                component: IsFilterableColumnRow,
+                                props : {row: a},
+                                sort_order: 45,
+                                id: "isFilterable"
+                            },
+                            {
+                                component: DisplayOnFrontendColumnRow,
+                                props : {row: a},
+                                sort_order: 50,
+                                id: "display_on_frontend"
+                            },
+                            {
+                                component: ActionColumnRow,
+                                props : {row: a},
+                                sort_order: 60,
+                                id: "action"
+                            }
+                        ]}
+                    />
+                </tr>
             })}
             </tbody>
         </table>

@@ -491,102 +491,110 @@ export default function ProductGrid({ apiUrl, areaProps }) {
             React.createElement(
                 "thead",
                 null,
-                React.createElement(Area, {
-                    className: "",
-                    id: "product_grid_header",
-                    filters: areaProps.filters,
-                    addFilter: areaProps.addFilter,
-                    updateFilter: areaProps.updateFilter,
-                    removeFilter: areaProps.removeFilter,
-                    cleanFilter: areaProps.cleanFilter,
-                    addField: addField,
-                    applyFilter: applyFilter,
-                    reactcomponent: "tr",
-                    coreWidgets: [{
-                        component: IdColumnHeader,
-                        props: _extends({}, areaProps, { addField, applyFilter }),
-                        sort_order: 10,
-                        id: "id"
-                    }, {
-                        component: SkuColumnHeader,
-                        props: _extends({}, areaProps, { addField, applyFilter }),
-                        sort_order: 15,
-                        id: "sku"
-                    }, {
-                        component: ThumbColumnHeader,
-                        props: _extends({}, areaProps, { addField, applyFilter }),
-                        sort_order: 20,
-                        id: "thumb"
-                    }, {
-                        component: NameColumnHeader,
-                        props: _extends({}, areaProps, { addField, applyFilter }),
-                        sort_order: 30,
-                        id: "name"
-                    }, {
-                        component: StatusColumnHeader,
-                        props: _extends({}, areaProps, { addField, applyFilter }),
-                        sort_order: 40,
-                        id: "status"
-                    }, {
-                        component: QtyColumnHeader,
-                        props: _extends({}, areaProps, { addField, applyFilter }),
-                        sort_order: 50,
-                        id: "qty"
-                    }, {
-                        component: PriceColumnHeader,
-                        props: _extends({}, areaProps, { addField, applyFilter }),
-                        sort_order: 60,
-                        id: "price"
-                    }]
-                })
+                React.createElement(
+                    "tr",
+                    null,
+                    React.createElement(Area, {
+                        className: "",
+                        id: "product_grid_header",
+                        filters: areaProps.filters,
+                        addFilter: areaProps.addFilter,
+                        updateFilter: areaProps.updateFilter,
+                        removeFilter: areaProps.removeFilter,
+                        cleanFilter: areaProps.cleanFilter,
+                        addField: addField,
+                        applyFilter: applyFilter,
+                        noOuter: true,
+                        coreWidgets: [{
+                            component: IdColumnHeader,
+                            props: _extends({}, areaProps, { addField, applyFilter }),
+                            sort_order: 10,
+                            id: "id"
+                        }, {
+                            component: SkuColumnHeader,
+                            props: _extends({}, areaProps, { addField, applyFilter }),
+                            sort_order: 15,
+                            id: "sku"
+                        }, {
+                            component: ThumbColumnHeader,
+                            props: _extends({}, areaProps, { addField, applyFilter }),
+                            sort_order: 20,
+                            id: "thumb"
+                        }, {
+                            component: NameColumnHeader,
+                            props: _extends({}, areaProps, { addField, applyFilter }),
+                            sort_order: 30,
+                            id: "name"
+                        }, {
+                            component: StatusColumnHeader,
+                            props: _extends({}, areaProps, { addField, applyFilter }),
+                            sort_order: 40,
+                            id: "status"
+                        }, {
+                            component: QtyColumnHeader,
+                            props: _extends({}, areaProps, { addField, applyFilter }),
+                            sort_order: 50,
+                            id: "qty"
+                        }, {
+                            component: PriceColumnHeader,
+                            props: _extends({}, areaProps, { addField, applyFilter }),
+                            sort_order: 60,
+                            id: "price"
+                        }]
+                    })
+                )
             ),
             React.createElement(
                 "tbody",
                 null,
                 products.map((p, i) => {
-                    return React.createElement(Area, {
-                        key: i,
-                        className: "",
-                        id: "product_grid_row",
-                        row: p,
-                        reactcomponent: "tr",
-                        coreWidgets: [{
-                            component: IdColumnRow,
-                            props: { row: p },
-                            sort_order: 10,
-                            id: "id"
-                        }, {
-                            component: SkuColumnRow,
-                            props: { row: p },
-                            sort_order: 15,
-                            id: "sku"
-                        }, {
-                            component: ThumbColumnRow,
-                            props: { row: p },
-                            sort_order: 20,
-                            id: "thumb"
-                        }, {
-                            component: NameColumnRow,
-                            props: { row: p },
-                            sort_order: 30,
-                            id: "name"
-                        }, {
-                            component: StatusColumnRow,
-                            props: { row: p },
-                            sort_order: 40,
-                            id: "status"
-                        }, {
-                            component: QtyColumnRow,
-                            props: { row: p },
-                            sort_order: 50,
-                            id: "qty"
-                        }, {
-                            component: PriceColumnRow,
-                            props: { row: p },
-                            sort_order: 60,
-                            id: "price"
-                        }]
-                    });
+                    return React.createElement(
+                        "tr",
+                        null,
+                        React.createElement(Area, {
+                            key: i,
+                            className: "",
+                            id: "product_grid_row",
+                            row: p,
+                            noOuter: true,
+                            coreWidgets: [{
+                                component: IdColumnRow,
+                                props: { row: p },
+                                sort_order: 10,
+                                id: "id"
+                            }, {
+                                component: SkuColumnRow,
+                                props: { row: p },
+                                sort_order: 15,
+                                id: "sku"
+                            }, {
+                                component: ThumbColumnRow,
+                                props: { row: p },
+                                sort_order: 20,
+                                id: "thumb"
+                            }, {
+                                component: NameColumnRow,
+                                props: { row: p },
+                                sort_order: 30,
+                                id: "name"
+                            }, {
+                                component: StatusColumnRow,
+                                props: { row: p },
+                                sort_order: 40,
+                                id: "status"
+                            }, {
+                                component: QtyColumnRow,
+                                props: { row: p },
+                                sort_order: 50,
+                                id: "qty"
+                            }, {
+                                component: PriceColumnRow,
+                                props: { row: p },
+                                sort_order: 60,
+                                id: "price"
+                            }]
+                        })
+                    );
                 })
             )
         ),
