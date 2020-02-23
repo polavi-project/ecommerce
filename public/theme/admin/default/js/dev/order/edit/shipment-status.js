@@ -1,7 +1,7 @@
 import Area from "../../../../../../../js/production/area.js";
 
-function Pending({status, isDropdown}) {
-    if(isDropdown === true)
+function Pending({status, noOuter = false}) {
+    if(noOuter === true)
         return <option value='pending'>Pending</option>;
     else if(status == 'pending')
         return <span className="uk-label uk-label-warning"><span uk-icon="icon: tag; ratio: 0.8"></span> Pending</span>;
@@ -9,8 +9,8 @@ function Pending({status, isDropdown}) {
         return null;
 }
 
-function Delivering({status, isDropdown}) {
-    if(isDropdown === true)
+function Delivering({status, noOuter = false}) {
+    if(noOuter === true)
         return <option value='delivering'>Delivering</option>;
     else if(status == 'delivering')
         return <span className="uk-label uk-label-warning"><span uk-icon="icon: tag; ratio: 0.8"></span> Delivering</span>;
@@ -18,8 +18,8 @@ function Delivering({status, isDropdown}) {
         return null;
 }
 
-function Delivered({status, isDropdown}) {
-    if(isDropdown === true)
+function Delivered({status, noOuter = false}) {
+    if(noOuter === true)
         return <option value='delivered'>Delivered</option>;
     else if(status == 'delivered')
         return <span className="uk-label uk-label-success"><span uk-icon="icon: tag; ratio: 0.8"></span> Delivered</span>;
@@ -27,16 +27,15 @@ function Delivered({status, isDropdown}) {
         return null;
 }
 
-function ShipmentStatus({status, isDropdown = false, wrapperProps = {}}) {
-    if(isDropdown === false)
+function ShipmentStatus(props) {
+    if(props.noOuter === false)
         return <Area
-            id="shipment-status"
-            status={status}
+            id="shipment_status"
             coreWidgets={[
                 {
                     component: Pending,
                     props : {
-                        status
+                        ...props
                     },
                     sort_order: 10,
                     id: "shipment-status-pending"
@@ -44,7 +43,7 @@ function ShipmentStatus({status, isDropdown = false, wrapperProps = {}}) {
                 {
                     component: Delivering,
                     props : {
-                        status
+                        ...props
                     },
                     sort_order: 20,
                     id: "shipment-status-delivering"
@@ -52,7 +51,7 @@ function ShipmentStatus({status, isDropdown = false, wrapperProps = {}}) {
                 {
                     component: Delivered,
                     props : {
-                        status
+                        ...props
                     },
                     sort_order: 30,
                     id: "shipment-status-delivered"
@@ -61,16 +60,13 @@ function ShipmentStatus({status, isDropdown = false, wrapperProps = {}}) {
         />;
     else
         return <Area
-            id="shipment-status"
-            status={status}
-            reactcomponent={"select"}
-            wrapperProps={wrapperProps}
+            id="shipment_status"
+            noOuter={true}
             coreWidgets={[
                 {
                     component: Pending,
                     props : {
-                        status,
-                        isDropdown
+                        ...props
                     },
                     sort_order: 10,
                     id: "shipment-status-pending"
@@ -78,8 +74,7 @@ function ShipmentStatus({status, isDropdown = false, wrapperProps = {}}) {
                 {
                     component: Delivering,
                     props : {
-                        status,
-                        isDropdown
+                        ...props
                     },
                     sort_order: 20,
                     id: "shipment-status-delivering"
@@ -87,8 +82,7 @@ function ShipmentStatus({status, isDropdown = false, wrapperProps = {}}) {
                 {
                     component: Delivered,
                     props : {
-                        status,
-                        isDropdown
+                        ...props
                     },
                     sort_order: 30,
                     id: "shipment-status-delivered"

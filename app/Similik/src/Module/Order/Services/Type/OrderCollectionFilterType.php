@@ -29,7 +29,8 @@ class OrderCollectionFilterType extends InputObjectType
                     'grand_total' => $container->get(FilterFieldType::class),
                     'payment_status' => $container->get(FilterFieldType::class),
                     'shipment_status' => $container->get(FilterFieldType::class),
-                    'customer_email' => $container->get(FilterFieldType::class)
+                    'customer_email' => $container->get(FilterFieldType::class),
+                    'created_at' => $container->get(FilterFieldType::class)
                 ];
 
                 dispatch_event('filter.orderCollectionFilter.input', [&$fields]);

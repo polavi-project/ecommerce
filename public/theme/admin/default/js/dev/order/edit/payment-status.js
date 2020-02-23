@@ -1,7 +1,7 @@
 import Area from "../../../../../../../js/production/area.js";
 
-function Pending({status, isDropdown}) {
-    if(isDropdown === true)
+function Pending({status, noOuter = false}) {
+    if(noOuter === true)
         return <option value='pending'>Pending</option>;
     else if(status == 'pending')
         return <span className="uk-label uk-label-warning"><span uk-icon="icon: tag; ratio: 0.8"></span> Pending</span>;
@@ -9,8 +9,8 @@ function Pending({status, isDropdown}) {
         return null;
 }
 
-function Paid({status, isDropdown}) {
-    if(isDropdown === true)
+function Paid({status, noOuter = false}) {
+    if(noOuter === true)
         return <option value='paid'>Paid</option>;
     else if(status == 'paid')
         return <span className="uk-label uk-label-success"><span uk-icon="icon: tag; ratio: 0.8"></span> Paid</span>;
@@ -18,8 +18,8 @@ function Paid({status, isDropdown}) {
         return null;
 }
 
-function Refunded({status, isDropdown}) {
-    if(isDropdown === true)
+function Refunded({status, noOuter = false}) {
+    if(noOuter === true)
         return <option value='refunded'>Refunded</option>;
     else if(status == 'refunded')
         return <span className="uk-label uk-label-danger"><span uk-icon="icon: tag; ratio: 0.8"></span> Refunded</span>;
@@ -28,18 +28,15 @@ function Refunded({status, isDropdown}) {
 }
 
 // TODO: Check again this Area
-function PaymentStatus({status, isDropdown = false, wrapperProps = {}}) {
-    if(isDropdown === false)
+function PaymentStatus(props) {
+    if(props.noOuter === false)
         return <Area
-            id="payment-status"
-            status={status}
-            isDropdown={isDropdown}
+            id="payment_status"
             coreWidgets={[
                 {
                     component: Pending,
                     props : {
-                        status,
-                        isDropdown
+                        ...props
                     },
                     sort_order: 10,
                     id: "payment-status-pending"
@@ -47,8 +44,7 @@ function PaymentStatus({status, isDropdown = false, wrapperProps = {}}) {
                 {
                     component: Paid,
                     props : {
-                        status,
-                        isDropdown
+                        ...props
                     },
                     sort_order: 20,
                     id: "payment-status-paid"
@@ -56,26 +52,23 @@ function PaymentStatus({status, isDropdown = false, wrapperProps = {}}) {
                 {
                     component: Refunded,
                     props : {
-                        status,
-                        isDropdown
+                        ...props
                     },
                     sort_order: 30,
                     id: "payment-status-refunded"
                 }
             ]}
+            {...props}
         />;
     else
         return <Area
-            id="payment-status"
-            status={status}
-            reactcomponent={"select"}
-            wrapperProps={wrapperProps}
+            id="payment_status"
+            noOuter={true}
             coreWidgets={[
                 {
                     component: Pending,
                     props : {
-                        status,
-                        isDropdown
+                        ...props
                     },
                     sort_order: 10,
                     id: "payment-status-pending"
@@ -83,8 +76,7 @@ function PaymentStatus({status, isDropdown = false, wrapperProps = {}}) {
                 {
                     component: Paid,
                     props : {
-                        status,
-                        isDropdown
+                        ...props
                     },
                     sort_order: 20,
                     id: "payment-status-paid"
@@ -92,13 +84,13 @@ function PaymentStatus({status, isDropdown = false, wrapperProps = {}}) {
                 {
                     component: Refunded,
                     props : {
-                        status,
-                        isDropdown
+                        ...props
                     },
                     sort_order: 30,
                     id: "payment-status-refunded"
                 }
             ]}
+            {...props}
         />;
 }
 
