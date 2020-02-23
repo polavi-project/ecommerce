@@ -147,65 +147,69 @@ export default function AttributeGrid({apiUrl})
     return <div className={"uk-overflow-auto"}>
         <table className="uk-table uk-table-small uk-table-divider">
             <thead>
-            <Area
-                className={""}
-                id={"attribute_group_grid_header"}
-                addFilter={addFilter}
-                cleanFilter={cleanFilter}
-                addField={addField}
-                applyFilter={applyFilter}
-                reactcomponent={"tr"}
-                coreWidgets={[
-                    {
-                        component: IdColumnHeader,
-                        props : {addFilter, cleanFilter, addField, applyFilter},
-                        sort_order: 10,
-                        id: "id"
-                    },
-                    {
-                        component: NameColumnHeader,
-                        props : {},
-                        sort_order: 20,
-                        id: "name"
-                    },
-                    {
-                        component: ActionColumnHeader,
-                        props : {},
-                        sort_order: 30,
-                        id: "action"
-                    }
-                ]}
-            />
+                <tr>
+                    <Area
+                        className={""}
+                        id={"attribute_group_grid_header"}
+                        addFilter={addFilter}
+                        cleanFilter={cleanFilter}
+                        addField={addField}
+                        applyFilter={applyFilter}
+                        noOuter={true}
+                        coreWidgets={[
+                            {
+                                component: IdColumnHeader,
+                                props : {addFilter, cleanFilter, addField, applyFilter},
+                                sort_order: 10,
+                                id: "id"
+                            },
+                            {
+                                component: NameColumnHeader,
+                                props : {},
+                                sort_order: 20,
+                                id: "name"
+                            },
+                            {
+                                component: ActionColumnHeader,
+                                props : {},
+                                sort_order: 30,
+                                id: "action"
+                            }
+                        ]}
+                    />
+                </tr>
             </thead>
             <tbody>
             {groups.map((g, i)=> {
-                return <Area
-                    key={i}
-                    className={""}
-                    id={"attribute_group_grid_row"}
-                    row={g}
-                    reactcomponent={"tr"}
-                    coreWidgets={[
-                        {
-                            component: IdColumnRow,
-                            props : {row: g},
-                            sort_order: 10,
-                            id: "id"
-                        },
-                        {
-                            component: NameColumnRow,
-                            props : {row: g},
-                            sort_order: 20,
-                            id: "name"
-                        },
-                        {
-                            component: ActionColumnRow,
-                            props : {row: g},
-                            sort_order: 30,
-                            id: "action"
-                        }
-                    ]}
-                />
+                return <tr>
+                    <Area
+                        key={i}
+                        className={""}
+                        id={"attribute_group_grid_row"}
+                        row={g}
+                        noOuter={true}
+                        coreWidgets={[
+                            {
+                                component: IdColumnRow,
+                                props : {row: g},
+                                sort_order: 10,
+                                id: "id"
+                            },
+                            {
+                                component: NameColumnRow,
+                                props : {row: g},
+                                sort_order: 20,
+                                id: "name"
+                            },
+                            {
+                                component: ActionColumnRow,
+                                props : {row: g},
+                                sort_order: 30,
+                                id: "action"
+                            }
+                        ]}
+                    />
+                </tr>
             })}
             </tbody>
         </table>

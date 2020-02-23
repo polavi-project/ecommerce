@@ -205,59 +205,67 @@ export default function AttributeGrid({ apiUrl }) {
             React.createElement(
                 "thead",
                 null,
-                React.createElement(Area, {
-                    className: "",
-                    id: "attribute_group_grid_header",
-                    addFilter: addFilter,
-                    cleanFilter: cleanFilter,
-                    addField: addField,
-                    applyFilter: applyFilter,
-                    reactcomponent: "tr",
-                    coreWidgets: [{
-                        component: IdColumnHeader,
-                        props: { addFilter, cleanFilter, addField, applyFilter },
-                        sort_order: 10,
-                        id: "id"
-                    }, {
-                        component: NameColumnHeader,
-                        props: {},
-                        sort_order: 20,
-                        id: "name"
-                    }, {
-                        component: ActionColumnHeader,
-                        props: {},
-                        sort_order: 30,
-                        id: "action"
-                    }]
-                })
+                React.createElement(
+                    "tr",
+                    null,
+                    React.createElement(Area, {
+                        className: "",
+                        id: "attribute_group_grid_header",
+                        addFilter: addFilter,
+                        cleanFilter: cleanFilter,
+                        addField: addField,
+                        applyFilter: applyFilter,
+                        noOuter: true,
+                        coreWidgets: [{
+                            component: IdColumnHeader,
+                            props: { addFilter, cleanFilter, addField, applyFilter },
+                            sort_order: 10,
+                            id: "id"
+                        }, {
+                            component: NameColumnHeader,
+                            props: {},
+                            sort_order: 20,
+                            id: "name"
+                        }, {
+                            component: ActionColumnHeader,
+                            props: {},
+                            sort_order: 30,
+                            id: "action"
+                        }]
+                    })
+                )
             ),
             React.createElement(
                 "tbody",
                 null,
                 groups.map((g, i) => {
-                    return React.createElement(Area, {
-                        key: i,
-                        className: "",
-                        id: "attribute_group_grid_row",
-                        row: g,
-                        reactcomponent: "tr",
-                        coreWidgets: [{
-                            component: IdColumnRow,
-                            props: { row: g },
-                            sort_order: 10,
-                            id: "id"
-                        }, {
-                            component: NameColumnRow,
-                            props: { row: g },
-                            sort_order: 20,
-                            id: "name"
-                        }, {
-                            component: ActionColumnRow,
-                            props: { row: g },
-                            sort_order: 30,
-                            id: "action"
-                        }]
-                    });
+                    return React.createElement(
+                        "tr",
+                        null,
+                        React.createElement(Area, {
+                            key: i,
+                            className: "",
+                            id: "attribute_group_grid_row",
+                            row: g,
+                            noOuter: true,
+                            coreWidgets: [{
+                                component: IdColumnRow,
+                                props: { row: g },
+                                sort_order: 10,
+                                id: "id"
+                            }, {
+                                component: NameColumnRow,
+                                props: { row: g },
+                                sort_order: 20,
+                                id: "name"
+                            }, {
+                                component: ActionColumnRow,
+                                props: { row: g },
+                                sort_order: 30,
+                                id: "action"
+                            }]
+                        })
+                    );
                 })
             )
         ),
