@@ -282,101 +282,105 @@ export default function OrderGrid({apiUrl})
     return <div className={"uk-overflow-auto"}>
         <table className="uk-table uk-table-small uk-table-divider">
             <thead>
-            <Area
-                className={""}
-                id={"order_grid_header"}
-                addFilter={addFilter}
-                cleanFilter={cleanFilter}
-                addField={addField}
-                applyFilter={applyFilter}
-                reactcomponent={"tr"}
-                coreWidgets={[
-                    {
-                        component: IdColumnHeader,
-                        props : {addFilter, cleanFilter, addField, applyFilter},
-                        sort_order: 10,
-                        id: "id"
-                    },
-                    {
-                        component: NumberColumnHeader,
-                        props : {},
-                        sort_order: 20,
-                        id: "number"
-                    },
-                    {
-                        component: TotalColumnHeader,
-                        props : {},
-                        sort_order: 30,
-                        id: "grand_total"
-                    },
-                    {
-                        component: PaymentStatusColumnHeader,
-                        props : {},
-                        sort_order: 40,
-                        id: "payment_status"
-                    },
-                    {
-                        component: ShipmentStatusColumnHeader,
-                        props : {},
-                        sort_order: 50,
-                        id: "shipment_status"
-                    },
-                    {
-                        component: ActionColumnHeader,
-                        props : {},
-                        sort_order: 60,
-                        id: "action"
-                    }
-                ]}
-            />
+                <tr>
+                    <Area
+                        className={""}
+                        id={"order_grid_header"}
+                        addFilter={addFilter}
+                        cleanFilter={cleanFilter}
+                        addField={addField}
+                        applyFilter={applyFilter}
+                        noOuter={true}
+                        coreWidgets={[
+                            {
+                                component: IdColumnHeader,
+                                props : {addFilter, cleanFilter, addField, applyFilter},
+                                sort_order: 10,
+                                id: "id"
+                            },
+                            {
+                                component: NumberColumnHeader,
+                                props : {},
+                                sort_order: 20,
+                                id: "number"
+                            },
+                            {
+                                component: TotalColumnHeader,
+                                props : {},
+                                sort_order: 30,
+                                id: "grand_total"
+                            },
+                            {
+                                component: PaymentStatusColumnHeader,
+                                props : {},
+                                sort_order: 40,
+                                id: "payment_status"
+                            },
+                            {
+                                component: ShipmentStatusColumnHeader,
+                                props : {},
+                                sort_order: 50,
+                                id: "shipment_status"
+                            },
+                            {
+                                component: ActionColumnHeader,
+                                props : {},
+                                sort_order: 60,
+                                id: "action"
+                            }
+                        ]}
+                    />
+                </tr>
             </thead>
             <tbody>
             {orders.map((o, i)=> {
-                return <Area
-                    key={i}
-                    className={""}
-                    id={"order_grid_row"}
-                    row={o}
-                    reactcomponent={"tr"}
-                    coreWidgets={[
-                        {
-                            component: IdColumnRow,
-                            props : {row: o},
-                            sort_order: 10,
-                            id: "id"
-                        },
-                        {
-                            component: NumberColumnRow,
-                            props : {row: o},
-                            sort_order: 20,
-                            id: "number"
-                        },
-                        {
-                            component: TotalColumnRow,
-                            props : {row: o},
-                            sort_order: 30,
-                            id: "grand_total"
-                        },
-                        {
-                            component: PaymentStatusColumnRow,
-                            props : {row: o},
-                            sort_order: 40,
-                            id: "payment_status"
-                        },
-                        {
-                            component: ShipmentStatusColumnRow,
-                            props : {row: o},
-                            sort_order: 50,
-                            id: "shipment_status"
-                        },
-                        {
-                            component: ActionColumnRow,
-                            props : {row: o},
-                            sort_order: 60,
-                            id: "action"
-                        }
-                    ]}
-                />
+                return <tr>
+                    <Area
+                        key={i}
+                        className={""}
+                        id={"order_grid_row"}
+                        row={o}
+                        noOuter={true}
+                        coreWidgets={[
+                            {
+                                component: IdColumnRow,
+                                props : {row: o},
+                                sort_order: 10,
+                                id: "id"
+                            },
+                            {
+                                component: NumberColumnRow,
+                                props : {row: o},
+                                sort_order: 20,
+                                id: "number"
+                            },
+                            {
+                                component: TotalColumnRow,
+                                props : {row: o},
+                                sort_order: 30,
+                                id: "grand_total"
+                            },
+                            {
+                                component: PaymentStatusColumnRow,
+                                props : {row: o},
+                                sort_order: 40,
+                                id: "payment_status"
+                            },
+                            {
+                                component: ShipmentStatusColumnRow,
+                                props : {row: o},
+                                sort_order: 50,
+                                id: "shipment_status"
+                            },
+                            {
+                                component: ActionColumnRow,
+                                props : {row: o},
+                                sort_order: 60,
+                                id: "action"
+                            }
+                        ]}
+                    />
+                </tr>
             })}
             </tbody>
         </table>
