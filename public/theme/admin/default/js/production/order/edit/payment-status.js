@@ -39,10 +39,12 @@ function Refunded({ status, isDropdown }) {
     );else return null;
 }
 
+// TODO: Check again this Area
 function PaymentStatus({ status, isDropdown = false, wrapperProps = {} }) {
     if (isDropdown === false) return React.createElement(Area, {
         id: 'payment-status',
         status: status,
+        isDropdown: isDropdown,
         coreWidgets: [{
             component: Pending,
             props: {

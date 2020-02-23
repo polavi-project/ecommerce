@@ -27,11 +27,13 @@ function Refunded({status, isDropdown}) {
         return null;
 }
 
+// TODO: Check again this Area
 function PaymentStatus({status, isDropdown = false, wrapperProps = {}}) {
     if(isDropdown === false)
         return <Area
             id="payment-status"
             status={status}
+            isDropdown={isDropdown}
             coreWidgets={[
                 {
                     component: Pending,

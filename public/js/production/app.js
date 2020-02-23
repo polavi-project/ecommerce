@@ -2,7 +2,7 @@ import Area from "./area.js";
 import LoadingBar from "./loading_bar.js";
 import { store } from "./redux_store.js";
 import { Head } from "./head.js";
-import { REQUEST_END, INITIAL_PAGE_READY } from "./event-types.js";
+import { REQUEST_END } from "./event-types.js";
 import { Fetch } from "./fetch.js";
 
 console.log(store);
@@ -36,7 +36,7 @@ const App = () => {
             delete window.pageData.appState.helmet.scripts;
             // Override widgets
             window.pageData.widgets = widgets;
-            dispatch({ 'type': INITIAL_PAGE_READY, 'payload': { data: window.pageData } });
+            //dispatch({'type': INITIAL_PAGE_READY, 'payload': {data: window.pageData}});
             dispatch({ 'type': REQUEST_END, 'payload': { data: window.pageData } });
         }).catch(e => {
             console.log(e);

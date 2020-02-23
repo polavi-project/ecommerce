@@ -4,32 +4,32 @@ import { UPDATE_WIDGETS, REQUEST_END } from "./event-types.js";
 import { ReducerRegistry } from "./reducer_registry.js";
 
 function Area(props) {
-    let Wrapper$Component = props.reactcomponent === undefined ? "div" : props.reactcomponent;
     const getWidgets = widgets => {
         let coreWidgets = props.coreWidgets ? props.coreWidgets : [];
         let term = widgets !== undefined ? coreWidgets.concat(widgets.filter(e => {
             return e.area === props.id;
         })) : coreWidgets;
 
-        let items = term.sort(function (obj1, obj2) {
+        return term.sort(function (obj1, obj2) {
             return obj1.sort_order - obj2.sort_order;
-        });
-
-        return items.map(c => {
-            let C = c.component;
-            if (typeof C === 'string') return React.createElement(C, _extends({ key: c.id }, c.props));else return React.createElement(C, _extends({ key: c.id }, c.props, { areaProps: props }));
         });
     };
 
-    const widgets = ReactRedux.useSelector(state => getWidgets(state.widgets));
-    let wrapperProps = {};
-    if (typeof props.wrapperProps === 'object' && props.wrapperProps !== null) wrapperProps = _extends({ className: props.className ? props.className : "" }, props.wrapperProps);else wrapperProps = { className: props.className ? props.className : "" };
+    const widgets = ReactRedux.useSelector(state => getWidgets(state.widgets), _.isEqual);
 
-    let args = [Wrapper$Component, wrapperProps];
-    widgets.forEach(w => {
-        args.push(w);
-    });
-    if (widgets.length === 0) return null;else return React.createElement.apply(null, args);
+    let Wrapper$Component = props.noOuter !== true ? "div" : React.Fragment;
+
+    if (widgets.length === 0) return null;
+
+    return React.createElement(
+        Wrapper$Component,
+        _extends({}, props, { areaProps: undefined, coreWidgets: undefined }),
+        widgets.map(w => {
+            let C = w.component;
+            if (typeof C === 'string') return React.createElement(C, _extends({ key: c.id }, c.props));
+            return React.createElement(C, _extends({ key: w.id }, w.props, { areaProps: props }));
+        })
+    );
 }
 
 function reducer(state = [], action = {}) {

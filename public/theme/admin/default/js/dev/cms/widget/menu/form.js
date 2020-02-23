@@ -1,5 +1,4 @@
 import Text from "../../../../../../../../js/production/form/fields/text.js";
-import Tinycme from "../../../../../../../../js/production/form/fields/tinycme.js";
 import Select from "../../../../../../../../js/production/form/fields/select.js";
 import {LayoutList} from "../../../../production/cms/widget/layout_list.js";
 import {AreaList} from "../../../../production/cms/widget/area_list.js";
@@ -28,7 +27,8 @@ function Categories({categories = [], setting = []}) {
                 return parseInt(c.id) !== parseInt(id);
             }));
     };
-    return <div className="uk-width-1-2">
+
+    return <div className="uk-width-1-2 uk-margin-medium-top">
         <h3>Categories</h3>
         <input type='text' name="variables[widget][setting][0][key]" value="category" readOnly style={{display:'none'}}/>
         <input type='hidden' name="variables[widget][setting][0][value]" value={JSON.stringify(cs)}/>
@@ -38,6 +38,7 @@ function Categories({categories = [], setting = []}) {
                     <label>
                         <input
                             type="checkbox"
+                            className="uk-checkbox"
                             checked={_.find(cs, {id: c.category_id}) !== undefined}
                             onChange={(e) => onChange(e, c.category_id)}
                         /> {c.name}
@@ -46,6 +47,7 @@ function Categories({categories = [], setting = []}) {
                     <label>
                         Position <input
                             type="text"
+                            className="uk-input uk-form-small uk-form-width-small"
                             value={_.find(cs, {id: c.category_id}) !== undefined ? _.get(_.find(cs, {id: c.category_id}), 'position', "") : ""}
                             onChange={(e) => {onChangePosition(c.category_id, e.target.value)}}
                         />
@@ -77,7 +79,7 @@ function Pages({pages = [], setting = []}) {
                 return parseInt(p.id) !== parseInt(id);
             }));
     };
-    return <div className="uk-width-1-2">
+    return <div className="uk-width-1-2 uk-margin-medium-top">
         <h3>Cms pages</h3>
         <input type='text' name="variables[widget][setting][1][key]" value="page" readOnly style={{display:'none'}}/>
         <input type='hidden' name="variables[widget][setting][1][value]" value={JSON.stringify(ps)}/>
@@ -87,6 +89,7 @@ function Pages({pages = [], setting = []}) {
                     <label>
                         <input
                             type="checkbox"
+                            className="uk-checkbox"
                             checked={_.find(ps, {id: p.cms_page_id}) !== undefined}
                             onChange={(e) => onChange(e, p.cms_page_id)}
                         /> {p.name}
@@ -95,6 +98,7 @@ function Pages({pages = [], setting = []}) {
                     <label>
                         Position <input
                         type="text"
+                        className="uk-input uk-form-small uk-form-width-small"
                         value={_.find(ps, {id: p.cms_page_id}) !== undefined ? _.get(_.find(ps, {id: p.cms_page_id}), 'position', "") : ""}
                         onChange={(e) => {onChangePosition(c.cms_page_id, e.target.value)}}
                     />
@@ -105,58 +109,104 @@ function Pages({pages = [], setting = []}) {
     </div>
 }
 
-export default function MenuWidget({id, name, status, setting, displaySetting, sort_order, formAction, areaProps, categories, pages}) {
+export default function MenuWidget({id, name, status, setting, displaySetting, sort_order, formAction, redirect, areaProps}) {
+    const [categories, setCategories] = React.useState([]);
+    const [pages, setPages] = React.useState([]);
+
     const layout = _.find(displaySetting, {key:'layout'}) !== undefined ?
         JSON.parse(_.get(_.find(displaySetting, {key:'layout'}), 'value', [])) : [];
     const area = _.find(displaySetting, {key:'area'}) !== undefined ?
         JSON.parse(_.get(_.find(displaySetting, {key:'area'}), 'value', [])) : [];
+
     const dispatch = ReactRedux.useDispatch();
     const onComplete = (response) => {
         if(_.get(response, 'payload.data.createWidget.status') === true) {
             dispatch({'type' : ADD_ALERT, 'payload': {alerts: [{id: "widget_update_success", message: 'Widget has been saved successfully', type: "success"}]}});
-            Fetch(areaProps.requestUrl, true);
+            Fetch(redirect, true);
         } else
             dispatch({'type' : ADD_ALERT, 'payload': {alerts: [{id: "widget_update_error", message: _.get(response, 'payload.data.createWidget.message', 'Something wrong, please try again'), type: "error"}]}});
     };
 
-    return <div>
+    const api = ReactRedux.useSelector(state => _.get(state, 'appState.graphqlApi'));
+
+    React.useEffect(()=>{
+        const getCategoriesQuery = "{ categoryCollection { categories { category_id name } }}";
+        const getPagesQuery = "{ pageCollection {pages {cms_page_id name } }}";
+        fetch(
+            api + "?query=" + getCategoriesQuery,
+            {
+                method: "GET"
+            }
+        )
+            .then(res => res.json())
+            .then(response => {
+                setCategories(response.payload.data.categoryCollection.categories);
+            })
+            .catch(error => console.log(error));
+
+        fetch(
+            api + "?query=" + getPagesQuery,
+            {
+                method: "GET"
+            }
+        )
+            .then(res => res.json())
+            .then(response => {
+                setPages(response.payload.data.pageCollection.pages);
+            })
+            .catch(error => console.log(error));
+    }, []);
+
+// TODO: make this form customizable
+    if(areaProps.type !== "menu")
+        return null;
+
+    return <div className="uk-margin-medium-top">
+        <h3>Menu widget</h3>
         <Form
             id="text-widget-edit-form"
             action={formAction}
             onComplete={onComplete}
         >
-            <input type='text' name="query" value="mutation CreateTextWidget($widget: WidgetInput!) { createWidget (widget: $widget) {status message}}" readOnly style={{display:'none'}}/>
-            <input type='text' name="variables[widget][type]" value="menu" readOnly style={{display:'none'}}/>
-            {id && <input type='text' name="variables[widget][id]" value={id} readOnly style={{display:'none'}}/>}
-            <Text
-                name="variables[widget][name]"
-                value={name}
-                formId="text-widget-edit-form"
-                validation_rules={['notEmpty']}
-                label={"Name"}
-            />
-            <Select
-                name="variables[widget][status]"
-                value={status}
-                formId="text-widget-edit-form"
-                options={[
-                    {value: '1', text: 'Enable'},
-                    {value: '0', text: 'Disable'}
-                ]}
-                label="Status"
-            />
-            <Categories categories={categories} setting={setting}/>
-            <Pages pages={pages} setting={setting}/>
-            <div>Select page layout</div>
-            <LayoutList formId={"text-widget-edit-form"} selectedLayouts={layout}/>
-            <div>Select area</div>
-            <AreaList formId={"text-widget-edit-form"} selectedAreas={area}/>
-            <Text
-                name="variables[widget][sort_order]"
-                value={sort_order}
-                formId="text-widget-edit-form"
-                label={"Sort order"}
-            />
+            <div className="uk-child-width-1-2 uk-grid">
+                <div>
+                    <input type='text' name="query" value="mutation CreateTextWidget($widget: WidgetInput!) { createWidget (widget: $widget) {status message}}" readOnly style={{display:'none'}}/>
+                    <input type='text' name="variables[widget][type]" value="menu" readOnly style={{display:'none'}}/>
+                    {id && <input type='text' name="variables[widget][id]" value={id} readOnly style={{display:'none'}}/>}
+                    <Text
+                        name="variables[widget][name]"
+                        value={name}
+                        formId="text-widget-edit-form"
+                        validation_rules={['notEmpty']}
+                        label={"Name"}
+                    />
+                    <Select
+                        name="variables[widget][status]"
+                        value={status}
+                        formId="text-widget-edit-form"
+                        options={[
+                            {value: '1', text: 'Enable'},
+                            {value: '0', text: 'Disable'}
+                        ]}
+                        label="Status"
+                        size={"medium"}
+                    />
+                    <Categories categories={categories} setting={setting}/>
+                    <Pages pages={pages} setting={setting}/>
+                </div>
+                <div>
+                    <h3>Select page layout</h3>
+                    <LayoutList formId={"text-widget-edit-form"} selectedLayouts={layout}/>
+                    <h3>Select area</h3>
+                    <AreaList formId={"text-widget-edit-form"} selectedAreas={area}/>
+                    <Text
+                        name="variables[widget][sort_order]"
+                        value={sort_order}
+                        formId="text-widget-edit-form"
+                        label={"Sort order"}
+                    />
+                </div>
+            </div>
         </Form>
     </div>
 }

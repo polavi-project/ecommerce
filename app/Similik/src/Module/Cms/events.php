@@ -315,6 +315,23 @@ $eventDispatcher->addListener(
     0
 );
 
+$eventDispatcher->addListener('register.widget.grid.middleware', function(\Similik\Services\MiddlewareManager $mm) {
+    $mm->registerMiddleware(\Similik\Module\Cms\Middleware\TextWidget\RegisterTypeMiddleware::class, 0);
+    $mm->registerMiddleware(\Similik\Module\Cms\Middleware\MenuWidget\RegisterTypeMiddleware::class, 0);
+});
+
+$eventDispatcher->addListener('register.widget.create.middleware', function(\Similik\Services\MiddlewareManager $mm) {
+    $mm->registerMiddleware(\Similik\Module\Cms\Middleware\TextWidget\RegisterTypeMiddleware::class, 0);
+    $mm->registerMiddleware(\Similik\Module\Cms\Middleware\TextWidget\FormMiddleware::class, 0);
+    $mm->registerMiddleware(\Similik\Module\Cms\Middleware\MenuWidget\RegisterTypeMiddleware::class, 0);
+    $mm->registerMiddleware(\Similik\Module\Cms\Middleware\MenuWidget\FormMiddleware::class, 0);
+});
+
+$eventDispatcher->addListener('register.widget.edit.middleware', function(\Similik\Services\MiddlewareManager $mm) {
+    $mm->registerMiddleware(\Similik\Module\Cms\Middleware\TextWidget\FormMiddleware::class, 0);
+    $mm->registerMiddleware(\Similik\Module\Cms\Middleware\MenuWidget\FormMiddleware::class, 0);
+});
+
 $eventDispatcher->addListener('register.admin.graphql.api.middleware', function(\Similik\Services\MiddlewareManager $mm) {
     $mm->registerMiddleware(\Similik\Module\Cms\Middleware\Widget\BeforeSaveMiddleware::class, 0);
 });
