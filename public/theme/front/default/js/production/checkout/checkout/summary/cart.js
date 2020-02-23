@@ -138,36 +138,40 @@ function CartSummary() {
         React.createElement(
             'table',
             { className: 'uk-table uk-table-small checkout-cart-summary-table' },
-            React.createElement(Area, {
-                id: "checkout_summary_cart",
-                reactcomponent: 'tbody',
-                coreWidgets: [{
-                    'component': Subtotal,
-                    'props': _extends({}, cart),
-                    'sort_order': 10,
-                    'id': 'checkout_order_summary_cart_subtotal'
-                }, {
-                    'component': Discount,
-                    'props': _extends({}, cart),
-                    'sort_order': 20,
-                    'id': 'checkout_order_summary_cart_discount'
-                }, {
-                    'component': ShippingFee,
-                    'props': _extends({}, cart),
-                    'sort_order': 30,
-                    'id': 'checkout_order_summary_cart_shipping'
-                }, {
-                    'component': Tax,
-                    'props': _extends({}, cart),
-                    'sort_order': 40,
-                    'id': 'checkout_order_summary_cart_tax'
-                }, {
-                    'component': GrandTotal,
-                    'props': _extends({}, cart),
-                    'sort_order': 50,
-                    'id': 'checkout_order_summary_cart_grand_total'
-                }]
-            })
+            React.createElement(
+                'tbody',
+                null,
+                React.createElement(Area, {
+                    id: "checkout_summary_cart",
+                    noOuter: true,
+                    coreWidgets: [{
+                        'component': Subtotal,
+                        'props': _extends({}, cart),
+                        'sort_order': 10,
+                        'id': 'checkout_order_summary_cart_subtotal'
+                    }, {
+                        'component': Discount,
+                        'props': _extends({}, cart),
+                        'sort_order': 20,
+                        'id': 'checkout_order_summary_cart_discount'
+                    }, {
+                        'component': ShippingFee,
+                        'props': _extends({}, cart),
+                        'sort_order': 30,
+                        'id': 'checkout_order_summary_cart_shipping'
+                    }, {
+                        'component': Tax,
+                        'props': _extends({}, cart),
+                        'sort_order': 40,
+                        'id': 'checkout_order_summary_cart_tax'
+                    }, {
+                        'component': GrandTotal,
+                        'props': _extends({}, cart),
+                        'sort_order': 50,
+                        'id': 'checkout_order_summary_cart_grand_total'
+                    }]
+                })
+            )
         )
     );
 }
