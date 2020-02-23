@@ -11,60 +11,64 @@ function Info({orderId, method, methodName, status, grandTotal}) {
     return <div className='payment-info'>
         <table className='uk-table uk-table-small'>
             <thead>
-            <Area
-                id={"order_payment_block_info_header"}
-                orderId={orderId}
-                method={method}
-                methodName={methodName}
-                grandTotal={grandTotal}
-                status={status}
-                reactcomponent={"tr"}
-                coreWidgets={[
-                    {
-                        'component': "th",
-                        'props': {children: <span>Status</span>},
-                        'sort_order': 10,
-                        'id': 'payment_status_header'
-                    },
-                    {
-                        'component': "th",
-                        'props': {children: <span>Method</span>},
-                        'sort_order': 20,
-                        'id': 'payment_method_header'
-                    },
-                    {
-                        'component': "th",
-                        'props': {children: <span>Actions</span>},
-                        'sort_order': 30,
-                        'id': 'payment_action_header'
-                    }
-                ]}
-            />
+                <tr>
+                    <Area
+                        id={"order_payment_block_info_header"}
+                        orderId={orderId}
+                        method={method}
+                        methodName={methodName}
+                        grandTotal={grandTotal}
+                        status={status}
+                        noOuter={true}
+                        coreWidgets={[
+                            {
+                                'component': "th",
+                                'props': {children: <span>Status</span>},
+                                'sort_order': 10,
+                                'id': 'payment_status_header'
+                            },
+                            {
+                                'component': "th",
+                                'props': {children: <span>Method</span>},
+                                'sort_order': 20,
+                                'id': 'payment_method_header'
+                            },
+                            {
+                                'component': "th",
+                                'props': {children: <span>Actions</span>},
+                                'sort_order': 30,
+                                'id': 'payment_action_header'
+                            }
+                        ]}
+                    />
+                </tr>
             </thead>
             <tbody>
-            <Area
-                id={"order_payment_block_info"}
-                orderId={orderId}
-                method={method}
-                methodName={methodName}
-                grandTotal={grandTotal}
-                status={status}
-                reactcomponent={"tr"}
-                coreWidgets={[
-                    {
-                        'component': Status,
-                        'props': {status: status},
-                        'sort_order': 10,
-                        'id': 'order_payment_status'
-                    },
-                    {
-                        'component': "td",
-                        'props': {children: <span>{methodName}</span>},
-                        'sort_order': 20,
-                        'id': 'order_payment_method'
-                    }
-                ]}
-            />
+                <tr>
+                    <Area
+                        id={"order_payment_block_info"}
+                        orderId={orderId}
+                        method={method}
+                        methodName={methodName}
+                        grandTotal={grandTotal}
+                        status={status}
+                        noOuter={true}
+                        coreWidgets={[
+                            {
+                                'component': Status,
+                                'props': {status: status},
+                                'sort_order': 10,
+                                'id': 'order_payment_status'
+                            },
+                            {
+                                'component': "td",
+                                'props': {children: <span>{methodName}</span>},
+                                'sort_order': 20,
+                                'id': 'order_payment_method'
+                            }
+                        ]}
+                    />
+                </tr>
             </tbody>
         </table>
     </div>

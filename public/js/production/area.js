@@ -23,10 +23,10 @@ function Area(props) {
 
     return React.createElement(
         Wrapper$Component,
-        _extends({}, props, { areaProps: undefined, coreWidgets: undefined }),
+        { id: props.id, className: props.className },
         widgets.map(w => {
             let C = w.component;
-            if (typeof C === 'string') return React.createElement(C, _extends({ key: c.id }, c.props));
+            if (typeof C === 'string') return React.createElement(C, _extends({ key: w.id }, w.props));
             return React.createElement(C, _extends({ key: w.id }, w.props, { areaProps: props }));
         })
     );

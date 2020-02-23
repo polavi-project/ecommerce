@@ -31,103 +31,107 @@ function OrderSummary() {
             React.createElement(
                 'table',
                 { className: 'uk-table uk-table-small uk-table-divider' },
-                React.createElement(Area, {
-                    id: "order_summary_block",
-                    orderId: orderId,
-                    currency: currency,
-                    grandTotal: grandTotal,
-                    coupon: coupon,
-                    discountAmount: discountAmount,
-                    taxAmount: taxAmount,
-                    reactcomponent: "tbody",
-                    coreWidgets: [{
-                        'component': "tr",
-                        'props': { children: [React.createElement(
-                                'td',
-                                { key: 'key' },
-                                React.createElement(
-                                    'span',
-                                    null,
-                                    'Subtotal'
-                                )
-                            ), React.createElement(
-                                'td',
-                                { key: 'value' },
-                                React.createElement(
-                                    'span',
-                                    null,
-                                    _subTotal
-                                )
-                            )] },
-                        'sort_order': 5,
-                        'id': 'summary_subtotal'
-                    }, {
-                        'component': "tr",
-                        'props': { children: [React.createElement(
-                                'td',
-                                { key: 'key' },
-                                React.createElement(
-                                    'span',
-                                    null,
-                                    'Tax'
-                                )
-                            ), React.createElement(
-                                'td',
-                                { key: 'value' },
-                                React.createElement(
-                                    'span',
-                                    null,
-                                    _taxAmount
-                                )
-                            )] },
-                        'sort_order': 10,
-                        'id': 'summary_tax'
-                    }, {
-                        'component': "tr",
-                        'props': { children: [React.createElement(
-                                'td',
-                                { key: 'key' },
-                                React.createElement(
-                                    'span',
-                                    null,
-                                    'Discount (',
-                                    coupon,
-                                    ')'
-                                )
-                            ), React.createElement(
-                                'td',
-                                { key: 'value' },
-                                React.createElement(
-                                    'span',
-                                    null,
-                                    _discountAmount
-                                )
-                            )] },
-                        'sort_order': 20,
-                        'id': 'summary_discount'
-                    }, {
-                        'component': "tr",
-                        'props': { children: [React.createElement(
-                                'td',
-                                { key: 'key' },
-                                React.createElement(
-                                    'span',
-                                    null,
-                                    'Grand total'
-                                )
-                            ), React.createElement(
-                                'td',
-                                { key: 'value' },
-                                React.createElement(
-                                    'span',
-                                    null,
-                                    _grandTotal
-                                )
-                            )] },
-                        'sort_order': 20,
-                        'id': 'summary_grand_total'
-                    }]
-                })
+                React.createElement(
+                    'tbody',
+                    null,
+                    React.createElement(Area, {
+                        id: "order_summary_block",
+                        orderId: orderId,
+                        currency: currency,
+                        grandTotal: grandTotal,
+                        coupon: coupon,
+                        discountAmount: discountAmount,
+                        taxAmount: taxAmount,
+                        noOuter: true,
+                        coreWidgets: [{
+                            'component': "tr",
+                            'props': { children: [React.createElement(
+                                    'td',
+                                    { key: 'key' },
+                                    React.createElement(
+                                        'span',
+                                        null,
+                                        'Subtotal'
+                                    )
+                                ), React.createElement(
+                                    'td',
+                                    { key: 'value' },
+                                    React.createElement(
+                                        'span',
+                                        null,
+                                        _subTotal
+                                    )
+                                )] },
+                            'sort_order': 5,
+                            'id': 'summary_subtotal'
+                        }, {
+                            'component': "tr",
+                            'props': { children: [React.createElement(
+                                    'td',
+                                    { key: 'key' },
+                                    React.createElement(
+                                        'span',
+                                        null,
+                                        'Tax'
+                                    )
+                                ), React.createElement(
+                                    'td',
+                                    { key: 'value' },
+                                    React.createElement(
+                                        'span',
+                                        null,
+                                        _taxAmount
+                                    )
+                                )] },
+                            'sort_order': 10,
+                            'id': 'summary_tax'
+                        }, {
+                            'component': "tr",
+                            'props': { children: [React.createElement(
+                                    'td',
+                                    { key: 'key' },
+                                    React.createElement(
+                                        'span',
+                                        null,
+                                        'Discount (',
+                                        coupon,
+                                        ')'
+                                    )
+                                ), React.createElement(
+                                    'td',
+                                    { key: 'value' },
+                                    React.createElement(
+                                        'span',
+                                        null,
+                                        _discountAmount
+                                    )
+                                )] },
+                            'sort_order': 20,
+                            'id': 'summary_discount'
+                        }, {
+                            'component': "tr",
+                            'props': { children: [React.createElement(
+                                    'td',
+                                    { key: 'key' },
+                                    React.createElement(
+                                        'span',
+                                        null,
+                                        'Grand total'
+                                    )
+                                ), React.createElement(
+                                    'td',
+                                    { key: 'value' },
+                                    React.createElement(
+                                        'span',
+                                        null,
+                                        _grandTotal
+                                    )
+                                )] },
+                            'sort_order': 20,
+                            'id': 'summary_grand_total'
+                        }]
+                    })
+                )
             )
         )
     );

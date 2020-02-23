@@ -20,11 +20,11 @@ function Area(props) {
     if(widgets.length === 0)
         return null;
 
-    return <Wrapper$Component {...props} areaProps={undefined} coreWidgets={undefined}>
+    return <Wrapper$Component id={props.id} className={props.className}>
         {widgets.map((w) => {
             let C = w.component;
             if(typeof C === 'string')
-                return <C key={c.id} {...c.props} />;
+                return <C key={w.id} {...w.props} />;
             return <C key={w.id} {...w.props} areaProps={props}/>;
         })}
     </Wrapper$Component>;
