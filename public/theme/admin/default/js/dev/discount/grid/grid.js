@@ -255,104 +255,108 @@ export default function CouponGrid({apiUrl, areaProps})
     return <div className={"uk-overflow-auto"}>
         <table className="uk-table uk-table-small uk-table-divider">
             <thead>
-            <Area
-                className={""}
-                id={"coupon_grid_header"}
-                filters={areaProps.filters}
-                addFilter={areaProps.addFilter}
-                updateFilter={areaProps.updateFilter}
-                removeFilter={areaProps.removeFilter}
-                cleanFilter={areaProps.cleanFilter}
-                addField={addField}
-                applyFilter={applyFilter}
-                reactcomponent={"tr"}
-                coreWidgets={[
-                    {
-                        component: IdColumnHeader,
-                        props : {...areaProps, addField, applyFilter},
-                        sort_order: 10,
-                        id: "id"
-                    },
-                    {
-                        component: CouponColumnHeader,
-                        props : {...areaProps, addField, applyFilter},
-                        sort_order: 20,
-                        id: "coupon"
-                    },
-                    {
-                        component: DescriptionColumnHeader,
-                        props : {...areaProps, addField, applyFilter},
-                        sort_order: 30,
-                        id: "description"
-                    },
-                    {
-                        component: FreeShippingColumnHeader,
-                        props : {...areaProps, addField, applyFilter},
-                        sort_order: 40,
-                        id: "free_shipping"
-                    },
-                    {
-                        component: StatusColumnHeader,
-                        props : {...areaProps, addField, applyFilter},
-                        sort_order: 50,
-                        id: "status"
-                    },
-                    {
-                        component: ActionColumnHeader,
-                        props : {...areaProps, addField, applyFilter},
-                        sort_order: 60,
-                        id: "action"
-                    }
-                ]}
-            />
+                <tr>
+                    <Area
+                        className={""}
+                        id={"coupon_grid_header"}
+                        filters={areaProps.filters}
+                        addFilter={areaProps.addFilter}
+                        updateFilter={areaProps.updateFilter}
+                        removeFilter={areaProps.removeFilter}
+                        cleanFilter={areaProps.cleanFilter}
+                        addField={addField}
+                        applyFilter={applyFilter}
+                        noOuter={true}
+                        coreWidgets={[
+                            {
+                                component: IdColumnHeader,
+                                props : {...areaProps, addField, applyFilter},
+                                sort_order: 10,
+                                id: "id"
+                            },
+                            {
+                                component: CouponColumnHeader,
+                                props : {...areaProps, addField, applyFilter},
+                                sort_order: 20,
+                                id: "coupon"
+                            },
+                            {
+                                component: DescriptionColumnHeader,
+                                props : {...areaProps, addField, applyFilter},
+                                sort_order: 30,
+                                id: "description"
+                            },
+                            {
+                                component: FreeShippingColumnHeader,
+                                props : {...areaProps, addField, applyFilter},
+                                sort_order: 40,
+                                id: "free_shipping"
+                            },
+                            {
+                                component: StatusColumnHeader,
+                                props : {...areaProps, addField, applyFilter},
+                                sort_order: 50,
+                                id: "status"
+                            },
+                            {
+                                component: ActionColumnHeader,
+                                props : {...areaProps, addField, applyFilter},
+                                sort_order: 60,
+                                id: "action"
+                            }
+                        ]}
+                    />
+                </tr>
             </thead>
             <tbody>
             {coupons.map((c, i)=> {
-                return <Area
-                    key={i}
-                    className={""}
-                    id={"coupon_grid_row"}
-                    row={c}
-                    reactcomponent={"tr"}
-                    coreWidgets={[
-                        {
-                            component: IdColumnRow,
-                            props : {row: c},
-                            sort_order: 10,
-                            id: "id"
-                        },
-                        {
-                            component: CouponColumnRow,
-                            props : {row: c},
-                            sort_order: 20,
-                            id: "coupon"
-                        },
-                        {
-                            component: DescriptionColumnRow,
-                            props : {row: c},
-                            sort_order: 30,
-                            id: "name"
-                        },
-                        {
-                            component: FreeShippingColumnRow,
-                            props : {row: c},
-                            sort_order: 40,
-                            id: "free_shipping"
-                        },
-                        {
-                            component: StatusColumnRow,
-                            props : {row: c},
-                            sort_order: 50,
-                            id: "status"
-                        },
-                        {
-                            component: ActionColumnRow,
-                            props : {row: c},
-                            sort_order: 60,
-                            id: "action"
-                        }
-                    ]}
-                />
+                return <tr>
+                    <Area
+                        key={i}
+                        className={""}
+                        id={"coupon_grid_row"}
+                        row={c}
+                        noOuter={true}
+                        coreWidgets={[
+                            {
+                                component: IdColumnRow,
+                                props : {row: c},
+                                sort_order: 10,
+                                id: "id"
+                            },
+                            {
+                                component: CouponColumnRow,
+                                props : {row: c},
+                                sort_order: 20,
+                                id: "coupon"
+                            },
+                            {
+                                component: DescriptionColumnRow,
+                                props : {row: c},
+                                sort_order: 30,
+                                id: "name"
+                            },
+                            {
+                                component: FreeShippingColumnRow,
+                                props : {row: c},
+                                sort_order: 40,
+                                id: "free_shipping"
+                            },
+                            {
+                                component: StatusColumnRow,
+                                props : {row: c},
+                                sort_order: 50,
+                                id: "status"
+                            },
+                            {
+                                component: ActionColumnRow,
+                                props : {row: c},
+                                sort_order: 60,
+                                id: "action"
+                            }
+                        ]}
+                    />
+                </tr>
             })}
             </tbody>
         </table>

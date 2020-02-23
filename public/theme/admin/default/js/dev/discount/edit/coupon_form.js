@@ -6,6 +6,7 @@ import Radio from "../../../../../../../js/production/form/fields/radio.js";
 import Area from "../../../../../../../js/production/area.js";
 import {FORM_FIELD_CREATED, FORM_FIELD_UPDATED} from "../../../../../../../js/dev/event-types.js";
 import Checkbox from "../../../../../../../js/production/form/fields/checkbox.js";
+import {Fetch} from "../../../../../../../js/production/fetch.js";
 
 function GeneralLeft(props) {
     return <div className="uk-width-1-2">
@@ -213,104 +214,106 @@ function RequiredProducts({requiredProducts}) {
             { products.map((p,i) => {
                 return <tr key={i}>
                     <td>
-                        <Area
-                            id="coupon_required_product_key_list"
-                            reactcomponent={"select"}
-                            wrapperProps={{
-                                name: `condition[required_product][${i}][key]`,
-                                className: 'uk-select uk-form-small uk-form-width-small',
-                                value: p.key,
-                                onChange: (e) => updateProduct(e, 'key', i)
-                            }}
-                            coreWidgets={[
-                                {
-                                    component: ()=>{ return <option value="category">CategoryId</option>;},
-                                    props : {},
-                                    sort_order: 10,
-                                    id: "required_product_key_category"
-                                },
-                                {
-                                    component: ()=>{ return <option value="attribute_group">Attribute Group</option>;},
-                                    props : {},
-                                    sort_order: 20,
-                                    id: "required_product_key_attribute_group"
-                                },
-                                {
-                                    component: ()=><option value="price">Price</option>,
-                                    props : {},
-                                    sort_order: 30,
-                                    id: "required_product_key_price"
-                                },
-                                {
-                                    component: ()=><option value="sku">Sku</option>,
-                                    props : {},
-                                    sort_order: 40,
-                                    id: "required_product_key_sku"
-                                }
-                            ]}
-                        />
+                        <select
+                            name={`condition[required_product][${i}][key]`}
+                            className={"uk-select uk-form-small uk-form-width-small"}
+                            value={p.key}
+                            onChange={(e) => updateProduct(e, 'key', i)}
+                        >
+                            <Area
+                                id="coupon_required_product_key_list"
+                                noOuter={true}
+                                coreWidgets={[
+                                    {
+                                        component: ()=>{ return <option value="category">CategoryId</option>;},
+                                        props : {},
+                                        sort_order: 10,
+                                        id: "required_product_key_category"
+                                    },
+                                    {
+                                        component: ()=>{ return <option value="attribute_group">Attribute Group</option>;},
+                                        props : {},
+                                        sort_order: 20,
+                                        id: "required_product_key_attribute_group"
+                                    },
+                                    {
+                                        component: ()=><option value="price">Price</option>,
+                                        props : {},
+                                        sort_order: 30,
+                                        id: "required_product_key_price"
+                                    },
+                                    {
+                                        component: ()=><option value="sku">Sku</option>,
+                                        props : {},
+                                        sort_order: 40,
+                                        id: "required_product_key_sku"
+                                    }
+                                ]}
+                            />
+                        </select>
                     </td>
                     <td>
-                        <Area
-                            id="coupon_required_product_operator_list"
-                            reactcomponent={"select"}
-                            wrapperProps={{
-                                name: `condition[required_product][${i}][operator]`,
-                                className: 'uk-select uk-form-small uk-form-width-small',
-                                value: p.operator,
-                                onChange: (e) => updateProduct(e, 'operator', i)
-                            }}
-                            coreWidgets={[
-                                {
-                                    component: ()=><option value="=">Equal</option>,
-                                    props : {},
-                                    sort_order: 10,
-                                    id: "coupon_required_product_operator_equal"
-                                },
-                                {
-                                    component: ()=><option value="<>">Not equal</option>,
-                                    props : {},
-                                    sort_order: 10,
-                                    id: "coupon_required_product_operator_equal"
-                                },
-                                {
-                                    component: ()=><option value=">">Greater</option>,
-                                    props : {},
-                                    sort_order: 20,
-                                    id: "coupon_required_product_operator_greater"
-                                },
-                                {
-                                    component: ()=><option value=">=">Greater or equal</option>,
-                                    props : {},
-                                    sort_order: 30,
-                                    id: "coupon_required_product_operator_greater_or_equal"
-                                },
-                                {
-                                    component: ()=><option value="<">Smaller</option>,
-                                    props : {},
-                                    sort_order: 40,
-                                    id: "coupon_required_product_operator_smaller"
-                                },
-                                {
-                                    component: ()=><option value="<=">Equal or smaller</option>,
-                                    props : {},
-                                    sort_order: 40,
-                                    id: "coupon_required_product_operator_equal_or_smaller"
-                                },
-                                {
-                                    component: ()=><option value="IN">In</option>,
-                                    props : {},
-                                    sort_order: 40,
-                                    id: "coupon_required_product_operator_in"
-                                },
-                                {
-                                    component: ()=><option value="NOT IN">Not in</option>,
-                                    props : {},
-                                    sort_order: 40,
-                                    id: "coupon_required_product_operator_not_in"
-                                }
-                            ]}
-                        />
+                        <select
+                            name={`condition[required_product][${i}][operator]`}
+                            className={"uk-select uk-form-small uk-form-width-small"}
+                            value={p.operator}
+                            onChange={(e) => updateProduct(e, 'operator', i)}
+                        >
+                            <Area
+                                id="coupon_required_product_operator_list"
+                                noOuter={true}
+                                coreWidgets={[
+                                    {
+                                        component: ()=><option value="=">Equal</option>,
+                                        props : {},
+                                        sort_order: 10,
+                                        id: "coupon_required_product_operator_equal"
+                                    },
+                                    {
+                                        component: ()=><option value="<>">Not equal</option>,
+                                        props : {},
+                                        sort_order: 10,
+                                        id: "coupon_required_product_operator_equal"
+                                    },
+                                    {
+                                        component: ()=><option value=">">Greater</option>,
+                                        props : {},
+                                        sort_order: 20,
+                                        id: "coupon_required_product_operator_greater"
+                                    },
+                                    {
+                                        component: ()=><option value=">=">Greater or equal</option>,
+                                        props : {},
+                                        sort_order: 30,
+                                        id: "coupon_required_product_operator_greater_or_equal"
+                                    },
+                                    {
+                                        component: ()=><option value="<">Smaller</option>,
+                                        props : {},
+                                        sort_order: 40,
+                                        id: "coupon_required_product_operator_smaller"
+                                    },
+                                    {
+                                        component: ()=><option value="<=">Equal or smaller</option>,
+                                        props : {},
+                                        sort_order: 40,
+                                        id: "coupon_required_product_operator_equal_or_smaller"
+                                    },
+                                    {
+                                        component: ()=><option value="IN">In</option>,
+                                        props : {},
+                                        sort_order: 40,
+                                        id: "coupon_required_product_operator_in"
+                                    },
+                                    {
+                                        component: ()=><option value="NOT IN">Not in</option>,
+                                        props : {},
+                                        sort_order: 40,
+                                        id: "coupon_required_product_operator_not_in"
+                                    }
+                                ]}
+                            />
+                        </select>
                     </td>
                     <td>
                         <Text
@@ -544,7 +547,14 @@ export default function CouponForm(props) {
     const user_condition = props.user_condition ? JSON.parse(props.user_condition) : {};
     const buyx_gety = props.buyx_gety ? JSON.parse(props.buyx_gety) : [];
     return <div className="uk-grid uk-grid-small uk-child-width-expand@s">
-        <Form id={"coupon-edit-form"} {...props}>
+        <Form
+            id={"coupon-edit-form"}
+            onComplete={(response) => {
+                if(_.get(response, 'redirect', undefined) !== undefined)
+                    Fetch(_.get(response, 'redirect', undefined), true);
+            }}
+            {...props}
+        >
             <Area
                 id={"coupon-general"}
                 className="uk-grid uk-grid-small"

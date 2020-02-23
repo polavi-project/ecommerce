@@ -401,92 +401,100 @@ export default function CouponGrid({ apiUrl, areaProps }) {
             React.createElement(
                 "thead",
                 null,
-                React.createElement(Area, {
-                    className: "",
-                    id: "coupon_grid_header",
-                    filters: areaProps.filters,
-                    addFilter: areaProps.addFilter,
-                    updateFilter: areaProps.updateFilter,
-                    removeFilter: areaProps.removeFilter,
-                    cleanFilter: areaProps.cleanFilter,
-                    addField: addField,
-                    applyFilter: applyFilter,
-                    reactcomponent: "tr",
-                    coreWidgets: [{
-                        component: IdColumnHeader,
-                        props: _extends({}, areaProps, { addField, applyFilter }),
-                        sort_order: 10,
-                        id: "id"
-                    }, {
-                        component: CouponColumnHeader,
-                        props: _extends({}, areaProps, { addField, applyFilter }),
-                        sort_order: 20,
-                        id: "coupon"
-                    }, {
-                        component: DescriptionColumnHeader,
-                        props: _extends({}, areaProps, { addField, applyFilter }),
-                        sort_order: 30,
-                        id: "description"
-                    }, {
-                        component: FreeShippingColumnHeader,
-                        props: _extends({}, areaProps, { addField, applyFilter }),
-                        sort_order: 40,
-                        id: "free_shipping"
-                    }, {
-                        component: StatusColumnHeader,
-                        props: _extends({}, areaProps, { addField, applyFilter }),
-                        sort_order: 50,
-                        id: "status"
-                    }, {
-                        component: ActionColumnHeader,
-                        props: _extends({}, areaProps, { addField, applyFilter }),
-                        sort_order: 60,
-                        id: "action"
-                    }]
-                })
+                React.createElement(
+                    "tr",
+                    null,
+                    React.createElement(Area, {
+                        className: "",
+                        id: "coupon_grid_header",
+                        filters: areaProps.filters,
+                        addFilter: areaProps.addFilter,
+                        updateFilter: areaProps.updateFilter,
+                        removeFilter: areaProps.removeFilter,
+                        cleanFilter: areaProps.cleanFilter,
+                        addField: addField,
+                        applyFilter: applyFilter,
+                        noOuter: true,
+                        coreWidgets: [{
+                            component: IdColumnHeader,
+                            props: _extends({}, areaProps, { addField, applyFilter }),
+                            sort_order: 10,
+                            id: "id"
+                        }, {
+                            component: CouponColumnHeader,
+                            props: _extends({}, areaProps, { addField, applyFilter }),
+                            sort_order: 20,
+                            id: "coupon"
+                        }, {
+                            component: DescriptionColumnHeader,
+                            props: _extends({}, areaProps, { addField, applyFilter }),
+                            sort_order: 30,
+                            id: "description"
+                        }, {
+                            component: FreeShippingColumnHeader,
+                            props: _extends({}, areaProps, { addField, applyFilter }),
+                            sort_order: 40,
+                            id: "free_shipping"
+                        }, {
+                            component: StatusColumnHeader,
+                            props: _extends({}, areaProps, { addField, applyFilter }),
+                            sort_order: 50,
+                            id: "status"
+                        }, {
+                            component: ActionColumnHeader,
+                            props: _extends({}, areaProps, { addField, applyFilter }),
+                            sort_order: 60,
+                            id: "action"
+                        }]
+                    })
+                )
             ),
             React.createElement(
                 "tbody",
                 null,
                 coupons.map((c, i) => {
-                    return React.createElement(Area, {
-                        key: i,
-                        className: "",
-                        id: "coupon_grid_row",
-                        row: c,
-                        reactcomponent: "tr",
-                        coreWidgets: [{
-                            component: IdColumnRow,
-                            props: { row: c },
-                            sort_order: 10,
-                            id: "id"
-                        }, {
-                            component: CouponColumnRow,
-                            props: { row: c },
-                            sort_order: 20,
-                            id: "coupon"
-                        }, {
-                            component: DescriptionColumnRow,
-                            props: { row: c },
-                            sort_order: 30,
-                            id: "name"
-                        }, {
-                            component: FreeShippingColumnRow,
-                            props: { row: c },
-                            sort_order: 40,
-                            id: "free_shipping"
-                        }, {
-                            component: StatusColumnRow,
-                            props: { row: c },
-                            sort_order: 50,
-                            id: "status"
-                        }, {
-                            component: ActionColumnRow,
-                            props: { row: c },
-                            sort_order: 60,
-                            id: "action"
-                        }]
-                    });
+                    return React.createElement(
+                        "tr",
+                        null,
+                        React.createElement(Area, {
+                            key: i,
+                            className: "",
+                            id: "coupon_grid_row",
+                            row: c,
+                            noOuter: true,
+                            coreWidgets: [{
+                                component: IdColumnRow,
+                                props: { row: c },
+                                sort_order: 10,
+                                id: "id"
+                            }, {
+                                component: CouponColumnRow,
+                                props: { row: c },
+                                sort_order: 20,
+                                id: "coupon"
+                            }, {
+                                component: DescriptionColumnRow,
+                                props: { row: c },
+                                sort_order: 30,
+                                id: "name"
+                            }, {
+                                component: FreeShippingColumnRow,
+                                props: { row: c },
+                                sort_order: 40,
+                                id: "free_shipping"
+                            }, {
+                                component: StatusColumnRow,
+                                props: { row: c },
+                                sort_order: 50,
+                                id: "status"
+                            }, {
+                                component: ActionColumnRow,
+                                props: { row: c },
+                                sort_order: 60,
+                                id: "action"
+                            }]
+                        })
+                    );
                 })
             )
         ),

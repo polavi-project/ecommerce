@@ -29,12 +29,12 @@ class SaveMiddleware extends MiddlewareAbstract
                 $conn->getTable('coupon')->where('coupon_id', '=', $request->attributes->get('id'))->update($data);
             else
                 $conn->getTable('coupon')->insert($data);
-            // TODO: add flash message
-            $response->redirect($this->getContainer()->get(Router::class)->generateUrl('coupon.list'));
+            $response->addAlert("coupon_save_success", "success", "Coupon saved successfully");
+            $response->addData("redirect", $this->getContainer()->get(Router::class)->generateUrl('coupon.list'));
         } catch (\Exception $e) {
             $response->addAlert('coupon_save_error', 'error', $e->getMessage())->notNewPage();
         }
 
-        return $delegate;
+        return $response;
     }
 }
