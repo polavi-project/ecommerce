@@ -9,7 +9,34 @@ import Area from "../../../../../../../js/production/area.js";
 import { FORM_FIELD_CREATED, FORM_FIELD_UPDATED } from "../../../../../../../js/dev/event-types.js";
 import Checkbox from "../../../../../../../js/production/form/fields/checkbox.js";
 import { Fetch } from "../../../../../../../js/production/fetch.js";
+import Datetime from "../../../../../../../js/production/form/fields/datetime.js";
 
+function StartEnd({ start_date = "", end_date = "" }) {
+    return React.createElement(
+        "div",
+        { className: "uk-grid uk-child-width-1-2" },
+        React.createElement(
+            "div",
+            null,
+            React.createElement(Datetime, {
+                name: "start_date",
+                formId: "coupon-edit-form",
+                label: "Start time",
+                value: start_date
+            })
+        ),
+        React.createElement(
+            "div",
+            null,
+            React.createElement(Datetime, {
+                name: "end_date",
+                formId: "coupon-edit-form",
+                label: "End time",
+                value: end_date
+            })
+        )
+    );
+}
 function GeneralLeft(props) {
     return React.createElement(
         "div",
@@ -46,14 +73,23 @@ function GeneralLeft(props) {
                 'sort_order': 15,
                 'id': 'coupon_status'
             }, {
+                'component': StartEnd,
+                'props': {
+                    start_date: _.get(props, 'start_date'),
+                    end_date: _.get(props, 'end_date')
+                },
+                'sort_order': 20,
+                'id': 'start_end'
+            }, {
                 'component': Textarea,
                 'props': {
                     name: "description",
                     value: _.get(props, 'description'),
                     formId: "coupon-edit-form",
-                    label: "Description"
+                    label: "Description",
+                    validation_rules: ['notEmpty']
                 },
-                'sort_order': 20,
+                'sort_order': 30,
                 'id': 'coupon_description'
             }]
         })

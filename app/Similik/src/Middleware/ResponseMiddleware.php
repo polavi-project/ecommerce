@@ -44,11 +44,14 @@ class ResponseMiddleware extends MiddlewareAbstract
                 ->addLink(["rel"=>"icon", "type"=>"image/png", "sizes"=>"16x16", "href"=> get_admin_theme_url() . "/image/favicon-16x16.png"])
                 ->addLink(["rel"=>"shortcut icon", "href"=> get_admin_theme_url() . "/image/favicon.ico"]);
 
-            if($request->isAdmin())
+            if($request->isAdmin()) {
                 $this
                     ->getContainer()
                     ->get(Helmet::class)
-                    ->addScript(['src'=> get_js_file_url('production/tinymce/tinymce.min.js')], 1);
+                    ->addScript(['src'=> get_js_file_url('production/tinymce/tinymce.min.js')], 1)
+                    ->addScript(['src'=> get_js_file_url('production/flatpickr.js')], 1)
+                    ->addLink(['rel'=>'stylesheet', 'href'=> get_css_file_url('flatpickr.min.css', $request->isAdmin())]);
+            }
             $this
                 ->getContainer()
                 ->get(Helmet::class)
