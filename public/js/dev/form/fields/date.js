@@ -5,6 +5,7 @@ export default function Date (props) {
     const [value, setValue] = React.useState(props.value ? props.value : '');
     const [error, setError] = React.useState(undefined);
     const [isDisabled, setIsDisabled] = React.useState(false);
+    const inputRef = React.createRef();
 
     React.useEffect(() => {
         PubSub.publishSync(FORM_FIELD_CREATED, {...props});
@@ -29,6 +30,10 @@ export default function Date (props) {
         };
     }, []);
 
+    React.useEffect(()=>{
+        flatpickr(inputRef.current, {enableTime: true,});
+    }, []);
+
     const onChange = (e)=> {
         setValue(e.target.value);
     };
@@ -36,7 +41,7 @@ export default function Date (props) {
     return <div className="form-field form-date">
         <div className="field-label"><label htmlFor={props.name}>{props.label}</label></div>
         <input
-            type="date"
+            type="text"
             className="uk-input uk-form-small"
             id={props.name}
             name={props.name}
@@ -44,6 +49,7 @@ export default function Date (props) {
             value={value}
             onChange={onChange}
             disabled={isDisabled}
+            ref={inputRef}
         />
         <Error error={error}/>
     </div>
