@@ -31,6 +31,10 @@ export default function DateTime(props) {
         };
     }, []);
 
+    React.useEffect(() => {
+        flatpickr("#" + props.name, { enableTime: true });
+    }, []);
+
     const onChange = e => {
         setValue(e.target.value);
     };
@@ -48,8 +52,8 @@ export default function DateTime(props) {
             )
         ),
         React.createElement("input", {
-            type: "datetime-local",
-            className: "uk-input uk-form-small",
+            type: "text",
+            className: "uk-form-small uk-input",
             id: props.name,
             name: props.name,
             placeholder: props.placeholder,

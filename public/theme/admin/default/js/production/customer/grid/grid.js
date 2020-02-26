@@ -423,90 +423,98 @@ export default function CmsPageGrid({ apiUrl, groups = [] }) {
             React.createElement(
                 "thead",
                 null,
-                React.createElement(Area, {
-                    className: "",
-                    id: "customer_grid_header",
-                    addFilter: addFilter,
-                    cleanFilter: cleanFilter,
-                    addField: addField,
-                    applyFilter: applyFilter,
-                    groups: groups,
-                    reactcomponent: "tr",
-                    coreWidgets: [{
-                        component: IdColumnHeader,
-                        props: {},
-                        sort_order: 10,
-                        id: "id"
-                    }, {
-                        component: EmailColumnHeader,
-                        props: {},
-                        sort_order: 15,
-                        id: "email"
-                    }, {
-                        component: NameColumnHeader,
-                        props: {},
-                        sort_order: 20,
-                        id: "name"
-                    }, {
-                        component: GroupColumnHeader,
-                        props: {},
-                        sort_order: 25,
-                        id: "group"
-                    }, {
-                        component: StatusColumnHeader,
-                        props: {},
-                        sort_order: 30,
-                        id: "status"
-                    }, {
-                        component: ActionColumnHeader,
-                        props: {},
-                        sort_order: 35,
-                        id: "action"
-                    }]
-                })
+                React.createElement(
+                    "tr",
+                    null,
+                    React.createElement(Area, {
+                        className: "",
+                        id: "customer_grid_header",
+                        addFilter: addFilter,
+                        cleanFilter: cleanFilter,
+                        addField: addField,
+                        applyFilter: applyFilter,
+                        groups: groups,
+                        noOuter: true,
+                        coreWidgets: [{
+                            component: IdColumnHeader,
+                            props: {},
+                            sort_order: 10,
+                            id: "id"
+                        }, {
+                            component: EmailColumnHeader,
+                            props: {},
+                            sort_order: 15,
+                            id: "email"
+                        }, {
+                            component: NameColumnHeader,
+                            props: {},
+                            sort_order: 20,
+                            id: "name"
+                        }, {
+                            component: GroupColumnHeader,
+                            props: {},
+                            sort_order: 25,
+                            id: "group"
+                        }, {
+                            component: StatusColumnHeader,
+                            props: {},
+                            sort_order: 30,
+                            id: "status"
+                        }, {
+                            component: ActionColumnHeader,
+                            props: {},
+                            sort_order: 35,
+                            id: "action"
+                        }]
+                    })
+                )
             ),
             React.createElement(
                 "tbody",
                 null,
                 customers.map((p, i) => {
-                    return React.createElement(Area, {
-                        key: i,
-                        className: "",
-                        id: "customer_grid_row",
-                        row: p,
-                        reactcomponent: "tr",
-                        coreWidgets: [{
-                            component: IdColumnRow,
-                            props: { row: p },
-                            sort_order: 10,
-                            id: "id"
-                        }, {
-                            component: EmailColumnRow,
-                            props: { row: p },
-                            sort_order: 15,
-                            id: "email"
-                        }, {
-                            component: NameColumnRow,
-                            props: { row: p },
-                            sort_order: 20,
-                            id: "name"
-                        }, {
-                            component: GroupColumnRow,
-                            props: { row: p, groups: groups },
-                            sort_order: 25,
-                            id: "group"
-                        }, {
-                            component: StatusColumnRow,
-                            props: { row: p },
-                            sort_order: 30,
-                            id: "status"
-                        }, {
-                            component: ActionColumnRow,
-                            props: { row: p },
-                            sort_order: 35,
-                            id: "action"
-                        }]
-                    });
+                    return React.createElement(
+                        "tr",
+                        null,
+                        React.createElement(Area, {
+                            key: i,
+                            className: "",
+                            id: "customer_grid_row",
+                            row: p,
+                            noOuter: true,
+                            coreWidgets: [{
+                                component: IdColumnRow,
+                                props: { row: p },
+                                sort_order: 10,
+                                id: "id"
+                            }, {
+                                component: EmailColumnRow,
+                                props: { row: p },
+                                sort_order: 15,
+                                id: "email"
+                            }, {
+                                component: NameColumnRow,
+                                props: { row: p },
+                                sort_order: 20,
+                                id: "name"
+                            }, {
+                                component: GroupColumnRow,
+                                props: { row: p, groups: groups },
+                                sort_order: 25,
+                                id: "group"
+                            }, {
+                                component: StatusColumnRow,
+                                props: { row: p },
+                                sort_order: 30,
+                                id: "status"
+                            }, {
+                                component: ActionColumnRow,
+                                props: { row: p },
+                                sort_order: 35,
+                                id: "action"
+                            }]
+                        })
+                    );
                 })
             )
         ),
