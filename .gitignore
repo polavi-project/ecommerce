@@ -18,13 +18,14 @@ public/theme/admin/default/js/node_modules/*
 public/theme/admin/default/js/dist
 public/theme/admin/default/js/dist/*
 public/theme/admin/default/js/package-lock.json
-
+public/theme/admin/default/js/develop
 
 public/theme/front/default/js/node_modules
 public/theme/front/default/js/node_modules/*
 public/theme/front/default/js/dist
 public/theme/front/default/js/dist/*
 public/theme/front/default/js/package-lock.json
+public/theme/front/default/js/develop
 
 public/js/node_modules
 public/js/node_modules/*
