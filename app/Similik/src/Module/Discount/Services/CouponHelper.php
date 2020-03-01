@@ -13,9 +13,17 @@ use function Similik\_mysql;
 use function Similik\dispatch_event;
 use function Similik\get_config;
 use Similik\Module\Checkout\Services\Cart\Cart;
+use Similik\Module\Checkout\Services\Cart\Item;
+use Similik\Module\Checkout\Services\Cart\ItemFactory;
 
 class CouponHelper
 {
+    /**@var Cart $cart*/
+    protected $cart;
+
+    /**@var ItemFactory $itemFactory*/
+    protected $itemFactory;
+
     /**@var callable[] */
     private $validators = [];
 
@@ -26,8 +34,52 @@ class CouponHelper
 
     protected $coupon;
 
-    public function __construct()
+    public function __construct(Cart $cart, ItemFactory $itemFactory)
     {
+        // Register discount to cart
+        $cart->addField(
+            "coupon",
+            function(Cart $cart, $dataSource) {
+                $coupon = $dataSource['coupon'] ?? $cart->getData("coupon") ?? null;
+                return $this->applyCoupon($coupon, $cart);
+            },
+            ['customer_id', 'customer_group_id', 'items']
+        );
+        $cart->addField(
+            "discount_amount",
+            function(Cart $cart) {
+                $items = $cart->getItems();
+                $discount = 0;
+                foreach ($items as $item)
+                    $discount += $item->getData('discount_amount');
+
+                return $discount;
+            },
+            ["coupon"]
+        );
+
+        $cart->addField(
+            "sub_total",
+            $cart->getField("sub_total")["resolver"],
+            array_merge($cart->getField("sub_total")["dependencies"], ["discount_amount"])
+        );
+
+        $cart->addField(
+            "grand_total",
+            function(Cart $cart) {
+                return $cart->getField("sub_total")["resolver"]($cart) - $cart->getData('discount_amount');
+            },
+            $cart->getField("grand_total")["dependencies"]
+        );
+
+        // Register discount to cart item
+        $itemFactory->addField(
+            "discount_amount",
+            function(Item $item, $dataSource) {
+
+            }
+        )
+        $this->cart = $cart;
         $this->defaultValidator();
         $this->defaultDiscountCalculator();
     }

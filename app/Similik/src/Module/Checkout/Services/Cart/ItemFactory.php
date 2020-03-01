@@ -237,12 +237,15 @@ class ItemFactory
         $this->processor = $processor;
     }
 
+    public function getField($field) {
+        return $this->fields[$field] ?? null;
+    }
+
     public function addField($field, callable $resolver = null, $dependencies = [])
     {
         if(!empty($this->items))
-            throw new \Exception("You can not add/remove field after an Item generated");
-        if(isset($this->fields[$field]))
-            throw new \Exception(sprintf("Field %s already exist", $field));
+            return $this;
+
         $this->fields[$field] = [
             'resolver'=> $resolver,
             'dependencies' => $dependencies
@@ -254,7 +257,8 @@ class ItemFactory
     public function removeField($field)
     {
         if(!empty($this->items))
-            throw new \Exception("You can not add/remove field after an Item generated");
+            return $this;
+
         if(isset($this->fields[$field]))
             unset($this->fields[$field]);
 
@@ -273,7 +277,7 @@ class ItemFactory
         if(empty($this->callbacks))
             $this->buildCallbacks();
         if(!$this->cart)
-            return null;
+            throw new  \Exception("Cart instance not created");
 
         $items = $this->getItems();
         $addedQty = 0;
@@ -337,6 +341,7 @@ class ItemFactory
             $item->setError(sprintf("We don't have enough stock for %s", $product['name']));
 
         $item->setResolvers($this->callbacks);
+
         $item->setData('cart_item_id', $cartItemId);
 
         if(!$item->getError() or $item->getData('cart_item_id')) {

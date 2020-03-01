@@ -13,7 +13,6 @@ use GuzzleHttp\Promise\FulfilledPromise;
 use GuzzleHttp\Promise\Promise;
 use GuzzleHttp\Promise\RejectedPromise;
 use function Similik\dispatch_event;
-use function Similik\subscribe;
 
 class Item
 {

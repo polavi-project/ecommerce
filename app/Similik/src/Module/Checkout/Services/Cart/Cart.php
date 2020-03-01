@@ -20,10 +20,8 @@ use function Similik\dispatch_event;
 use function Similik\get_config;
 use function Similik\get_default_language_Id;
 use Similik\Module\Customer\Services\Customer;
-use Similik\Module\Discount\Services\CouponHelper;
 use Similik\Services\Db\Processor;
 use Similik\Services\Http\Request;
-use function Similik\subscribe;
 
 class Cart
 {
@@ -39,9 +37,6 @@ class Cart
 
     /** @var Request $request*/
     protected $request;
-
-    /** @var CouponHelper $couponHelper*/
-    protected $couponHelper;
 
     /** @var Customer $customer*/
     protected $customer;
@@ -65,9 +60,7 @@ class Cart
 
     public function __construct(
         ItemFactory $itemFactory,
-        Request $request,
-        CouponHelper $couponHelper,
-        int $cartId = null
+        Request $request
     )
     {
         $this->initFields();
@@ -75,25 +68,15 @@ class Cart
         $this->itemFactory = $itemFactory;
         $this->request = $request;
         $this->processor = new Processor();
-        $this->couponHelper = $couponHelper;
+    }
 
-        if($cartId) {
-            $cartData = $this->processor->getTable('cart')->load($cartId);
-            if(!$cartData || $cartData['status'] == 0)
-                throw new \Exception("Invalid cart");
-
-            $this->dataSource = $cartData;
-            $this->setData('cart_id', $cartId);
-        }
-        subscribe('cart_item_updated', function() {
-            $this->onChange(null);
-        });
-        subscribe('cart_item_added', function() {
-            $this->onChange(null);
-        });
-        subscribe('cart_item_removed', function() {
-            $this->onChange(null);
-        });
+    public function initFromId(int $id) {
+        if($this->getData("cart_id"))
+            throw new \Exception("No, your cart is already existed");
+        $cartData = $this->processor->getTable('cart')->load($id);
+        if(!$cartData || $cartData['status'] == 0)
+            throw new \Exception("Invalid cart");
+        $this->setData('cart_id', $id);
     }
 
     protected function initFields()
@@ -196,28 +179,6 @@ class Cart
                 },
                 'dependencies' => ['shipping_fee_excl_tax']
             ],
-            'coupon' => [
-                'resolver' => function(Cart $cart, $dataSource) {
-                    try {
-                        $coupon = $dataSource['coupon'] ?? $cart->data['coupon'] ?? null;
-                        return $this->couponHelper->applyCoupon($coupon, $cart);
-                    } catch (\Exception $e) {
-                        return $cart->data['coupon'];
-                    }
-                },
-                'dependencies' => ['customer_id', 'customer_group_id', 'items']
-            ],
-            'discount_amount' => [
-                'resolver' => function(Cart $cart, $dataSource) {
-                    $items = $cart->getItems();
-                    $discount = 0;
-                    foreach ($items as $item)
-                        $discount +=$item->getData('discount_amount');
-
-                    return $discount;
-                },
-                'dependencies' => ['coupon']
-            ],
             'tax_amount' => [
                 'resolver' => function(Cart $cart, $dataSource) {
                     $itemTax = 0;
@@ -235,11 +196,11 @@ class Cart
 
                     return $total ;
                 },
-                'dependencies' => ['discount_amount', 'items']
+                'dependencies' => ['items']
             ],
             'grand_total' => [
-                'resolver' => function(Cart $cart, $dataSource) {
-                    return $cart->getData('sub_total') - $cart->getData('discount_amount') + $cart->getData('tax_amount') + $cart->getData('shipping_fee_incl_tax');
+                'resolver' => function(Cart $cart) {
+                    return $cart->getData('sub_total') + $cart->getData('tax_amount') + $cart->getData('shipping_fee_incl_tax');
                 },
                 'dependencies' => ['sub_total', 'tax_amount', 'payment_method', 'shipping_fee_incl_tax']
             ],
@@ -332,6 +293,7 @@ class Cart
                 'dependencies' => ['cart_id', 'customer_group_id', 'shipping_address_id'],
             ]
         ];
+        dispatch_event("register_cart_field", [$this]);
 
         $sorter = new ArraySort();
         foreach ($this->fields as $key=>$value) {
@@ -350,18 +312,24 @@ class Cart
         int $language = null,
         array $requestedData = []
     ) {
-        $item = $this->itemFactory->createItem(
-            $productId,
-            $qty,
-            $selectedCustomOptions,
-            $language,
-            $requestedData
-        );
-
-        $promise = new \GuzzleHttp\Promise\Promise(function() use (&$promise, $item) {
-            $promise->resolve($item);
-        });
-        $this->promises[] = $promise;
+        try {
+            $item = $this->itemFactory->createItem(
+                $productId,
+                $qty,
+                $selectedCustomOptions,
+                $language,
+                $requestedData
+            );
+            $promise = new \GuzzleHttp\Promise\Promise(function() use (&$promise, $item) {
+                if($item->getError())
+                    $promise->reject($item->getError());
+                else
+                    $promise->resolve($item);
+            });
+            $this->promises[] = $promise;
+        } catch (\Exception $e) {
+            $promise = new RejectedPromise($e->getMessage());
+        }
 
         return $promise;
     }
@@ -378,14 +346,15 @@ class Cart
         return $promise;
     }
 
-    public function addField($field, $defaultValue = null, callable $resolver = null, $dependencies = [])
+    public function getField($field) {
+        return $this->fields[$field] ?? null;
+    }
+
+    public function addField($field, callable $resolver = null, $dependencies = [])
     {
-        if(isset($this->fields[$field]))
-            throw new \Exception(sprintf("Field %s already exist", $field));
         $this->fields[$field] = [
             'resolve'=> $resolver,
-            'dependencies' => $dependencies,
-            'value' => $defaultValue
+            'dependencies' => $dependencies
         ];
 
         return $this;
