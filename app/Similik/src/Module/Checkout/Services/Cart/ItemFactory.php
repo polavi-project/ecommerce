@@ -29,7 +29,7 @@ class ItemFactory
 
     protected $fields = [];
 
-    protected $callbacks = [];
+    protected $resolvers = [];
 
     /**
      * @var Item[]
@@ -38,6 +38,9 @@ class ItemFactory
 
     /** @var Processor $processor*/
     protected $processor;
+
+    /***@var boolean $isChanged */
+    protected $isChanged = false;
 
     public function __construct(Processor $processor)
     {
@@ -274,8 +277,8 @@ class ItemFactory
         int $cartItemId = null
     )
     {
-        if(empty($this->callbacks))
-            $this->buildCallbacks();
+        if(empty($this->resolvers))
+            $this->buildResolvers();
         if(!$this->cart)
             throw new  \Exception("Cart instance not created");
 
@@ -340,7 +343,7 @@ class ItemFactory
         if(($product['qty'] - $addedQty < $qty) && $product['manage_stock'] == 1)
             $item->setError(sprintf("We don't have enough stock for %s", $product['name']));
 
-        $item->setResolvers($this->callbacks);
+        $item->setResolvers($this->resolvers);
 
         $item->setData('cart_item_id', $cartItemId);
 
@@ -375,6 +378,15 @@ class ItemFactory
         return $this->items;
     }
 
+    /**
+     * @return ItemFactory
+     */
+    public function ItIsChanged(): ItemFactory
+    {
+        $this->isChanged = true;
+        return $this;
+    }
+
     protected function validateCustomOption(array &$selectedOptions, array $availableOptions) {
         foreach ($selectedOptions as $id => $value) {
             if (!in_array($id, array_keys($availableOptions)) || !in_array($value, array_keys($availableOptions[$id]['values'])))
@@ -390,7 +402,7 @@ class ItemFactory
         return $selectedOptions;
     }
 
-    protected function buildCallbacks()
+    protected function buildResolvers()
     {
         $sorter = new ArraySort();
         foreach ($this->fields as $key=>$value) {
@@ -399,7 +411,7 @@ class ItemFactory
         $sorted = $sorter->doSort();
 
         foreach ($sorted as $key=>$value)
-            $this->callbacks[$value] = $this->fields[$value]['resolver'];
+            $this->resolvers[$value] = $this->fields[$value]['resolver'];
     }
 
     /**

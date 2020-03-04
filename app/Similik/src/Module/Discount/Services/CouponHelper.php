@@ -78,7 +78,7 @@ class CouponHelper
             function(Item $item, $dataSource) {
 
             }
-        )
+        );;;;
         $this->cart = $cart;
         $this->defaultValidator();
         $this->defaultDiscountCalculator();
@@ -94,8 +94,7 @@ class CouponHelper
 
     protected function defaultDiscountCalculator()
     {
-        $this->addDiscountCalculator('percentage_discount_to_entire_order', function($coupon, Cart $cart) {
-            $coupon = _mysql()->getTable('coupon')->loadByField('coupon', $coupon);
+        $this->addDiscountCalculator('percentage_discount_to_entire_order', function(array $coupon, Cart $cart) {
             $discountPercent = floatval($coupon['discount_amount']) > 100 ? 100 : floatval($coupon['discount_amount']);
             $cartDiscountAmount = ($discountPercent * $this->getCartTotalBeforeDiscount($cart)) / 100;
 
@@ -127,8 +126,7 @@ class CouponHelper
             }
         });
 
-        $this->addDiscountCalculator('fixed_discount_to_entire_order', function($coupon, Cart $cart) {
-            $coupon = _mysql()->getTable('coupon')->loadByField('coupon', $coupon);
+        $this->addDiscountCalculator('fixed_discount_to_entire_order', function(array $coupon, Cart $cart) {
             $cartDiscountAmount = floatval($coupon['discount_amount']);
             $cartDiscountAmount = $this->getCartTotalBeforeDiscount($cart) > $cartDiscountAmount ? $cartDiscountAmount : $this->getCartTotalBeforeDiscount($cart);
             switch (get_config('sale_discount_calculation_rounding', 0)) {
@@ -159,8 +157,7 @@ class CouponHelper
             }
         });
 
-        $this->addDiscountCalculator('fixed_discount_to_specific_products', function($coupon, Cart $cart) {
-            $coupon = _mysql()->getTable('coupon')->loadByField('coupon', $coupon);
+        $this->addDiscountCalculator('fixed_discount_to_specific_products', function(array $coupon, Cart $cart) {
             $discountAmount = floatval($coupon['discount_amount']);
             $items = $cart->getItems();
             $targetProducts = trim($coupon['target_products']);
@@ -187,8 +184,7 @@ class CouponHelper
             }
         });
 
-        $this->addDiscountCalculator('percentage_discount_to_specific_products', function($coupon, Cart $cart) {
-            $coupon = _mysql()->getTable('coupon')->loadByField('coupon', $coupon);
+        $this->addDiscountCalculator('percentage_discount_to_specific_products', function(array $coupon, Cart $cart) {
             $discountPercent = floatval($coupon['discount_amount']) > 100 ? 100 : floatval($coupon['discount_amount']);
             $items = $cart->getItems();
             $targetProducts = trim($coupon['target_products']);
@@ -671,7 +667,7 @@ class CouponHelper
         return $this;
     }
 
-    public function applyCoupon($coupon, Cart $cart)
+    protected function applyCoupon($coupon, Cart $cart)
     {
         if($coupon == null) {
             $this->coupon = null;
@@ -704,7 +700,7 @@ class CouponHelper
     {
         $_coupon = _mysql()->getTable('coupon')->loadByField('coupon', $coupon);
         if(isset($this->discountCalculators[$_coupon['discount_type']]))
-            $this->discountCalculators[$_coupon['discount_type']]($coupon, $cart);
+            $this->discountCalculators[$_coupon['discount_type']]($_coupon, $cart);
 
         return $this;
     }

@@ -83,8 +83,8 @@ class Cart
     {
         $this->fields = [
             'cart_id' => [
-                'resolver' => function(Cart $cart, $dataSource) {
-                    return $dataSource['cart_id'] ?? null;
+                'resolver' => function(Cart $cart, $value) {
+                    return $value;
                 }
             ],
             'currency' => [
@@ -107,11 +107,11 @@ class Cart
                 'dependencies' => ['customer_id']
             ],
             'customer_email' => [
-                'resolver' => function(Cart $cart, $dataSource) {
+                'resolver' => function(Cart $cart, $value) {
                     if($cart->request->getCustomer()->isLoggedIn())
                         $email = $cart->request->getCustomer()->getData('email');
                     else
-                        $email = $dataSource['customer_email'] ?? null;
+                        $email = $value;
                     if(!$email)
                         $this->error = "Customer email could not be empty";
 
@@ -120,11 +120,11 @@ class Cart
                 'dependencies' => ['customer_id']
             ],
             'customer_full_name' => [
-                'resolver' => function(Cart $cart, $dataSource) {
-                    if($cart->request->getCustomer()->isLoggedIn())
+                'resolver' => function(Cart $cart, $value) {
+                    if($cart->getData("customer_id"))
                         $name = $cart->request->getCustomer()->getData('full_name');
                     else
-                        $name = $dataSource['customer_full_name'] ?? null;
+                        $name = $value;
                     if(!$name)
                         $this->error = "Customer name could not be empty";
 
@@ -143,12 +143,12 @@ class Cart
                 }
             ],
             'status' => [
-                'resolver' => function(Cart $cart, $dataSource) {
-                    return  $dataSource['status'] ?? $cart->getData('status') ?? 1;
+                'resolver' => function(Cart $cart, $value) {
+                    return  $value ?? $cart->getData('status') ?? 1;
                 }
             ],
             'total_qty' => [
-                'resolver' => function(Cart $cart, $dataSource) {
+                'resolver' => function(Cart $cart) {
                     $count = 0;
                     foreach ($cart->getItems() as $item)
                         $count = $count + (int)$item->getData('qty');
@@ -158,7 +158,7 @@ class Cart
                 'dependencies' => ['items']
             ],
             'total_weight' => [
-                'resolver' => function(Cart $cart, $dataSource) {
+                'resolver' => function(Cart $cart) {
                     $weight = 0;
                     foreach ($cart->getItems() as $item)
                         $weight += $item->getData('product_weight') * $item->getData('qty');
@@ -168,7 +168,7 @@ class Cart
                 'dependencies' => ['items']
             ],
             'shipping_fee_excl_tax' => [
-                'resolver' => function(Cart $cart, $dataSource) {
+                'resolver' => function(Cart $cart, $value) {
                     return (float)dispatch_event('cart_shipping_fee_calculate', [$this]);
                 },
                 'dependencies' => ['shipping_method', 'total_weight']
@@ -412,7 +412,7 @@ class Cart
         }
     }
 
-    protected function onChange($trigger)
+    protected function onChange($key, $value)
     {
         if($this->isOrdered != false)
             return null;
@@ -421,15 +421,15 @@ class Cart
             $this->isRunning = true;
             $this->error = null;
             foreach ($this->resolvers as $field=>$resolver) {
-                if($field != $trigger) {
+                if($field != $key) {
                     $bound = \Closure::bind($resolver, $this);
-                    $this->data[$field] = $bound($this, $this->dataSource);
+                    $this->data[$field] = $bound($this, $value);
                 }
             }
             $this->isRunning = false;
             $promise = settle($this->setDataPromises);
             $promise->wait();
-            dispatch_event('cart_updated', [$this, $trigger]);
+            dispatch_event('cart_updated', [$this, $key]);
         }
     }
 
