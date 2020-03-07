@@ -25,12 +25,7 @@ class AddProductMiddleware extends MiddlewareAbstract
      */
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
-        $selectedOptions = $request->request->get('custom_options', []);
         $promise = $this->getContainer()->get(Cart::class)->addItem(
-            (int) $request->request->get('product_id'),
-            (int) $request->request->get('qty'),
-            $selectedOptions,
-            (int) $request->getSession()->get('language', get_default_language_Id()),
             $request->request->all()
         );
 
@@ -38,9 +33,10 @@ class AddProductMiddleware extends MiddlewareAbstract
             $response->addAlert('cart_add_success', 'success', "{$item->getData('product_name')} was added to shopping cart successfully")->notNewPage();
         });
 
-        $promise->otherwise(function($reason) use ($response) {
-            $response->addAlert('cart_add_error', 'error', $reason)->notNewPage();
+        $promise->otherwise(function($error) use ($response) {
+            $response->addAlert('cart_add_error', 'error', $error['message'])->notNewPage();
         });
+
         return $promise;
     }
 }

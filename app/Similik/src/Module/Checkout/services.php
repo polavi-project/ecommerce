@@ -7,11 +7,9 @@
 declare(strict_types=1);
 
 /**@var \Similik\Services\Di\Container $container */
-
-$container->set(\Similik\Module\Checkout\Services\Cart\ItemFactory::class, function() use ($container) {
-    return new \Similik\Module\Checkout\Services\Cart\ItemFactory($container->get(\Similik\Services\Db\Processor::class));
-});
-
+$container[\Similik\Module\Checkout\Services\Cart\Cart::class] =  function() use ($container) {
+    return new \Similik\Module\Checkout\Services\Cart\Cart($container->get(\Similik\Services\Http\Request::class));
+};
 
 $container->set(\Similik\Module\Checkout\Services\PriceHelper::class, function() use ($container) {
     return new \Similik\Module\Checkout\Services\PriceHelper($container->get(\Similik\Services\Db\Processor::class));

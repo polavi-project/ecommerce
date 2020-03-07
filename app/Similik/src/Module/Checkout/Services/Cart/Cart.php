@@ -11,35 +11,25 @@ namespace Similik\Module\Checkout\Services\Cart;
 
 use GuzzleHttp\Promise\FulfilledPromise;
 use GuzzleHttp\Promise\Promise;
+use function GuzzleHttp\Promise\promise_for;
 use GuzzleHttp\Promise\PromiseInterface;
 use GuzzleHttp\Promise\RejectedPromise;
-use function GuzzleHttp\Promise\settle;
 use MJS\TopSort\Implementations\ArraySort;
 use function Similik\_mysql;
 use function Similik\dispatch_event;
 use function Similik\get_config;
-use function Similik\get_default_language_Id;
-use Similik\Module\Customer\Services\Customer;
-use Similik\Services\Db\Processor;
 use Similik\Services\Http\Request;
+use function Similik\subscribe;
 
 class Cart
 {
     protected $fields = [];
-
-    protected $data = [];
-
-    /** @var Processor $processor*/
-    protected $processor;
 
     /** @var ItemFactory itemFactory*/
     protected $itemFactory;
 
     /** @var Request $request*/
     protected $request;
-
-    /** @var Customer $customer*/
-    protected $customer;
 
     /**@var callable[]*/
     protected $resolvers = [];
@@ -51,29 +41,35 @@ class Cart
     /**@var Promise[] $promises*/
     protected $promises = [];
 
-    /**@var Promise[] $setDataPromises*/
-    protected $setDataPromises = [];
+    /**@var Promise $setDataPromises*/
+    protected $setDataPromise;
 
     protected $error;
 
     protected $isOrdered = false;
 
     public function __construct(
-        ItemFactory $itemFactory,
         Request $request
     )
     {
         $this->initFields();
-        $itemFactory->setCart($this);
-        $this->itemFactory = $itemFactory;
         $this->request = $request;
-        $this->processor = new Processor();
+
+        subscribe('cart_item_updated', function() {
+            $this->onChange(null);
+        });
+        subscribe('cart_item_added', function() {
+            $this->onChange(null);
+        });
+        subscribe('cart_item_removed', function() {
+            $this->onChange(null);
+        });
     }
 
     public function initFromId(int $id) {
         if($this->getData("cart_id"))
-            throw new \Exception("No, your cart is already existed");
-        $cartData = $this->processor->getTable('cart')->load($id);
+            throw new \Exception("No, your cart is already initialized");
+        $cartData = _mysql()->getTable('cart')->load($id);
         if(!$cartData || $cartData['status'] == 0)
             throw new \Exception("Invalid cart");
         $this->setData('cart_id', $id);
@@ -81,10 +77,10 @@ class Cart
 
     protected function initFields()
     {
-        $this->fields = [
+        $fields = [
             'cart_id' => [
-                'resolver' => function(Cart $cart, $value) {
-                    return $value;
+                'resolver' => function(Cart $cart) {
+                    return $this->dataSource['cart_id'] ?? null;
                 }
             ],
             'currency' => [
@@ -107,11 +103,11 @@ class Cart
                 'dependencies' => ['customer_id']
             ],
             'customer_email' => [
-                'resolver' => function(Cart $cart, $value) {
+                'resolver' => function(Cart $cart) {
                     if($cart->request->getCustomer()->isLoggedIn())
                         $email = $cart->request->getCustomer()->getData('email');
                     else
-                        $email = $value;
+                        $email = $this->dataSource['customer_email'] ?? null;
                     if(!$email)
                         $this->error = "Customer email could not be empty";
 
@@ -120,11 +116,11 @@ class Cart
                 'dependencies' => ['customer_id']
             ],
             'customer_full_name' => [
-                'resolver' => function(Cart $cart, $value) {
+                'resolver' => function(Cart $cart) {
                     if($cart->getData("customer_id"))
                         $name = $cart->request->getCustomer()->getData('full_name');
                     else
-                        $name = $value;
+                        $name = $this->dataSource['customer_full_name'] ?? null;
                     if(!$name)
                         $this->error = "Customer name could not be empty";
 
@@ -143,8 +139,8 @@ class Cart
                 }
             ],
             'status' => [
-                'resolver' => function(Cart $cart, $value) {
-                    return  $value ?? $cart->getData('status') ?? 1;
+                'resolver' => function(Cart $cart) {
+                    return  $this->dataSource['status'] ?? $cart->getData('status') ?? 1;
                 }
             ],
             'total_qty' => [
@@ -168,19 +164,19 @@ class Cart
                 'dependencies' => ['items']
             ],
             'shipping_fee_excl_tax' => [
-                'resolver' => function(Cart $cart, $value) {
+                'resolver' => function(Cart $cart) {
                     return (float)dispatch_event('cart_shipping_fee_calculate', [$this]);
                 },
                 'dependencies' => ['shipping_method', 'total_weight']
             ],
             'shipping_fee_incl_tax' => [
-                'resolver' => function(Cart $cart, $dataSource) {
+                'resolver' => function(Cart $cart) {
                     return $cart->getData('shipping_fee_excl_tax'); // TODO: Adding tax
                 },
                 'dependencies' => ['shipping_fee_excl_tax']
             ],
             'tax_amount' => [
-                'resolver' => function(Cart $cart, $dataSource) {
+                'resolver' => function(Cart $cart) {
                     $itemTax = 0;
                     foreach ($cart->getItems() as $item)
                         $itemTax += $item->getData('tax_amount');
@@ -189,7 +185,7 @@ class Cart
                 'dependencies' => ['shipping_fee_incl_tax', 'discount_amount']
             ],
             'sub_total' => [
-                'resolver' => function(Cart $cart, $dataSource) {
+                'resolver' => function(Cart $cart) {
                     $total = 0;
                     foreach ($cart->getItems() as $item)
                         $total += $item->getData('final_price') * $item->getData('qty');
@@ -205,8 +201,8 @@ class Cart
                 'dependencies' => ['sub_total', 'tax_amount', 'payment_method', 'shipping_fee_incl_tax']
             ],
             'shipping_address_id' => [
-                'resolver' => function(Cart $cart, $dataSource) {
-                    $id = $dataSource['shipping_address_id'] ?? null;
+                'resolver' => function(Cart $cart) {
+                    $id = $this->dataSource['shipping_address_id'] ?? null;
                     $conn = _mysql();
                     if(!$id || !$conn->getTable('cart_address')->load($id))
                         $this->error = "Shipping address can not be empty";
@@ -215,8 +211,8 @@ class Cart
                 }
             ],
             'shipping_method' => [
-                'resolver' => function(Cart $cart, $dataSource) {
-                    $method = dispatch_event('apply_shipping_method', [$this, $dataSource]);
+                'resolver' => function(Cart $cart) {
+                    $method = dispatch_event('apply_shipping_method', [$this, $this->dataSource]);
                     if(!$method)
                         $this->error = "Shipping method can not be empty";
 
@@ -225,18 +221,18 @@ class Cart
                 'dependencies' => ['sub_total']
             ],
             'shipping_method_name' => [
-                'resolver' => function(Cart $cart, $dataSource) {
-                    return $dataSource['shipping_method_name'] ?? $dataSource['shipping_method_name'] ?? null;
+                'resolver' => function(Cart $cart) {
+                    return $this->dataSource['shipping_method_name'] ?? $this->dataSource['shipping_method_name'] ?? null;
                 }
             ],
             'shipping_note' => [
-                'resolver' => function(Cart $cart, $dataSource) {
-                    return $dataSource['shipping_note'] ?? $dataSource['shipping_note'] ?? null;
+                'resolver' => function(Cart $cart) {
+                    return $this->dataSource['shipping_note'] ?? $this->dataSource['shipping_note'] ?? null;
                 }
             ],
             'billing_address_id' => [
-                'resolver' => function(Cart $cart, $dataSource) {
-                    $id = $dataSource['billing_address_id'] ?? null;
+                'resolver' => function(Cart $cart) {
+                    $id = $this->dataSource['billing_address_id'] ?? null;
                     $conn = _mysql();
                     if(!$id || !$conn->getTable('cart_address')->load($id))
                         return null;
@@ -244,8 +240,8 @@ class Cart
                 }
             ],
             'payment_method' => [
-                'resolver' => function(Cart $cart, $dataSource) {
-                    $method = dispatch_event('apply_payment_method', [$this, $dataSource]);
+                'resolver' => function(Cart $cart) {
+                    $method = dispatch_event('apply_payment_method', [$this, $this->dataSource]);
                     if(!$method)
                         $this->error = "Payment method can not be empty";
 
@@ -254,84 +250,46 @@ class Cart
                 'dependencies' => ['sub_total']
             ],
             'payment_method_name' => [
-                'resolver' => function(Cart $cart, $dataSource) {
-                    return $dataSource['payment_method_name'] ?? $dataSource['payment_method_name'] ?? null;
+                'resolver' => function(Cart $cart) {
+                    return $this->dataSource['payment_method_name'] ?? $this->dataSource['payment_method_name'] ?? null;
                 }
             ],
             'items' => [
-                'resolver' => function(Cart $cart, $dataSource) {
-                    if($cart->itemFactory->getItems())
-                        return $cart->itemFactory->getItems();
-                    else {
-                        $items = [];
-                        $rows = $this->processor->getTable('cart_item')
-                            ->where('cart_id', '=', $cart->getData('cart_id'))
-                            ->fetchAllAssoc();
-                        foreach ($rows as $row) {
-                            $selectedOptions = $row['product_custom_options'] ? json_decode($row['product_custom_options'], true) : [];
-                            $_selectedOptions = [];
-                            foreach ($selectedOptions as $id=> $option) {
-                                $values = $option['values'];
-                                foreach ($values as $value)
-                                $_selectedOptions[$id][] = $value['value_id'];
-                            }
-                            $items[] = $this->itemFactory->createItem(
-                                (int) $row['product_id'],
-                                (int) $row['qty'],
-                                $_selectedOptions,
-                                (int) $this->request->getSession()->get('language', get_default_language_Id()),
-                                $row['requested_data'] ? json_decode($row['requested_data'], true) : [],
-                                (int) $row['cart_item_id']
-                            );
-                        }
-                        if(empty($items))
-                            $this->error = "Shopping cart is empty";
-
-                        return $items;
+                'resolver' => function(Cart $cart) {
+                    if(isset($this->dataSource['items']))
+                        return $this->dataSource['items'];
+                    $items = _mysql()->getTable('cart_item')->where('cart_id', '=', $this->getData('cart_id'))->fetchAllAssoc();
+                    $is = [];
+                    foreach ($items as $item) {
+                        $i = new Item($cart, $item);
+                        $is[$i->getId()] = $i;
                     }
+
+                    return $is;
                 },
                 'dependencies' => ['cart_id', 'customer_group_id', 'shipping_address_id'],
             ]
         ];
-        dispatch_event("register_cart_field", [$this]);
+        dispatch_event("register_cart_field", [&$fields]);
 
-        $sorter = new ArraySort();
-        foreach ($this->fields as $key=>$value) {
-            $sorter->add($key, $value['dependencies'] ?? []);
-        }
-        $sorted = $sorter->doSort();
+        $this->fields = $this->sortFields($fields);
 
-        foreach ($sorted as $key=>$value)
-            $this->resolvers[$value] = $this->fields[$value]['resolver'];
+        return $this;
     }
 
-    public function addItem(
-        int $productId,
-        int $qty,
-        array $selectedCustomOptions = [],
-        int $language = null,
-        array $requestedData = []
-    ) {
-        try {
-            $item = $this->itemFactory->createItem(
-                $productId,
-                $qty,
-                $selectedCustomOptions,
-                $language,
-                $requestedData
-            );
-            $promise = new \GuzzleHttp\Promise\Promise(function() use (&$promise, $item) {
-                if($item->getError())
-                    $promise->reject($item->getError());
-                else
-                    $promise->resolve($item);
-            });
-            $this->promises[] = $promise;
-        } catch (\Exception $e) {
-            $promise = new RejectedPromise($e->getMessage());
-        }
+    public function addItem(array $itemData) {
+        $item = new Item($this, $itemData);
+        if($item->getError())
+            return new RejectedPromise($item);
 
-        return $promise;
+        $items = $this->getData('items') ?? [];
+        $items[$item->getId()] = $item;
+        $promise = $this->setData('items', $items);
+
+        if($promise->getState() == 'fulfilled' && $this->getItem($item->getId()))
+            return new FulfilledPromise($item);
+        else
+            return new RejectedPromise($item->getError());
     }
 
     public function removeItem($id)
@@ -353,7 +311,7 @@ class Cart
     public function addField($field, callable $resolver = null, $dependencies = [])
     {
         $this->fields[$field] = [
-            'resolve'=> $resolver,
+            'resolve' => $resolver,
             'dependencies' => $dependencies
         ];
 
@@ -382,29 +340,31 @@ class Cart
         if($this->isRunning == true)
             return new RejectedPromise("Can not set value when resolves are running");
 
+        $this->dataSource[$key] = $value;
+
         if(isset($this->fields[$key]) and !empty($this->fields[$key]['dependencies'])) {
             $this->dataSource[$key] = $value;
             $promise = new \GuzzleHttp\Promise\Promise(function() use (&$promise, $key, $value) {
                 if($this->getData($key) == $value) {
                     $promise->resolve($value);
                 } else
-                    $promise->reject("Can not change {$key} field to {$value}");
+                    $promise->reject("Can not change {$key} field");
             });
-            $this->setDataPromises[$key] = $promise;
+            $this->setDataPromise = $promise;
             $this->onChange(null);
 
             return $promise;
         } else {
-            if(isset($this->data[$key]) and $this->data[$key] === $value)
-                return new FulfilledPromise($value);
-
-            $resolver = \Closure::bind($this->resolvers[$key], $this);
-            $_value = $resolver($this, array_merge($this->dataSource, [$key=> $value]));
+            $previous = $this->fields[$key]['value'] ?? null;
+            $resolver = \Closure::bind($this->fields[$key]["resolver"], $this);
+            $_value = $resolver($this);
 
             if($value != $_value) {
                 return new RejectedPromise("Field resolver returns different value");
+            } else if($previous == $_value) {
+                return new FulfilledPromise($value);
             } else {
-                $this->data[$key] = $value;
+                $this->fields[$key]['value'] = $value;
                 $this->dataSource[$key] = $value;
                 $this->onChange($key);
                 return new FulfilledPromise($value);
@@ -412,7 +372,7 @@ class Cart
         }
     }
 
-    protected function onChange($key, $value)
+    protected function onChange($key)
     {
         if($this->isOrdered != false)
             return null;
@@ -420,27 +380,30 @@ class Cart
         if($this->isRunning == false) {
             $this->isRunning = true;
             $this->error = null;
-            foreach ($this->resolvers as $field=>$resolver) {
-                if($field != $key) {
-                    $bound = \Closure::bind($resolver, $this);
-                    $this->data[$field] = $bound($this, $value);
+            foreach ($this->fields as $k=>$value) {
+                if($k != $key) {
+                    $this->fields[$k]['value'] = $value["resolver"]($this, $this->dataSource);
                 }
             }
             $this->isRunning = false;
-            $promise = settle($this->setDataPromises);
-            $promise->wait();
+            if($this->setDataPromise)
+                $this->setDataPromise->wait();
             dispatch_event('cart_updated', [$this, $key]);
         }
     }
 
     public function getData($key)
     {
-        return $this->data[$key] ?? null;
+        return $this->fields[$key]['value'] ?? null;
     }
 
     public function toArray()
     {
-        return $this->data;
+        $data = [];
+        foreach ($this->fields as $key => $field)
+            $data[$key] = $field['value'] ?? null;
+
+        return $data;
     }
 
     /**
@@ -448,12 +411,20 @@ class Cart
      */
     public function getItems()
     {
-        return $this->data['items'] ?? [];
+        return $this->fields['items']['value'] ?? [];
+    }
+
+    /**
+     * @return Item
+     */
+    public function getItem($id)
+    {
+        return $this->getData("items")[$id] ?? null;
     }
 
     public function isEmpty()
     {
-        return empty($this->data['items']);
+        return empty($this->getItems());
     }
 
     /**
@@ -466,7 +437,8 @@ class Cart
 
     public function createOrderSync()
     {
-        $shippingAddress = $this->processor->getTable('cart_address')->load($this->getData('shipping_address_id'));
+        $conn = _mysql();
+        $shippingAddress = $conn->getTable('cart_address')->load($this->getData('shipping_address_id'));
         if(!$shippingAddress)
             throw new \Exception("Please provide shipping address");
 
@@ -494,12 +466,11 @@ class Cart
 //                'customer_full_name' => null
 //            ];
 //        }
-        $autoIncrement = $this
-            ->processor
+        $autoIncrement = $conn
             ->executeQuery("SELECT `AUTO_INCREMENT` FROM  INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = :database AND TABLE_NAME   = :table", ['database'=> DB_DATABASE, 'table'=>'order'])
             ->fetch(\PDO::FETCH_ASSOC);
 
-        $orderData = array_merge($this->data, [
+        $orderData = array_merge($this->toArray(), [
             'order_number' =>10000 + (int)$autoIncrement['AUTO_INCREMENT'],
             'shipment_status' => 'pending',
             'payment_status' => 'pending'
@@ -507,34 +478,34 @@ class Cart
 
         dispatch_event("filter_order_data", [&$orderData]);
 
-        $this->processor->startTransaction();
+        $conn->startTransaction();
         try {
             // Order address
-            $shippingAddressId = $this->processor->getTable('order_address')
+            $shippingAddressId = $conn->getTable('order_address')
                 ->insert($shippingAddress);
-            $billingAddress = $this->processor->getTable('cart_address')->load($this->getData('billing_address_id'));
+            $billingAddress = $conn->getTable('cart_address')->load($this->getData('billing_address_id'));
             if(!$billingAddress)
             $billingAddress = $shippingAddress;
-            $this->processor->getTable('order_address')
+            $conn->getTable('order_address')
                 ->insert($billingAddress);
-            $billingAddressId = $this->processor->getLastID();
+            $billingAddressId = $conn->getLastID();
 
-            $this->processor->getTable('order')
+            $conn->getTable('order')
                 ->insert(array_merge($orderData, [
                     'shipping_address_id' => $shippingAddressId,
                     'billing_address_id' => $billingAddressId
                 ]));
-            $orderId = $this->processor->getLastID();
+            $orderId = $conn->getLastID();
             $items = $this->getItems();
             foreach ($items as $item) {
                 $itemData = array_merge($item->toArray(), ['order_item_order_id' => $orderId]);
                 dispatch_event("filter_order_data", [&$itemData]);
 
-                $this->processor->getTable('order_item')->insert($itemData);
+                $conn->getTable('order_item')->insert($itemData);
             }
 
             // Order activities
-            $this->processor->getTable('order_activity')
+            $conn->getTable('order_activity')
                 ->insert([
                     'order_activity_order_id' => $orderId,
                     'comment' => 'Order created',
@@ -543,14 +514,14 @@ class Cart
             $this->isOrdered = $orderId;
 
             // Disable cart
-            $this->processor->getTable('cart')
+            $conn->getTable('cart')
                 ->where('cart_id', '=', $this->getData('cart_id'))
                 ->update(['status'=>0]);
-            $this->processor->commit();
+            $conn->commit();
 
             return $orderId;
         } catch (\Exception $e) {
-            $this->processor->rollback();
+            $conn->rollback();
             throw $e;
         }
     }
@@ -573,9 +544,31 @@ class Cart
 
     public function destroy()
     {
-        $this->itemFactory = new ItemFactory($this->processor);
         $this->dataSource = [];
         $this->itemFactory->setCart($this);
         $this->setData('cart_id', null);
+    }
+
+    protected function sortFields(array $fields)
+    {
+        $sorter = new ArraySort();
+        foreach ($fields as $key=>$value) {
+            $sorter->add($key, $value['dependencies'] ?? []);
+        }
+        $sorted = $sorter->doSort();
+
+        $result = [];
+        foreach ($sorted as $key=>$value)
+            $result[$value] = $fields[$value];
+
+        return $result;
+    }
+
+    /**
+     * @return ItemFactory
+     */
+    public function getItemFactory(): ItemFactory
+    {
+        return $this->itemFactory;
     }
 }

@@ -141,6 +141,11 @@ class App
         $router = $this->container->get(Router::class);
         $container = $this->container;
         foreach($coreModules as $module) {
+            if(file_exists( MODULE_PATH . DS . $module . DS . 'services.php'))
+                (function() use ($module, $container) {
+                    include MODULE_PATH . DS . $module . DS . 'services.php';
+                })();
+
             if(file_exists( MODULE_PATH . DS . $module . DS . 'events.php') && $installed === true)
                 (function() use ($module, $eventDispatcher, $container) {
                     include MODULE_PATH . DS . $module . DS . 'events.php';
@@ -149,11 +154,6 @@ class App
             if(file_exists( MODULE_PATH . DS . $module . DS . 'routes.php'))
                 (function() use ($module, $router, $container) {
                     include MODULE_PATH . DS . $module . DS . 'routes.php';
-                })();
-
-            if(file_exists( MODULE_PATH . DS . $module . DS . 'services.php'))
-                (function() use ($module, $container) {
-                    include MODULE_PATH . DS . $module . DS . 'services.php';
                 })();
         }
         subscribe('after.load.module', function() {}, 0 , $eventDispatcher);

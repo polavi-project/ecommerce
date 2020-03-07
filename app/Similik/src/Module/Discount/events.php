@@ -7,10 +7,13 @@
 declare(strict_types=1);
 
 /** @var \Similik\Services\Event\EventDispatcher $eventDispatcher */
+/** @var Container $container */
 
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
 use function Similik\_mysql;
+use Similik\Module\Checkout\Services\Cart\Cart;
+use Similik\Module\Checkout\Services\Cart\Item;
 use Similik\Module\Discount\Services\CouponCollection;
 use Similik\Module\Discount\Services\Type\CouponCollectionFilterType;
 use Similik\Module\Discount\Services\Type\CouponCollectionType;
@@ -85,3 +88,46 @@ $eventDispatcher->addListener(
     },
     5
 );
+
+$eventDispatcher->addListener("register_cart_field", function(&$fields) use($container) {
+    // Register discount to cart
+    $fields["coupon"] = [
+        "resolver" => function(Cart $cart, $dataSource) use($container) {
+            $coupon = $dataSource['coupon'] ?? $cart->getData("coupon") ?? null;
+            return $container->get(\Similik\Module\Discount\Services\CouponHelper::class)->applyCoupon($coupon, $cart);
+        },
+        "dependencies" => ['customer_id', 'customer_group_id', 'items']
+    ];
+
+    $fields["discount_amount"] = [
+        "resolver" => function(Cart $cart) {
+            $items = $cart->getItems();
+            $discount = 0;
+            foreach ($items as $item)
+                $discount += $item->getData('discount_amount');
+
+            return $discount;
+        },
+        "dependencies" => ["coupon"]
+    ];
+
+    $fields["sub_total"] = [
+        "resolver" => $fields["sub_total"]["resolver"],
+        "dependencies" => array_merge($fields["sub_total"]["dependencies"], ["discount_amount"])
+    ];
+
+    $fields["grand_total"] = [
+        "resolver" => function(Cart $cart) use ($fields){
+            return $fields["grand_total"]["resolver"]($cart) - $cart->getData('discount_amount');
+        },
+        "dependencies" => array_merge($fields["grand_total"]["dependencies"], ["discount_amount"])
+    ];
+});
+
+$eventDispatcher->addListener("register_cart_item_field", function(array &$fields) {
+    $fields["discount_amount"] = [
+        "resolver" => function(Item $item) {
+            return 0;
+        }
+    ];
+});
