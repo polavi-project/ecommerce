@@ -92,8 +92,8 @@ $eventDispatcher->addListener(
 $eventDispatcher->addListener("register_cart_field", function(&$fields) use($container) {
     // Register discount to cart
     $fields["coupon"] = [
-        "resolver" => function(Cart $cart, $dataSource) use($container) {
-            $coupon = $dataSource['coupon'] ?? $cart->getData("coupon") ?? null;
+        "resolver" => function(Cart $cart) use($container) {
+            $coupon = $cart->getDataSource()['coupon'] ?? $cart->getData("coupon") ?? null;
             return $container->get(\Similik\Module\Discount\Services\CouponHelper::class)->applyCoupon($coupon, $cart);
         },
         "dependencies" => ['customer_id', 'customer_group_id', 'items']
@@ -111,11 +111,6 @@ $eventDispatcher->addListener("register_cart_field", function(&$fields) use($con
         "dependencies" => ["coupon"]
     ];
 
-    $fields["sub_total"] = [
-        "resolver" => $fields["sub_total"]["resolver"],
-        "dependencies" => array_merge($fields["sub_total"]["dependencies"], ["discount_amount"])
-    ];
-
     $fields["grand_total"] = [
         "resolver" => function(Cart $cart) use ($fields){
             return $fields["grand_total"]["resolver"]($cart) - $cart->getData('discount_amount');
@@ -124,10 +119,10 @@ $eventDispatcher->addListener("register_cart_field", function(&$fields) use($con
     ];
 });
 
-$eventDispatcher->addListener("register_cart_item_field", function(array &$fields) {
+$eventDispatcher->addListener("register_cart_item_field", function(array &$fields) use($container)  {
     $fields["discount_amount"] = [
-        "resolver" => function(Item $item) {
-            return 0;
+        "resolver" => function(Item $item) use($container) {
+            return $item->getDataSource()['discount_amount'] ?? 0;
         }
     ];
 });

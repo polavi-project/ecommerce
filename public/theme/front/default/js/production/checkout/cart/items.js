@@ -159,11 +159,11 @@ function Items({ items }) {
                                 "div",
                                 { className: "cart-tem-info" },
                                 React.createElement(A, { url: item.productUrl, text: item.product_name, classes: "uk-link-muted" }),
-                                item.error && React.createElement(
+                                item.error.map((e, i) => React.createElement(
                                     "div",
-                                    { className: "text-danger" },
-                                    item.error
-                                ),
+                                    { className: "text-danger", key: i },
+                                    e.message
+                                )),
                                 React.createElement(ItemOptions, { options: item.options })
                             )
                         ),

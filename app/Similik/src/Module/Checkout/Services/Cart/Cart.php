@@ -25,9 +25,6 @@ class Cart
 {
     protected $fields = [];
 
-    /** @var ItemFactory itemFactory*/
-    protected $itemFactory;
-
     /** @var Request $request*/
     protected $request;
 
@@ -54,25 +51,16 @@ class Cart
     {
         $this->initFields();
         $this->request = $request;
-
-        subscribe('cart_item_updated', function() {
-            $this->onChange(null);
-        });
-        subscribe('cart_item_added', function() {
-            $this->onChange(null);
-        });
-        subscribe('cart_item_removed', function() {
-            $this->onChange(null);
-        });
     }
 
     public function initFromId(int $id) {
-        if($this->getData("cart_id"))
-            throw new \Exception("No, your cart is already initialized");
-        $cartData = _mysql()->getTable('cart')->load($id);
-        if(!$cartData || $cartData['status'] == 0)
-            throw new \Exception("Invalid cart");
-        $this->setData('cart_id', $id);
+        if(!$this->getData("cart_id")) {
+            $data = _mysql()->getTable('cart')->load($id);
+            $this->dataSource = $data;
+            $this->setData('cart_id', $id);
+        }
+
+        return $this;
     }
 
     protected function initFields()
@@ -256,16 +244,22 @@ class Cart
             ],
             'items' => [
                 'resolver' => function(Cart $cart) {
-                    if(isset($this->dataSource['items']))
-                        return $this->dataSource['items'];
-                    $items = _mysql()->getTable('cart_item')->where('cart_id', '=', $this->getData('cart_id'))->fetchAllAssoc();
-                    $is = [];
-                    foreach ($items as $item) {
-                        $i = new Item($cart, $item);
-                        $is[$i->getId()] = $i;
+                    $items = [];
+                    if(isset($this->dataSource['items'])) {
+                        foreach ($this->dataSource['items'] as $item) {
+                            if($item->getData('cart_item_id') != null || !$item->getError())
+                                $item->refresh();
+                            $items[$item->getId()] = $item;
+                        }
+                    } else {
+                        $is = _mysql()->getTable('cart_item')->where('cart_id', '=', $this->getData('cart_id'))->fetchAllAssoc();
+                        foreach ($is as $v) {
+                            $i = new Item($cart, $v);
+                            $items[$i->getId()] = $i;
+                        }
                     }
 
-                    return $is;
+                    return $items;
                 },
                 'dependencies' => ['cart_id', 'customer_group_id', 'shipping_address_id'],
             ]
@@ -283,25 +277,26 @@ class Cart
             return new RejectedPromise($item);
 
         $items = $this->getData('items') ?? [];
-        $items[$item->getId()] = $item;
+        $flag = false;
+        foreach ($items as $id=>$i) {
+            if($i->getData('product_sku') == $item->getData('product_sku') && $i->getData('product_custom_options') == $item->getData('product_custom_options')) {
+                $i->setData('qty', $i->getData('qty') + $item->getData('qty'));
+                $items[$id] = $i;
+                $item = $i;
+                $flag = true;
+                break;
+            }
+        }
+
+        if($flag == false)
+            $items[$item->getId()] = $item;
+
         $promise = $this->setData('items', $items);
 
         if($promise->getState() == 'fulfilled' && $this->getItem($item->getId()))
             return new FulfilledPromise($item);
         else
-            return new RejectedPromise($item->getError());
-    }
-
-    public function removeItem($id)
-    {
-        $item = $this->itemFactory->removeItem($id);
-
-        $promise = new \GuzzleHttp\Promise\Promise(function() use (&$promise, $item) {
-            $promise->resolve($item);
-        });
-        $this->promises[] = $promise;
-
-        return $promise;
+            return new RejectedPromise($item);
     }
 
     public function getField($field) {
@@ -387,7 +382,7 @@ class Cart
             }
             $this->isRunning = false;
             if($this->setDataPromise)
-                $this->setDataPromise->wait();
+                $this->setDataPromise->wait(false);
             dispatch_event('cart_updated', [$this, $key]);
         }
     }
@@ -450,22 +445,6 @@ class Cart
             if($item->getError())
                 throw new \Exception("There is an error in shopping cart item");
 
-        // Start saving order
-        $customerId = $this->getData('customer_id');
-//        if($customerId) {
-//            $customer = $this->processor->getTable('customer')->load($customerId);
-//            if(!$customer)
-//                throw new \Exception("Customer does not exist");
-//            $customerData = [
-//                'customer_email' => $customer['email'],
-//                'customer_full_name' => $customer['full_name'],
-//            ];
-//        } else {
-//            $customerData = [
-//                'customer_email' => null,
-//                'customer_full_name' => null
-//            ];
-//        }
         $autoIncrement = $conn
             ->executeQuery("SELECT `AUTO_INCREMENT` FROM  INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = :database AND TABLE_NAME   = :table", ['database'=> DB_DATABASE, 'table'=>'order'])
             ->fetch(\PDO::FETCH_ASSOC);
@@ -545,7 +524,6 @@ class Cart
     public function destroy()
     {
         $this->dataSource = [];
-        $this->itemFactory->setCart($this);
         $this->setData('cart_id', null);
     }
 
@@ -565,10 +543,10 @@ class Cart
     }
 
     /**
-     * @return ItemFactory
+     * @return array
      */
-    public function getItemFactory(): ItemFactory
+    public function getDataSource(): array
     {
-        return $this->itemFactory;
+        return $this->dataSource;
     }
 }

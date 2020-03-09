@@ -94,7 +94,20 @@ class CartItemType extends ObjectType
                             return $container->get(Router::class)->generateUrl('cart.remove', ["id"=>$item['cart_item_id']]);                        }
                     ],
                     'error' => [
-                        'type' => Type::string()
+                        'type' => Type::listOf(new ObjectType([
+                            'name'=> 'cartItemError',
+                            'fields' => [
+                                'field' => Type::string(),
+                                'message'=> Type::string()
+                            ]
+                        ])),
+                        'resolve' => function($item, $args, Container $container, ResolveInfo $info) {
+                            $errors = [];
+                            if($item['error'])
+                                foreach ($item['error'] as $key => $val)
+                                    $errors[] = ['field'=> $key, 'message'=> $val];
+                            return $errors;
+                        }
                     ]
                 ];
 

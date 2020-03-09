@@ -50,7 +50,9 @@ class ItemsMiddleware extends MiddlewareAbstract
                             final_price
                             total
                             removeUrl
-                            error
+                            error {
+                                message
+                            }
                         }
                     }
                 }"

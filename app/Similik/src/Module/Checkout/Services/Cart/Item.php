@@ -13,6 +13,7 @@ use GuzzleHttp\Promise\FulfilledPromise;
 use GuzzleHttp\Promise\Promise;
 use GuzzleHttp\Promise\RejectedPromise;
 use MJS\TopSort\Implementations\ArraySort;
+use Monolog\Logger;
 use function Similik\_mysql;
 use function Similik\dispatch_event;
 use function Similik\get_base_url_scheme_less;
@@ -141,7 +142,7 @@ class Item
                     $items = $this->cart->getItems();
                     $addedQty = 0;
                     foreach ($items as $key=>$i)
-                        if($i->getData('product_sku') == $this->dataSource['product']['product_sku'])
+                        if($i->getData('product_sku') == $this->dataSource['product']['sku'])
                             $addedQty = $i->getData('qty');
 
                     if(!isset($item->getDataSource()['qty']) || $item->getDataSource()['qty'] <= 0) {
@@ -227,9 +228,23 @@ class Item
             'product_custom_options' => [
                 'resolver' => function(Item $item) {
                     $selectedOptions = $item->dataSource['product_custom_options'] ?? [];
-                    if(is_string($selectedOptions))
+                    if(is_string($selectedOptions)) { // this item is loaded from cart_item table
                         $selectedOptions = json_decode($selectedOptions, true); // Custom option is json string in database
-                    $availableOptions = $item->dataSource['product']['custom_options'] ?? [];
+                        $selectedOptions = array_map(function($o) {
+                            return array_keys($o['values'] ?? []);
+                        }, $selectedOptions);
+                    }
+
+                    $availableOptions = _mysql()->getTable('product_custom_option')
+                        ->where('product_custom_option_product_id', '=', $this->getData('product_id'))
+                        ->fetchAllAssocPrimaryKey();
+
+                    array_walk($availableOptions, function (&$value, $key) {
+                        $value['values'] = _mysql()->getTable('product_custom_option_value')
+                            ->where('option_id', '=', (int)$key)
+                            ->fetchAllAssocPrimaryKey();
+                    });
+
                     $validatedOptions = [];
                     foreach ($selectedOptions as $id => $value) {
                         if (!in_array($id, array_keys($availableOptions)))
@@ -254,7 +269,7 @@ class Item
                     }
                     $flag = true;
                     foreach ($availableOptions as $id => $option)
-                        if ((int)$option['is_required'] == 1 and !in_array($id, array_keys($validatedOptions)))
+                        if ((int)$option['is_required'] == 1 and (!in_array($id, array_keys($validatedOptions)) || empty($validatedOptions[$id]['values'])))
                             $flag = false;
                     if($flag == false)
                         $item->setError("product_custom_options", "You need to select some required option to purchase this product");
@@ -301,6 +316,7 @@ class Item
 
     public function setData($key, $value)
     {
+        the_container()->get(Logger::class)->addError("Item set value", [$key, $value]);
         if($this->isRunning == true)
             return new RejectedPromise("Can not set value when resolves are running");
 
@@ -321,14 +337,12 @@ class Item
             $previous = $this->fields[$key]['value'] ?? null;
             $resolver = \Closure::bind($this->fields[$key]["resolver"], $this);
             $_value = $resolver($this);
-
             if($value != $_value) {
                 return new RejectedPromise("Field resolver returns different value");
             } else if($previous == $_value) {
                 return new FulfilledPromise($value);
             } else {
                 $this->fields[$key]['value'] = $value;
-                $this->dataSource[$key] = $value;
                 $this->onChange($key);
                 return new FulfilledPromise($value);
             }
@@ -351,6 +365,7 @@ class Item
 
     protected function onChange($trigger)
     {
+        the_container()->get(Logger::class)->addError("Item onchange " . $trigger);
         if($this->isRunning == false) {
             $this->isRunning = true;
             //$this->error = null;
@@ -365,6 +380,10 @@ class Item
                 $this->setDataPromise->wait();
             dispatch_event('cart_item_updated', [$this, $trigger]);
         }
+    }
+
+    public function refresh() {
+        $this->onChange(null);
     }
 
     /**

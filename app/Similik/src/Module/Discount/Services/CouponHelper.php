@@ -9,12 +9,12 @@ declare(strict_types=1);
 namespace Similik\Module\Discount\Services;
 
 
+use Monolog\Logger;
 use function Similik\_mysql;
 use function Similik\dispatch_event;
 use function Similik\get_config;
 use Similik\Module\Checkout\Services\Cart\Cart;
-use Similik\Module\Checkout\Services\Cart\Item;
-use Similik\Module\Checkout\Services\Cart\ItemFactory;
+use function Similik\the_container;
 
 class CouponHelper
 {
@@ -82,6 +82,7 @@ class CouponHelper
         });
 
         $this->addDiscountCalculator('fixed_discount_to_entire_order', function(array $coupon, Cart $cart) {
+            the_container()->get(Logger::class)->addError("Calculating fixed_discount_to_entire_order", $coupon);
             $cartDiscountAmount = floatval($coupon['discount_amount']);
             $cartDiscountAmount = $this->getCartTotalBeforeDiscount($cart) > $cartDiscountAmount ? $cartDiscountAmount : $this->getCartTotalBeforeDiscount($cart);
             switch (get_config('sale_discount_calculation_rounding', 0)) {
@@ -113,6 +114,7 @@ class CouponHelper
         });
 
         $this->addDiscountCalculator('fixed_discount_to_specific_products', function(array $coupon, Cart $cart) {
+            the_container()->get(Logger::class)->addError("Calculating fixed_discount_to_specific_products ", $coupon);
             $discountAmount = floatval($coupon['discount_amount']);
             $items = $cart->getItems();
             $targetProducts = trim($coupon['target_products']);
@@ -140,6 +142,7 @@ class CouponHelper
         });
 
         $this->addDiscountCalculator('percentage_discount_to_specific_products', function(array $coupon, Cart $cart) {
+            the_container()->get(Logger::class)->addError("Calculating percentage_discount_to_specific_products ", $coupon);
             $discountPercent = floatval($coupon['discount_amount']) > 100 ? 100 : floatval($coupon['discount_amount']);
             $items = $cart->getItems();
             $targetProducts = trim($coupon['target_products']);
@@ -624,29 +627,37 @@ class CouponHelper
 
     public function applyCoupon($coupon, Cart $cart)
     {
-        if($coupon == null) {
+        $flag = true;
+        if($coupon == null)
+            $flag = false;
+
+        if($flag == true) {
+            $conn = _mysql();
+            $_coupon = $conn->getTable('coupon')->loadByField('coupon', $coupon);
+            if($_coupon == false)
+                $flag = false;
+
+            if($flag == true)
+                foreach ($this->validators as $key=>$validator) {
+                    if(!$validator($_coupon, $cart)) {
+                        $flag = false;
+                        break;
+                    }
+                }
+        }
+
+        if($flag == false) {
             $this->coupon = null;
             $this->discounts = [];
             $items= $cart->getItems();
             foreach ($items as $item)
-                $item->setData('discount_amount', null);
+                $item->setData('discount_amount', 0);
 
             return null;
+        } else {
+            $this->coupon = $_coupon;
+            $this->calculateDiscount($coupon, $cart);
         }
-
-        $conn = _mysql();
-        $_coupon = $conn->getTable('coupon')->loadByField('coupon', $coupon);
-        if($_coupon == false)
-            return false;
-
-        foreach ($this->validators as $key=>$validator) {
-            if(!$validator($_coupon, $cart)) {
-                return false;
-            }
-        }
-
-        $this->coupon = $_coupon;
-        $this->calculateDiscount($coupon, $cart);
 
         return $coupon;
     }
