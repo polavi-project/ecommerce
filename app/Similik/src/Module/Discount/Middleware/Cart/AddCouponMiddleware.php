@@ -21,12 +21,14 @@ class AddCouponMiddleware extends MiddlewareAbstract
     {
         $coupon = $request->request->get('coupon');
         $cart = $this->getContainer()->get(Cart::class);
-        $cart->setData('coupon', $coupon)
-            ->then(function($coupon) use ($request, $response) {
-                $response->redirect($this->getContainer()->get(Router::class)->generateUrl('checkout.cart'));
-            })
-            ->otherwise(function($reason) use ($response) {
-                $response->addAlert('coupon_apply_error', 'error', "Invalid coupon")->notNewPage();
-            });
+        $promise = $cart->setData('coupon', $coupon);
+
+        $promise->then(function($coupon) use ($request, $response) {
+            $response->redirect($this->getContainer()->get(Router::class)->generateUrl('checkout.cart'));
+        });
+
+        $promise->otherwise(function($reason) use ($response) {
+            $response->addAlert('coupon_apply_error', 'error', "Invalid coupon")->notNewPage();
+        });
     }
 }

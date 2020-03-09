@@ -25,21 +25,24 @@ class AddProductMiddleware extends MiddlewareAbstract
      */
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
-        $selectedOptions = $request->request->get('custom_options', []);
         $promise = $this->getContainer()->get(Cart::class)->addItem(
-            (int) $request->request->get('product_id'),
-            (int) $request->request->get('qty'),
-            $selectedOptions,
-            (int) $request->getSession()->get('language', get_default_language_Id()),
             $request->request->all()
-        )->then(function(Item $item) use ($response) {
-            if($item->getError())
-                throw new \Exception($item->getError());
-            else
-                $response->addAlert('cart_add_success', 'success', "{$item->getData('product_name')} was added to shopping cart successfully")->notNewPage();
-        })->otherwise(function($reason) use ($response) {
+        );
 
-            $response->addAlert('cart_add_error', 'error', $reason->getMessage())->notNewPage();
+        $promise->then(function(Item $item) use ($response) {
+            $response->addAlert('cart_add_success', 'success', "{$item->getData('product_name')} was added to shopping cart successfully")->notNewPage();
+        });
+
+        $promise->otherwise(function($item) use ($response) {
+            $errors = $item->getError();
+            if(count($errors) == 1 and isset($errors['product_custom_options'])) {
+                $response->addAlert('cart_add_error', 'error', $errors['product_custom_options']);
+                $response->redirect($item->getData('product_url'));
+            } else
+                foreach ($errors as $field => $message) {
+                    $response->addAlert('cart_add_error', 'error', $message);
+                }
+            $response->notNewPage();
         });
 
         return $promise;

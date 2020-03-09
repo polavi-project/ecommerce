@@ -12,16 +12,27 @@ namespace Similik\Module\Checkout\Services\Cart;
 use GuzzleHttp\Promise\FulfilledPromise;
 use GuzzleHttp\Promise\Promise;
 use GuzzleHttp\Promise\RejectedPromise;
+use MJS\TopSort\Implementations\ArraySort;
+use Monolog\Logger;
+use function Similik\_mysql;
 use function Similik\dispatch_event;
-use function Similik\subscribe;
+use function Similik\get_base_url_scheme_less;
+use function Similik\get_current_language_id;
+use Similik\Module\Checkout\Services\PriceHelper;
+use Similik\Module\Tax\Services\TaxCalculator;
+use Similik\Services\Routing\Router;
+use function Similik\str_replace_last;
+use function Similik\the_container;
+use Symfony\Component\Filesystem\Filesystem;
 
 class Item
 {
+    protected $id;
+
+    /**@var Cart $cart*/
+    protected $cart;
+
     protected $fields  = [];
-
-    protected $data = [];
-
-    protected $resolvers = [];
 
     protected $isRunning = false;
 
@@ -29,44 +40,309 @@ class Item
 
     protected $dataSource = [];
 
-    /**@var Promise $setDataPromises*/
-    protected $setDataPromises;
+    /**@var Promise $setDataPromise*/
+    protected $setDataPromise;
 
-    public function __construct(array $fields, array $dataSource)
+    public function __construct(Cart $cart, array $dataSource)
     {
-        $this->fields = $fields;
+        $this->cart = $cart;
+        $this->id = uniqid();
+        $fields = [
+            'cart_item_id' => [
+                'resolver' => function(Item $item) {
+                    return $item->getData('cart_item_id') ?? $item->getDataSource()['cart_item_id'] ?? null;
+                }
+            ],
+            'product_id' => [
+                'resolver' => function(Item $item) {
+                    $conn = _mysql();
+                    $product = $conn->getTable('product')
+                        ->where("product.status", '=', 1)
+                        ->leftJoin('product_description', null, [
+                            [
+                                'column'      => "product_description.language_id",
+                                'operator'    => "=",
+                                'value'       => get_current_language_id(),
+                                'ao'          => 'and',
+                                'start_group' => null,
+                                'end_group'   => null
+                            ]
+                        ])
+                        ->load($item->getDataSource()['product_id']);
+                    if(!$product) {
+                        $item->setError("product_id", "Requested product is not available");
+                        return null;
+                    }
+                    $this->dataSource = array_merge($item->getDataSource(), ["product"=>$product]);
+                    return $item->getDataSource()['product_id'];
+                }
+            ],
+            'product_name' => [
+                'resolver' => function(Item $item) {
+                    return $item->getData('name') ?? $item->dataSource['product']['name'] ?? null;
+                },
+                'dependencies' => ['product_id']
+            ],
+            'product_thumbnail' => [
+                'resolver' => function(Item $item) {
+                    $fileSystem = new Filesystem();
+                    if(!isset($item->getDataSource()['product']['image']) or $item->getDataSource()['product']['image'] == null)
+                        return null;
+                    if($fileSystem->exists(MEDIA_PATH . DS . str_replace_last('.', '_thumb.', $item->getDataSource()['product']['image'])))
+                        return get_base_url_scheme_less(false) . "/public/media/" . str_replace_last('.', '_thumb.', $item->getDataSource()['product']['image']);
+                    else
+                        return null;
+                },
+                'dependencies' => ['product_id']
+            ],
+            'product_url_key' => [
+                'resolver' => function(Item $item) {
+                    return $item->getData('product_url_key') ?? $item->dataSource['product']['seo_key'] ?? null;
+                },
+                'dependencies' => ['product_id']
+            ],
+            'product_url' => [
+                'resolver' => function(Item $item) {
+                    if(!preg_match('/^[\.a-zA-Z0-9\-_+]+$/', $item->getData('product_url_key')))
+                        return the_container()->get(Router::class)->generateUrl('product.view', ["id"=>$item->getData('product_id')]);
+                    else
+                        return the_container()->get(Router::class)->generateUrl('product.view.pretty', ["slug"=>$item->getData('product_url_key')]);
+                },
+                'dependencies' => ['product_id', 'product_url_key']
+            ],
+            'product_sku' => [
+                'resolver' => function(Item $item) {
+                    return $item->getData('product_sku') ?? $item->getDataSource()['product']['sku'] ?? null;
+                },
+                'dependencies' => ['product_id']
+            ],
+            'product_weight' => [
+                'resolver' => function(Item $item) {
+                    return $item->getData('weight') ?? (float)$item->getDataSource()['product']['weight'] ?? null;
+                },
+                'dependencies' => ['product_id']
+            ],
+            'product_price' => [
+                'resolver' => function(Item $item) {
+                    return $item->getData('price') ?? $item->getDataSource()['product']['price'] ?? 0;
+                },
+                'dependencies' => ['product_id']
+            ],
+            'product_price_incl_tax' => [
+                'resolver' => function(Item $item) {
+                    return TaxCalculator::getTaxAmount(
+                            $item->getData('product_price'),
+                            $item->getData('tax_percent')
+                        ) + $item->getData('product_price');
+                },
+                'dependencies' => ['product_price', 'tax_percent']
+            ],
+            'qty' => [
+                'resolver' => function(Item $item) {
+                    $items = $this->cart->getItems();
+                    $addedQty = 0;
+                    foreach ($items as $key=>$i)
+                        if($i->getData('product_sku') == $this->dataSource['product']['sku'])
+                            $addedQty = $i->getData('qty');
+
+                    if(!isset($item->getDataSource()['qty']) || $item->getDataSource()['qty'] <= 0) {
+                        $item->setError("qty", "Not enough stock");
+                        return null;
+                    }
+
+                    if(($this->dataSource['product']['qty'] - $addedQty < $item->getDataSource()['qty'] || $item->getDataSource()['product']['stock_availability'] == 0) && $this->dataSource['product']['manage_stock'] == 1)  {
+                        $item->setError("qty", "Not enough stock");
+                        return null;
+                    }
+                    return $item->getDataSource()['qty'] ?? $item->getData('qty');
+                },
+                'dependencies' => ['product_id']
+            ],
+            'final_price' => [
+                'resolver' => function(Item $item) {
+                    $priceHelper = the_container()->get(PriceHelper::class);
+                    $selectedOptions = $item->getData('product_custom_options');
+                    $extraPrice = 0;
+                    foreach ($selectedOptions as $id => $option) {
+                        foreach ($option['values'] as $value)
+                            $extraPrice += floatval($value['extra_price']);
+                    }
+                    return $priceHelper->getProductSalePrice(
+                            $item->getData('product_id'),
+                            $item->getData('product_price'),
+                            $item->getData('qty'),
+                            $this->cart->getData('customer_group_id')
+                        ) + $extraPrice;
+                },
+                'dependencies' => [
+                    'product_price',
+                    'qty',
+                    'tax_percent',
+                    'product_custom_options'
+                ]
+            ],
+            'final_price_incl_tax' => [
+                'resolver' => function(Item $item) {
+                    return TaxCalculator::getTaxAmount(
+                            $item->getData('final_price'),
+                            $item->getData('tax_percent')
+                        ) + $item->getData('final_price');
+                },
+                'dependencies' => ['final_price', 'tax_percent']
+            ],
+            'tax_percent' => [
+                'resolver' => function(Item $item) {
+                    $conn = _mysql();
+                    $shippingAddress = $conn->getTable('cart_address')->load($this->cart->getData('shipping_address_id'));
+                    if($shippingAddress) {
+                        TaxCalculator::setCountry($shippingAddress['country']);
+                        TaxCalculator::setProvince($shippingAddress['province']);
+                        TaxCalculator::setPostcode($shippingAddress['postcode']);
+                    }
+                    return TaxCalculator::getTaxPercent($item->getDataSource()['product']['tax_class']);
+                }
+            ],
+            'tax_amount' => [
+                'resolver' => function(Item $item) {
+                    return TaxCalculator::getTaxAmount(
+                        $item->getData('product_price') * $item->getData('qty'),
+                        $item->getData('tax_percent')
+                    );
+                },
+                'dependencies' => [
+                    'product_price',
+                    'qty',
+                    'tax_percent',
+                    'discount_amount'
+                ]
+            ],
+            'discount_amount' => [
+                'resolver' => function(Item $item) {
+                    return $item->getDataSource()['discount_amount'] ?? $item->getData('discount_amount') ?? 0;
+                },
+                'dependencies' => [
+                    'product_price',
+                    'qty'
+                ]
+            ],
+            'product_custom_options' => [
+                'resolver' => function(Item $item) {
+                    $selectedOptions = $item->dataSource['product_custom_options'] ?? [];
+                    if(is_string($selectedOptions)) { // this item is loaded from cart_item table
+                        $selectedOptions = json_decode($selectedOptions, true); // Custom option is json string in database
+                        $selectedOptions = array_map(function($o) {
+                            return array_keys($o['values'] ?? []);
+                        }, $selectedOptions);
+                    }
+
+                    $availableOptions = _mysql()->getTable('product_custom_option')
+                        ->where('product_custom_option_product_id', '=', $this->getData('product_id'))
+                        ->fetchAllAssocPrimaryKey();
+
+                    array_walk($availableOptions, function (&$value, $key) {
+                        $value['values'] = _mysql()->getTable('product_custom_option_value')
+                            ->where('option_id', '=', (int)$key)
+                            ->fetchAllAssocPrimaryKey();
+                    });
+
+                    $validatedOptions = [];
+                    foreach ($selectedOptions as $id => $value) {
+                        if (!in_array($id, array_keys($availableOptions)))
+                            unset($selectedOptions[$id]);
+
+                        $validatedOptions[$id] = [
+                            'option_id' => $id,
+                            'option_name' => $availableOptions[$id]['option_name']
+                        ];
+
+                        $values = [];
+                        $value = (array) $value;
+                        foreach ($value as $val) {
+                            if(in_array((int) $val, array_keys($availableOptions[$id]['values'])))
+                                $values[(int) $val] = [
+                                    'value_id' => (int) $val,
+                                    'value_text' => $availableOptions[$id]['values'][(int) $val]['value'],
+                                    'extra_price' => $availableOptions[$id]['values'][(int) $val]['extra_price']
+                                ];
+                        }
+                        $validatedOptions[$id]['values'] = $values;
+                    }
+                    $flag = true;
+                    foreach ($availableOptions as $id => $option)
+                        if ((int)$option['is_required'] == 1 and (!in_array($id, array_keys($validatedOptions)) || empty($validatedOptions[$id]['values'])))
+                            $flag = false;
+                    if($flag == false)
+                        $item->setError("product_custom_options", "You need to select some required option to purchase this product");
+
+                    return $validatedOptions;
+                }
+            ],
+            'total' => [
+                'resolver' => function(Item $item) {
+                    return $item->getData('final_price')
+                        * $item->getData('qty')
+                        + $item->getData('tax_amount')
+                        - $item->getData('discount_amount');
+                },
+                'dependencies' => [
+                    'final_price',
+                    'qty',
+                    'discount_amount'
+                ]
+            ]
+        ];
+
+        dispatch_event("register_cart_item_field", [&$fields]);
+
+        $this->fields = $this->sortFields($fields);
         $this->dataSource = $dataSource;
+        $this->onChange(null);
+    }
+
+    protected function sortFields(array $fields)
+    {
+        $sorter = new ArraySort();
+        foreach ($fields as $key=>$value) {
+            $sorter->add($key, $value['dependencies'] ?? []);
+        }
+        $sorted = $sorter->doSort();
+
+        $result = [];
+        foreach ($sorted as $key=>$value)
+            $result[$value] = $fields[$value];
+
+        return $result;
     }
 
     public function setData($key, $value)
     {
+        the_container()->get(Logger::class)->addError("Item set value", [$key, $value]);
         if($this->isRunning == true)
             return new RejectedPromise("Can not set value when resolves are running");
 
+        $this->dataSource[$key] = $value;
+
         if(isset($this->fields[$key]) and !empty($this->fields[$key]['dependencies'])) {
-            $this->dataSource[$key] = $value;
             $promise = new \GuzzleHttp\Promise\Promise(function() use (&$promise, $key, $value) {
                 if($this->getData($key) == $value) {
                     $promise->resolve($value);
                 } else
                     $promise->reject("Can not change {$key} field to {$value}");
             });
-            $this->setDataPromises = $promise;
+            $this->setDataPromise = $promise;
             $this->onChange(null);
 
             return $promise;
         } else {
-            if(isset($this->data[$key]) and $this->data[$key] === $value)
-                return new FulfilledPromise($value);
-
-            $resolver = \Closure::bind($this->resolvers[$key], $this);
-            $_value = $resolver($this, array_merge($this->dataSource, [$key=> $value]));
-
+            $previous = $this->fields[$key]['value'] ?? null;
+            $resolver = \Closure::bind($this->fields[$key]["resolver"], $this);
+            $_value = $resolver($this);
             if($value != $_value) {
                 return new RejectedPromise("Field resolver returns different value");
+            } else if($previous == $_value) {
+                return new FulfilledPromise($value);
             } else {
-                $this->data[$key] = $value;
-                $this->dataSource[$key] = $value;
+                $this->fields[$key]['value'] = $value;
                 $this->onChange($key);
                 return new FulfilledPromise($value);
             }
@@ -75,57 +351,49 @@ class Item
 
     public function getData($key)
     {
-        return $this->data[$key] ?? null;
+        return $this->fields[$key]['value'] ?? null;
     }
 
     public function toArray()
     {
-        return $this->data;
+        $data = [];
+        foreach ($this->fields as $key => $field)
+            $data[$key] = $field['value'] ?? null;
+
+        return $data;
     }
 
     protected function onChange($trigger)
     {
+        the_container()->get(Logger::class)->addError("Item onchange " . $trigger);
         if($this->isRunning == false) {
             $this->isRunning = true;
             //$this->error = null;
-            foreach ($this->resolvers as $field=>$resolver) {
-                if($field != $trigger) {
-                    $this->data[$field] = $resolver($this, $this->dataSource);
+            foreach ($this->fields as $key=>$value) {
+                if($key != $trigger) {
+                    $resolver = \Closure::bind($this->fields[$key]["resolver"], $this);
+                    $this->fields[$key]['value'] = $resolver($this);
                 }
             }
             $this->isRunning = false;
-            if($this->setDataPromises)
-                $this->setDataPromises->wait();
+            if($this->setDataPromise)
+                $this->setDataPromise->wait();
             dispatch_event('cart_item_updated', [$this, $trigger]);
         }
     }
 
-    /**
-     * @param array $resolvers
-     * @return Item
-     */
-    public function setResolvers(array $resolvers): Item
-    {
-        if(!$this->resolvers)
-            $this->resolvers = $resolvers;
-        return $this;
+    public function refresh() {
+        $this->onChange(null);
     }
 
     /**
-     * @return array
-     */
-    public function getResolvers(): array
-    {
-        return $this->resolvers;
-    }
-
-    /**
-     * @param mixed $error
+     * @param $field
+     * @param $message
      * @return Item
      */
-    public function setError($error)
+    public function setError($field, $message)
     {
-        $this->error = $error;
+        $this->error[$field] = $message;
         return $this;
     }
 
@@ -135,5 +403,21 @@ class Item
     public function getError()
     {
         return $this->error;
+    }
+
+    /**
+     * @return array
+     */
+    public function getDataSource(): array
+    {
+        return $this->dataSource;
+    }
+
+    /**
+     * @return string
+     */
+    public function getId(): string
+    {
+        return $this->id;
     }
 }

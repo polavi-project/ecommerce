@@ -94,7 +94,7 @@ class SaveCartMiddleware extends MiddlewareAbstract
             ]);
         } catch (\Exception $e) {
             $conn->rollback();
-            $response->addAlert('cart_save_error', 'error', $e->getMessage())->notNewPage();
+            $response->addAlert('cart_save_error', 'error', $e->getMessage());
         }
 
         if($response->isRedirect())

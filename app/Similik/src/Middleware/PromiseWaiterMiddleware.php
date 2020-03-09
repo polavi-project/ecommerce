@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace Similik\Middleware;
 
-use Similik\Module\Graphql\Services\GraphqlExecutor;
 use Similik\Services\Http\Request;
 use Similik\Services\Http\Response;
 use Similik\Services\PromiseWaiter;
@@ -19,7 +18,6 @@ class PromiseWaiterMiddleware extends MiddlewareAbstract
     {
         $this->getContainer()->get(PromiseWaiter::class)->wait();
 
-        $promises = $this->getContainer()->get(PromiseWaiter::class)->getPromises();
         return $delegate;
     }
 }

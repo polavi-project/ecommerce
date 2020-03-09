@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 /**@var \Similik\Services\Di\Container $container */
 $container->set(\Similik\Module\Discount\Services\CouponHelper::class, function() use ($container) {
-    return new \Similik\Module\Discount\Services\CouponHelper();
+    return new \Similik\Module\Discount\Services\CouponHelper($container->get(\Similik\Module\Checkout\Services\Cart\Cart::class));
 });
 
 $container->set(\Similik\Module\Discount\Services\Type\CouponType::class, function() use ($container) {

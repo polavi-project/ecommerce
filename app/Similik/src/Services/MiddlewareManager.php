@@ -8,8 +8,6 @@ declare(strict_types=1);
 
 namespace Similik\Services;
 
-use Monolog\Logger;
-use function Similik\array_find;
 use function Similik\dispatch_event;
 use Similik\Middleware\ConfigMiddleware;
 use Similik\Middleware\ResponseMiddleware;

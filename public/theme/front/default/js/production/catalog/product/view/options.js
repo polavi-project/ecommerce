@@ -32,7 +32,7 @@ export default function Options({ options = [] }) {
                 case "select":
                     FieldComponent = React.createElement(Select, {
                         key: i,
-                        name: `custom_options[${o.option_id}][]`,
+                        name: `product_custom_options[${o.option_id}][]`,
                         options: values,
                         validation_rules: parseInt(o.is_required) === 1 ? ['notEmpty'] : [],
                         formId: "product-form",
@@ -42,7 +42,7 @@ export default function Options({ options = [] }) {
                 case "multiselect":
                     FieldComponent = React.createElement(Multiselect, {
                         key: i,
-                        name: `custom_options[${o.option_id}][]`,
+                        name: `product_custom_options[${o.option_id}][]`,
                         options: values,
                         validation_rules: parseInt(o.is_required) === 1 ? ['notEmpty'] : [],
                         formId: "product-form",
@@ -52,7 +52,7 @@ export default function Options({ options = [] }) {
                 default:
                     FieldComponent = React.createElement(Select, {
                         key: i,
-                        name: `custom_options[${o.option_id}][]`,
+                        name: `product_custom_options[${o.option_id}][]`,
                         options: values,
                         validation_rules: parseInt(o.is_required) === 1 ? ['notEmpty'] : [],
                         formId: "product-form",
