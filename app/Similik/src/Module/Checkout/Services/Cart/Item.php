@@ -128,15 +128,6 @@ class Item
                 },
                 'dependencies' => ['product_id']
             ],
-            'product_price_incl_tax' => [
-                'resolver' => function(Item $item) {
-                    return TaxCalculator::getTaxAmount(
-                            $item->getData('product_price'),
-                            $item->getData('tax_percent')
-                        ) + $item->getData('product_price');
-                },
-                'dependencies' => ['product_price', 'tax_percent']
-            ],
             'qty' => [
                 'resolver' => function(Item $item) {
                     $items = $this->cart->getItems();
@@ -177,52 +168,7 @@ class Item
                 'dependencies' => [
                     'product_price',
                     'qty',
-                    'tax_percent',
                     'product_custom_options'
-                ]
-            ],
-            'final_price_incl_tax' => [
-                'resolver' => function(Item $item) {
-                    return TaxCalculator::getTaxAmount(
-                            $item->getData('final_price'),
-                            $item->getData('tax_percent')
-                        ) + $item->getData('final_price');
-                },
-                'dependencies' => ['final_price', 'tax_percent']
-            ],
-            'tax_percent' => [
-                'resolver' => function(Item $item) {
-                    $conn = _mysql();
-                    $shippingAddress = $conn->getTable('cart_address')->load($this->cart->getData('shipping_address_id'));
-                    if($shippingAddress) {
-                        TaxCalculator::setCountry($shippingAddress['country']);
-                        TaxCalculator::setProvince($shippingAddress['province']);
-                        TaxCalculator::setPostcode($shippingAddress['postcode']);
-                    }
-                    return TaxCalculator::getTaxPercent($item->getDataSource()['product']['tax_class']);
-                }
-            ],
-            'tax_amount' => [
-                'resolver' => function(Item $item) {
-                    return TaxCalculator::getTaxAmount(
-                        $item->getData('product_price') * $item->getData('qty'),
-                        $item->getData('tax_percent')
-                    );
-                },
-                'dependencies' => [
-                    'product_price',
-                    'qty',
-                    'tax_percent',
-                    'discount_amount'
-                ]
-            ],
-            'discount_amount' => [
-                'resolver' => function(Item $item) {
-                    return $item->getDataSource()['discount_amount'] ?? $item->getData('discount_amount') ?? 0;
-                },
-                'dependencies' => [
-                    'product_price',
-                    'qty'
                 ]
             ],
             'product_custom_options' => [
@@ -280,14 +226,11 @@ class Item
             'total' => [
                 'resolver' => function(Item $item) {
                     return $item->getData('final_price')
-                        * $item->getData('qty')
-                        + $item->getData('tax_amount')
-                        - $item->getData('discount_amount');
+                        * $item->getData('qty');
                 },
                 'dependencies' => [
                     'final_price',
-                    'qty',
-                    'discount_amount'
+                    'qty'
                 ]
             ]
         ];
@@ -316,7 +259,6 @@ class Item
 
     public function setData($key, $value)
     {
-        the_container()->get(Logger::class)->addError("Item set value", [$key, $value]);
         if($this->isRunning == true)
             return new RejectedPromise("Can not set value when resolves are running");
 
@@ -335,9 +277,10 @@ class Item
             return $promise;
         } else {
             $previous = $this->fields[$key]['value'] ?? null;
-            $resolver = \Closure::bind($this->fields[$key]["resolver"], $this);
+            $resolver = \Closure::bind($this->fields[$key]["resolver"], $this, get_class($this));
             $_value = $resolver($this);
             if($value != $_value) {
+                $this->fields[$key]['value'] = $_value;
                 return new RejectedPromise("Field resolver returns different value");
             } else if($previous == $_value) {
                 return new FulfilledPromise($value);
@@ -365,13 +308,12 @@ class Item
 
     protected function onChange($trigger)
     {
-        the_container()->get(Logger::class)->addError("Item onchange " . $trigger);
         if($this->isRunning == false) {
             $this->isRunning = true;
             //$this->error = null;
             foreach ($this->fields as $key=>$value) {
                 if($key != $trigger) {
-                    $resolver = \Closure::bind($this->fields[$key]["resolver"], $this);
+                    $resolver = \Closure::bind($this->fields[$key]["resolver"], $this, get_class($this));
                     $this->fields[$key]['value'] = $resolver($this);
                 }
             }

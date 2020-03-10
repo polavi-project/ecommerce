@@ -1,7 +1,10 @@
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 import { ADD_ALERT, ADD_APP_STATE } from "../../../../../../../../js/production/event-types.js";
 import { Fetch } from "../../../../../../../../js/production/fetch.js";
 
 function Address({ address, cartId, addressType = 'shipping', action, setNeedSelectAddress }) {
+    const cart = ReactRedux.useSelector(state => _.get(state, 'appState.cart'));
     const dispatch = ReactRedux.useDispatch();
     const onComplete = response => {
         let path = addressType === 'shipping' ? 'payload.data.addShippingAddress' : 'payload.data.addBillingAddress';
@@ -11,18 +14,18 @@ function Address({ address, cartId, addressType = 'shipping', action, setNeedSel
                 'type': ADD_APP_STATE,
                 'payload': {
                     'appState': {
-                        'cart': {
+                        'cart': _extends({}, cart, {
                             'shippingAddress': address
-                        }
+                        })
                     }
                 }
             });else dispatch({
                 'type': ADD_APP_STATE,
                 'payload': {
                     'appState': {
-                        'cart': {
+                        'cart': _extends({}, cart, {
                             'billingAddress': address
-                        }
+                        })
                     }
                 }
             });
@@ -40,12 +43,12 @@ function Address({ address, cartId, addressType = 'shipping', action, setNeedSel
         let formData = new FormData();
         for (let key in address) {
             if (address.hasOwnProperty(key)) {
-                if (address[key] !== null && key !== 'customer_address_id') formData.append(`variables[address][${key}]`, address[key]);
+                if (address[key] !== null && key !== 'customer_address_id' && key !== 'delete_url' && key !== 'update_url') formData.append(`variables[address][${key}]`, address[key]);
             }
         }
         formData.append(`variables[cartId]`, cartId);
-        if (addressType === 'shipping') formData.append('query', "mutation AddShippingAddress($address: CustomerAddressInput!, $cartId: Int!) { addShippingAddress (address: $address, cartId: $cartId) {status message address {customer_address_id}}}");
-        if (addressType === 'billing') formData.append('query', "mutation AddBillingAddress($address: CustomerAddressInput!, $cartId: Int!) { addBillingAddress (address: $address, cartId: $cartId) {status message address {customer_address_id}}}");
+        if (addressType === 'shipping') formData.append('query', "mutation AddShippingAddress($address: AddressInput!, $cartId: Int!) { addShippingAddress (address: $address, cartId: $cartId) {status message address {customer_address_id}}}");
+        if (addressType === 'billing') formData.append('query', "mutation AddBillingAddress($address: AddressInput!, $cartId: Int!) { addBillingAddress (address: $address, cartId: $cartId) {status message address {customer_address_id}}}");
         Fetch(action, false, 'POST', formData, null, onComplete, onError);
     };
 
