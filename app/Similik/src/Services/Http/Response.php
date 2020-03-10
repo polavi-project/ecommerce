@@ -28,7 +28,7 @@ class Response extends \Symfony\Component\HttpFoundation\Response
 
     protected $alerts = [];
 
-    public function __construct()
+    public function __construct() // TODO: Helmet should be a dependency here
     {
         parent::__construct('', 200, []);
         $this->jsonData = new DataObject();

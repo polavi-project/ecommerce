@@ -157,21 +157,6 @@ class Cart
                 },
                 'dependencies' => ['shipping_method', 'total_weight']
             ],
-            'shipping_fee_incl_tax' => [
-                'resolver' => function(Cart $cart) {
-                    return $cart->getData('shipping_fee_excl_tax'); // TODO: Adding tax
-                },
-                'dependencies' => ['shipping_fee_excl_tax']
-            ],
-            'tax_amount' => [
-                'resolver' => function(Cart $cart) {
-                    $itemTax = 0;
-                    foreach ($cart->getItems() as $item)
-                        $itemTax += $item->getData('tax_amount');
-                    return $itemTax + $cart->getData('shipping_fee_incl_tax') - $cart->getData('shipping_fee_excl_tax');
-                },
-                'dependencies' => ['shipping_fee_incl_tax', 'discount_amount']
-            ],
             'sub_total' => [
                 'resolver' => function(Cart $cart) {
                     $total = 0;
@@ -184,9 +169,9 @@ class Cart
             ],
             'grand_total' => [
                 'resolver' => function(Cart $cart) {
-                    return $cart->getData('sub_total') + $cart->getData('tax_amount') + $cart->getData('shipping_fee_incl_tax');
+                    return $cart->getData('sub_total') + $cart->getData('shipping_fee_excl_tax');
                 },
-                'dependencies' => ['sub_total', 'tax_amount', 'payment_method', 'shipping_fee_incl_tax']
+                'dependencies' => ['sub_total', 'payment_method']
             ],
             'shipping_address_id' => [
                 'resolver' => function(Cart $cart) {
@@ -206,7 +191,7 @@ class Cart
 
                     return $method;
                 },
-                'dependencies' => ['sub_total']
+                'dependencies' => ['sub_total', 'shipping_address_id']
             ],
             'shipping_method_name' => [
                 'resolver' => function(Cart $cart) {
@@ -355,6 +340,7 @@ class Cart
             $_value = $resolver($this);
 
             if($value != $_value) {
+                $this->fields[$key]['value'] = $_value;
                 return new RejectedPromise("Field resolver returns different value");
             } else if($previous == $_value) {
                 return new FulfilledPromise($value);

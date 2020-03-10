@@ -125,4 +125,11 @@ $eventDispatcher->addListener("register_cart_item_field", function(array &$field
             return $item->getDataSource()['discount_amount'] ?? 0;
         }
     ];
+
+    $fields["total"] = [
+        "resolver" => function(Item $item) use ($fields){
+            return $fields["total"]["resolver"]($item) - $item->getData('discount_amount');
+        },
+        "dependencies" => array_merge($fields["total"]["dependencies"], ["discount_amount"])
+    ];
 });
