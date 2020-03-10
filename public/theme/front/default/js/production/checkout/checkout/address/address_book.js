@@ -40,12 +40,12 @@ function Address({ address, cartId, addressType = 'shipping', action, setNeedSel
         let formData = new FormData();
         for (let key in address) {
             if (address.hasOwnProperty(key)) {
-                if (address[key] !== null && key !== 'customer_address_id') formData.append(`variables[address][${key}]`, address[key]);
+                if (address[key] !== null && key !== 'customer_address_id' && key !== 'delete_url' && key !== 'update_url') formData.append(`variables[address][${key}]`, address[key]);
             }
         }
         formData.append(`variables[cartId]`, cartId);
-        if (addressType === 'shipping') formData.append('query', "mutation AddShippingAddress($address: CustomerAddressInput!, $cartId: Int!) { addShippingAddress (address: $address, cartId: $cartId) {status message address {customer_address_id}}}");
-        if (addressType === 'billing') formData.append('query', "mutation AddBillingAddress($address: CustomerAddressInput!, $cartId: Int!) { addBillingAddress (address: $address, cartId: $cartId) {status message address {customer_address_id}}}");
+        if (addressType === 'shipping') formData.append('query', "mutation AddShippingAddress($address: AddressInput!, $cartId: Int!) { addShippingAddress (address: $address, cartId: $cartId) {status message address {customer_address_id}}}");
+        if (addressType === 'billing') formData.append('query', "mutation AddBillingAddress($address: AddressInput!, $cartId: Int!) { addBillingAddress (address: $address, cartId: $cartId) {status message address {customer_address_id}}}");
         Fetch(action, false, 'POST', formData, null, onComplete, onError);
     };
 
