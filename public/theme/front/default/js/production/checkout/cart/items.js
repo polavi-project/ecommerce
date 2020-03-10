@@ -185,13 +185,13 @@ function Items({ items }) {
                                     _finalPrice
                                 )
                             ),
-                            parseFloat(item.final_price) === parseFloat(item.product_price) && React.createElement(
+                            parseFloat(item.final_price) >= parseFloat(item.product_price) && React.createElement(
                                 "div",
                                 null,
                                 React.createElement(
                                     "span",
                                     { className: "sale-price" },
-                                    _regularPrice
+                                    _finalPrice
                                 )
                             )
                         ),
