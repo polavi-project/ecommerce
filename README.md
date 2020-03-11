@@ -22,11 +22,11 @@ It follows client rendering approach. Json data will be sent from server and all
 ### Prerequisites
 
 Apache server, PHP 7.3, Mysql 5.6 and 1 free SendGrid account for transactional email
-Please check [here](https://www.similik.com/document/system-prerequisites/) for more detail.
+Please check [here](https://www.similik.com/docs/system-prerequisites) for more detail.
 
 ### Installing
 
-Please check [here](https://www.similik.com/document/installation-guide/) for more detail.
+Please check [here](https://www.similik.com/docs/installation-guide) for more detail.
 
 
 ## Built With
