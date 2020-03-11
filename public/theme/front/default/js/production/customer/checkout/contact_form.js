@@ -139,7 +139,7 @@ function Guest({ loginUrl, setContactUrl }) {
                     submitText: formButton,
                     onComplete: wantEdit === true ? () => setWantEdit(false) : undefined
                 },
-                React.createElement(Text, {
+                wantLogin !== true && React.createElement(Text, {
                     formId: "checkout-contact-form",
                     name: "full_name",
                     validation_rules: ['notEmpty'],
