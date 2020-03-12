@@ -67,6 +67,13 @@ class AttributeType extends ObjectType
                             if($container->get(Request::class)->isAdmin() == false)
                                 return null;
                             return $container->get(Router::class)->generateUrl('attribute.edit', ["id"=>$attribute['attribute_id']]);                        }
+                    ],
+                    'deleteUrl' => [
+                        'type' => Type::string(),
+                        'resolve' => function($attribute, $args, Container $container, ResolveInfo $info) {
+                            if($container->get(Request::class)->isAdmin() == false)
+                                return null;
+                            return $container->get(Router::class)->generateUrl('attribute.delete', ["id"=>$attribute['attribute_id']]);                        }
                     ]
                 ];
 

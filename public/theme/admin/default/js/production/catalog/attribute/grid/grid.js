@@ -504,6 +504,7 @@ function CodeColumnRow({ row }) {
 function ActionColumnHeader({ areaProps }) {
     React.useEffect(() => {
         areaProps.addField('editUrl');
+        areaProps.addField('deleteUrl');
     }, []);
 
     const onClick = () => {
@@ -541,7 +542,20 @@ function ActionColumnRow({ row }) {
         React.createElement(
             "div",
             null,
-            React.createElement(A, { url: _.get(row, 'editUrl', ''), text: "Edit" })
+            React.createElement(A, { url: _.get(row, 'editUrl', ''), text: "Edit" }),
+            React.createElement(
+                "span",
+                null,
+                " "
+            ),
+            React.createElement(
+                "a",
+                { className: "uk-link-muted",
+                    onClick: () => {
+                        if (window.confirm('Are you sure?')) Fetch(row.deleteUrl, false, 'GET');
+                    } },
+                "Delete"
+            )
         )
     );
 }
