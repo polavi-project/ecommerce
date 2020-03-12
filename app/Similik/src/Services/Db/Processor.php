@@ -369,19 +369,17 @@ class Processor extends \PDO
 
     public function delete(Table $table)
     {
-        $event = new GenericEvent($this, [$table]);
-        $table = $event->getArgument(0);
         $whereClause = $this->buildWhere($table->getWhere());
         $binding = $table->getBinding();
         $query = "DELETE FROM `" . DB_PREFIX . $table->getTable()  . "` " . $whereClause;
         try {
             $stmt = $this->prepare($query);
             $stmt->execute($binding);
-            $event = new GenericEvent($this, [$table]);
         } catch (\PDOException $e) {
             $this->commit = false;
             throw $e;
         }
+
         return $this;
     }
 

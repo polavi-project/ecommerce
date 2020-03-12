@@ -85,15 +85,13 @@ $router->addAdminRoute('attribute.create', 'GET', '/attribute/create', $attribut
 
 $router->addAdminRoute('attribute.edit', 'GET', '/attribute/edit/{id:\d+}', $attributeEditMiddleware);
 
+$router->addAdminRoute('attribute.delete', 'GET', '/attribute/delete/{id:\d+}', [
+    \Similik\Module\Catalog\Middleware\Attribute\Delete\DeleteMiddleware::class
+]);
+
 $router->addAdminRoute('attribute.save', 'POST', '/attribute/save[/{id:\d+}]', [
     \Similik\Module\Catalog\Middleware\Attribute\Save\UpdateMiddleware::class,
     \Similik\Module\Catalog\Middleware\Attribute\Save\CreateMiddleware::class
-]);
-
-$router->addAdminRoute('attribute.delete', 'GET', '/attribute/delete/{id:\d+}', [
-//    \Similik\Module\Catalog\Middleware\Category\Save\ValidateMiddleware::class,
-//    \Similik\Module\Catalog\Middleware\Category\Save\UpdateMiddleware::class,
-//    \Similik\Module\Catalog\Middleware\Category\Save\CreateMiddleware::class
 ]);
 
 //////////////// ATTRIBUTE GROUP ////////////////////
