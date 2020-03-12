@@ -9,12 +9,10 @@ declare(strict_types=1);
 namespace Similik\Module\Discount\Services;
 
 
-use Monolog\Logger;
 use function Similik\_mysql;
 use function Similik\dispatch_event;
 use function Similik\get_config;
 use Similik\Module\Checkout\Services\Cart\Cart;
-use function Similik\the_container;
 
 class CouponHelper
 {
@@ -33,7 +31,6 @@ class CouponHelper
 
     public function __construct(Cart $cart)
     {
-
         $this->cart = $cart;
         $this->defaultValidator();
         $this->defaultDiscountCalculator();
@@ -82,7 +79,6 @@ class CouponHelper
         });
 
         $this->addDiscountCalculator('fixed_discount_to_entire_order', function(array $coupon, Cart $cart) {
-            the_container()->get(Logger::class)->addError("Calculating fixed_discount_to_entire_order", $coupon);
             $cartDiscountAmount = floatval($coupon['discount_amount']);
             $cartDiscountAmount = $this->getCartTotalBeforeDiscount($cart) > $cartDiscountAmount ? $cartDiscountAmount : $this->getCartTotalBeforeDiscount($cart);
             switch (get_config('sale_discount_calculation_rounding', 0)) {
@@ -114,7 +110,6 @@ class CouponHelper
         });
 
         $this->addDiscountCalculator('fixed_discount_to_specific_products', function(array $coupon, Cart $cart) {
-            the_container()->get(Logger::class)->addError("Calculating fixed_discount_to_specific_products ", $coupon);
             $discountAmount = floatval($coupon['discount_amount']);
             $items = $cart->getItems();
             $targetProducts = trim($coupon['target_products']);
@@ -142,8 +137,45 @@ class CouponHelper
         });
 
         $this->addDiscountCalculator('percentage_discount_to_specific_products', function(array $coupon, Cart $cart) {
-            the_container()->get(Logger::class)->addError("Calculating percentage_discount_to_specific_products ", $coupon);
             $discountPercent = floatval($coupon['discount_amount']) > 100 ? 100 : floatval($coupon['discount_amount']);
+            $items = $cart->getItems();
+            $targetProducts = trim($coupon['target_products']);
+            $targetProducts = empty($targetProducts) ? [] : explode(',', $targetProducts);
+            foreach ($items as $item) {
+                $sku = $item->getData('product_sku');
+                if(in_array($sku, $targetProducts)) {
+                    $discountAmount = $item->getData('final_price') * $item->getData('qty') * $discountPercent / 100;
+                    switch (get_config('sale_discount_calculation_rounding', 0)) {
+                        case 1:
+                            $discountAmount = ceil($discountAmount);
+                            break;
+                        case -1:
+                            $discountAmount = floor($discountAmount);
+                            break;
+                    }
+                } else {
+                    $discountAmount = 0;
+                }
+                if(!isset($this->discounts[$item->getData('cart_item_id')]) or $this->discounts[$item->getData('cart_item_id')] != $discountAmount) {
+                    $this->discounts[$item->getData('cart_item_id')] = $discountAmount;
+                    $item->setData('discount_amount', $discountAmount);
+                }
+            }
+        });
+
+        $this->addDiscountCalculator('by_x_get_y', function(array $coupon, Cart $cart) {
+            $discountPercent = floatval($coupon['discount_amount']) > 100 ? 100 : floatval($coupon['discount_amount']);
+            $configs = json_decode($coupon['buyx_gety'], true);
+            if (JSON_ERROR_NONE !== json_last_error())
+                return;
+            foreach ($configs as $row) {
+                $xSku = $row['sku'] ?? null;
+                $xQty = $row['x'] ?? null;
+                $ySku = $row['y'] ?? null;
+                $maxY = $row['max_y'] ?? null;
+                $discount = isset($row['discount']) ? floatval($row['discount']) : 0;
+            }
+
             $items = $cart->getItems();
             $targetProducts = trim($coupon['target_products']);
             $targetProducts = empty($targetProducts) ? [] : explode(',', $targetProducts);
