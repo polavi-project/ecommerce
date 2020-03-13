@@ -150,6 +150,18 @@ export default function AttributeEditForm(props) {
     return React.createElement(
         "div",
         { className: "attribute-edit-container" },
+        _.get(props, 'attribute.attribute_id') && React.createElement(
+            "h2",
+            null,
+            "Edit ",
+            _.get(props, 'attribute.attribute_name'),
+            " attribute"
+        ),
+        _.get(props, 'attribute.attribute_id', null) === null && React.createElement(
+            "h2",
+            null,
+            "Add new attribute"
+        ),
         React.createElement(Area, { id: "admin_attribute_edit_before", widgets: [] }),
         React.createElement(
             Form,
