@@ -1,16 +1,15 @@
 const Attributes = ({ attributes }) => {
     return React.createElement(
-        "div",
+        "li",
         null,
         React.createElement(
-            "strong",
-            null,
-            "Attributes"
+            "a",
+            { className: "uk-accordion-title", href: "#" },
+            "Specification"
         ),
-        React.createElement("br", null),
         React.createElement(
             "ul",
-            null,
+            { className: "uk-accordion-content" },
             attributes.map((attribute, index) => {
                 return React.createElement(
                     "li",

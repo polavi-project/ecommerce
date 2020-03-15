@@ -15,12 +15,18 @@ function Area(props) {
 
     const widgets = ReactRedux.useSelector(state => getWidgets(state.widgets), _.isEqual);
 
-    let Wrapper$Component = props.noOuter !== true ? "div" : React.Fragment;
+    let Wrapper$Component = props.noOuter !== true ? (props.wrapper !== undefined ? props.wrapper : "div") : React.Fragment;
+
+    let wrapperProps = {};
+    if(typeof props.wrapperProps === 'object' && props.wrapperProps !== null)
+        wrapperProps = {className : props.className ? props.className : "" , ...props.wrapperProps};
+    else
+        wrapperProps = {className : props.className ? props.className : "" };
 
     if(widgets.length === 0)
         return null;
 
-    return <Wrapper$Component id={props.id} className={props.className}>
+    return <Wrapper$Component {...wrapperProps}>
         {widgets.map((w) => {
             let C = w.component;
             if(typeof C === 'string')

@@ -139,6 +139,7 @@ $productViewMiddleware = [
     \Similik\Module\Catalog\Middleware\Product\View\PriceMiddleware::class,
     \Similik\Module\Catalog\Middleware\Product\View\GeneralInfoMiddleware::class,
     \Similik\Module\Catalog\Middleware\Product\View\ImagesMiddleware::class,
+    \Similik\Module\Catalog\Middleware\Product\View\DescriptionMiddleware::class,
     \Similik\Module\Catalog\Middleware\Product\View\AttributeMiddleware::class,
     \Similik\Module\Catalog\Middleware\Product\View\FormMiddleware::class,
 ];

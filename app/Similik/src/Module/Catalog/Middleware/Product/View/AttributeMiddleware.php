@@ -29,11 +29,11 @@ class AttributeMiddleware extends MiddlewareAbstract
         if($response->getStatusCode() == 404)
             return $delegate;
 
-        $this->getContainer()
+        $promise = $this->getContainer()
             ->get(GraphqlExecutor::class)
             ->waitToExecute([
                 "query"=>"{
-                    product_attribute_index(product_id: {$request->get('id')} language:{$request->get('language', get_default_language_Id())})
+                    productAttributeIndex(product_id: {$request->get('id')} language:{$request->get('language', get_default_language_Id())})
                     {
                         attribute_name
                         attribute_id
@@ -41,17 +41,18 @@ class AttributeMiddleware extends MiddlewareAbstract
                         attribute_value_text
                     }
                 }"
-            ])
-            ->then(function($result) use ($response) {
+            ]);
+
+        $promise->then(function($result) use ($response) {
                 /**@var \GraphQL\Executor\ExecutionResult $result */
-                if(isset($result->data['product_attribute_index']) and $result->data['product_attribute_index']) {
+                if(isset($result->data['productAttributeIndex']) and $result->data['productAttributeIndex']) {
                     $response->addWidget(
                         'product_view_attribute',
-                        'content',
-                        40,
+                        'product_detail_tab',
+                        20,
                         get_js_file_url("production/catalog/product/view/attributes.js", false),
                         [
-                            "attributes"=>$result->data['product_attribute_index']
+                            "attributes"=>$result->data['productAttributeIndex']
                         ]
                     );
                 }

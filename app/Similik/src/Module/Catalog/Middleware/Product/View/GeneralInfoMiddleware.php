@@ -11,6 +11,7 @@ namespace Similik\Module\Catalog\Middleware\Product\View;
 use function Similik\get_default_language_Id;
 use function Similik\get_js_file_url;
 use Similik\Module\Graphql\Services\GraphqlExecutor;
+use Similik\Services\Helmet;
 use Similik\Services\Http\Request;
 use Similik\Services\Http\Response;
 use Similik\Middleware\MiddlewareAbstract;
@@ -38,10 +39,10 @@ class GeneralInfoMiddleware extends MiddlewareAbstract
                 "query"=>"{
                     product_view_general_info: product(id: {$request->get('id')} language:{$request->get('language', get_default_language_Id())})
                     {
-                        name 
-                        price 
-                        description 
-                        sku 
+                        name
+                        price
+                        short_description
+                        sku
                         stock_availability
                     }
                 }"
@@ -57,6 +58,10 @@ class GeneralInfoMiddleware extends MiddlewareAbstract
                         $result->data['product_view_general_info']
                     );
 
+                    $this->getContainer()->get(Helmet::class)->setTitle($result->data['product_view_general_info']['name'])->addMeta([
+                        'name'=> 'description',
+                        'content' => $result->data['product_view_general_info']['short_description']
+                    ]);
                 }
             });
 

@@ -1,8 +1,18 @@
 const Description = ({ description }) => {
     return React.createElement(
-        "div",
+        "li",
         null,
-        description
+        React.createElement(
+            "a",
+            { className: "uk-accordion-title", href: "#" },
+            "Description"
+        ),
+        React.createElement(
+            "div",
+            { className: "uk-accordion-content" },
+            description
+        )
     );
 };
+
 export default Description;

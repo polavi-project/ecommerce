@@ -43,7 +43,7 @@ const Price = ({ tierPrices = [] }) => {
     const _salePrice = new Intl.NumberFormat(language, { style: 'currency', currency: currency }).format(salePrice);
     return React.createElement(
         'div',
-        { className: 'product-view-price' },
+        { className: 'product-view-price uk-margin-small-top' },
         parseFloat(salePrice) < parseFloat(regularPrice) && React.createElement(
             'div',
             null,
