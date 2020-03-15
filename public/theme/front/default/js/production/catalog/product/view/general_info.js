@@ -8,14 +8,6 @@ function Name({ name }) {
     );
 }
 
-function Description({ description }) {
-    return React.createElement(
-        "div",
-        { className: "product-single-des" },
-        description
-    );
-}
-
 function Sku({ sku }) {
     return React.createElement(
         "div",
@@ -49,12 +41,5 @@ export default function GeneralInfo({ name, price, description, sku, stock_avail
             },
             'sort_order': 20,
             'id': 'product-single-sku'
-        }, {
-            'component': Description,
-            'props': {
-                description: description
-            },
-            'sort_order': 30,
-            'id': 'product-single-description'
         }] });
 }

@@ -51,15 +51,6 @@ class InitMiddleware extends MiddlewareAbstract
         }
 
         $request->attributes->set('id', $product['product_id']);
-        $des = $conn->getTable('product_description')
-            ->where('product_description_product_id', '=', $product['product_id'])
-            ->andWhere('language_id', '=', get_default_language_Id())
-            ->fetchOneAssoc();
-
-        $this->getContainer()->get(Helmet::class)->setTitle($des['name'])->addMeta([
-            'name'=> 'description',
-            'content' => $des['short_description']
-        ]);
 
         $response->addState('product', [
             'id' => $product['product_id'],

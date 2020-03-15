@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace Similik\Module\Catalog\Middleware\Attribute\Edit;
 
-use function Similik\get_default_language_Id;
 use Similik\Services\Db\Processor;
 use Similik\Services\Helmet;
 use Similik\Services\Http\Response;

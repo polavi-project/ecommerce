@@ -9,12 +9,12 @@ export default function Options({ options = [] }) {
 
     return React.createElement(
         "div",
-        { className: "product-single-options" },
+        { className: "product-single-options uk-margin-small-bottom" },
         React.createElement(
             "div",
-            { className: "product-single-options-title" },
+            { className: "product-single-options-title uk-margin-small-top" },
             React.createElement(
-                "span",
+                "strong",
                 null,
                 "Options"
             )

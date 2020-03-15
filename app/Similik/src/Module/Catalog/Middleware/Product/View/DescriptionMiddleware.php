@@ -8,14 +8,16 @@ declare(strict_types=1);
 
 namespace Similik\Module\Catalog\Middleware\Product\View;
 
+use function Similik\get_default_language_Id;
 use function Similik\get_js_file_url;
 use Similik\Module\Graphql\Services\GraphqlExecutor;
+use Similik\Services\Helmet;
 use Similik\Services\Http\Request;
 use Similik\Services\Http\Response;
 use Similik\Middleware\MiddlewareAbstract;
 
 
-class ImagesMiddleware extends MiddlewareAbstract
+class DescriptionMiddleware extends MiddlewareAbstract
 {
     /**
      * @param Request $request
@@ -28,38 +30,28 @@ class ImagesMiddleware extends MiddlewareAbstract
         if($response->getStatusCode() == 404)
             return $delegate;
 
+        if($response->hasWidget('product_view_general_info'))
+            return $delegate;
+
         $this->getContainer()
             ->get(GraphqlExecutor::class)
             ->waitToExecute([
                 "query"=>"{
-                    productImages(productId: {$request->get('id')})
+                    description: product(id: {$request->get('id')} language:{$request->get('language', get_default_language_Id())})
                     {
-                        images {
-                            image
-                            main
-                            thumb
-                            isMain
-                        }
-                        productName 
+                        description
                     }
                 }"
             ])
             ->then(function($result) use ($response) {
                 /**@var \GraphQL\Executor\ExecutionResult $result */
-                //var_dump($result);
-                if(isset($result->data['productImages']) and $result->data['productImages']) {
-//                    $mainImage = null;
-//                    foreach ($result->data['productImages']['images'] as $key => $val)
-//                        if($val['isMain'] == true) {
-//                            $mainImage = $val;
-//                            unset($result->data['productImages']['images'][$key]);
-//                        }
+                if(isset($result->data['description']) and $result->data['description']) {
                     $response->addWidget(
-                        'product_view_images',
-                        'product_page_middle_left',
+                        'product_description',
+                        'product_detail_tab',
                         10,
-                        get_js_file_url("production/catalog/product/view/images.js", false),
-                        $result->data['productImages']
+                        get_js_file_url("production/catalog/product/view/description.js", false),
+                        ['description' => $result->data['description']['description']]
                     );
                 }
             });
