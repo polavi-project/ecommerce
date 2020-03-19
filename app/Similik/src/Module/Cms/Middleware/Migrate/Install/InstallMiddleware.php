@@ -60,7 +60,7 @@ class InstallMiddleware extends MiddlewareAbstract
               `meta_description` text,
               PRIMARY KEY (`cms_page_description_id`),
               UNIQUE KEY `UNQ_PAGE_LANGUAGE` (`cms_page_description_cms_page_id`,`language_id`),
-              CONSTRAINT `FK_CMS_PAGE_DESCRIPTION` FOREIGN KEY (`cms_page_description_cms_page_id`) REFERENCES `cms_page` (`cms_page_id`) ON UPDATE CASCADE
+              CONSTRAINT `FK_CMS_PAGE_DESCRIPTION` FOREIGN KEY (`cms_page_description_cms_page_id`) REFERENCES `cms_page` (`cms_page_id`) ON DELETE CASCADE
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT 'Cms page description'");
 
             //Create cms_widget table
