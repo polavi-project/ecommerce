@@ -68,6 +68,14 @@ class CmsPageType extends ObjectType
                                 return null;
                             return $container->get(Router::class)->generateUrl('page.edit', ["id"=>$page['cms_page_id']]);
                         }
+                    ],
+                    'deleteUrl' => [
+                        'type' => Type::string(),
+                        'resolve' => function($page, $args, Container $container, ResolveInfo $info) {
+                            if($container->get(Request::class)->isAdmin() == false)
+                                return null;
+                            return $container->get(Router::class)->generateUrl('page.delete', ["id"=>$page['cms_page_id']]);
+                        }
                     ]
                 ];
 

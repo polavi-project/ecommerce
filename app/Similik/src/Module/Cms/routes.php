@@ -26,6 +26,10 @@ $router->addAdminRoute('page.edit', 'GET', '/page/edit/{id:\d+}', [
     \Similik\Module\Cms\Middleware\Page\Edit\FormMiddleware::class
 ]);
 
+$router->addAdminRoute('page.delete', 'GET', '/page/delete/{id:\d+}', [
+    \Similik\Module\Cms\Middleware\Page\Delete\DeleteMiddleware::class,
+]);
+
 $router->addAdminRoute('page.save', 'POST', '/page/save[/{id:\d+}]', [
     \Similik\Module\Cms\Middleware\Page\Edit\InitMiddleware::class,
     \Similik\Module\Cms\Middleware\Page\Edit\FormMiddleware::class
