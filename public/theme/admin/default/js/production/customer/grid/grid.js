@@ -1,10 +1,10 @@
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 import Area from "../../../../../../../js/production/area.js";
 import A from "../../../../../../../js/production/a.js";
+import { Fetch } from "../../../../../../../js/production/fetch.js";
 
 function IdColumnHeader({ areaProps }) {
-    const filterFrom = React.useRef(null);
-    const filterTo = React.useRef(null);
-
     React.useEffect(() => {
         areaProps.addField("customer_id");
     }, []);
@@ -23,36 +23,6 @@ function IdColumnHeader({ areaProps }) {
                     null,
                     "ID"
                 )
-            ),
-            React.createElement(
-                "div",
-                { className: "filter" },
-                React.createElement(
-                    "div",
-                    null,
-                    React.createElement("input", {
-                        className: "uk-input uk-form-small uk-form-width-small",
-                        type: "text",
-                        ref: filterFrom,
-                        onKeyPress: e => {
-                            if (e.key === 'Enter') areaProps.addFilter("id", "BETWEEN", `${e.target.value} AND ${filterTo.current.value}`);
-                        },
-                        placeholder: "From"
-                    })
-                ),
-                React.createElement(
-                    "div",
-                    null,
-                    React.createElement("input", {
-                        className: "uk-input uk-form-small uk-form-width-small",
-                        type: "text",
-                        ref: filterTo,
-                        onKeyPress: e => {
-                            if (e.key === 'Enter') areaProps.addFilter("id", "BETWEEN", `${filterFrom.current.value} AND ${e.target.value}`);
-                        },
-                        placeholder: "To"
-                    })
-                )
             )
         )
     );
@@ -70,12 +40,22 @@ function IdColumnRow({ row }) {
     );
 }
 
-function EmailColumnHeader({ areaProps }) {
+function EmailColumnHeader({ filters, removeFilter, updateFilter, areaProps }) {
     const filterInput = React.useRef(null);
 
     React.useEffect(() => {
         areaProps.addField('email');
     }, []);
+
+    const onKeyPress = e => {
+        if (e.key === 'Enter') {
+            if (e.target.value == "") removeFilter("email");else updateFilter("email", "LIKE", `%${e.target.value}%`);
+        }
+    };
+
+    React.useEffect(() => {
+        filterInput.current.value = filters.findIndex(e => e.key === 'email') === -1 ? "" : filterInput.current.value;
+    });
 
     return React.createElement(
         "th",
@@ -96,13 +76,11 @@ function EmailColumnHeader({ areaProps }) {
                 "div",
                 { className: "filter" },
                 React.createElement("input", {
-                    className: "uk-input uk-form-small uk-form-width-small",
                     type: "text",
                     ref: filterInput,
-                    onKeyPress: e => {
-                        if (e.key === 'Enter') areaProps.addFilter("email", "LIKE", `%${e.target.value}%`);
-                    },
-                    placeholder: "Email"
+                    onKeyPress: e => onKeyPress(e),
+                    placeholder: "Email",
+                    className: "uk-input uk-form-small uk-form-width-small"
                 })
             )
         )
@@ -121,12 +99,22 @@ function EmailColumnRow({ row }) {
     );
 }
 
-function NameColumnHeader({ areaProps }) {
+function NameColumnHeader({ filters, removeFilter, updateFilter, areaProps }) {
     const filterInput = React.useRef(null);
 
     React.useEffect(() => {
         areaProps.addField('full_name');
     }, []);
+
+    const onKeyPress = e => {
+        if (e.key === 'Enter') {
+            if (e.target.value == "") removeFilter("full_name");else updateFilter("full_name", "LIKE", `%${e.target.value}%`);
+        }
+    };
+
+    React.useEffect(() => {
+        filterInput.current.value = filters.findIndex(e => e.key === 'full_name') === -1 ? "" : filterInput.current.value;
+    });
 
     return React.createElement(
         "th",
@@ -147,13 +135,11 @@ function NameColumnHeader({ areaProps }) {
                 "div",
                 { className: "filter" },
                 React.createElement("input", {
-                    className: "uk-input uk-form-small uk-form-width-small",
                     type: "text",
                     ref: filterInput,
-                    onKeyPress: e => {
-                        if (e.key === 'Enter') areaProps.addFilter("full_name", "LIKE", `%${e.target.value}%`);
-                    },
-                    placeholder: "Full name"
+                    onKeyPress: e => onKeyPress(e),
+                    placeholder: "Full name",
+                    className: "uk-input uk-form-small uk-form-width-small"
                 })
             )
         )
@@ -172,12 +158,20 @@ function NameColumnRow({ row }) {
     );
 }
 
-function GroupColumnHeader({ areaProps }) {
+function GroupColumnHeader({ areaProps, filters, updateFilter, groups }) {
     const filterInput = React.useRef(null);
 
     React.useEffect(() => {
         areaProps.addField("group_id");
     }, []);
+
+    const onChange = e => {
+        updateFilter("group", "=", `${e.target.value}`);
+    };
+
+    React.useEffect(() => {
+        filterInput.current.value = filters.findIndex(e => e.key === 'group') === -1 ? null : filterInput.current.value;
+    });
 
     return React.createElement(
         "th",
@@ -200,19 +194,11 @@ function GroupColumnHeader({ areaProps }) {
                 React.createElement(
                     "select",
                     {
-                        className: "uk-select uk-form-small uk-form-width-small",
-                        defaultValue: "placeholder",
                         ref: filterInput,
-                        onChange: e => {
-                            areaProps.addFilter("group", "Equal", e.target.value);
-                        }
+                        onChange: e => onChange(e),
+                        className: "uk-select uk-form-small uk-form-width-small"
                     },
-                    React.createElement(
-                        "option",
-                        { value: "placeholder", disabled: true },
-                        "Please select"
-                    ),
-                    areaProps.groups.map((g, i) => {
+                    groups.map((g, i) => {
                         return React.createElement(
                             "option",
                             { key: i, value: g.customer_group_id },
@@ -240,11 +226,17 @@ function GroupColumnRow({ row, groups }) {
 
 function ActionColumnHeader({ areaProps }) {
     React.useEffect(() => {
+        areaProps.addField('customer_id');
         areaProps.addField('editUrl');
     }, []);
+
+    const onClick = () => {
+        areaProps.cleanFilter();
+    };
+
     return React.createElement(
         "th",
-        null,
+        { className: "column" },
         React.createElement(
             "div",
             { className: "header" },
@@ -256,6 +248,11 @@ function ActionColumnHeader({ areaProps }) {
                     null,
                     "Action"
                 )
+            ),
+            React.createElement(
+                "a",
+                { onClick: () => onClick() },
+                "Clean filter"
             )
         )
     );
@@ -269,16 +266,24 @@ function ActionColumnRow({ row }) {
     );
 }
 
-function StatusColumnHeader({ areaProps }) {
+function StatusColumnHeader({ areaProps, filters, updateFilter }) {
     const filterInput = React.useRef(null);
+
+    const onChange = e => {
+        updateFilter("status", "=", `${e.target.value}`);
+    };
 
     React.useEffect(() => {
         areaProps.addField("status");
     }, []);
 
+    React.useEffect(() => {
+        filterInput.current.value = filters.findIndex(e => e.key === 'status') === -1 ? null : filterInput.current.value;
+    });
+
     return React.createElement(
-        "td",
-        null,
+        "th",
+        { className: "column" },
         React.createElement(
             "div",
             { className: "header status-header" },
@@ -296,9 +301,11 @@ function StatusColumnHeader({ areaProps }) {
                 { className: "filter" },
                 React.createElement(
                     "select",
-                    { className: "uk-select uk-form-small", ref: filterInput, onChange: e => {
-                            areaProps.addFilter("status", "Equal", e.target.value);
-                        } },
+                    {
+                        ref: filterInput,
+                        onChange: e => onChange(e),
+                        className: "uk-select uk-form-small uk-form-width-small"
+                    },
                     React.createElement(
                         "option",
                         { value: 1 },
@@ -335,32 +342,10 @@ function StatusColumnRow({ row }) {
     );
 }
 
-export default function CmsPageGrid({ apiUrl, groups = [] }) {
+export default function CustomerGrid({ apiUrl, areaProps, groups = [] }) {
     const [customers, setCustomers] = React.useState([]);
-    const [filters, setFilters] = React.useState([]);
     const [fields, setFields] = React.useState([]);
 
-    const addFilter = (key, operator, value) => {
-        let flag = 0;
-        filters.forEach((f, i) => {
-            if (f.key === key && !value) flag = 1; // Remove
-            if (f.key === key && value) flag = 2; // Update
-        });
-        if (flag === 0) setFilters(prevFilters => prevFilters.concat({ key: key, operator: operator, value: value }));else if (flag === 1) {
-            const setFilters = prevFilters.filter((f, index) => f.key !== key);
-            setFilters(newFilters);
-        } else setFilters(prevFilters => prevFilters.map((f, i) => {
-            if (f.key === key) {
-                f.operator = operator;
-                f.value = value;
-            }
-            return f;
-        }));
-    };
-
-    const cleanFilter = () => {
-        setFilters([]);
-    };
     const addField = field => {
         setFields(prevFields => prevFields.concat(field));
     };
@@ -368,27 +353,20 @@ export default function CmsPageGrid({ apiUrl, groups = [] }) {
     const applyFilter = () => {
         let formData = new FormData();
         formData.append('query', buildQuery());
-        axios({
-            method: 'post',
-            url: apiUrl,
-            headers: { 'content-type': 'multipart/form-data' },
-            data: formData
-        }).then(function (response) {
-            if (response.headers['content-type'] !== "application/json") throw new Error('Something wrong, please try again');
-            if (_.get(response, 'data.payload.data.customerCollection.customers')) {
-                setCustomers(_.get(response, 'data.payload.data.customerCollection.customers'));
+
+        Fetch(apiUrl, false, 'POST', formData, null, response => {
+            if (_.get(response, 'payload.data.customerCollection.customers')) {
+                setCustomers(_.get(response, 'payload.data.customerCollection.customers'));
             }
-        }).catch(function (error) {}).finally(function () {
-            // e.target.value = null;
-            // setUploading(false);
         });
     };
 
     const buildQuery = () => {
         let filterStr = "";
-        filters.forEach((f, i) => {
-            filterStr += `${f.key} : {operator : ${f.operator} value: "${f.value}"} `;
+        areaProps.filters.forEach((f, i) => {
+            filterStr += `${f.key} : {operator : "${f.operator}" value: "${f.value}"} `;
         });
+
         filterStr = filterStr.trim();
         if (filterStr) filterStr = `(filter : {${filterStr}})`;
 
@@ -403,7 +381,7 @@ export default function CmsPageGrid({ apiUrl, groups = [] }) {
     React.useEffect(() => {
         if (fields.length === 0) return;
         applyFilter();
-    }, [fields, filters]);
+    }, [fields, areaProps.filters]);
 
     return React.createElement(
         "div",
@@ -429,40 +407,42 @@ export default function CmsPageGrid({ apiUrl, groups = [] }) {
                     React.createElement(Area, {
                         className: "",
                         id: "customer_grid_header",
-                        addFilter: addFilter,
-                        cleanFilter: cleanFilter,
+                        filters: areaProps.filters,
+                        addFilter: areaProps.addFilter,
+                        updateFilter: areaProps.updateFilter,
+                        removeFilter: areaProps.removeFilter,
+                        cleanFilter: areaProps.cleanFilter,
                         addField: addField,
                         applyFilter: applyFilter,
-                        groups: groups,
                         noOuter: true,
                         coreWidgets: [{
                             component: IdColumnHeader,
-                            props: {},
+                            props: _extends({}, areaProps, { addField, applyFilter }),
                             sort_order: 10,
                             id: "id"
                         }, {
                             component: EmailColumnHeader,
-                            props: {},
+                            props: _extends({}, areaProps, { addField, applyFilter }),
                             sort_order: 15,
                             id: "email"
                         }, {
                             component: NameColumnHeader,
-                            props: {},
+                            props: _extends({}, areaProps, { addField, applyFilter }),
                             sort_order: 20,
                             id: "name"
                         }, {
                             component: GroupColumnHeader,
-                            props: {},
+                            props: _extends({}, areaProps, { addField, applyFilter, groups }),
                             sort_order: 25,
                             id: "group"
                         }, {
                             component: StatusColumnHeader,
-                            props: {},
+                            props: _extends({}, areaProps, { addField, applyFilter }),
                             sort_order: 30,
                             id: "status"
                         }, {
                             component: ActionColumnHeader,
-                            props: {},
+                            props: _extends({}, areaProps, { addField, applyFilter }),
                             sort_order: 35,
                             id: "action"
                         }]
@@ -472,7 +452,7 @@ export default function CmsPageGrid({ apiUrl, groups = [] }) {
             React.createElement(
                 "tbody",
                 null,
-                customers.map((p, i) => {
+                customers.map((c, i) => {
                     return React.createElement(
                         "tr",
                         null,
@@ -480,36 +460,36 @@ export default function CmsPageGrid({ apiUrl, groups = [] }) {
                             key: i,
                             className: "",
                             id: "customer_grid_row",
-                            row: p,
+                            row: c,
                             noOuter: true,
                             coreWidgets: [{
                                 component: IdColumnRow,
-                                props: { row: p },
+                                props: { row: c },
                                 sort_order: 10,
                                 id: "id"
                             }, {
                                 component: EmailColumnRow,
-                                props: { row: p },
+                                props: { row: c },
                                 sort_order: 15,
                                 id: "email"
                             }, {
                                 component: NameColumnRow,
-                                props: { row: p },
+                                props: { row: c },
                                 sort_order: 20,
                                 id: "name"
                             }, {
                                 component: GroupColumnRow,
-                                props: { row: p, groups: groups },
+                                props: { row: c, groups },
                                 sort_order: 25,
                                 id: "group"
                             }, {
                                 component: StatusColumnRow,
-                                props: { row: p },
+                                props: { row: c },
                                 sort_order: 30,
                                 id: "status"
                             }, {
                                 component: ActionColumnRow,
-                                props: { row: p },
+                                props: { row: c },
                                 sort_order: 35,
                                 id: "action"
                             }]

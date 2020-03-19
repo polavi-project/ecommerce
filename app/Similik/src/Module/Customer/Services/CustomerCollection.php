@@ -46,6 +46,10 @@ class CustomerCollection extends CollectionBuilder
             $this->collection->andWhere('customer.full_name', $args['operator'], $args['value']);
         });
 
+        $this->addFilter('email', function($args) {
+            $this->collection->andWhere('customer.email', $args['operator'], $args['value']);
+        });
+
         $this->addFilter('group', function($args) {
             $this->collection->andWhere('customer.group_id', $args['operator'], $args['value']);
         });

@@ -23,6 +23,7 @@ class CustomerCollectionFilterType extends InputObjectType
             'fields' => function() use($container) {
                 $fields = [
                     'id' => $container->get(FilterFieldType::class),
+                    'email' => $container->get(FilterFieldType::class),
                     'status' => $container->get(FilterFieldType::class),
                     'name' => $container->get(FilterFieldType::class),
                     'group' => $container->get(FilterFieldType::class)

@@ -29,10 +29,25 @@ class GridMiddleware extends MiddlewareAbstract
             return $delegate;
 
         $this->getContainer()->get(Helmet::class)->setTitle("Customers");
+        $response->addWidget(
+            'coupon_grid_container',
+            'content',
+            0,
+            get_js_file_url("production/grid/grid.js", true),
+            ['id'=>"customer_grid_container"]
+        );
+
+        $response->addWidget(
+            'customer_grid_title',
+            'customer_grid_container',
+            0,
+            get_js_file_url("production/customer/grid/title.js", true)
+        );
+
         $groups = _mysql()->getTable('customer_group')->where('customer_group_id', '<', 999)->fetchAllAssoc();
         $response->addWidget(
             'customer_grid',
-            'content',
+            'customer_grid_container',
             20, get_js_file_url("production/customer/grid/grid.js", true),
             [
                 "apiUrl" => generate_url('admin.graphql.api'),
