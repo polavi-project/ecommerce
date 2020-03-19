@@ -25,14 +25,6 @@ $container[\Similik\Module\Customer\Services\Type\AddressType::class] = function
     return new \Similik\Module\Customer\Services\Type\AddressType($container);
 };
 
-$container[\Similik\Module\Customer\Services\Type\CustomerGridType::class] = function() use ($container){
-    return new \Similik\Module\Customer\Services\Type\CustomerGridType($container);
-};
-
-$container[\Similik\Module\Customer\Services\CustomerGridCollection::class] = function() use ($container){
-    return new \Similik\Module\Customer\Services\CustomerGridCollection();
-};
-
 $container[\Similik\Module\Customer\Services\Type\AddressInputType::class] = function() use ($container){
     return new \Similik\Module\Customer\Services\Type\AddressInputType($container);
 };
