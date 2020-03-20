@@ -60,6 +60,14 @@ class WidgetType extends ObjectType
                                 return null;
                             return $container->get(Router::class)->generateUrl('widget.edit', ["type"=>$widget['type'], 'id'=> $widget['cms_widget_id']]);
                         }
+                    ],
+                    'deleteUrl' => [
+                        'type' => Type::string(),
+                        'resolve' => function($widget, $args, Container $container, ResolveInfo $info) {
+                            if($container->get(Request::class)->isAdmin() == false)
+                                return null;
+                            return $container->get(Router::class)->generateUrl('widget.delete', ['id'=> $widget['cms_widget_id']]);
+                        }
                     ]
                 ];
 

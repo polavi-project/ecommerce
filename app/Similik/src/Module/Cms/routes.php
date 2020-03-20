@@ -48,6 +48,10 @@ $router->addAdminRoute('widget.edit', 'GET', '/widget/edit/{type}/{id:\d+}', [
     \Similik\Module\Cms\Middleware\Widget\Edit\EditMiddleware::class
 ]);
 
+$router->addAdminRoute('widget.delete', 'GET', '/widget/edit/{id:\d+}', [
+    \Similik\Module\Cms\Middleware\Widget\Delete\DeleteMiddleware::class
+]);
+
 $router->addAdminRoute('cms.install', ["POST", "GET"], '/cms/migrate/install', [
     \Similik\Module\Cms\Middleware\Migrate\Install\InstallMiddleware::class
 ]);
