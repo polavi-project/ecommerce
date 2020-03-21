@@ -30,7 +30,7 @@ class SaveMiddleware extends MiddlewareAbstract
             else
                 $conn->getTable('coupon')->insert($data);
             $response->addAlert("coupon_save_success", "success", "Coupon saved successfully");
-            $response->addData("redirect", $this->getContainer()->get(Router::class)->generateUrl('coupon.list'));
+            $response->addData("redirect", $this->getContainer()->get(Router::class)->generateUrl('coupon.grid'));
         } catch (\Exception $e) {
             $response->addAlert('coupon_save_error', 'error', $e->getMessage())->notNewPage();
         }

@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 /** @var \Similik\Services\Routing\Router $router */
 
-$router->addAdminRoute('coupon.list', 'GET', '/coupons', [
+$router->addAdminRoute('coupon.grid', 'GET', '/coupons', [
     \Similik\Module\Discount\Middleware\Grid\GridMiddleware::class,
     \Similik\Module\Discount\Middleware\Grid\AddNewButtonMiddleware::class,
 ]);
@@ -22,6 +22,10 @@ $router->addAdminRoute('coupon.create', 'GET', '/coupon/create', [
 $router->addAdminRoute('coupon.edit', 'GET', '/coupon/edit/{id:\d+}', [
     \Similik\Module\Discount\Middleware\Edit\LoadCustomerGroupMiddleware::class,
     \Similik\Module\Discount\Middleware\Edit\FormMiddleware::class
+]);
+
+$router->addAdminRoute('coupon.delete', 'GET', '/coupon/delete/{id:\d+}', [
+    \Similik\Module\Discount\Middleware\Delete\DeleteMiddleware::class,
 ]);
 
 $router->addAdminRoute('coupon.save', "POST", '/coupon/save[/{id:\d+}]', [
