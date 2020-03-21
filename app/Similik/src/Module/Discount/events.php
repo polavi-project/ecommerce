@@ -36,7 +36,7 @@ $eventDispatcher->addListener(
             $container->get(\Similik\Module\Cms\Services\NavigationManager::class)->addItem(
                 'coupon.grid',
                 'All coupon',
-                $container->get(Router::class)->generateUrl('coupon.list'),
+                $container->get(Router::class)->generateUrl('coupon.grid'),
                 'list',
                 'discount',
                 10
