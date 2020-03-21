@@ -6,7 +6,7 @@
 
 declare(strict_types=1);
 
-namespace Similik\Module\Cms\Middleware\Widget\Delete;
+namespace Similik\Module\Catalog\Middleware\AttributeGroup\Delete;
 
 
 use function Similik\_mysql;
@@ -21,12 +21,13 @@ class DeleteMiddleware extends MiddlewareAbstract
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
         $id = $request->attributes->get('id');
+
         try {
-            _mysql()->getTable('cms_widget')->where('cms_widget_id', '=', $id)->delete();
-            $response->addAlert("cms_widget_id_delete_success", "success", "Widget deleted");
-            $response->redirect(generate_url('widget.grid'));
+            _mysql()->getTable('attribute_group')->where('attribute_group_id', '=', $id)->delete();
+            $response->addAlert("attribute_group_delete_success", "success", "Attribute group deleted");
+            $response->redirect(generate_url('attribute.group.grid'));
         } catch (\Exception $e) {
-            $response->addAlert("cms_widget_id_delete_error", "error", $e->getMessage())->notNewPage();
+            $response->addAlert("attribute_group_delete_error", "error", $e->getMessage())->notNewPage();
         }
 
         return $delegate;

@@ -9,7 +9,6 @@ namespace Similik\Services\Db;
 
 use function Similik\dispatch_event;
 use Similik\Services\Log\Logger;
-use Symfony\Component\EventDispatcher\GenericEvent;
 
 class Processor extends \PDO
 {
@@ -50,7 +49,6 @@ class Processor extends \PDO
     {
         if ($this->inTransaction and $this->commit == true) {
             try {
-                // commit read-write transaction which also releases the lock
                 parent::commit();
                 $this->inTransaction = false;
             } catch (\PDOException $e) {
@@ -285,9 +283,6 @@ class Processor extends \PDO
     public function update(Table $table, array $data = [])
     {
         dispatch_event("before_update_{$table->getTable()}", [&$data]);
-        $event = new GenericEvent($this, [$table, $data]);
-        $table = $event->getArgument(0);
-        $data = $event->getArgument(1);
         $prepare = '';
         $binding = [];
         foreach ($table->getColumns() as $column) {
@@ -369,12 +364,16 @@ class Processor extends \PDO
 
     public function delete(Table $table)
     {
+        $affectedRows = $table->fetchAllAssoc();
+        dispatch_event("before_delete_{$table->getTable()}", [$affectedRows]);
+
         $whereClause = $this->buildWhere($table->getWhere());
         $binding = $table->getBinding();
         $query = "DELETE FROM `" . DB_PREFIX . $table->getTable()  . "` " . $whereClause;
         try {
             $stmt = $this->prepare($query);
             $stmt->execute($binding);
+            dispatch_event("after_delete_{$table->getTable()}", [$affectedRows]);
         } catch (\PDOException $e) {
             $this->commit = false;
             throw $e;

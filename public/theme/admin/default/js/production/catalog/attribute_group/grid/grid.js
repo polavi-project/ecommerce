@@ -1,5 +1,6 @@
 import Area from "../../../../../../../../js/production/area.js";
 import A from "../../../../../../../../js/production/a.js";
+import { Fetch } from "../../../../../../../../js/production/fetch.js";
 
 function IdColumnHeader({ areaProps }) {
     const filterFrom = React.useRef(null);
@@ -94,6 +95,7 @@ function NameColumnRow({ row }) {
 function ActionColumnHeader({ areaProps }) {
     React.useEffect(() => {
         areaProps.addField('editUrl');
+        areaProps.addField('deleteUrl');
     }, []);
     return React.createElement(
         "td",
@@ -121,7 +123,20 @@ function ActionColumnRow({ row }) {
         React.createElement(
             "div",
             null,
-            React.createElement(A, { url: _.get(row, 'editUrl', ''), text: "Edit" })
+            React.createElement(A, { url: _.get(row, 'editUrl', ''), text: "Edit" }),
+            React.createElement(
+                "span",
+                null,
+                " "
+            ),
+            React.createElement(
+                "a",
+                { className: "uk-link-muted",
+                    onClick: () => {
+                        if (window.confirm('Are you sure?')) Fetch(row.deleteUrl, false, 'GET');
+                    } },
+                "Delete"
+            )
         )
     );
 }

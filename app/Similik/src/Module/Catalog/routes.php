@@ -109,6 +109,10 @@ $router->addAdminRoute('attribute.group.create', 'GET', '/attribute/group/create
 
 $router->addAdminRoute('attribute.group.edit', 'GET', '/attribute/group/edit/{id:\d+}', $attributeGroupEditMiddleware);
 
+$router->addAdminRoute('attribute.group.delete', 'GET', '/attribute/group/delete/{id:\d+}', [
+    Similik\Module\Catalog\Middleware\AttributeGroup\Delete\DeleteMiddleware::class
+]);
+
 $router->addAdminRoute('attribute.group.save', 'POST', '/attribute/group/save[/{id:\d+}]', [
     \Similik\Module\Catalog\Middleware\AttributeGroup\Save\UpdateMiddleware::class,
     \Similik\Module\Catalog\Middleware\AttributeGroup\Save\CreateMiddleware::class

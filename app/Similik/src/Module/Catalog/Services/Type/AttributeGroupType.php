@@ -51,6 +51,13 @@ class AttributeGroupType extends ObjectType
                             if($container->get(Request::class)->isAdmin() == false)
                                 return null;
                             return $container->get(Router::class)->generateUrl('attribute.group.edit', ["id"=>$group['attribute_group_id']]);                        }
+                    ],
+                    'deleteUrl' => [
+                        'type' => Type::string(),
+                        'resolve' => function($group, $args, Container $container, ResolveInfo $info) {
+                            if($container->get(Request::class)->isAdmin() == false)
+                                return null;
+                            return $container->get(Router::class)->generateUrl('attribute.group.delete', ["id"=>$group['attribute_group_id']]);                        }
                     ]
                 ];
 
