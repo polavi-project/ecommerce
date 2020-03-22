@@ -52,6 +52,7 @@ class ProductsMiddleware extends MiddlewareAbstract
                     }
 QUERY
             ]);
+
         $promise->then(function($result) use ($request, $response) {
                 /**@var \GraphQL\Executor\ExecutionResult $result */
                 if (isset($result->data['productCollection']['products'])) {

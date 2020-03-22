@@ -463,6 +463,8 @@ class Processor extends \PDO
             $setting['sort_order'] = (in_array(strtoupper($setting['sort_order']), ['ASC', 'DESC'])) ? strtoupper($setting['sort_order']) : 'ASC';
 
         $setting = array_merge($defaultSetting, $setting);
+        if (strpos($setting['sort_by'], '.') == false)
+            $setting['sort_by'] = "`{$table->getTable()}`." . $setting['sort_by'];
 
         return $setting;
     }
