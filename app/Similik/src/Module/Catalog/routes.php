@@ -58,16 +58,14 @@ $router->addAdminRoute('category.create', 'GET', '/category/create', $categoryEd
 
 $router->addAdminRoute('category.edit', 'GET', '/category/edit/{id:\d+}', $categoryEditMiddleware);
 
+$router->addAdminRoute('category.delete', ["POST", "GET"], '/category/delete/{id:\d+}', [
+    \Similik\Module\Catalog\Middleware\Category\Delete\DeleteMiddleware::class
+]);
+
 $router->addAdminRoute('category.save', 'POST', '/category/save[/{id:\d+}]', [
     \Similik\Module\Catalog\Middleware\Category\Save\ValidateMiddleware::class,
     \Similik\Module\Catalog\Middleware\Category\Save\UpdateMiddleware::class,
     \Similik\Module\Catalog\Middleware\Category\Save\CreateMiddleware::class
-]);
-
-$router->addAdminRoute('category.delete', 'GET', '/category/delete/{id:\d+}', [
-//    \Similik\Module\Catalog\Middleware\Category\Save\ValidateMiddleware::class,
-//    \Similik\Module\Catalog\Middleware\Category\Save\UpdateMiddleware::class,
-//    \Similik\Module\Catalog\Middleware\Category\Save\CreateMiddleware::class
 ]);
 
 //////////////// ATTRIBUTE ////////////////////
