@@ -224,3 +224,10 @@ $eventDispatcher->addListener(
     },
     0
 );
+
+$eventDispatcher->addListener('before_delete_attribute_group', function($rows) {
+   foreach ($rows as $row) {
+       if($row['attribute_group_id'] == 1)
+           throw new Exception("Can not delete 'Default' attribute group");
+   }
+});

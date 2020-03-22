@@ -84,6 +84,14 @@ class CategoryType extends ObjectType
                                 return null;
                             return $container->get(Router::class)->generateUrl('category.edit', ["id"=>$category['category_id']]);
                         }
+                    ],
+                    'deleteUrl' => [
+                        'type' => Type::string(),
+                        'resolve' => function($category, $args, Container $container, ResolveInfo $info) {
+                            if($container->get(Request::class)->isAdmin() == false)
+                                return null;
+                            return $container->get(Router::class)->generateUrl('category.delete', ["id"=>$category['category_id']]);
+                        }
                     ]
                 ];
 

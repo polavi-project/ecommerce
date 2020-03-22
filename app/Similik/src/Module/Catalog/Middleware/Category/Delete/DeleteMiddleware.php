@@ -6,7 +6,7 @@
 
 declare(strict_types=1);
 
-namespace Similik\Module\Cms\Middleware\Widget\Delete;
+namespace Similik\Module\Catalog\Middleware\Category\Delete;
 
 
 use function Similik\_mysql;
@@ -22,11 +22,11 @@ class DeleteMiddleware extends MiddlewareAbstract
     {
         $id = $request->attributes->get('id');
         try {
-            _mysql()->getTable('cms_widget')->where('cms_widget_id', '=', $id)->delete();
-            $response->addAlert("cms_widget_id_delete_success", "success", "Widget deleted");
-            $response->redirect(generate_url('widget.grid'));
+            _mysql()->getTable('category')->where('category_id', '=', $id)->delete();
+            $response->addAlert("category_delete_success", "success", "Category deleted");
+            $response->redirect(generate_url('category.grid'));
         } catch (\Exception $e) {
-            $response->addAlert("cms_widget_id_delete_error", "error", $e->getMessage())->notNewPage();
+            $response->addAlert("category_delete_error", "error", $e->getMessage())->notNewPage();
         }
 
         return $delegate;

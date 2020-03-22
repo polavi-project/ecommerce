@@ -28,5 +28,7 @@ class DeleteMiddleware extends MiddlewareAbstract
         } catch (\Exception $e) {
             $response->addAlert("attribute_delete_error", "error", $e->getMessage())->notNewPage();
         }
+
+        return $delegate;
     }
 }

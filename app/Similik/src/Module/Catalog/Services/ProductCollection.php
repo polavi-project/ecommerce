@@ -175,8 +175,8 @@ class ProductCollection extends CollectionBuilder
                 return;
             if($args['operator'] == "BETWEEN") {
                 $arr = explode("AND", $args['value']);
-                $from = (float) trim($arr[0]);
-                $to = isset($arr[1]) ? (float) trim($arr[1]) : null;
+                $from = (int) trim($arr[0]);
+                $to = isset($arr[1]) ? (int) trim($arr[1]) : null;
                 $this->getCollection()->andWhere('product.qty', '>=', $from);
                 if($to)
                     $this->getCollection()->andWhere('product.qty', '<=', $to);
@@ -251,13 +251,13 @@ class ProductCollection extends CollectionBuilder
             $this->setLimit((int)$args['value']);
         });
 
-        $this->addFilter('sort_by', function($args) use ($isAdmin) {
+        $this->addFilter('sortBy', function($args) use ($isAdmin) {
             if($args['operator'] !== "=")
                 return;
             $this->setSortBy($args['value']);
         });
 
-        $this->addFilter('sort_order', function($args) use ($isAdmin) {
+        $this->addFilter('sortOrder', function($args) use ($isAdmin) {
             if($args['operator'] !== "=")
                 return;
             $this->setSortOrder($args['value']);
@@ -278,11 +278,11 @@ class ProductCollection extends CollectionBuilder
                 ],
                 'sortBy' => [
                     'operator' => '=',
-                    'value' => get_config('catalog_product_list_sort_by', 'price')
+                    'value' => get_config('catalog_product_list_sort_by', 'product_id')
                 ],
                 'sortOrder' => [
                     'operator' => '=',
-                    'value' => get_config('catalog_product_list_sort_order', 'ASC')
+                    'value' => get_config('catalog_product_list_sort_order', 'DESC')
                 ]
             ];
         foreach ($filters as $key => $arg)
