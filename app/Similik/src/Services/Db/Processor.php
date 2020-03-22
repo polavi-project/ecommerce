@@ -28,6 +28,9 @@ class Processor extends \PDO
         $this->exec("SET time_zone = '+00:00'");
     }
 
+    /**
+     * Start a transaction
+     */
     public function startTransaction()
     {
         if (!$this->inTransaction) {
@@ -37,14 +40,23 @@ class Processor extends \PDO
         }
     }
 
+    /**
+     * This method executes a query with binding params
+     * @param $query
+     * @param array $binding
+     * @return bool|\PDOStatement
+     */
     public function executeQuery($query, array $binding = [])
     {
-        Logger::write($query);
         $stmt = $this->prepare($query);
         $stmt->execute($binding);
         return $stmt;
     }
 
+    /**
+     * Commit a transaction
+     * @return bool|void
+     */
     public function commit()
     {
         if ($this->inTransaction and $this->commit == true) {
@@ -58,6 +70,10 @@ class Processor extends \PDO
         }
     }
 
+    /**
+     * Rollback a transaction
+     * @return bool|void
+     */
     public function rollback()
     {
         if ($this->inTransaction) {
@@ -66,16 +82,30 @@ class Processor extends \PDO
         }
     }
 
+    /**
+     * Get main table of current query
+     * @param string $tableName
+     * @return Table
+     */
     public function getTable(string $tableName) : Table
     {
         return new Table($tableName, $this);
     }
 
+    /**
+     * @inheritDoc
+     * @return string
+     */
     public function getLastID()
     {
         return $this->lastInsertId();
     }
 
+    /**
+     * Build SELECT query base on provided table
+     * @param Table $table
+     * @return string
+     */
     protected function buildSelect(Table $table)
     {
         $table_name = DB_PREFIX . $table->getTable();
@@ -108,9 +138,15 @@ class Processor extends \PDO
             $query .= " FROM `{$table_name}` AS `{$table->getTable()}`";
         else
             $query .= " FROM `{$table_name}`";
+
         return $query;
     }
 
+    /**
+     * Build JOIN statement base on provided table
+     * @param Table $table
+     * @return string
+     */
     protected function buildJoin(Table $table)
     {
         if(!$table->getJoin())
@@ -132,6 +168,12 @@ class Processor extends \PDO
         return $joinClause;
     }
 
+    /**
+     * Build WHERE statement base on provided table
+     * @param array $where
+     * @param null $binding
+     * @return string|null
+     */
     protected function buildWhere(array $where, &$binding = null)
     {
         if(count($where) == 0)
@@ -188,12 +230,19 @@ class Processor extends \PDO
         return  $whereClause;
     }
 
+    /**
+     * Execute SELECT statement.
+     * @param Table $table
+     * @param array $setting
+     * @return bool|\PDOStatement
+     */
     public function select(Table $table, array $setting = [])
     {
         $setting = $this->validateSelectQuerySetting($table, $setting);
         $query = $this->buildSelect($table) . " " . $this->buildJoin($table);
         $whereClause = $this->buildWhere($table->getWhere());
         $query = $query . " {$whereClause} ";
+
         if($table->getGroupBy())
             $query = $query . ' GROUP BY ' . $table->getGroupBy();
 
@@ -231,14 +280,13 @@ class Processor extends \PDO
         }
     }
 
-    public function save(Table $table, array $data)
-    {
-        if (isset($data[$table->getPrimary()]) and $data[$table->getPrimary()])
-            return $this->update($table, $data);
-        else
-            return $this->insert($table, $data);
-    }
-
+    /**
+     * Execute INSERT INTO statement
+     * @param Table $table
+     * @param array $data
+     * @return int
+     * @throws \Exception
+     */
     public function insert(Table $table, array  $data = [])
     {
         dispatch_event("before_insert_{$table->getTable()}", [&$data]);
@@ -280,6 +328,13 @@ class Processor extends \PDO
         }
     }
 
+    /**
+     * Execute UPDATE statement
+     * @param Table $table
+     * @param array $data
+     * @return int
+     * @throws \Exception
+     */
     public function update(Table $table, array $data = [])
     {
         dispatch_event("before_update_{$table->getTable()}", [&$data]);
@@ -320,6 +375,12 @@ class Processor extends \PDO
         }
     }
 
+    /**
+     * Execute INSERT ON UPDATE statement
+     * @param Table $table
+     * @param array $data
+     * @return int
+     */
     public function insertOnUpdate(Table $table, array $data)
     {
         $binding = [];
@@ -362,6 +423,11 @@ class Processor extends \PDO
         }
     }
 
+    /**
+     * Execute DELETE statement
+     * @param Table $table
+     * @return $this
+     */
     public function delete(Table $table)
     {
         $affectedRows = $table->fetchAllAssoc();
@@ -384,16 +450,20 @@ class Processor extends \PDO
 
     protected function validateSelectQuerySetting(Table $table, array $setting)
     {
-        $default_setting = [
+        $defaultSetting = [
             'sort_by'=> "`{$table->getTable()}`." . $table->getPrimary(),
             'sort_order'=> 'DESC',
             'page'=> 1,
             'limit'=> null
         ];
+
         $setting = array_filter($setting, function($value){return !is_null($value);});
+
         if(isset($setting['sort_order']))
             $setting['sort_order'] = (in_array(strtoupper($setting['sort_order']), ['ASC', 'DESC'])) ? strtoupper($setting['sort_order']) : 'ASC';
-        $setting = array_merge($default_setting, $setting);
+
+        $setting = array_merge($defaultSetting, $setting);
+
         return $setting;
     }
 
