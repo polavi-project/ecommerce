@@ -156,9 +156,7 @@ class App
                     include MODULE_PATH . DS . $module . DS . 'routes.php';
                 })();
         }
-        subscribe('after.load.module', function() {}, 0 , $eventDispatcher);
-
-        dispatch_event('after.load.module', [], $eventDispatcher);
+        dispatch_event('after.load.module', []);
     }
 
     public function run()

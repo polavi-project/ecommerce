@@ -28,23 +28,18 @@ $eventDispatcher->addListener(
 );
 
 $eventDispatcher->addListener(
-    'add_widget_type',
-    function (&$types) {
+    'widget_types',
+    function ($types) {
         $types[] = ['code' => 'product_filter', 'name' => 'Product Filter'];
         $types[] = ['code' => 'featured_products', 'name' => 'Featured Products'];
+
+        return $types;
     },
     0
 );
 
-$eventDispatcher->addListener('register.widget.grid.middleware', function(\Similik\Services\MiddlewareManager $mm) {
-    $mm->registerMiddleware(\Similik\Module\Catalog\Middleware\Widget\FeaturedProduct\RegisterTypeMiddleware::class, 0);
-    $mm->registerMiddleware(\Similik\Module\Catalog\Middleware\Widget\ProductFilter\RegisterTypeMiddleware::class, 0);
-});
-
 $eventDispatcher->addListener('register.widget.create.middleware', function(\Similik\Services\MiddlewareManager $mm) {
-    $mm->registerMiddleware(\Similik\Module\Catalog\Middleware\Widget\FeaturedProduct\RegisterTypeMiddleware::class, 0);
     $mm->registerMiddleware(\Similik\Module\Catalog\Middleware\Widget\FeaturedProduct\FormMiddleware::class, 0);
-    $mm->registerMiddleware(\Similik\Module\Catalog\Middleware\Widget\ProductFilter\RegisterTypeMiddleware::class, 0);
     $mm->registerMiddleware(\Similik\Module\Catalog\Middleware\Widget\ProductFilter\FormMiddleware::class, 0);
 });
 

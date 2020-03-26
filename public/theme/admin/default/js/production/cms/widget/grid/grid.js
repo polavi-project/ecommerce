@@ -175,7 +175,7 @@ function StatusColumnRow({ row }) {
     );
 }
 
-function TypeColumnHeader({ areaProps, filters, updateFilter }) {
+function TypeColumnHeader({ areaProps, filters, updateFilter, types }) {
     const filterInput = React.useRef(null);
 
     const onChange = e => {
@@ -215,9 +215,12 @@ function TypeColumnHeader({ areaProps, filters, updateFilter }) {
                         onChange: e => onChange(e),
                         className: "uk-select uk-form-small uk-form-width-small"
                     },
-                    React.createElement(Area, {
-                        id: "widget_types",
-                        noOuter: true
+                    types.map((t, i) => {
+                        return React.createElement(
+                            "option",
+                            { value: t.code, key: i },
+                            t.name
+                        );
                     })
                 )
             )
@@ -225,11 +228,17 @@ function TypeColumnHeader({ areaProps, filters, updateFilter }) {
     );
 }
 
-function TypeColumnRow({ row }) {
-    return React.createElement(Area, {
-        id: "widget_types",
-        selectedType: _.get(row, "type")
-    });
+function TypeColumnRow({ row, types }) {
+    const type = types.find(e => e.code === row.type);
+    if (type === undefined) return React.createElement(
+        "td",
+        null,
+        "undefined"
+    );else return React.createElement(
+        "td",
+        null,
+        type.name
+    );
 }
 
 function ActionColumnHeader({ areaProps }) {
@@ -288,7 +297,7 @@ function ActionColumnRow({ row }) {
     );
 }
 
-export default function WidgetGrid({ apiUrl, areaProps }) {
+export default function WidgetGrid({ apiUrl, types, areaProps }) {
     const [widgets, setWidgets] = React.useState([]);
     const [fields, setFields] = React.useState([]);
 
@@ -358,7 +367,7 @@ export default function WidgetGrid({ apiUrl, areaProps }) {
                             id: "id"
                         }, {
                             component: TypeColumnHeader,
-                            props: _extends({}, areaProps, { addField, applyFilter }),
+                            props: _extends({}, areaProps, { types, addField, applyFilter }),
                             sort_order: 20,
                             id: "type"
                         }, {
@@ -400,7 +409,7 @@ export default function WidgetGrid({ apiUrl, areaProps }) {
                                 id: "id"
                             }, {
                                 component: TypeColumnRow,
-                                props: { row: w },
+                                props: { row: w, types },
                                 sort_order: 20,
                                 id: "type"
                             }, {

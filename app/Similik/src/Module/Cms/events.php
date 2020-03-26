@@ -315,15 +315,19 @@ $eventDispatcher->addListener(
     0
 );
 
-$eventDispatcher->addListener('register.widget.grid.middleware', function(\Similik\Services\MiddlewareManager $mm) {
-    $mm->registerMiddleware(\Similik\Module\Cms\Middleware\TextWidget\RegisterTypeMiddleware::class, 0);
-    $mm->registerMiddleware(\Similik\Module\Cms\Middleware\MenuWidget\RegisterTypeMiddleware::class, 0);
-});
+$eventDispatcher->addListener(
+    'widget_types',
+    function ($types) {
+        $types[] = ['code' => 'text', 'name' => 'Text widget'];
+        $types[] = ['code' => 'menu', 'name' => 'Menu widget'];
+
+        return $types;
+    },
+    0
+);
 
 $eventDispatcher->addListener('register.widget.create.middleware', function(\Similik\Services\MiddlewareManager $mm) {
-    $mm->registerMiddleware(\Similik\Module\Cms\Middleware\TextWidget\RegisterTypeMiddleware::class, 0);
     $mm->registerMiddleware(\Similik\Module\Cms\Middleware\TextWidget\FormMiddleware::class, 0);
-    $mm->registerMiddleware(\Similik\Module\Cms\Middleware\MenuWidget\RegisterTypeMiddleware::class, 0);
     $mm->registerMiddleware(\Similik\Module\Cms\Middleware\MenuWidget\FormMiddleware::class, 0);
 });
 

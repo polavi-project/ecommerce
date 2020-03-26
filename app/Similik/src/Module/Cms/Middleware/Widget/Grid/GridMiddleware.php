@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace Similik\Module\Cms\Middleware\Widget\Grid;
 
 
+use function Similik\create_mutable_var;
 use function Similik\generate_url;
 use function Similik\get_js_file_url;
 use Similik\Middleware\MiddlewareAbstract;
@@ -44,7 +45,8 @@ class GridMiddleware extends MiddlewareAbstract
             20,
             get_js_file_url("production/cms/widget/grid/grid.js", true),
             [
-                "apiUrl" => generate_url('admin.graphql.api')
+                "apiUrl" => generate_url('admin.graphql.api'),
+                "types" => create_mutable_var("widget_types", [])
             ]
         );
 

@@ -1,6 +1,6 @@
 import Area from "../../../../../../../../js/production/area.js";
 
-function TypeSelector({ type = "", id = null, setType }) {
+function TypeSelector({ types, setType, type = "", id = null }) {
     if (id) return null;
 
     return React.createElement(
@@ -23,16 +23,18 @@ function TypeSelector({ type = "", id = null, setType }) {
                 { value: "", disabled: true },
                 "Please select widget type"
             ),
-            React.createElement(Area, {
-                id: "widget_types",
-                selectedType: type,
-                noOuter: true
+            types.map((t, i) => {
+                return React.createElement(
+                    "option",
+                    { value: t.code, key: i },
+                    t.name
+                );
             })
         )
     );
 }
 
-export default function WidgetEditForm({ selectedType = "", widgetId = null }) {
+export default function WidgetEditForm({ types, selectedType = "", widgetId = null }) {
     const [type, setType] = React.useState(selectedType);
 
     return React.createElement(
@@ -52,7 +54,8 @@ export default function WidgetEditForm({ selectedType = "", widgetId = null }) {
             }, {
                 component: TypeSelector,
                 props: {
-                    type: type,
+                    types,
+                    type,
                     id: widgetId,
                     setType: setType
                 },
