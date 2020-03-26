@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace Similik\Module\Cms\Middleware\Widget\Edit;
 
 
+use function Similik\create_mutable_var;
 use function Similik\get_js_file_url;
 use Similik\Middleware\MiddlewareAbstract;
 use Similik\Services\Helmet;
@@ -34,6 +35,7 @@ class EditMiddleware extends MiddlewareAbstract
             [
                 "widgetId"=> $request->attributes->get('id'),
                 "id"=> "widget_edit_form_wrapper",
+                "types"=> create_mutable_var("widget_types", []),
                 "selectedType"=> $request->attributes->get('type', "")
             ]
         );

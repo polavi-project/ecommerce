@@ -16,22 +16,15 @@ class EventDispatcher
 
     public function dispatch($event, array $arguments = [])
     {
-        //echo $event;
         $listeners = $this->getListeners($event);
 
         // For filter variable
-        if(empty($listeners))
-            return null;
-
-        $value = null;
-        foreach ($listeners as $listener) {
-            $handler = $listener['handler'];
-            $temp = $handler(...$arguments);
-            if($temp !== null)
-                $value = $temp;
+        if(!empty($listeners)) {
+            foreach ($listeners as $listener) {
+                $handler = $listener['handler'];
+                $handler(...$arguments);
+            }
         }
-
-        return $value;
     }
 
     public function getAllListeners()
@@ -39,7 +32,7 @@ class EventDispatcher
         return $this->listeners;
     }
 
-    protected function getListeners(string $event)
+    public function getListeners(string $event)
     {
         $listeners = $this->listeners[$event] ?? [];
 

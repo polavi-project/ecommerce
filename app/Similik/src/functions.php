@@ -21,15 +21,12 @@ use GraphQL\Type\Definition\ScalarType;
 use GraphQL\Type\Definition\Type;
 use GraphQL\Type\Definition\WrappingType;
 use GraphQL\Type\Schema;
-use GuzzleHttp\Promise\Promise;
 use Imagine\Image\Box;
 use Imagine\Imagick\Imagine;
 use Similik\Services\Db\Processor;
-use Similik\Services\Db\Table;
 use Similik\Services\Di\Container;
 use Similik\Services\Event\EventDispatcher;
 use Similik\Services\Locale\Language;
-use Similik\Services\Log\Logger;
 use Similik\Services\Routing\Router;
 use Symfony\Component\HttpFoundation\Session\Session;
 
@@ -51,34 +48,32 @@ function _mysql()
     return new Processor();
 }
 
-function dispatch_event(string $eventName, array $args = [], EventDispatcher $start = null) {
-    static $dispatcher;
+function dispatch_event(string $eventName, array $args = []) {
+    the_container()->get(EventDispatcher::class)->dispatch($eventName, $args);
+}
 
-    if ($start) {
-        $dispatcher = $start;
-    } elseif (!$dispatcher) {
-        $dispatcher = new EventDispatcher();
+function create_mutable_var($name, $value) {
+    $listeners = the_container()->get(EventDispatcher::class)->getListeners($name);
+    if(empty($listeners))
+        return $value;
+
+    foreach ($listeners as $listener) {
+        $handler = $listener['handler'];
+        $value = $handler($value);
     }
 
-    return $dispatcher->dispatch($eventName, $args);
+    return $value;
+}
+
+// TODO: Add filter var function
+function subscribe(string $eventName, callable $callback, int $priority = 0)
+{
+    the_container()->get(EventDispatcher::class)->addListener($eventName, $callback, $priority);
 }
 
 function generate_url($routerName, array $params = [], array $query = null)
 {
     return the_container()->get(Router::class)->generateUrl($routerName, $params, $query);
-}
-// TODO: Add filter var function
-function subscribe(string $eventName, callable $callback, int $priority = 0, EventDispatcher $start = null)
-{
-    static $dispatcher;
-
-    if ($start) {
-        $dispatcher = $start;
-    } elseif (!$dispatcher) {
-        $dispatcher = new EventDispatcher();
-    }
-
-    $dispatcher->addListener($eventName, $callback, $priority);
 }
 
 function get_config(string $name, $defaultValue = null, int $languageId = 0)
