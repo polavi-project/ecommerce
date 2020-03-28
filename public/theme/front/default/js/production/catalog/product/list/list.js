@@ -2,9 +2,8 @@ import Area from "../../../../../../../../js/production/area.js";
 import { Name } from "./item/name.js";
 import { Thumbnail } from "./item/thumbnail.js";
 import { Price } from "./item/price.js";
-import { AddToCart } from "./item/buy_button.js";
 
-export default function ProductList({ products = [], addItemApi }) {
+export default function ProductList({ products = [] }) {
     if (products.length === 0) return React.createElement(
         "div",
         { className: "product-list" },
@@ -22,7 +21,7 @@ export default function ProductList({ products = [], addItemApi }) {
             { className: "product-list uk-grid-small uk-grid uk-flex-center uk-child-width-1-4@m uk-child-width-1-2@s" },
             products.map((p, index) => {
                 return React.createElement(Area, {
-                    id: "product_item_" + p.product_id,
+                    id: "product_item",
                     className: "listing-tem",
                     product: p,
                     key: index,
@@ -41,11 +40,6 @@ export default function ProductList({ products = [], addItemApi }) {
                         props: { price: p.price, salePrice: p.salePrice },
                         sort_order: 30,
                         id: "price"
-                    }, {
-                        component: AddToCart,
-                        props: { id: p.product_id, addItemApi },
-                        sort_order: 40,
-                        id: "add_to_cart"
                     }]
                 });
             })

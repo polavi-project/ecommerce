@@ -9,10 +9,7 @@ declare(strict_types=1);
 namespace Similik\Module\Catalog\Middleware\Category\View;
 
 use GuzzleHttp\Promise\Promise;
-use function Similik\generate_url;
-use function Similik\get_config;
 use function Similik\get_js_file_url;
-use Similik\Module\Graphql\Services\GraphqlExecutor;
 use Similik\Services\Http\Request;
 use Similik\Services\Http\Response;
 use Similik\Middleware\MiddlewareAbstract;

@@ -24,11 +24,11 @@ function reducer(productCollectionFilter = [], action = {}) {
 
 ReducerRegistry.register('productCollectionFilter', reducer);
 
-export default function Products({ ps = [], _total, addItemApi, categoryId }) {
+export default function Products(props) {
     const dispatch = ReactRedux.useDispatch();
     const apiUrl = ReactRedux.useSelector(state => _.get(state, 'appState.graphqlApi'));
-    const [products, setProducts] = React.useState(ps);
-    const [total, setTotal] = React.useState(_total);
+    const [products, setProducts] = React.useState(props.products);
+    const [total, setTotal] = React.useState(props.total);
 
     const productCollectionFilter = ReactRedux.useSelector(state => state.productCollectionFilter);
 
@@ -50,7 +50,6 @@ export default function Products({ ps = [], _total, addItemApi, categoryId }) {
     };
 
     const buildQuery = filters => {
-        filters['category'] = { operator: 'IN', value: categoryId };
         let filterStr = ``;
 
         for (let key in filters) {
@@ -63,14 +62,13 @@ export default function Products({ ps = [], _total, addItemApi, categoryId }) {
         filterStr = filterStr.trim();
         if (filterStr) filterStr = `(filter : {${filterStr}})`;
 
-        // TODO: field need to be changeable without overwriting this file
-        return `{productCollection ${filterStr} {products {product_id name price salePrice url image { list }} total currentFilter}}`;
+        return props.query.replace("<FILTER>", filterStr);
     };
 
     return React.createElement(
         "div",
         { className: "uk-width-1-1" },
-        React.createElement(ProductList, { products: products, addItemApi: addItemApi }),
+        React.createElement(ProductList, { products: products }),
         React.createElement(Pagination, { total: total })
     );
 }
