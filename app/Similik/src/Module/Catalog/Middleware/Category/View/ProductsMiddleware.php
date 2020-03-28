@@ -69,7 +69,10 @@ QUERY
                             "currentFilter" => json_decode($result->data['productCollection']['currentFilter'], true),
                             "total" => $result->data['productCollection']['total'],
                             "addItemApi" => generate_url('cart.add'),
-                            "query" => $query
+                            "query" => $query,
+                            "with_pagination" => create_mutable_var("with_pagination", true),
+                            "with_sorting" => create_mutable_var("with_sorting", true),
+                            "sorting_options" => create_mutable_var("sorting_options", [])
                         ]
                     );
                 }

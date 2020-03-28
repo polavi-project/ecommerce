@@ -38,6 +38,17 @@ $eventDispatcher->addListener(
     0
 );
 
+$eventDispatcher->addListener(
+    'sorting_options',
+    function ($options) {
+        $options[] = ['code' => 'price', 'name' => 'Price'];
+        $options[] = ['code' => 'created_at', 'name' => 'Created date'];
+
+        return $options;
+    },
+    0
+);
+
 $eventDispatcher->addListener('register.widget.create.middleware', function(\Similik\Services\MiddlewareManager $mm) {
     $mm->registerMiddleware(\Similik\Module\Catalog\Middleware\Widget\FeaturedProduct\FormMiddleware::class, 0);
     $mm->registerMiddleware(\Similik\Module\Catalog\Middleware\Widget\ProductFilter\FormMiddleware::class, 0);

@@ -5,7 +5,7 @@ import { PRODUCT_COLLECTION_FILTER_CHANGED } from "../../../../../../../../js/pr
 export default function Pagination({ total }) {
     const dispatch = ReactRedux.useDispatch();
     const filters = ReactRedux.useSelector(state => {
-        if (_.get(state, 'productCollectionFilter').length > 0) return _.get(state, 'productCollectionFilter');else return _.get(state, 'appState.productCollectionRootFilter');
+        return _extends({}, _.get(state, 'appState.productCollectionRootFilter'), _.get(state, 'productCollectionFilter'));
     });
     const limit = ReactRedux.useSelector(state => _.get(state, 'appState.productCollectionRootFilter.limit.value', 20));
     const current = ReactRedux.useSelector(state => _.get(state, 'productCollectionFilter.page.value', 1));

@@ -4,6 +4,7 @@ import { ADD_ALERT } from "../../../../../../../../js/production/event-types.js"
 import { PRODUCT_COLLECTION_FILTER_CHANGED } from "../../../../../../../../js/production/event-types.js";
 import { ReducerRegistry } from "../../../../../../../../js/production/reducer_registry.js";
 import Pagination from "../../product/list/pagination.js";
+import Sorting from "../../product/list/sorting.js";
 
 function usePrevious(value) {
     const ref = React.useRef();
@@ -68,7 +69,8 @@ export default function Products(props) {
     return React.createElement(
         "div",
         { className: "uk-width-1-1" },
+        props.with_sorting === true && React.createElement(Sorting, { sorting_options: props.sorting_options }),
         React.createElement(ProductList, { products: products }),
-        React.createElement(Pagination, { total: total })
+        props.with_pagination === true && React.createElement(Pagination, { total: total })
     );
 }

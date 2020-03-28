@@ -278,7 +278,7 @@ class ProductCollection extends CollectionBuilder
                 ],
                 'sortBy' => [
                     'operator' => '=',
-                    'value' => get_config('catalog_product_list_sort_by', 'product_id')
+                    'value' => get_config('catalog_product_list_sort_by', 'created_at')
                 ],
                 'sortOrder' => [
                     'operator' => '=',

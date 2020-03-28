@@ -62,6 +62,7 @@ ul{margin: 10px 0 !important;}
 /* FOOTER */
 .container .footer{padding-top: 50px; padding-bottom: 20px}
 /* PRODUCT LISTING PAGE */
+.product-sorting-inner{}
 .product-list .listing-tem{margin-bottom: 30px}
 .listing-tem .product-price-listing{margin: 10px 0}
 .list-placeholder-helper {
