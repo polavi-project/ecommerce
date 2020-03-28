@@ -41,6 +41,13 @@ $eventDispatcher->addListener(
 );
 
 $eventDispatcher->addListener(
+    'register.core.middleware',
+    function (\Similik\Services\MiddlewareManager $middlewareManager) {
+        $middlewareManager->registerMiddlewareBefore(\Similik\Middleware\ResponseMiddleware::class, \Similik\Module\Checkout\Middleware\Cart\Add\ButtonMiddleware::class);
+    },
+    0
+);
+$eventDispatcher->addListener(
     'filter.mutation.type',
     function (&$fields, Container $container) {
         $fields['addShippingAddress'] = [

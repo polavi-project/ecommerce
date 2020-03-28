@@ -1,9 +1,9 @@
-import { Fetch } from "../../../../../../../../../js/production/fetch.js";
+import { Fetch } from "../../../../../../../js/production/fetch.js";
 
-function AddToCart({ id, addItemApi }) {
-    const onAddToCart = (e, id) => {
+export default function AddToCart({ addItemApi, areaProps }) {
+    const onAddToCart = e => {
         e.preventDefault();
-        Fetch(addItemApi, false, "POST", { product_id: id, qty: 1 });
+        Fetch(addItemApi, false, "POST", { product_id: areaProps.product.product_id, qty: 1 });
     };
 
     return React.createElement(
@@ -12,7 +12,7 @@ function AddToCart({ id, addItemApi }) {
         React.createElement(
             "a",
             { className: "uk-button uk-button-primary uk-button-small",
-                onClick: e => onAddToCart(e, id) },
+                onClick: e => onAddToCart(e) },
             React.createElement(
                 "span",
                 null,
@@ -21,5 +21,3 @@ function AddToCart({ id, addItemApi }) {
         )
     );
 }
-
-export { AddToCart };

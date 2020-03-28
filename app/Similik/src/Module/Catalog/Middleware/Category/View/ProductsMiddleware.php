@@ -8,8 +8,8 @@ declare(strict_types=1);
 
 namespace Similik\Module\Catalog\Middleware\Category\View;
 
+use function Similik\create_mutable_var;
 use function Similik\generate_url;
-use function Similik\get_config;
 use function Similik\get_js_file_url;
 use Similik\Module\Graphql\Services\GraphqlExecutor;
 use Similik\Services\Http\Request;
@@ -29,13 +29,9 @@ class ProductsMiddleware extends MiddlewareAbstract
         if($response->hasWidget('category_view_products'))
             return $delegate;
 
-        $limit = get_config('catalog_product_list_limit', 50);
-        $promise = $this->getContainer()
-            ->get(GraphqlExecutor::class)
-            ->waitToExecute([
-                "query"=> <<< QUERY
+        $query = create_mutable_var("product_list_query", <<< QUERY
                     {
-                        productCollection (filter: { category : {operator: "IN" value: "{$request->attributes->get('id')}"} limit: {operator: "=" value: "{$limit}"}}) {
+                        productCollection <FILTER> {
                                 products {
                                     product_id
                                     name
@@ -51,9 +47,14 @@ class ProductsMiddleware extends MiddlewareAbstract
                         }
                     }
 QUERY
+        );
+        $promise = $this->getContainer()
+            ->get(GraphqlExecutor::class)
+            ->waitToExecute([
+                "query"=> str_replace("<FILTER>", "(filter: { category : {operator: \"IN\" value: \"{$request->attributes->get('id')}\"}})", $query)
             ]);
 
-        $promise->then(function($result) use ($request, $response) {
+        $promise->then(function($result) use ($request, $response, $query) {
                 /**@var \GraphQL\Executor\ExecutionResult $result */
                 if (isset($result->data['productCollection']['products'])) {
                     $products = $result->data['productCollection']['products'];
@@ -64,11 +65,14 @@ QUERY
                         10,
                         get_js_file_url("production/catalog/category/view/products.js", false),
                         [
-                            "ps" => $products,
+                            "products" => $products,
                             "currentFilter" => json_decode($result->data['productCollection']['currentFilter'], true),
-                            "_total" => $result->data['productCollection']['total'],
+                            "total" => $result->data['productCollection']['total'],
                             "addItemApi" => generate_url('cart.add'),
-                            "categoryId" => $request->attributes->get('id')
+                            "query" => $query,
+                            "with_pagination" => create_mutable_var("with_pagination", true),
+                            "with_sorting" => create_mutable_var("with_sorting", true),
+                            "sorting_options" => create_mutable_var("sorting_options", [])
                         ]
                     );
                 }

@@ -121,7 +121,7 @@ $router->addAdminRoute('catalog.install', 'POST', '/catalog/migrate/install', [
 ]);
 
 ////////////////////////////////////////////
-///            SITE ROUTERS           //////
+////            SITE ROUTERS           /////
 ////////////////////////////////////////////
 
 
@@ -145,6 +145,7 @@ $productViewMiddleware = [
     \Similik\Module\Catalog\Middleware\Product\View\AttributeMiddleware::class,
     \Similik\Module\Catalog\Middleware\Product\View\FormMiddleware::class,
 ];
+
 $router->addSiteRoute('product.view', 'GET', '/product/id/{id:\d+}', $productViewMiddleware);
 
 // Pretty url
