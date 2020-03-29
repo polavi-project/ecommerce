@@ -15,12 +15,12 @@ let fields = [{
     id: "description"
 }, {
     component: Select,
-    props: { id: 'status', formId: "category-edit-form", name: "status", label: "Status", options: [{ value: 0, text: 'Disabled' }, { value: 1, text: 'Enabled' }], isTranslateAble: false },
+    props: { id: 'status', formId: "category-edit-form", name: "status", label: "Status", options: [{ value: 0, text: 'Disabled' }, { value: 1, text: 'Enabled' }], isTranslateAble: false, validation_rules: ["notEmpty"] },
     sort_order: 70,
     id: "status"
 }, {
     component: Select,
-    props: { id: "include_in_nav", formId: "category-edit-form", name: "include_in_nav", label: "Include in navigation ?", options: [{ value: 0, text: 'No' }, { value: 1, text: 'Yes' }], isTranslateAble: false },
+    props: { id: "include_in_nav", formId: "category-edit-form", name: "include_in_nav", label: "Include in navigation ?", options: [{ value: 0, text: 'No' }, { value: 1, text: 'Yes' }], isTranslateAble: false, validation_rules: ["notEmpty"] },
     sort_order: 80,
     id: "include_in_nav"
 }, {

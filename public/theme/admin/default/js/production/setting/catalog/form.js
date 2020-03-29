@@ -75,7 +75,7 @@ function ListingPage(props) {
                         formId: "catalog_setting_form",
                         name: "catalog_product_list_limit",
                         label: "Number of product in listing page",
-                        value: props.catalog_product_list_limit
+                        value: _.get(props, "data.catalog_product_list_limit", 50)
                     },
                     sort_order: 20,
                     id: "catalog_product_list_limit"
@@ -86,8 +86,10 @@ function ListingPage(props) {
                         formId: "catalog_setting_form",
                         name: "catalog_product_list_sort_by",
                         label: "Default sort by",
-                        value: props.catalog_product_list_sort_by,
-                        options: [{ value: 'price', text: 'Price' }, { value: 'name', text: 'Name' }, { value: 'created_at', text: 'Created date' }]
+                        value: _.get(props, "data.catalog_product_list_sort_by"),
+                        options: _.get(props, "sorting_options", []).map(o => {
+                            return { 'value': o.code, text: o.name };
+                        })
                     },
                     sort_order: 30,
                     id: "catalog_product_list_sort_by"
@@ -98,7 +100,7 @@ function ListingPage(props) {
                         formId: "catalog_setting_form",
                         name: "catalog_product_list_sort_order",
                         label: "Default sort order",
-                        value: props.catalog_product_list_sort_order,
+                        value: _.get(props, "data.catalog_product_list_sort_order", "DESC"),
                         options: [{ value: 'ASC', text: 'Low to high' }, { value: 'DESC', text: 'High to low' }]
                     },
                     sort_order: 40,
@@ -110,7 +112,7 @@ function ListingPage(props) {
                         formId: "catalog_setting_form",
                         name: "catalog_product_list_image_width",
                         label: "Product image width in listing page",
-                        value: props.catalog_product_list_image_width
+                        value: _.get(props, "data.catalog_product_list_image_width", "")
                     },
                     sort_order: 50,
                     id: "catalog_product_list_image_width"
@@ -121,7 +123,7 @@ function ListingPage(props) {
                         formId: "catalog_setting_form",
                         name: "catalog_product_list_image_height",
                         label: "Product image height in listing page",
-                        value: props.catalog_product_list_image_height
+                        value: _.get(props, "data.catalog_product_list_image_height", "")
                     },
                     sort_order: 60,
                     id: "catalog_product_list_image_height"
@@ -156,7 +158,7 @@ function DetailPage(props) {
                         formId: "catalog_setting_form",
                         name: "catalog_product_detail_image_width",
                         label: "Product image width in detail page",
-                        value: props.catalog_product_detail_image_width
+                        value: _.get(props, "data.catalog_product_detail_image_width", "")
                     },
                     sort_order: 10,
                     id: "catalog_product_detail_image_width"
@@ -167,7 +169,7 @@ function DetailPage(props) {
                         formId: "catalog_setting_form",
                         name: "catalog_product_detail_image_height",
                         label: "Product image height in detail page",
-                        value: props.catalog_product_detail_image_height
+                        value: _.get(props, "data.catalog_product_detail_image_height", "")
                     },
                     sort_order: 20,
                     id: "catalog_product_detail_image_height"
@@ -204,7 +206,7 @@ function General(props) {
                         label: "Display out of stock product?",
                         options: [{ value: 0, text: 'No' }, { value: 1, text: 'Yes' }],
                         validation_rules: ["notEmpty"],
-                        value: props.catalog_out_of_stock_display
+                        value: _.get(props, "data.catalog_out_of_stock_display", 0)
                     },
                     sort_order: 10,
                     id: "catalog_out_of_stock_display"
@@ -239,17 +241,17 @@ export default function CatalogSettingForms(props) {
             { id: "catalog_setting_form", action: props.action },
             React.createElement(Area, { id: "catalog_setting_form_inner", className: "uk-grid uk-grid-small", coreWidgets: [{
                     component: General,
-                    props: _extends({}, props.data),
+                    props: _extends({}, props),
                     sort_order: 10,
                     id: "catalog_setting_general"
                 }, {
                     component: ListingPage,
-                    props: _extends({}, props.data),
+                    props: _extends({}, props),
                     sort_order: 20,
                     id: "catalog_setting_listing"
                 }, {
                     component: DetailPage,
-                    props: _extends({}, props.data),
+                    props: _extends({}, props),
                     sort_order: 30,
                     id: "catalog_setting_detail"
                 }] })

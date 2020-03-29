@@ -1,12 +1,9 @@
 import Area from "../../../../../../../../js/production/area.js";
 import Text from "../../../../../../../../js/production/form/fields/text.js";
-import TextArea from "../../../../../../../../js/production/form/fields/textarea.js";
-import Select from "../../../../../../../../js/production/form/fields/select.js";
-import Tinycme from "../../../../../../../../js/production/form/fields/tinycme.js";
 
 let fields = [{
     component: Text,
-    props: { id: 'seo_key', formId: "category-edit-form", name: "seo_key", label: "Seo key" },
+    props: { id: 'seo_key', formId: "category-edit-form", name: "seo_key", label: "Seo key", validation_rules: ['notEmpty'] },
     sort_order: 10,
     id: "seo_key"
 }, {

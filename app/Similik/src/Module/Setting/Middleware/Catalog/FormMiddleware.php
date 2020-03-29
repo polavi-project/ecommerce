@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace Similik\Module\Setting\Middleware\Catalog;
 
 use function Similik\_mysql;
+use function Similik\create_mutable_var;
 use function Similik\get_default_language_Id;
 use function Similik\get_js_file_url;
 use Similik\Services\Helmet;
@@ -49,8 +50,9 @@ AND `name` LIKE 'catalog_%'", ['language' => $request->attributes->get('language
             10,
             get_js_file_url("production/setting/catalog/form.js", true),
             [
-                "action" =>$this->getContainer()->get(Router::class)->generateUrl('setting.catalog'),
-                "data" => $data
+                "action" => $this->getContainer()->get(Router::class)->generateUrl('setting.catalog'),
+                "data" => $data,
+                "sorting_options" => create_mutable_var("sorting_options", [])
             ]
         );
 
