@@ -22,16 +22,13 @@ class AddressFormMiddleware extends MiddlewareAbstract
 {
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
-        $outPut = dirty_output_query($this->getContainer()->get(Schema::class), 'CustomerAddress');
         $response->addWidget(
             'checkout_new_shipping_address_form',
             'checkout_shipping_address_block',
             30,
             get_js_file_url("production/checkout/checkout/address/new_shipping_address_form.js"),
             [
-                "action" => generate_url('graphql.api', [], [
-                    "query" => "mutation AddShippingAddress(\$address: AddressInput!, \$cartId: Int!) { addShippingAddress (address: \$address, cartId: \$cartId) {status message address $outPut}}"
-                ]),
+                "action" => generate_url('checkout.set.shipping.address'),
                 "countries" => get_config('general_allow_countries', ["US"]),
             ]
         );
@@ -42,12 +39,21 @@ class AddressFormMiddleware extends MiddlewareAbstract
             30,
             get_js_file_url("production/checkout/checkout/address/new_billing_address_form.js"),
             [
-                "action" => generate_url('graphql.api', [], [
-                    "query" => "mutation AddBillingAddress(\$address: AddressInput!, \$cartId: Int!) { addBillingAddress (address: \$address, cartId: \$cartId) {status message address $outPut}}"
-                ]),
+                "action" => generate_url('checkout.set.billing.address'),
                 "countries" => get_config('general_allow_countries', ["US"]),
             ]
         );
+
+        $response->addWidget(
+            'checkout_use_shipping_address_checkbox',
+            'checkout_billing_address_block',
+            20,
+            get_js_file_url("production/checkout/checkout/address/use_shipping_address.js"),
+            [
+                "action" => generate_url('checkout.set.billing.address')
+            ]
+        );
+
         $response->addWidget(
             'new_address_cartId_field',
             'customer_address_form_inner',

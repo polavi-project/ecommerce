@@ -45,6 +45,14 @@ $router->addSiteRoute('checkout.set.shipment', 'POST', '/checkout/shipment/add',
     \Similik\Module\Checkout\Middleware\Checkout\Shipment\AddShippingMethodMiddleware::class
 ]);
 
+$router->addSiteRoute('checkout.set.billing.address', 'POST', '/checkout/payment/address/set', [
+    \Similik\Module\Checkout\Middleware\Checkout\Payment\AddBillingAddressMiddleware::class
+]);
+
+$router->addSiteRoute('checkout.set.shipping.address', 'POST', '/checkout/shipment/address/set', [
+    \Similik\Module\Checkout\Middleware\Checkout\Shipment\AddShippingAddressMiddleware::class
+]);
+
 $router->addSiteRoute('checkout.order', 'POST', '/checkout/order', [
     \Similik\Module\Checkout\Middleware\Checkout\Order\CreateOrderMiddleware::class,
     \Similik\Module\Checkout\Middleware\Checkout\Order\ResponseMiddleware::class
