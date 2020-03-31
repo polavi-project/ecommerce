@@ -33,12 +33,14 @@ $eventDispatcher->addListener(
 );
 
 $eventDispatcher->addListener(
-    'apply_payment_method',
-    function (Similik\Module\Checkout\Services\Cart\Cart $cart, $data) {
+    'payment_method',
+    function ($method, array $context) {
+        /**@var \Similik\Module\Checkout\Services\Cart\Cart $cart*/
+        $cart = $context[0];
+        $requestingMethod = $cart->getDataSource()['payment_method'] ?? null;
         $subTotal = $cart->getData('sub_total');
         if(
-            isset($data['payment_method']) and
-            $data['payment_method'] == 'cod' and
+            $requestingMethod == 'cod' and
             \Similik\get_config('payment_cod_status') == 1 and
             (
                 ((int)\Similik\get_config('payment_cod_minimum') <= $subTotal) and

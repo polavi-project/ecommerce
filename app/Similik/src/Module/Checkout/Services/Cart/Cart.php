@@ -215,7 +215,7 @@ class Cart
             ],
             'payment_method' => [
                 'resolver' => function(Cart $cart) {
-                    $method = dispatch_event('apply_payment_method', [$this, $this->dataSource]);
+                    $method = create_mutable_var("payment_method", null, [$this]);
                     if(!$method)
                         $this->error = "Payment method can not be empty";
 
