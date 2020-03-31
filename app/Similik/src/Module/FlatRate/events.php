@@ -20,18 +20,20 @@ $eventDispatcher->addListener(
 );
 
 $eventDispatcher->addListener(
-    'apply_shipping_method',
-    function (Similik\Module\Checkout\Services\Cart\Cart $cart, $data) {
-//        if($cart->getData('shipping_address_id') == null)
-//            return null;
+    'shipping_method',
+    function ($method, array $context = []) {
+        if($method !== null)
+            return $method;
 
+        /**@var Cart $cart*/
+        $cart = $context[0];
+        $requestingMethod = $cart->getDataSource()['shipping_method'] ?? null;
         $shippingAddress = \Similik\_mysql()->getTable('cart_address')->load($cart->getData('shipping_address_id'));
         if(
-            isset($data['shipping_method']) and
-            $data['shipping_method'] == 'flat_rate' and
+            $requestingMethod == 'flat_rate' and
             get_config('shipment_flat_rate_status') == 1 and
             (
-                in_array($shippingAddress['country'], get_config('shipment_flat_rate_countries', ['US'])) ||
+                in_array($shippingAddress['country'] ?? null, get_config('shipment_flat_rate_countries', ['US'])) ||
                 get_config('shipment_flat_rate_countries', []) == []
             )
         )

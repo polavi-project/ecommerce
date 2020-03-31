@@ -16,6 +16,7 @@ use GuzzleHttp\Promise\PromiseInterface;
 use GuzzleHttp\Promise\RejectedPromise;
 use MJS\TopSort\Implementations\ArraySort;
 use function Similik\_mysql;
+use function Similik\create_mutable_var;
 use function Similik\dispatch_event;
 use function Similik\get_config;
 use Similik\Services\Http\Request;
@@ -185,7 +186,7 @@ class Cart
             ],
             'shipping_method' => [
                 'resolver' => function(Cart $cart) {
-                    $method = dispatch_event('apply_shipping_method', [$this, $this->dataSource]);
+                    $method = create_mutable_var("shipping_method", null, [$this]);
                     if(!$method)
                         $this->error = "Shipping method can not be empty";
 

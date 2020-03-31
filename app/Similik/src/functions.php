@@ -52,14 +52,14 @@ function dispatch_event(string $eventName, array $args = []) {
     the_container()->get(EventDispatcher::class)->dispatch($eventName, $args);
 }
 
-function create_mutable_var($name, $value) {
+function create_mutable_var($name, $value, array $context = []) {
     $listeners = the_container()->get(EventDispatcher::class)->getListeners($name);
     if(empty($listeners))
         return $value;
 
     foreach ($listeners as $listener) {
         $handler = $listener['handler'];
-        $value = $handler($value);
+        $value = $handler($value, $context);
     }
 
     return $value;
