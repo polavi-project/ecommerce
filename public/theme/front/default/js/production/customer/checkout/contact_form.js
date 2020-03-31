@@ -3,7 +3,7 @@ import Text from "../../../../../../../js/production/form/fields/text.js";
 import Password from "../../../../../../../js/production/form/fields/password.js";
 
 function LoggedInCustomer() {
-    const fullName = ReactRedux.useSelector(state => _.get(state, 'appState.customer.fullName'));
+    const fullName = ReactRedux.useSelector(state => _.get(state, 'appState.customer.full_name'));
     const email = ReactRedux.useSelector(state => _.get(state, 'appState.customer.email'));
 
     return React.createElement(
