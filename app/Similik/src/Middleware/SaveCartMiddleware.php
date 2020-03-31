@@ -10,6 +10,7 @@ namespace Similik\Middleware;
 
 use function GuzzleHttp\Promise\settle;
 use function Similik\_mysql;
+use function Similik\create_mutable_var;
 use Similik\Module\Checkout\Services\Cart\Cart;
 use Similik\Services\Http\Response;
 use Similik\Services\Http\Request;
@@ -74,7 +75,7 @@ class SaveCartMiddleware extends MiddlewareAbstract
             foreach ($items as $item) {
                 $itemsList[] = $item->toArray();
             }
-            $response->addState('cart', [
+            $response->addState('cart', create_mutable_var("cart_state", [
                 'cartId' => $cart->getData('cart_id'),
                 'fullName' => $cart->getData('customer_full_name'),
                 'email' => $cart->getData('customer_email'),
@@ -91,7 +92,7 @@ class SaveCartMiddleware extends MiddlewareAbstract
                 'shippingMethod' => $cart->getData('shipping_method'),
                 'shippingAddress' => $conn->getTable('cart_address')->load($cart->getData('shipping_address_id')),
                 'items' => $itemsList
-            ]);
+            ], [$cart]));
         } catch (\Exception $e) {
             $conn->rollback();
             $response->addAlert('cart_save_error', 'error', $e->getMessage());
