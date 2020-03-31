@@ -22,12 +22,13 @@ $eventDispatcher->addListener(
 $eventDispatcher->addListener(
     'shipping_method',
     function ($method, array $context = []) {
-        if($method !== null)
-            return $method;
 
         /**@var Cart $cart*/
         $cart = $context[0];
         $requestingMethod = $cart->getDataSource()['shipping_method'] ?? null;
+        if($requestingMethod !== "flat_rate")
+            return $method;
+
         $shippingAddress = \Similik\_mysql()->getTable('cart_address')->load($cart->getData('shipping_address_id'));
         if(
             $requestingMethod == 'flat_rate' and
@@ -45,14 +46,17 @@ $eventDispatcher->addListener(
 );
 
 $eventDispatcher->addListener(
-    'cart_shipping_fee_calculate',
-    function (Similik\Module\Checkout\Services\Cart\Cart $cart) {
+    'shipping_fee_excl_tax',
+    function ($value, array $context = []) {
+        /**@var Cart $cart*/
+        $cart = $context[0];
         if($cart->getData('shipping_method') != 'flat_rate')
-            return null;
+            return $value;
         $coupon = \Similik\the_container()->get(\Similik\Module\Discount\Services\CouponHelper::class)->getCoupon();
         if($coupon and $coupon['free_shipping'] == 1)
             return 0;
-        return get_config('shipment_flat_rate_fee');
+
+        return get_config('shipment_flat_rate_fee', 0);
     },
     0
 );
