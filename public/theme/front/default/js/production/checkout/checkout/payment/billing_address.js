@@ -1,13 +1,14 @@
 import Area from "../../../../../../../../js/production/area.js";
+import AddressSummary from "../../../customer/dashboard/address_summary.js";
 
 function Title() {
     return React.createElement(
-        'div',
+        "div",
         null,
         React.createElement(
-            'strong',
+            "strong",
             null,
-            'Billing address'
+            "Billing address"
         )
     );
 }
@@ -20,57 +21,14 @@ function BillingAddress({ needSelectAddress, setNeedSelectAddress }) {
         setNeedSelectAddress(true);
     };
     if (!billingAddress || needSelectAddress === true) return null;else return React.createElement(
-        'div',
-        { className: 'checkout-shipping-address' },
+        "div",
+        { className: "checkout-shipping-address" },
+        React.createElement(AddressSummary, { address: billingAddress }),
         React.createElement(
-            'div',
-            null,
-            React.createElement(
-                'strong',
-                null,
-                billingAddress.full_name
-            )
-        ),
-        React.createElement(
-            'div',
-            null,
-            billingAddress.address_1
-        ),
-        React.createElement(
-            'div',
-            null,
-            billingAddress.address_2
-        ),
-        React.createElement(
-            'div',
-            null,
-            billingAddress.city,
-            ', ',
-            billingAddress.province,
-            ', ',
-            billingAddress.postcode
-        ),
-        React.createElement(
-            'div',
-            null,
-            billingAddress.country
-        ),
-        React.createElement(
-            'div',
-            null,
-            React.createElement(
-                'span',
-                null,
-                'Phone'
-            ),
-            ': ',
-            billingAddress.telephone
-        ),
-        React.createElement(
-            'a',
-            { href: '#', onClick: e => onClick(e) },
-            React.createElement('span', { 'uk-icon': 'icon: location; ratio: 1' }),
-            ' Change'
+            "a",
+            { href: "#", onClick: e => onClick(e) },
+            React.createElement("span", { "uk-icon": "icon: location; ratio: 1" }),
+            " Change"
         )
     );
 }
@@ -79,11 +37,11 @@ function BillingAddressBlock() {
     const [needSelectAddress, setNeedSelectAddress] = React.useState(false);
 
     return React.createElement(
-        'div',
-        { className: 'checkout-billing-address' },
+        "div",
+        { className: "checkout-billing-address" },
         React.createElement(Area, {
             id: "checkout_billing_address_block",
-            className: 'uk-width-1-1',
+            className: "uk-width-1-1",
             needSelectAddress: needSelectAddress,
             setNeedSelectAddress: setNeedSelectAddress,
             coreWidgets: [{

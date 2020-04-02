@@ -11,7 +11,6 @@ namespace Similik\Module\Graphql\Services;
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
-use Monolog\Logger;
 use function Similik\_mysql;
 use function Similik\dispatch_event;
 use Similik\Module\Catalog\Services\AttributeCollection;
@@ -59,7 +58,6 @@ class QueryType extends ObjectType
                         'language' => Type::nonNull(Type::id())
                     ],
                     'resolve' => function($product, $args, Container $container, ResolveInfo $info)  {
-                        $container->get(Logger::class)->addInfo("product resolver is runing");
                         $productTable = _mysql()->getTable('product');
                         $productTable->leftJoin('product_description', null, [
                             [
