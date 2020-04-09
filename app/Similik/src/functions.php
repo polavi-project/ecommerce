@@ -89,7 +89,7 @@ function get_config(string $name, $defaultValue = null, int $languageId = 0)
     if(isset($configCache[$languageId][$name]))
         return $configCache[$languageId][$name];
     else if(isset($configCache[0][$name]))
-        return $configCache[$languageId][$name];
+        return $configCache[0][$name];
 
     $config = _mysql()->getTable('setting')->where('name', '=', $name)
         ->andWhere('language_id', '=', $languageId)
