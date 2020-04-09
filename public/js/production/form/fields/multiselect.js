@@ -38,20 +38,16 @@ export default function MultiSelect(props) {
 
     return React.createElement(
         "div",
-        { className: "form-field form-multi-select" },
+        { className: "form-group" },
         React.createElement(
-            "div",
-            { className: "field-label" },
-            React.createElement(
-                "label",
-                { htmlFor: props.name },
-                props.label
-            )
+            "label",
+            { htmlFor: props.name },
+            props.label
         ),
         React.createElement(
             "select",
             {
-                className: "uk-select uk-form-small",
+                className: "form-control",
                 id: props.id,
                 name: props.name,
                 value: value,

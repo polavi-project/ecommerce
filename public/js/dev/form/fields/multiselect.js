@@ -34,10 +34,10 @@ export default function MultiSelect (props) {
         setValue(val);
     };
 
-    return <div className="form-field form-multi-select">
-        <div className="field-label"><label htmlFor={props.name}>{props.label}</label></div>
+    return <div className="form-group">
+        <label htmlFor={props.name}>{props.label}</label>
         <select
-            className="uk-select uk-form-small"
+            className="form-control"
             id={props.id}
             name={props.name}
             value={value}

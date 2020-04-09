@@ -42,19 +42,15 @@ export default function DateTime(props) {
 
     return React.createElement(
         "div",
-        { className: "form-field form-date-time" },
+        { className: "form-group" },
         React.createElement(
-            "div",
-            { className: "field-label" },
-            React.createElement(
-                "label",
-                { htmlFor: props.name },
-                props.label
-            )
+            "label",
+            { htmlFor: props.name },
+            props.label
         ),
         React.createElement("input", {
             type: "text",
-            className: "uk-form-small uk-input",
+            className: "form-control",
             id: props.name,
             name: props.name,
             placeholder: props.placeholder,

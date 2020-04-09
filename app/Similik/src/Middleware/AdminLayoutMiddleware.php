@@ -26,7 +26,7 @@ class AdminLayoutMiddleware extends MiddlewareAbstract
             'wrapper',
             0,
             get_js_file_url("production/area.js"),
-            ["id"=> "container", "className" => "container"]
+            ["id"=> "container", "className" => "container-fluid"]
         );
 
         $response->addWidget(

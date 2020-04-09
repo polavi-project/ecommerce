@@ -38,7 +38,7 @@ export default function Password(props) {
 
     return React.createElement(
         "div",
-        { className: "form-field form-password" },
+        { className: "form-group" },
         React.createElement(
             "label",
             { htmlFor: props.name },
@@ -46,7 +46,7 @@ export default function Password(props) {
         ),
         React.createElement("input", {
             type: "password",
-            className: "uk-input uk-form-small",
+            className: "form-control",
             id: props.name,
             name: props.name,
             placeholder: props.placeholder,

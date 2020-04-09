@@ -39,19 +39,15 @@ export default function Text(props) {
 
     return React.createElement(
         "div",
-        { className: "form-field form-text" },
+        { className: "form-group" },
         React.createElement(
-            "div",
-            { className: "field-label" },
-            React.createElement(
-                "label",
-                { htmlFor: props.name },
-                props.label
-            )
+            "label",
+            { htmlFor: props.name },
+            props.label
         ),
         React.createElement("input", {
             type: "text",
-            className: "uk-input uk-form-small uk-form-width-" + props.size,
+            className: "form-control",
             id: props.name,
             name: props.name,
             placeholder: props.placeholder,
@@ -60,8 +56,8 @@ export default function Text(props) {
             disabled: isDisabled
         }),
         props.comment && React.createElement(
-            "div",
-            null,
+            "small",
+            { className: "form-text text-muted" },
             React.createElement(
                 "i",
                 null,

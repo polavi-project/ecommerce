@@ -2,7 +2,7 @@ let Error = props => {
     let { error } = props;
     if (!error) return "";else return React.createElement(
         "div",
-        { className: "form-field-error" },
+        { className: "invalid-feedback" },
         React.createElement(
             "span",
             null,

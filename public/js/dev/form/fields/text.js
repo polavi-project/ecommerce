@@ -36,11 +36,11 @@ export default function Text (props) {
         if (props.handler) props.handler.call(window, e, props);
     };
 
-    return <div className="form-field form-text">
-        <div className="field-label"><label htmlFor={props.name}>{props.label}</label></div>
+    return <div className="form-group">
+        <label htmlFor={props.name}>{props.label}</label>
         <input
             type="text"
-            className={"uk-input uk-form-small uk-form-width-" + props.size}
+            className={"form-control"}
             id={props.name}
             name={props.name}
             placeholder={props.placeholder}
@@ -49,7 +49,7 @@ export default function Text (props) {
             disabled={isDisabled}
         />
         { props.comment &&
-            <div><i>{props.comment}</i></div>
+            <small className="form-text text-muted"><i>{props.comment}</i></small>
         }
         <Error error={error}/>
     </div>
