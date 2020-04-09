@@ -3,6 +3,9 @@ import Text from "../../../../../../../../js/production/form/fields/text.js";
 import TextArea from "../../../../../../../../js/production/form/fields/textarea.js";
 import Select from "../../../../../../../../js/production/form/fields/select.js";
 import Tinycme from "../../../../../../../../js/production/form/fields/tinycme.js";
+import Radio from "../../../../../../../../js/production/form/fields/radio.js";
+import Checkbox from "../../../../../../../../js/production/form/fields/checkbox.js";
+import Switch from "../../../../../../../../js/production/form/fields/switch.js";
 
 export default function General({ data }) {
     const [fields] = React.useState(() => {
@@ -37,10 +40,15 @@ export default function General({ data }) {
             sort_order: 60,
             id: "weight"
         }, {
-            component: Select,
-            props: { id: 'status', formId: "product-edit-form", name: "status", type: "select", label: "Status", options: [{ value: 0, text: 'Disabled' }, { value: 1, text: 'Enabled' }], isTranslateAble: false },
+            component: Switch,
+            props: { id: 'status', formId: "product-edit-form", name: "status", label: "Status", options: [{ value: 0, text: 'Disabled' }, { value: 1, text: 'Enabled' }], isTranslateAble: false },
             sort_order: 70,
             id: "status"
+        }, {
+            component: Checkbox,
+            props: { id: 'statuss', formId: "product-edit-form", name: "statusss", label: "Status", options: [{ value: 0, text: 'Disabled' }, { value: 1, text: 'Enabled' }], isTranslateAble: false },
+            sort_order: 70,
+            id: "statusss"
         }, {
             component: Select,
             props: { id: "manage_stock", formId: "product-edit-form", name: "manage_stock", type: "select", label: "Manage stock?", options: [{ value: 0, text: 'No' }, { value: 1, text: 'Yes' }], isTranslateAble: false },

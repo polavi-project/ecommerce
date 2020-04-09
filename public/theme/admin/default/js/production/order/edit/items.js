@@ -167,7 +167,7 @@ export default function Items({ items }) {
                             null,
                             React.createElement(Area, {
                                 key: k,
-                                id: "order_item_row_" + i.itemId,
+                                id: "order_item_row_" + i.item_id,
                                 noOuter: true,
                                 item: i,
                                 coreWidgets: [{

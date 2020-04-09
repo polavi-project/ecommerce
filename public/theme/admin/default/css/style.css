@@ -1,33 +1,3 @@
-/* COLOR VARIABLES */
-:root {
-    --primary: brown;
-    --secondary: red;
-    --borderColor: #e5e5e5;
-    --dangerColor: #f0506e;
-}
-.border-block {border: 1px solid var(--borderColor); box-sizing: border-box; padding: 10px; margin-bottom: 20px}
-
-
-html {
-    font-size: 14px !important;
-}
-.uk-h1, .uk-h2, .uk-h3, .uk-h4, .uk-h5, .uk-h6, .uk-heading-2xlarge, .uk-heading-large, .uk-heading-medium, .uk-heading-small, .uk-heading-xlarge, h1, h2, h3, h4, h5, h6{font-weight: 300 !important;}
-.text-danger{color:#f0506e}
-.text-success{color:#32d296}
-
-.admin-navigation{
-    float: left;
-    width: 200px;
-    padding: 0 10px 10px 10px;
-    box-sizing: border-box;
-}
-.admin-navigation + .content {
-    overflow: hidden;
-    margin-left: 220px;
-    padding-right: 20px;
-}
-
-/**************************************** LOADING BAR *********************************************/
 .loading-bar{
     background: #1e87f0;
     height: 3px;
@@ -42,51 +12,14 @@ html {
     width: 0%
 }
 
-@-webkit-keyframes sk-stretchdelay {
-    0%, 40%, 100% { -webkit-transform: scaleY(0.4) }
-    20% { -webkit-transform: scaleY(1.0) }
-}
 
-@keyframes sk-stretchdelay {
-    0%, 40%, 100% {
-        transform: scaleY(0.4);
-        -webkit-transform: scaleY(0.4);
-    }  20% {
-           transform: scaleY(1.0);
-           -webkit-transform: scaleY(1.0);
-       }
-}
 
-/* FORM */
-.form-field{margin-top: 10px}
-td .form-field{margin-top: 0px}
-.form-field-error span {color: var(--dangerColor)}
-.group-wrapper{
-    display: inline;
-}
-.group-form{float: left; width: 50%; box-sizing: border-box;padding: 10px}
-.uk-label{text-transform: capitalize!important; border-radius: 10px!important;}
-.product-thumbnail{max-width: 80px}
-.similik-form-button{margin-top: 15px}
-/* GRID */
-table input{max-width: 95px}
-table.uk-table thead th{vertical-align: top}
-.table-row-img{max-width: 60px}
-.row {
-    border-top: 1px solid #999;
-    min-height: 25px;
-}
-.order-edit-info{margin-bottom: 20px}
-.admin-login-form{margin-top: 60px}
-
-/* TABLE */
-html .uk-table-small td, html .uk-table-small th{padding: 5px}
-
-/* HEADER */
-.container > .header{padding: 12px 10px; border-bottom: 1px solid var(--borderColor); margin-bottom: 15px; overflow: hidden}
-.container > .header .logo{float: left}
-.container > .header .admin-user-greeting{float: right}
-
-/**/
-.sale-statistic-header ul {list-style: none; margin-top: 6px; margin-bottom:0px}
-.sale-statistic-header ul li {float: left; padding-left: 10px}
+/******* GLOBAL *******/
+.wrapper{padding: 0 10px}
+.font-color-primary{color: #058C8C}
+/******* FORM *******/
+.similik-radio input, .similik-checkbox input{display: none}
+.similik-radio .fas, .similik-checkbox .fas{font-size: 16px; padding-right: 5px}
+.similik-radio label, .similik-checkbox label{cursor: pointer}
+.similik-switch .fas{color: #058C8C; font-size: 22px; cursor: pointer}
+.field-validation-error{color: #dc3545}

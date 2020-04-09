@@ -1,10 +1,9 @@
 import {Error} from "./error.js"
 import {FORM_FIELD_CREATED, FORM_VALIDATED, FORM_FIELD_REMOVED, FORM_LANGUAGE_CHANGED} from "./../../event-types.js";
 
-export default function Checkbox (props) {
-    const [isChecked, setChecked] = React.useState(props.isChecked);
+export default function Switch (props) {
+    const [value, setValue] = React.useState(props.value !== undefined ? parseInt(props.value) : 0);
     const [error, setError] = React.useState(undefined);
-    const [isDisabled, setIsDisabled] = React.useState(false);
 
     React.useEffect(() => {
         PubSub.publishSync(FORM_FIELD_CREATED, {...props});
@@ -30,30 +29,21 @@ export default function Checkbox (props) {
     }, []);
 
     const onChange = (e)=> {
-        if(isDisabled === true)
-            return false;
-        setChecked(e.target.checked);
+        if(props.isDisabled === true)
+            return;
+        setValue(value === 1 ? 0 : 1);
+        if (props.handler) props.handler.call(window, e, props);
     };
 
-    return <div className="form-group similik-checkbox">
-        <div><label>{props.label}</label></div>
+    return <div className="form-group similik-switch">
+        <label>{props.label}</label>
+        <input type="hidden" value={value} name={props.name}/>
         <div>
-            <label htmlFor={props.name}><input
-                type="checkbox"
-                className="uk-checkbox"
-                id={props.name}
-                name={props.name}
-                onChange={onChange}
-                disabled={isDisabled}
-                checked={isChecked}
-            />
-                {!isChecked && <i className="fas fa-square font-color-primary"></i>}
-                {isChecked && <i className="fas fa-check-square font-color-primary"></i>}
-                {props.label}
-            </label>
+            {value == 0 && <i className="fas fa-toggle-off" onClick={(e)=>onChange(e)}></i>}
+            {value == 1 && <i className="fas fa-toggle-on" onClick={(e)=>onChange(e)}></i>}
         </div>
         { props.comment &&
-            <p><i>{props.comment}</i></p>
+            <div><i>{props.comment}</i></div>
         }
         <Error error={error}/>
     </div>

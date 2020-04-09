@@ -76,6 +76,8 @@ class ResponseMiddleware extends MiddlewareAbstract
                 $this
                     ->getContainer()
                     ->get(Helmet::class)
+                    ->addLink(['rel'=>'stylesheet', 'href'=> get_css_file_url('fontawesome/css/all.min.css', $request->isAdmin())])
+                    ->addLink(['rel'=>'stylesheet', 'href'=> get_css_file_url('style.css', $request->isAdmin())])
                     ->addLink(['rel'=>'stylesheet', 'href'=> get_css_file_url('bootstrap.css', $request->isAdmin())]);
 
             $response->setContent($this->renderHtml($response));
