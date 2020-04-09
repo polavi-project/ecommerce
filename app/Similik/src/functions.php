@@ -52,14 +52,14 @@ function dispatch_event(string $eventName, array $args = []) {
     the_container()->get(EventDispatcher::class)->dispatch($eventName, $args);
 }
 
-function create_mutable_var($name, $value) {
+function create_mutable_var($name, $value, array $context = []) {
     $listeners = the_container()->get(EventDispatcher::class)->getListeners($name);
     if(empty($listeners))
         return $value;
 
     foreach ($listeners as $listener) {
         $handler = $listener['handler'];
-        $value = $handler($value);
+        $value = $handler($value, $context);
     }
 
     return $value;
@@ -80,29 +80,35 @@ function get_config(string $name, $defaultValue = null, int $languageId = 0)
 {
     if(!file_exists(CONFIG_PATH . DS . 'config.php'))
         return $defaultValue;
-    $config = [];
-    if(file_exists(CACHE_PATH . DS . 'config_cache.php')) {
-        $config = include_once (CACHE_PATH . DS . 'config_cache.php');
+    static $configCache = [];
+
+    if(file_exists(CACHE_PATH . DS . 'config_cache.php') && empty($configCache)) {
+        $configCache = include_once (CACHE_PATH . DS . 'config_cache.php');
     }
 
-    if(isset($config[$languageId][$name]))
-        return $config[$languageId][$name];
-    else if(isset($config[0][$name]))
-        return $config[$languageId][$name];
+    if(isset($configCache[$languageId][$name]))
+        return $configCache[$languageId][$name];
+    else if(isset($configCache[0][$name]))
+        return $configCache[0][$name];
 
     $config = _mysql()->getTable('setting')->where('name', '=', $name)
         ->andWhere('language_id', '=', $languageId)
         ->fetchOneAssoc();
-
-    if(!$config)
+    if($config) {
+        $configCache[$languageId][$name] = $config['json'] == 1  ? json_decode($config['value'], true) : $config['value'];
+        return $configCache[$languageId][$name];
+    } else {
         $config = _mysql()->getTable('setting')->where('name', '=', $name)
             ->andWhere('language_id', '=', 0)
             ->fetchOneAssoc();
-
-    if(!$config)
-        return $defaultValue;
-
-    return $config['json'] == 1  ? json_decode($config['value'], true) : $config['value'];
+        if($config) {
+            $configCache[0][$name] = $config['json'] == 1  ? json_decode($config['value'], true) : $config['value'];
+            return $configCache[0][$name];
+        } else {
+            $configCache[$languageId][$name] = $defaultValue;
+            return $defaultValue;
+        }
+    }
 }
 
 function get_base_url($isAdmin = false)

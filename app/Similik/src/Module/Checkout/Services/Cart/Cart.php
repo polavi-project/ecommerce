@@ -11,15 +11,14 @@ namespace Similik\Module\Checkout\Services\Cart;
 
 use GuzzleHttp\Promise\FulfilledPromise;
 use GuzzleHttp\Promise\Promise;
-use function GuzzleHttp\Promise\promise_for;
 use GuzzleHttp\Promise\PromiseInterface;
 use GuzzleHttp\Promise\RejectedPromise;
 use MJS\TopSort\Implementations\ArraySort;
 use function Similik\_mysql;
+use function Similik\create_mutable_var;
 use function Similik\dispatch_event;
 use function Similik\get_config;
 use Similik\Services\Http\Request;
-use function Similik\subscribe;
 
 class Cart
 {
@@ -153,7 +152,7 @@ class Cart
             ],
             'shipping_fee_excl_tax' => [
                 'resolver' => function(Cart $cart) {
-                    return (float)dispatch_event('cart_shipping_fee_calculate', [$this]);
+                    return (float)create_mutable_var('shipping_fee_excl_tax', null, [$this]);
                 },
                 'dependencies' => ['shipping_method', 'total_weight']
             ],
@@ -185,7 +184,7 @@ class Cart
             ],
             'shipping_method' => [
                 'resolver' => function(Cart $cart) {
-                    $method = dispatch_event('apply_shipping_method', [$this, $this->dataSource]);
+                    $method = create_mutable_var("shipping_method", null, [$this]);
                     if(!$method)
                         $this->error = "Shipping method can not be empty";
 
@@ -214,7 +213,7 @@ class Cart
             ],
             'payment_method' => [
                 'resolver' => function(Cart $cart) {
-                    $method = dispatch_event('apply_payment_method', [$this, $this->dataSource]);
+                    $method = create_mutable_var("payment_method", null, [$this]);
                     if(!$method)
                         $this->error = "Payment method can not be empty";
 

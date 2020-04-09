@@ -8,9 +8,7 @@ declare(strict_types=1);
 
 namespace Similik\Module\Catalog\Middleware\Product\Edit;
 
-use function Similik\get_config;
 use function Similik\get_default_language_Id;
-use function Similik\get_display_languages;
 use function Similik\get_js_file_url;
 use Similik\Services\Http\Request;
 use Similik\Services\Http\Response;
@@ -38,18 +36,6 @@ class FormMiddleware extends MiddlewareAbstract
                 "currentLanguage" => $request->query->get('language') != null ? $request->query->get('language') : get_default_language_Id()
             ]
         );
-//        $languages = get_display_languages();
-//        $response->addWidget(
-//            'product-edit-form_language_switcher',
-//            'admin_product_edit_before',
-//            10,
-//            get_js_file_url("production/language-switcher.js", true),
-//            [
-//                "id"=> 'product-edit-form_language_switcher',
-//                'languages' => $languages,
-//                "current" => in_array($request->query->get('language'), get_config('general_languages', [])) ? $request->query->get('language') : get_default_language_Id()
-//            ]
-//        );
 
         return $delegate;
     }

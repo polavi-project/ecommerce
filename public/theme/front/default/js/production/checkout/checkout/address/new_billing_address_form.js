@@ -7,8 +7,8 @@ export default function BillingAddressForm(props) {
     const dispatch = ReactRedux.useDispatch();
     const cart = ReactRedux.useSelector(state => _.get(state, 'appState.cart'));
     const onComplete = response => {
-        if (_.get(response, 'payload.data.addBillingAddress.status') === true) {
-            let address = _.get(response, 'payload.data.addBillingAddress.address');
+        if (_.get(response, 'add_checkout_billing_address.status') === true) {
+            let address = _.get(response, 'add_checkout_billing_address.address');
             props.areaProps.setNeedSelectAddress(false);
             dispatch({
                 'type': ADD_APP_STATE,
@@ -21,7 +21,7 @@ export default function BillingAddressForm(props) {
                 }
             });
         } else {
-            dispatch({ 'type': ADD_ALERT, 'payload': { alerts: [{ id: "checkout_billing_address_error", message: _.get(response, 'payload.data.addBillingAddress.message', 'Something wrong. Please try again'), type: "error" }] } });
+            dispatch({ 'type': ADD_ALERT, 'payload': { alerts: [{ id: "checkout_billing_address_error", message: _.get(response, 'add_checkout_billing_address.message', 'Something wrong. Please try again'), type: "error" }] } });
         }
     };
 

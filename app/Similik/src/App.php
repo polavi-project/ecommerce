@@ -168,15 +168,15 @@ class App
                 10 => SessionMiddleware::class,
                 20 => RoutingMiddleware::class,
                 30 => AuthenticateMiddleware::class,
-                35 => CartInitMiddleware::class,
-                40 => HandlerMiddleware::class,
+                40 => CartInitMiddleware::class,
+                50 => HandlerMiddleware::class,
+                60 => PromiseWaiterMiddleware::class,
                 70 => SaveCartMiddleware::class,
-                80 => PromiseWaiterMiddleware::class,
-                90 => AdminLayoutMiddleware::class,
-                100 => FrontLayoutMiddleware::class,
-                110 => AdminNavigationMiddleware::class,
-                140 => AlertMiddleware::class,
-                150 => ResponseMiddleware::class
+                80 => AdminLayoutMiddleware::class,
+                90 => FrontLayoutMiddleware::class,
+                100 => AdminNavigationMiddleware::class,
+                110 => AlertMiddleware::class,
+                120 => ResponseMiddleware::class
             ];
         else
             $middleware = [

@@ -6,9 +6,10 @@ import AddressForm from "../../../../production/customer/dashboard/address.js";
 export default function ShippingAddressForm(props) {
     const dispatch = ReactRedux.useDispatch();
     const cart = ReactRedux.useSelector(state => _.get(state, 'appState.cart'));
+
     const onComplete = response => {
-        if (_.get(response, 'payload.data.addShippingAddress.status') === true) {
-            let address = _.get(response, 'payload.data.addShippingAddress.address');
+        if (_.get(response, 'add_checkout_shipping_address.status') === true) {
+            let address = _.get(response, 'add_checkout_shipping_address.address');
             props.areaProps.setNeedSelectAddress(false);
             dispatch({
                 'type': ADD_APP_STATE,
@@ -21,7 +22,7 @@ export default function ShippingAddressForm(props) {
                 }
             });
         } else {
-            dispatch({ 'type': ADD_ALERT, 'payload': { alerts: [{ id: "checkout_shipping_address_error", message: _.get(response, 'payload.data.addShippingAddress.message'), type: "error" }] } });
+            dispatch({ 'type': ADD_ALERT, 'payload': { alerts: [{ id: "checkout_shipping_address_error", message: _.get(response, 'add_checkout_shipping_address.message'), type: "error" }] } });
         }
     };
 

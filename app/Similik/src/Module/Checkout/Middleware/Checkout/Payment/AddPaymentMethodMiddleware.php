@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace Similik\Module\Checkout\Middleware\Checkout\Payment;
 
 
+use Monolog\Logger;
 use Similik\Middleware\MiddlewareAbstract;
 use Similik\Module\Checkout\Services\Cart\Cart;
 use Similik\Services\Http\Request;
@@ -25,8 +26,10 @@ class AddPaymentMethodMiddleware extends MiddlewareAbstract
 
         $promise->then(function($value) use ($response) {
             $response->addData('success', 1)->notNewPage();
-        }, function (\Exception $reason) use ($response) {
-            $response->addData('success', 0)->addData('message', $reason->getMessage())->notNewPage();
+        }, function ($reason) use ($response) {
+            $response->addData('success', 0);
+            $response->addAlert("checkout_shipping_method", "error", $reason);
+            $response->notNewPage();
         });
 
         return $delegate;

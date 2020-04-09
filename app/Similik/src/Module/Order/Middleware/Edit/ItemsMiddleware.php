@@ -30,7 +30,7 @@ class ItemsMiddleware extends MiddlewareAbstract
                 "query"=>"{
                     orderItems: order (id: {$request->attributes->get('id')}) {
                         items {
-                            itemId: order_item_id
+                            item_id: order_item_id
                             product_id
                             product_sku
                             product_name

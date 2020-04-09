@@ -7,7 +7,7 @@ function Address({ address, cartId, addressType = 'shipping', action, setNeedSel
     const cart = ReactRedux.useSelector(state => _.get(state, 'appState.cart'));
     const dispatch = ReactRedux.useDispatch();
     const onComplete = response => {
-        let path = addressType === 'shipping' ? 'payload.data.addShippingAddress' : 'payload.data.addBillingAddress';
+        let path = addressType === 'shipping' ? 'add_checkout_shipping_address' : 'add_checkout_billing_address';
         if (_.get(response, path + '.status') === true) {
             setNeedSelectAddress(false);
             if (addressType === 'shipping') dispatch({
@@ -47,8 +47,7 @@ function Address({ address, cartId, addressType = 'shipping', action, setNeedSel
             }
         }
         formData.append(`variables[cartId]`, cartId);
-        if (addressType === 'shipping') formData.append('query', "mutation AddShippingAddress($address: AddressInput!, $cartId: Int!) { addShippingAddress (address: $address, cartId: $cartId) {status message address {customer_address_id}}}");
-        if (addressType === 'billing') formData.append('query', "mutation AddBillingAddress($address: AddressInput!, $cartId: Int!) { addBillingAddress (address: $address, cartId: $cartId) {status message address {customer_address_id}}}");
+
         Fetch(action, false, 'POST', formData, null, onComplete, onError);
     };
 

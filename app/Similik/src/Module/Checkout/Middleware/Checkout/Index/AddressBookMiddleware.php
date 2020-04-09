@@ -40,7 +40,7 @@ class AddressBookMiddleware extends MiddlewareAbstract
                         get_js_file_url("production/checkout/checkout/address/address_book.js"),
                         [
                             "addresses"=> $result->data['customerAddresses'],
-                            "action" => generate_url('graphql.api'),
+                            "action" => generate_url('checkout.set.shipping.address'),
                             "cartId" => $this->getContainer()->get(Cart::class)->getData('cart_id')
                         ]
                     );
@@ -52,7 +52,7 @@ class AddressBookMiddleware extends MiddlewareAbstract
                         get_js_file_url("production/checkout/checkout/address/address_book.js"),
                         [
                             "addresses"=> $result->data['customerAddresses'],
-                            "action" => generate_url('graphql.api'),
+                            "action" => generate_url('checkout.set.billing.address'),
                             "cartId" => $this->getContainer()->get(Cart::class)->getData('cart_id'),
                             "addressType" => "billing"
                         ]
