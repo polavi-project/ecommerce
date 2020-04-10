@@ -17,7 +17,7 @@
 /******* GLOBAL *******/
 body .container-fluid{padding-left: 0px; padding-right: 0px}
 .wrapper > .container-fluid{display: flex}
-.content{padding-left: 20px; padding-right: 20px}
+.content{padding-left: 20px; padding-right: 20px; flex-grow: 1;}
 body{background-color: #E1E1E1!important;}
 .font-color-primary{color: #058C8C}
 /******* FORM *******/
@@ -40,3 +40,10 @@ body{background-color: #E1E1E1!important;}
 .admin-nav .simplebar-scrollbar:before{background-color: #058C8C}
 .nav-item > a, .nav-item .root-label{display: block; padding-left: 20px}
 .nav-item > a:hover{background-color: #E1E1E1; color: #181818}
+
+/******* HEADER *********/
+.header{margin: 0 -20px; padding: 20px 20px 5px 20px; background-color: #fff}
+.admin-user-greeting{display: flex; justify-content: space-between}
+.admin-user-greeting .user-name{color: #058C8C}
+.admin-user-greeting .time{font-size: 9px}
+.admin-user-greeting .logout span{padding-right: 7px}
