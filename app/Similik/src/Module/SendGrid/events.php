@@ -11,17 +11,20 @@ declare(strict_types=1);
 use Similik\Services\Routing\Router;
 
 $eventDispatcher->addListener(
-        'before_execute_' . strtolower(str_replace('\\', '_', \Similik\Middleware\AdminNavigationMiddleware::class)),
-        function (\Similik\Services\Di\Container $container) {
-            $container->get(\Similik\Module\Cms\Services\NavigationManager::class)->addItem(
-                'setting.sendgrid',
-                'SendGrid',
-                $container->get(Router::class)->generateUrl('setting.sendgrid'),
-                'mail',
-                'setting'
-            );
-        },
-        0
+    "admin_menu",
+    function (array $items) {
+        return array_merge($items, [
+            [
+                "id" => "setting_sendgrid",
+                "sort_order" => 50,
+                "url" => \Similik\generate_url("setting.sendgrid"),
+                "title" => "SendGrid",
+                "icon" => "mail-bulk",
+                "parent_id" => "setting"
+            ]
+        ]);
+    },
+    0
 );
 
 $eventDispatcher->addListener('register.customer.register.post.middleware', function(\Similik\Services\MiddlewareManager $mm) {

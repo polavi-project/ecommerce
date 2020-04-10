@@ -20,14 +20,6 @@ use Similik\Services\Http\Request;
 use Similik\Services\Routing\Router;
 
 $eventDispatcher->addListener(
-        'register.core.middleware',
-        function (\Similik\Services\MiddlewareManager $middlewareManager) {
-            $middlewareManager->registerMiddleware(\Similik\Module\Catalog\Middleware\Core\AddCatalogMenuMiddleware::class, 81);
-        },
-        0
-);
-
-$eventDispatcher->addListener(
     'widget_types',
     function ($types) {
         $types[] = ['code' => 'product_filter', 'name' => 'Product Filter'];
@@ -209,24 +201,57 @@ $eventDispatcher->addListener(
 );
 
 $eventDispatcher->addListener(
-    'before_execute_' . strtolower(str_replace('\\', '_', \Similik\Middleware\AdminNavigationMiddleware::class)),
-    function (\Similik\Services\Di\Container $container) {
-        $container->get(\Similik\Module\Cms\Services\NavigationManager::class)->addItem(
-            'product_attribute_group',
-            'Attribute groups',
-            \Similik\generate_url('attribute.group.grid'),
-            'file-text',
-            'catalog',
-            99
-        );
-        $container->get(\Similik\Module\Cms\Services\NavigationManager::class)->addItem(
-            'product_attribute',
-            'Attribute',
-            \Similik\generate_url('attribute.grid'),
-            'tag',
-            'catalog',
-            100
-        );
+    "admin_menu",
+    function (array $items) {
+        return array_merge($items, [
+            [
+                "id" => "product_add_new",
+                "sort_order" => 10,
+                "url" => \Similik\generate_url("product.create"),
+                "title" => "New Product",
+                "icon" => "cubes",
+                "parent_id" => "quick_links"
+            ],
+            [
+                "id" => "catalog",
+                "sort_order" => 10,
+                "url" => null,
+                "title" => "Catalog",
+                "parent_id" => null
+            ],
+            [
+                "id" => "catalog_products",
+                "sort_order" => 10,
+                "url" => \Similik\generate_url("product.grid"),
+                "title" => "Products",
+                "icon" => "boxes",
+                "parent_id" => "catalog"
+            ],
+            [
+                "id" => "catalog_categories",
+                "sort_order" => 20,
+                "url" => \Similik\generate_url("category.grid"),
+                "title" => "Categories",
+                "icon" => "tags",
+                "parent_id" => "catalog"
+            ],
+            [
+                "id" => "catalog_attributes",
+                "sort_order" => 30,
+                "url" => \Similik\generate_url("attribute.grid"),
+                "title" => "Attributes",
+                "icon" => "ruler-combined",
+                "parent_id" => "catalog"
+            ],
+            [
+                "id" => "catalog_attribute_groups",
+                "sort_order" => 40,
+                "url" => \Similik\generate_url("attribute.group.grid"),
+                "title" => "Attribute groups",
+                "icon" => "tags",
+                "parent_id" => "catalog"
+            ]
+        ]);
     },
     0
 );

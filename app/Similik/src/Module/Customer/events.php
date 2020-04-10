@@ -213,23 +213,25 @@ $eventDispatcher->addListener(
 );
 
 $eventDispatcher->addListener(
-    'before_execute_' . strtolower(str_replace('\\', '_', \Similik\Middleware\AdminNavigationMiddleware::class)),
-    function (\Similik\Services\Di\Container $container) {
-        $container->get(\Similik\Module\Cms\Services\NavigationManager::class)->addItem(
-            'customer',
-            'Customer',
-            '',
-            'users',
-            null,
-            15
-        )->addItem(
-            'customer.grid',
-            'All customer',
-            $container->get(Router::class)->generateUrl('customer.grid'),
-            'list',
-            'customer',
-            0
-        );
+    "admin_menu",
+    function (array $items) {
+        return array_merge($items, [
+            [
+                "id" => "customer",
+                "sort_order" => 20,
+                "url" => null,
+                "title" => "Customer",
+                "parent_id" => null
+            ],
+            [
+                "id" => "customer_customers",
+                "sort_order" => 10,
+                "url" => \Similik\generate_url("customer.grid"),
+                "title" => "Customers",
+                "icon" => "users",
+                "parent_id" => "customer"
+            ]
+        ]);
     },
     0
 );

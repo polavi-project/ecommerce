@@ -29,13 +29,7 @@ class AdminLayoutMiddleware extends MiddlewareAbstract
             ["id"=> "container", "className" => "container-fluid"]
         );
 
-        $response->addWidget(
-            'admin_header',
-            'container',
-            0,
-            get_js_file_url("production/area.js", true),
-            ["id"=> "header", "className" => "header"]
-        );
+
         $response->addWidget(
             'admin_menu',
             'container',
@@ -53,7 +47,13 @@ class AdminLayoutMiddleware extends MiddlewareAbstract
                 "className"=> "content"
             ]
         );
-
+        $response->addWidget(
+            'admin_header',
+            'content',
+            0,
+            get_js_file_url("production/area.js", true),
+            ["id"=> "header", "className" => "header"]
+        );
         return $delegate;
     }
 }

@@ -1,5 +1,7 @@
 import A from "./a.js";
 
+
+
 export default function Navigation(props) {
     const getRootItems = () => {
         let result = props.items.filter(item => item.parent_id === null);
@@ -20,13 +22,15 @@ export default function Navigation(props) {
 
     const renderChildren = (id) => {
         let items = getChildrenItems(id);
-        return <ul className="uk-nav-sub">
+        if(items.length == 0)
+            return null;
+        return <ul className="list-unstyled">
             {
                 items.map((r,i) => {
-                    return <li key={i} className="uk-parent">
+                    return <li key={i} className="nav-item">
                         <A url={r.url}>
                             {
-                                r.icon && <span className="uk-margin-small-right" uk-icon={"icon: " + r.icon + "; ratio: 1"}></span>
+                                r.icon && <i className={"fas fa-"+ r.icon}></i>
                             }
                             {r.title}
                         </A>
@@ -40,25 +44,31 @@ export default function Navigation(props) {
 
     };
     let rootItems = getRootItems();
-    return <div>
-        <ul className="uk-nav-default uk-nav-parent-icon" uk-nav="multiple: true">
-            {
-                rootItems.map((r,i) => {
-                    return <li key={i} className="uk-parent">
+    return <ul className={"list-unstyled"}>
+        {
+            rootItems.map((r,i) => {
+                return <li key={i} className="nav-item">
+                    {   r.url &&
+                    <A url={r.url} className={"root-label"}>
                         {
-                            <A url={r.url}>
-                                {
-                                    r.icon && <span className="uk-margin-small-right" uk-icon={"icon: " + r.icon + "; ratio: 1"}></span>
-                                }
-                                {r.title}
-                            </A>
+                            r.icon && <i className={"fas fa-"+ r.icon}></i>
                         }
-                        {
-                            renderChildren(r.id)
-                        }
-                    </li>
-                })
-            }
-        </ul>
-    </div>
+                        {r.title}
+                    </A>
+                    }
+                    {   !r.url &&
+                    <span className={"root-label"}>
+                            {
+                                r.icon && <i className={"fas fa-"+ r.icon}></i>
+                            }
+                        {r.title}
+                        </span>
+                    }
+                    {
+                        renderChildren(r.id)
+                    }
+                </li>
+            })
+        }
+    </ul>
 }

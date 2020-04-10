@@ -15,22 +15,25 @@ use Similik\Services\Di\Container;
 use Similik\Services\Routing\Router;
 
 $eventDispatcher->addListener(
-        'before_execute_' . strtolower(str_replace('\\', '_', \Similik\Middleware\AdminNavigationMiddleware::class)),
-        function (\Similik\Services\Di\Container $container) {
-            $container->get(\Similik\Module\Cms\Services\NavigationManager::class)->addItem(
-                'order',
-                'Orders',
-                '',
-                'cart',
-                null,
-                0
-            )->addItem(
-                'order.grid',
-                'All orders',
-                $container->get(Router::class)->generateUrl('order.grid'),
-                null,
-                'order'
-            );
+        "admin_menu",
+        function (array $items) {
+            return array_merge($items, [
+                [
+                    "id" => "order",
+                    "sort_order" => 30,
+                    "url" => null,
+                    "title" => "Order",
+                    "parent_id" => null
+                ],
+                [
+                    "id" => "order_grid",
+                    "sort_order" => 10,
+                    "url" => \Similik\generate_url("order.grid"),
+                    "title" => "Orders",
+                    "icon" => "shopping-bag",
+                    "parent_id" => "order"
+                ]
+            ]);
         },
         0
 );

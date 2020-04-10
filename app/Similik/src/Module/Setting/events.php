@@ -12,40 +12,49 @@ use Similik\Services\Routing\Router;
 use Symfony\Component\Filesystem\Filesystem;
 
 $eventDispatcher->addListener(
-        'before_execute_' . strtolower(str_replace('\\', '_', \Similik\Middleware\AdminNavigationMiddleware::class)),
-        function (\Similik\Services\Di\Container $container) {
-            $container->get(\Similik\Module\Cms\Services\NavigationManager::class)->addItem(
-                'setting',
-                'Setting',
-                '',
-                'cog',
-                null,
-                30
-            )->addItem(
-                'setting.general',
-                'General',
-                $container->get(Router::class)->generateUrl('setting.general'),
-                'settings',
-                'setting'
-            )->addItem(
-                'setting.catalog',
-                'Catalog',
-                $container->get(Router::class)->generateUrl('setting.catalog'),
-                'thumbnails',
-                'setting'
-            )->addItem(
-                'setting.payment',
-                'Payment',
-                $container->get(Router::class)->generateUrl('setting.payment'),
-                'credit-card',
-                'setting'
-            )->addItem(
-                'setting.shipment',
-                'Shipment',
-                $container->get(Router::class)->generateUrl('setting.shipment'),
-                'cart',
-                'setting'
-            );
+        "admin_menu",
+        function (array $items) {
+            return array_merge($items, [
+                [
+                    "id" => "setting",
+                    "sort_order" => 60,
+                    "url" => null,
+                    "title" => "Setting",
+                    "parent_id" => null
+                ],
+                [
+                    "id" => "setting_general",
+                    "sort_order" => 10,
+                    "url" => \Similik\generate_url("setting.general"),
+                    "title" => "General",
+                    "icon" => "cogs",
+                    "parent_id" => "setting"
+                ],
+                [
+                    "id" => "setting_catalog",
+                    "sort_order" => 20,
+                    "url" => \Similik\generate_url("setting.catalog"),
+                    "title" => "Catalog",
+                    "icon" => "sliders-h",
+                    "parent_id" => "setting"
+                ],
+                [
+                    "id" => "setting_payment",
+                    "sort_order" => 30,
+                    "url" => \Similik\generate_url("setting.payment"),
+                    "title" => "Payment",
+                    "icon" => "money-check-alt",
+                    "parent_id" => "setting"
+                ],
+                [
+                    "id" => "setting_shipment",
+                    "sort_order" => 40,
+                    "url" => \Similik\generate_url("setting.shipment"),
+                    "title" => "Shipment",
+                    "icon" => "shipping-fast",
+                    "parent_id" => "setting"
+                ]
+            ]);
         },
         0
 );
