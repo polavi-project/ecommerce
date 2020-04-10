@@ -35,7 +35,7 @@ body{background-color: #E1E1E1!important;}
 .admin-navigation .menu-toggle{color: #fff}
 .admin-nav{height: calc(100vh - 110px); margin-top: 80px}
 .admin-nav li span, .admin-navigation li a{color: #E1E1E1; line-height: 40px;}
-.admin-nav .root-label{text-transform: uppercase; font-weight: bold; font-size: 11px}
+.admin-nav .root-label{text-transform: uppercase; font-weight: bold; font-size: 11px; color: #8f8f8f}
 .admin-nav .fas{padding-right: 10px; font-size: 15px}
 .admin-nav .simplebar-scrollbar:before{background-color: #058C8C}
 .nav-item > a, .nav-item .root-label{display: block; padding-left: 20px}
