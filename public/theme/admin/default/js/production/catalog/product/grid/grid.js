@@ -39,7 +39,7 @@ function IdColumnHeader({ filters, removeFilter, updateFilter, areaProps }) {
             ),
             React.createElement(
                 "div",
-                { className: "filter" },
+                { className: "filter range" },
                 React.createElement(
                     "div",
                     null,
@@ -104,7 +104,7 @@ function SkuColumnHeader({ filters, removeFilter, updateFilter, areaProps }) {
                 React.createElement(
                     "span",
                     null,
-                    "SKU"
+                    "Sku"
                 )
             ),
             React.createElement(
@@ -166,7 +166,7 @@ function PriceColumnHeader({ removeFilter, filters, updateFilter, areaProps }) {
             ),
             React.createElement(
                 "div",
-                { className: "filter" },
+                { className: "filter range" },
                 React.createElement(
                     "div",
                     null,
@@ -295,7 +295,7 @@ function QtyColumnHeader({ areaProps, filters, removeFilter, updateFilter }) {
             ),
             React.createElement(
                 "div",
-                { className: "filter" },
+                { className: "filter range" },
                 React.createElement(
                     "div",
                     null,
@@ -347,7 +347,7 @@ function ThumbColumnHeader({ areaProps }) {
                 React.createElement(
                     "span",
                     null,
-                    "Thumbnail"
+                    "Image"
                 )
             )
         )
@@ -484,10 +484,10 @@ export default function ProductGrid({ apiUrl, areaProps }) {
 
     return React.createElement(
         "div",
-        { className: "product-grid" },
+        { className: "product-grid mt-4" },
         React.createElement(
             "table",
-            { className: "table table-bordered" },
+            { className: "table table-bordered sticky" },
             React.createElement(
                 "thead",
                 null,

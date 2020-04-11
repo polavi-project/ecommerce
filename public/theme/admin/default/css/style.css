@@ -51,7 +51,20 @@ body{background-color: #E1E1E1!important;}
 
 /********* CONTENT *********/
 .page-title{padding: 13px 0}
-.content{min-height: calc(100vh - 100px)}
+.content{min-height: calc(100vh - 100px); padding-bottom: 20px}
 
+/********** BLOCK **********/
+.sml-block{background-color: #fff; padding: 20px; border-radius: 10px}
 /********** FOOTER **********/
 .footer{display: flex; justify-content: space-between; margin: 0 -20px; padding: 20px 20px 20px 20px; background-color: #fff;}
+
+/******** GRID *********/
+.filter{margin-top: 5px; display: table; width: -webkit-fill-available}
+table img{max-width: 50px}
+.table th.action-column{vertical-align: middle !important;}
+.range input{max-width: 60px}
+.filter div + div{margin-top: 5px}
+.table.sticky thead th {vertical-align: top; position: sticky; top: 60px; background-color: #fff}
+.table.sticky thead th:after{content: ''; height: 2px; background-color: #E1E1E1; position: absolute; bottom: -2px; left: 0; width: 100%}
+.table.sticky thead th:before{content: ''; height: 1px; background-color: #E1E1E1; position: absolute; top: -1px; left: 0; width: 100%}
+

@@ -10,23 +10,24 @@ export default function ActionColumnHeader({ areaProps }) {
 
     return React.createElement(
         'th',
-        { className: "column" },
+        { className: "column action-column" },
         React.createElement(
             'div',
-            { className: 'header' },
+            { className: 'table-header' },
             React.createElement(
                 'div',
                 { className: "title" },
-                React.createElement(
-                    'span',
-                    null,
-                    'Action'
-                )
+                React.createElement('span', null)
             ),
             React.createElement(
-                'a',
-                { onClick: () => onClick() },
-                'Clean filter'
+                'div',
+                { className: 'filter' },
+                React.createElement(
+                    'a',
+                    { onClick: () => onClick(), className: 'text-danger', title: 'Clear filter', href: 'javascript:void(0)' },
+                    React.createElement('i', { className: 'fa fa-filter' }),
+                    React.createElement('i', { className: 'fa fa-slash', style: { marginLeft: "-13px" } })
+                )
             )
         )
     );
