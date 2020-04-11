@@ -39,7 +39,7 @@ class SeoMiddleware extends MiddlewareAbstract
                     if(isset($result->data['seoInfo'])) {
                         $response->addWidget(
                             'product_edit_seo',
-                            'admin_product_edit_inner_right',
+                            'admin_product_edit_inner_left',
                             30,
                             get_js_file_url("production/catalog/product/edit/seo.js", true),
                             ["id"=>"product_edit_seo", "data" => $result->data['seoInfo']]
@@ -49,7 +49,7 @@ class SeoMiddleware extends MiddlewareAbstract
         else
             $response->addWidget(
                 'product_edit_seo',
-                'admin_product_edit_inner_right',
+                'admin_product_edit_inner_left',
                 30,
                 get_js_file_url("production/catalog/product/edit/seo.js", true),
                 ["id"=>"product_edit_seo"]

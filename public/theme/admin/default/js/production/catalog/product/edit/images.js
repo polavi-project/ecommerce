@@ -3,42 +3,41 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 import { Fetch } from "../../../../../../../../js/production/fetch.js";
 
 function Image(props) {
-    const isMainStyle = {
-        color: "blue"
-    };
-
     return React.createElement(
         "li",
-        { className: "uk-width-1-4" },
+        { className: "col-3" },
         React.createElement("img", { src: props.url }),
         React.createElement(
             "a",
             {
                 href: "#",
+                className: "text-danger",
                 onClick: e => {
                     e.preventDefault();props.removeImage(props.index);
                 } },
-            React.createElement("span", { "uk-icon": "trash" })
+            React.createElement("i", { className: "fas fa-trash-alt" })
         ),
-        props.isMain && React.createElement("span", { style: isMainStyle, "uk-icon": "star" }),
-        !props.isMain && React.createElement(
+        props.isMain ? React.createElement(
+            "a",
+            { href: "javascript:void(0)" },
+            React.createElement("i", { className: "fas fa-check-square" })
+        ) : React.createElement(
             "a",
             {
                 href: "#",
                 onClick: e => {
                     e.preventDefault();props.setMainImage(props.index);
                 } },
-            React.createElement("span", { "uk-icon": "star" })
+            React.createElement("i", { className: "fas fa-square" })
         ),
-        props.isMain && React.createElement("input", { type: "hidden", name: "main_image", value: props.path }),
-        !props.isMain && React.createElement("input", { type: "hidden", name: "images[]", value: props.path })
+        props.isMain ? React.createElement("input", { type: "hidden", name: "main_image", value: props.path }) : React.createElement("input", { type: "hidden", name: "images[]", value: props.path })
     );
 }
 
 function Images({ images, removeImage, setMainImage }) {
     return React.createElement(
         "ul",
-        { className: "uk-list uk-grid-small uk-grid" },
+        { className: "row product-upload-images list-unstyled" },
         images.map((f, i) => {
             return React.createElement(Image, _extends({
                 index: i }, f, {
@@ -77,35 +76,24 @@ function Upload(props) {
         null,
         React.createElement(
             "div",
-            null,
-            React.createElement("span", { "uk-icon": "image" }),
-            " ",
-            React.createElement(
-                "strong",
-                null,
-                "Images"
-            )
-        ),
-        React.createElement(
-            "div",
-            { className: "js-upload uk-placeholder uk-text-center" },
-            React.createElement("span", { "uk-icon": "icon: cloud-upload" }),
+            { className: "product-image-upload text-center" },
+            React.createElement("i", { className: "fas fa-upload" }),
             React.createElement(
                 "span",
-                { className: "uk-text-middle" },
+                { className: "align-middle" },
                 React.createElement(
                     "label",
                     { htmlFor: "product-image" },
                     React.createElement(
                         "a",
-                        { className: "uk-link" },
+                        null,
                         "Select files"
                     )
                 )
             ),
             React.createElement(
                 "div",
-                { "uk-form-custom": "true" },
+                { className: "invisible" },
                 React.createElement("input", { id: "product-image", type: "file", multiple: true, onChange: onChange })
             )
         )
@@ -137,7 +125,12 @@ export default function ImageUploadContainer(props) {
 
     return React.createElement(
         "div",
-        { className: "product-edit-image border-block" },
+        { className: "product-edit-image sml-block mt-4" },
+        React.createElement(
+            "div",
+            { className: "sml-block-title" },
+            "Images"
+        ),
         React.createElement(Upload, {
             addImage: addImage,
             uploadApi: props.uploadApi

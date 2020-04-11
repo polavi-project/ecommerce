@@ -26,6 +26,7 @@ body{background-color: #E1E1E1!important;}
 .similik-radio .fas, .similik-checkbox .fas{font-size: 16px; padding-right: 5px}
 .similik-radio label, .similik-checkbox label{cursor: pointer}
 .similik-switch .fas{color: #058C8C; font-size: 22px; cursor: pointer}
+.similik-switch .fas.fa-toggle-off{color: #E1E1E1}
 .field-validation-error{color: #dc3545}
 
 /******* NAVIGATION ********/
@@ -43,7 +44,7 @@ body{background-color: #E1E1E1!important;}
 .nav-item > a:hover{background-color: #E1E1E1; color: #181818}
 
 /******* HEADER *********/
-.header{margin: 0 -20px; padding: 19px 20px 3px 20px; background-color: #fff; position: sticky; top: 0}
+.header{margin: 0 -20px; padding: 19px 20px 3px 20px; background-color: #fff; position: sticky; top: 0; z-index: 1000}
 .admin-user-greeting{display: flex; justify-content: space-between}
 .admin-user-greeting .user-name{color: #058C8C}
 .admin-user-greeting .time{font-size: 9px}
@@ -55,6 +56,7 @@ body{background-color: #E1E1E1!important;}
 
 /********** BLOCK **********/
 .sml-block{background-color: #fff; padding: 20px; border-radius: 10px}
+.sml-block-title{font-size: 18px; margin-bottom: 20px; font-weight: 500}
 /********** FOOTER **********/
 .footer{display: flex; justify-content: space-between; margin: 0 -20px; padding: 20px 20px 20px 20px; background-color: #fff;}
 
@@ -67,4 +69,9 @@ table img{max-width: 50px}
 .table.sticky thead th {vertical-align: top; position: sticky; top: 60px; background-color: #fff}
 .table.sticky thead th:after{content: ''; height: 2px; background-color: #E1E1E1; position: absolute; bottom: -2px; left: 0; width: 100%}
 .table.sticky thead th:before{content: ''; height: 1px; background-color: #E1E1E1; position: absolute; top: -1px; left: 0; width: 100%}
+table .form-group{margin-bottom: 0px}
 
+/******** PRODUCT EDIT *********/
+.product-upload-images{margin-top: 20px}
+.product-upload-images img{max-width: 100px}
+.product-image-upload{border: 1px dotted #e1e1e1; padding-top: 20px}

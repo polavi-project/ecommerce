@@ -25,25 +25,20 @@ export default function Attributes(props) {
 
     return React.createElement(
         "div",
-        { className: "product-edit-attribute border-block" },
+        { className: "product-edit-attribute sml-block" },
         React.createElement(
             "div",
-            null,
-            React.createElement(
-                "strong",
-                null,
-                "Attribute"
-            )
+            { className: "sml-block-title" },
+            "Attribute"
         ),
         React.createElement(
             "div",
             null,
             React.createElement(
-                "span",
+                "p",
                 null,
                 "Attribute Group"
             ),
-            React.createElement("br", null),
             React.createElement(Select, {
                 name: "group_id",
                 formId: props.formId,
@@ -74,7 +69,7 @@ export default function Attributes(props) {
         ),
         React.createElement(
             "table",
-            { className: "uk-table uk-table-small" },
+            { className: "table table-bordered" },
             React.createElement(
                 "tbody",
                 null,

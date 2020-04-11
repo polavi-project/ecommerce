@@ -13,9 +13,9 @@ export default function ProductEditFormComponent(props) {
             _extends({ id: "product-edit-form" }, props),
             React.createElement(
                 "div",
-                { className: "uk-grid uk-grid-small" },
-                React.createElement(Area, { id: "admin_product_edit_inner_left", coreWidgets: [], className: "uk-width-1-2" }),
-                React.createElement(Area, { id: "admin_product_edit_inner_right", coreWidgets: [], className: "uk-width-1-2" })
+                { className: "row" },
+                React.createElement(Area, { id: "admin_product_edit_inner_left", coreWidgets: [], className: "col-6" }),
+                React.createElement(Area, { id: "admin_product_edit_inner_right", coreWidgets: [], className: "col-6" })
             )
         ),
         React.createElement(Area, { id: "admin_product_edit_after", widgets: [] })

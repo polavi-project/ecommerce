@@ -45,13 +45,8 @@ export default function General({ data }) {
             sort_order: 70,
             id: "status"
         }, {
-            component: Checkbox,
-            props: { id: 'statuss', formId: "product-edit-form", name: "statusss", label: "Status", options: [{ value: 0, text: 'Disabled' }, { value: 1, text: 'Enabled' }], isTranslateAble: false },
-            sort_order: 70,
-            id: "statusss"
-        }, {
-            component: Select,
-            props: { id: "manage_stock", formId: "product-edit-form", name: "manage_stock", type: "select", label: "Manage stock?", options: [{ value: 0, text: 'No' }, { value: 1, text: 'Yes' }], isTranslateAble: false },
+            component: Switch,
+            props: { id: "manage_stock", formId: "product-edit-form", name: "manage_stock", label: "Manage stock?", options: [{ value: 0, text: 'No' }, { value: 1, text: 'Yes' }], isTranslateAble: false },
             sort_order: 80,
             id: "manage_stock"
         }, {
@@ -60,8 +55,8 @@ export default function General({ data }) {
             sort_order: 90,
             id: "qty"
         }, {
-            component: Select,
-            props: { id: "stock_availability", formId: "product-edit-form", name: "stock_availability", type: "select", label: "Stock availability", options: [{ value: 0, text: 'Out of stock' }, { value: 1, text: 'In stock' }], validation_rules: ["notEmpty"], isTranslateAble: false },
+            component: Switch,
+            props: { id: "stock_availability", formId: "product-edit-form", name: "stock_availability", label: "Stock availability", options: [{ value: 0, text: 'Out of stock' }, { value: 1, text: 'In stock' }], validation_rules: ["notEmpty"], isTranslateAble: false },
             sort_order: 100,
             id: "stock_availability"
         }].filter(f => {
@@ -72,15 +67,11 @@ export default function General({ data }) {
 
     return React.createElement(
         "div",
-        { className: "product-edit-general border-block" },
+        { className: "product-edit-general sml-block" },
         React.createElement(
             "div",
-            null,
-            React.createElement(
-                "strong",
-                null,
-                "General"
-            )
+            { className: "sml-block-title" },
+            "General"
         ),
         React.createElement(Area, { id: "product-edit-general", coreWidgets: fields })
     );

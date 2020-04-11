@@ -25,19 +25,15 @@ export default function AdvancedPrice(props) {
     };
     return React.createElement(
         "div",
-        { className: "uk-overflow-auto border-block" },
+        { className: "sml-block mt-4" },
         React.createElement(
             "div",
-            { className: "group-form-title" },
-            React.createElement(
-                "strong",
-                null,
-                "Advance price"
-            )
+            { className: "sml-block-title" },
+            "Advance price"
         ),
         React.createElement(
             "table",
-            { className: "uk-table uk-table-divider uk-table-striped uk-table-small uk-table-justify" },
+            { className: "table table-bordered" },
             React.createElement(
                 "thead",
                 null,
@@ -61,17 +57,17 @@ export default function AdvancedPrice(props) {
                     ),
                     React.createElement(
                         "th",
-                        { className: "uk-table-shrink uk-width-1-2" },
+                        null,
                         "Active From"
                     ),
                     React.createElement(
                         "th",
-                        { className: "uk-table-shrink uk-width-1-2" },
+                        null,
                         "Active To"
                     ),
                     React.createElement(
                         "th",
-                        { className: "uk-table-shrink uk-width-1-2" },
+                        null,
                         "Action"
                     )
                 )
@@ -104,21 +100,21 @@ export default function AdvancedPrice(props) {
                         ),
                         React.createElement(
                             "td",
-                            { className: "uk-width-1-2" },
+                            null,
                             React.createElement(Datefield, { formId: props.formId, type: "text", name: 'advance_price[' + price.product_price_id + '][active_from]', value: price.active_from })
                         ),
                         React.createElement(
                             "td",
-                            { className: "uk-width-1-2" },
+                            null,
                             React.createElement(Datefield, { formId: props.formId, type: "text", name: 'advance_price[' + price.product_price_id + '][active_to]', value: price.active_to })
                         ),
                         React.createElement(
                             "td",
-                            null,
+                            { className: "align-middle" },
                             React.createElement(
                                 "a",
-                                { onClick: e => removePrice(e, index) },
-                                React.createElement("span", { "uk-icon": "minus-circle" })
+                                { onClick: e => removePrice(e, index), href: "javascript:void(0)", className: "text-danger" },
+                                React.createElement("i", { className: "fas fa-trash-alt" })
                             )
                         )
                     );
@@ -135,8 +131,8 @@ export default function AdvancedPrice(props) {
                         null,
                         React.createElement(
                             "a",
-                            { onClick: addPrice },
-                            React.createElement("span", { "uk-icon": "plus-circle" })
+                            { onClick: addPrice, href: "javascript:void(0)" },
+                            React.createElement("i", { className: "fas fa-plus" })
                         )
                     )
                 )
