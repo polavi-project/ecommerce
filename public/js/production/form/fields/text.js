@@ -40,7 +40,7 @@ export default function Text(props) {
     return React.createElement(
         "div",
         { className: "form-group" },
-        React.createElement(
+        props.label && React.createElement(
             "label",
             { htmlFor: props.name },
             props.label

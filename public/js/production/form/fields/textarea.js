@@ -38,7 +38,7 @@ export default function TextArea(props) {
     return React.createElement(
         "div",
         { className: "form-group" },
-        React.createElement(
+        props.label && React.createElement(
             "label",
             { htmlFor: props.name },
             props.label

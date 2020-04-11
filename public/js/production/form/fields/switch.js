@@ -39,9 +39,9 @@ export default function Switch(props) {
     return React.createElement(
         "div",
         { className: "form-group similik-switch" },
-        React.createElement(
+        props.label && React.createElement(
             "label",
-            null,
+            { htmlFor: props.name },
             props.label
         ),
         React.createElement("input", { type: "hidden", value: value, name: props.name }),

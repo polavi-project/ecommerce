@@ -36,7 +36,7 @@ export default function Password (props) {
     };
 
     return <div className="form-group">
-        <label htmlFor={props.name}>{props.label}</label>
+        {props.label && <label htmlFor={props.name}>{props.label}</label>}
         <input
             type="password"
             className="form-control"

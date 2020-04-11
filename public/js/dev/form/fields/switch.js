@@ -36,7 +36,7 @@ export default function Switch (props) {
     };
 
     return <div className="form-group similik-switch">
-        <label>{props.label}</label>
+        {props.label && <label htmlFor={props.name}>{props.label}</label>}
         <input type="hidden" value={value} name={props.name}/>
         <div>
             {value == 0 && <i className="fas fa-toggle-off" onClick={(e)=>onChange(e)}></i>}

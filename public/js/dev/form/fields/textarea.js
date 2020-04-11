@@ -34,7 +34,7 @@ export default function TextArea (props) {
     };
 
     return <div className="form-group">
-        <label htmlFor={props.name}>{props.label}</label>
+        {props.label && <label htmlFor={props.name}>{props.label}</label>}
         <textarea
             className={"form-control"}
             id={props.name}

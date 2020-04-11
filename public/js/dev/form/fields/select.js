@@ -35,7 +35,7 @@ export default function Select (props) {
     };
 
     return <div className="form-group">
-        <label htmlFor={props.name}>{props.label}</label>
+        {props.label && <label htmlFor={props.name}>{props.label}</label>}
         <select
             className={"form-control"}
             id={props.name}

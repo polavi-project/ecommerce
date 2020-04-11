@@ -39,7 +39,7 @@ export default function DateTime (props) {
     };
 
     return <div className="form-group">
-        <label htmlFor={props.name}>{props.label}</label>
+        {props.label && <label htmlFor={props.name}>{props.label}</label>}
         <input
             type="text"
             className="form-control"
