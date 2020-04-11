@@ -1,5 +1,5 @@
 .loading-bar{
-    background: #1e87f0;
+    background: #058C8C;
     height: 3px;
     display: block;
     position: fixed;
@@ -9,7 +9,8 @@
     -moz-transition: width 1.5s;
     -o-transition: width 1.5s;
     transition: width 1.5s;
-    width: 0%
+    width: 0%;
+    z-index: 1001;
 }
 
 
