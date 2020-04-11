@@ -30,7 +30,7 @@ export default function Grid({ id, defaultFilter = [] }) {
 
     return React.createElement(
         "div",
-        { className: "uk-overflow-auto" },
+        { className: "grid" },
         React.createElement(Area, {
             id: id,
             filters: filters,

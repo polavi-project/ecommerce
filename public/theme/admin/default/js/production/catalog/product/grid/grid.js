@@ -27,7 +27,7 @@ function IdColumnHeader({ filters, removeFilter, updateFilter, areaProps }) {
         { className: "column" },
         React.createElement(
             "div",
-            { className: "header id-header" },
+            { className: "table-header id-header" },
             React.createElement(
                 "div",
                 { className: "title" },
@@ -48,7 +48,7 @@ function IdColumnHeader({ filters, removeFilter, updateFilter, areaProps }) {
                         ref: filterFrom,
                         onKeyPress: e => onKeyPress(e),
                         placeholder: "From",
-                        className: "uk-input uk-form-small uk-form-width-small"
+                        className: "form-control"
                     })
                 ),
                 React.createElement(
@@ -59,7 +59,7 @@ function IdColumnHeader({ filters, removeFilter, updateFilter, areaProps }) {
                         ref: filterTo,
                         onKeyPress: e => onKeyPress(e),
                         placeholder: "To",
-                        className: "uk-input uk-form-small uk-form-width-small"
+                        className: "form-control"
                     })
                 )
             )
@@ -97,7 +97,7 @@ function SkuColumnHeader({ filters, removeFilter, updateFilter, areaProps }) {
         { className: "column" },
         React.createElement(
             "div",
-            { className: "header id-header" },
+            { className: "table-header id-header" },
             React.createElement(
                 "div",
                 { className: "title" },
@@ -115,7 +115,7 @@ function SkuColumnHeader({ filters, removeFilter, updateFilter, areaProps }) {
                     ref: filterInput,
                     onKeyPress: e => onKeyPress(e),
                     placeholder: "Sku",
-                    className: "uk-input uk-form-small uk-form-width-small"
+                    className: "form-control"
                 })
             )
         )
@@ -154,7 +154,7 @@ function PriceColumnHeader({ removeFilter, filters, updateFilter, areaProps }) {
         null,
         React.createElement(
             "div",
-            { className: "header price-header" },
+            { className: "table-header price-header" },
             React.createElement(
                 "div",
                 { className: "title" },
@@ -175,7 +175,7 @@ function PriceColumnHeader({ removeFilter, filters, updateFilter, areaProps }) {
                         ref: filterFrom,
                         onKeyPress: e => onKeyPress(e),
                         placeholder: "From",
-                        className: "uk-input uk-form-small uk-form-width-small"
+                        className: "form-control"
                     })
                 ),
                 React.createElement(
@@ -186,7 +186,7 @@ function PriceColumnHeader({ removeFilter, filters, updateFilter, areaProps }) {
                         ref: filterTo,
                         onKeyPress: e => onKeyPress(e),
                         placeholder: "To",
-                        className: "uk-input uk-form-small uk-form-width-small"
+                        className: "form-control"
                     })
                 )
             )
@@ -226,7 +226,7 @@ function NameColumnHeader({ filters, removeFilter, updateFilter, areaProps }) {
         { className: "column" },
         React.createElement(
             "div",
-            { className: "header name-header" },
+            { className: "table-header name-header" },
             React.createElement(
                 "div",
                 { className: "title" },
@@ -244,7 +244,7 @@ function NameColumnHeader({ filters, removeFilter, updateFilter, areaProps }) {
                     ref: filterInput,
                     onKeyPress: e => onKeyPress(e),
                     placeholder: "Product name",
-                    className: "uk-input uk-form-small uk-form-width-medium"
+                    className: "form-control"
                 })
             )
         )
@@ -283,7 +283,7 @@ function QtyColumnHeader({ areaProps, filters, removeFilter, updateFilter }) {
         { className: "column" },
         React.createElement(
             "div",
-            { className: "header name-header" },
+            { className: "table-header name-header" },
             React.createElement(
                 "div",
                 { className: "title" },
@@ -304,7 +304,7 @@ function QtyColumnHeader({ areaProps, filters, removeFilter, updateFilter }) {
                         ref: filterFrom,
                         onKeyPress: e => onKeyPress(e),
                         placeholder: "From",
-                        className: "uk-input uk-form-small uk-form-width-small"
+                        className: "form-control"
                     })
                 ),
                 React.createElement(
@@ -315,7 +315,7 @@ function QtyColumnHeader({ areaProps, filters, removeFilter, updateFilter }) {
                         ref: filterTo,
                         onKeyPress: e => onKeyPress(e),
                         placeholder: "To",
-                        className: "uk-input uk-form-small uk-form-width-small"
+                        className: "form-control"
                     })
                 )
             )
@@ -340,7 +340,7 @@ function ThumbColumnHeader({ areaProps }) {
         { className: "column" },
         React.createElement(
             "div",
-            { className: "header thumb-header" },
+            { className: "table-header thumb-header" },
             React.createElement(
                 "div",
                 { className: "title" },
@@ -386,7 +386,7 @@ function StatusColumnHeader({ areaProps, filters, updateFilter }) {
         { className: "column" },
         React.createElement(
             "div",
-            { className: "header status-header" },
+            { className: "table-header status-header" },
             React.createElement(
                 "div",
                 { className: "title" },
@@ -404,7 +404,7 @@ function StatusColumnHeader({ areaProps, filters, updateFilter }) {
                     {
                         ref: filterInput,
                         onChange: e => onChange(e),
-                        className: "uk-select uk-form-small uk-form-width-small"
+                        className: "form-control"
                     },
                     React.createElement(
                         "option",
@@ -484,10 +484,10 @@ export default function ProductGrid({ apiUrl, areaProps }) {
 
     return React.createElement(
         "div",
-        { className: "uk-overflow-auto" },
+        { className: "product-grid" },
         React.createElement(
             "table",
-            { className: "uk-table uk-table-small uk-table-divider" },
+            { className: "table table-bordered" },
             React.createElement(
                 "thead",
                 null,

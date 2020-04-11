@@ -37,6 +37,7 @@ class AdminLayoutMiddleware extends MiddlewareAbstract
             get_js_file_url("production/area.js", true),
             ["id"=> "menu", "className" => "admin-navigation"]
         );
+
         $response->addWidget(
             'admin_content',
             'container',
@@ -47,6 +48,7 @@ class AdminLayoutMiddleware extends MiddlewareAbstract
                 "className"=> "content-wrapper"
             ]
         );
+
         $response->addWidget(
             'admin_header',
             'content_wrapper',
@@ -54,6 +56,14 @@ class AdminLayoutMiddleware extends MiddlewareAbstract
             get_js_file_url("production/area.js", true),
             ["id"=> "header", "className" => "header"]
         );
+
+        $response->addWidget(
+            'dashboard_title',
+            'content',
+            0,
+            get_js_file_url("production/cms/title.js", true)
+        );
+
         $response->addWidget(
             'admin_content_inner',
             'content_wrapper',
@@ -61,6 +71,7 @@ class AdminLayoutMiddleware extends MiddlewareAbstract
             get_js_file_url("production/area.js", true),
             ["id"=> "content", "className" => "content"]
         );
+
         $response->addWidget(
             'admin_footer',
             'content_wrapper',

@@ -37,12 +37,6 @@ class GridMiddleware extends MiddlewareAbstract
         );
 
         $response->addWidget(
-            'product_grid_title',
-            'product_grid_container',
-            0, get_js_file_url("production/catalog/product/grid/title.js", true)
-        );
-        
-        $response->addWidget(
             'product_grid',
             'product_grid_container',
             20, get_js_file_url("production/catalog/product/grid/grid.js", true),

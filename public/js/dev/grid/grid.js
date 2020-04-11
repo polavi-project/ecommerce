@@ -35,7 +35,7 @@ export default function Grid({id, defaultFilter = []})
         setFilters(defaultFilter);
     };
 
-    return <div className={"uk-overflow-auto"}>
+    return <div className={"grid"}>
         <Area
             id={id}
             filters={filters}

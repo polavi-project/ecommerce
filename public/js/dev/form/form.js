@@ -68,7 +68,7 @@ function Form(props) {
         {props.children}
         {props.submitText !== null &&
         <div className="similik-form-button form-submit-button">
-            <button type="submit" className="uk-button uk-button-small uk-button-primary">
+            <button type="submit" className="btn btn-primary">
                 {props.submitText ? props.submitText : 'Submit'}
             </button>
         </div>

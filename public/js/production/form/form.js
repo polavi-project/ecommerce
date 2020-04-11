@@ -71,7 +71,7 @@ function Form(props) {
             { className: "similik-form-button form-submit-button" },
             React.createElement(
                 "button",
-                { type: "submit", className: "uk-button uk-button-small uk-button-primary" },
+                { type: "submit", className: "btn btn-primary" },
                 props.submitText ? props.submitText : 'Submit'
             )
         )
