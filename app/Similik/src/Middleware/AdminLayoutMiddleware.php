@@ -43,17 +43,31 @@ class AdminLayoutMiddleware extends MiddlewareAbstract
             20,
             get_js_file_url("production/area.js", true),
             [
-                "id"=> "content",
-                "className"=> "content"
+                "id"=> "content_wrapper",
+                "className"=> "content-wrapper"
             ]
         );
         $response->addWidget(
             'admin_header',
-            'content',
+            'content_wrapper',
             0,
             get_js_file_url("production/area.js", true),
             ["id"=> "header", "className" => "header"]
         );
+        $response->addWidget(
+            'admin_content_inner',
+            'content_wrapper',
+            10,
+            get_js_file_url("production/area.js", true),
+            ["id"=> "content", "className" => "content"]
+        );
+        $response->addWidget(
+            'admin_footer',
+            'content_wrapper',
+            20,
+            get_js_file_url("production/cms/footer.js", true)
+        );
+
         return $delegate;
     }
 }

@@ -79,8 +79,8 @@ class ResponseMiddleware extends MiddlewareAbstract
                     ->addScript(['src'=> get_js_file_url('production/simplebar.min.js', true), 'type'=>'text/javascript'], 10)
                     ->addLink(['rel'=>'stylesheet', 'href'=> get_css_file_url('simplebar.css', $request->isAdmin())])
                     ->addLink(['rel'=>'stylesheet', 'href'=> get_css_file_url('fontawesome/css/all.min.css', $request->isAdmin())])
-                    ->addLink(['rel'=>'stylesheet', 'href'=> get_css_file_url('style.css', $request->isAdmin())])
-                    ->addLink(['rel'=>'stylesheet', 'href'=> get_css_file_url('bootstrap.css', $request->isAdmin())]);
+                    ->addLink(['rel'=>'stylesheet', 'href'=> get_css_file_url('bootstrap.css', $request->isAdmin())])
+                    ->addLink(['rel'=>'stylesheet', 'href'=> get_css_file_url('style.css', $request->isAdmin())]);
 
             $response->setContent($this->renderHtml($response));
             $response->send($request->isAjax(), $response->getStatusCode());

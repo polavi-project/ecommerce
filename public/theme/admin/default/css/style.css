@@ -15,9 +15,10 @@
 
 
 /******* GLOBAL *******/
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6{font-weight: 400; line-height: 1.5}
 body .container-fluid{padding-left: 0px; padding-right: 0px}
 .wrapper > .container-fluid{display: flex}
-.content{padding-left: 20px; padding-right: 20px; flex-grow: 1;}
+.content-wrapper{padding-left: 20px; padding-right: 20px; flex-grow: 1;}
 body{background-color: #E1E1E1!important;}
 .font-color-primary{color: #058C8C}
 /******* FORM *******/
@@ -42,8 +43,14 @@ body{background-color: #E1E1E1!important;}
 .nav-item > a:hover{background-color: #E1E1E1; color: #181818}
 
 /******* HEADER *********/
-.header{margin: 0 -20px; padding: 20px 20px 5px 20px; background-color: #fff}
+.header{margin: 0 -20px; padding: 19px 20px 3px 20px; background-color: #fff; position: sticky; top: 0px}
 .admin-user-greeting{display: flex; justify-content: space-between}
 .admin-user-greeting .user-name{color: #058C8C}
 .admin-user-greeting .time{font-size: 9px}
 .admin-user-greeting .logout span{padding-right: 7px}
+
+/********* CONTENT *********/
+.page-title{padding: 13px 0px}
+.content{min-height: calc(100vh - 100px)}
+/********** FOOTER **********/
+.footer{display: flex; justify-content: space-between; margin: 0 -20px; padding: 20px 20px 20px 20px; background-color: #fff;}

@@ -28,9 +28,9 @@ class TitleMiddleware extends MiddlewareAbstract
             'dashboard_title',
             'content',
             0,
-            get_js_file_url("production/cms/dashboard/title.js", true),
+            get_js_file_url("production/cms/title.js", true),
             [
-                "h1" => "Dashboard"
+                "title" => "Dashboard"
             ]
         );
 
