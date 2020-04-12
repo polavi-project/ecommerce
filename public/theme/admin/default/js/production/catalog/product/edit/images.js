@@ -19,12 +19,13 @@ function Image(props) {
         ),
         props.isMain ? React.createElement(
             "a",
-            { href: "javascript:void(0)" },
+            { href: "javascript:void(0)", className: "pl-1" },
             React.createElement("i", { className: "fas fa-check-square" })
         ) : React.createElement(
             "a",
             {
                 href: "#",
+                className: "pl-1",
                 onClick: e => {
                     e.preventDefault();props.setMainImage(props.index);
                 } },

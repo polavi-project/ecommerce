@@ -66,10 +66,6 @@ class GeneralInfoMiddleware extends MiddlewareAbstract
                             sku
                             weight
                             status
-                            manage_stock
-                            tax_class
-                            qty
-                            stock_availability
                         }
                     }"
                 ])->then(function($result) use ($response) {

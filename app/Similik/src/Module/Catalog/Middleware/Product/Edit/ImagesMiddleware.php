@@ -49,8 +49,8 @@ class ImagesMiddleware extends MiddlewareAbstract
                     if(isset($result->data['productImages']) and $result->data['productImages']) {
                         $response->addWidget(
                             'product_edit_images',
-                            'admin_product_edit_inner_right',
-                            50,
+                            'admin_product_edit_inner_left',
+                            20,
                             get_js_file_url("production/catalog/product/edit/images.js", true),
                             array_merge(
                                 $result->data['productImages'],
@@ -64,8 +64,8 @@ class ImagesMiddleware extends MiddlewareAbstract
         else
             $response->addWidget(
                 'product_edit_images',
-                'admin_product_edit_inner_right',
-                50,
+                'admin_product_edit_inner_left',
+                20,
                 get_js_file_url("production/catalog/product/edit/images.js", true),
                 [
                     'uploadApi' =>generate_url('admin.graphql.api', ['type' => 'uploadMedia'])

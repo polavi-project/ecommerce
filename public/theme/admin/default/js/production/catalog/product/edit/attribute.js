@@ -34,13 +34,9 @@ export default function Attributes(props) {
         React.createElement(
             "div",
             null,
-            React.createElement(
-                "p",
-                null,
-                "Attribute Group"
-            ),
             React.createElement(Select, {
                 name: "group_id",
+                label: "Attribute groups",
                 formId: props.formId,
                 isTranslateAble: false,
                 value: props.selected_group === undefined ? parseInt(props.attributeGroups[0]['attribute_group_id']) : parseInt(props.selected_group),

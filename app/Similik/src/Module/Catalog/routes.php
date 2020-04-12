@@ -17,6 +17,7 @@ $productEditMiddleware = [
     \Similik\Module\Catalog\Middleware\Product\Edit\InitMiddleware::class,
     \Similik\Module\Catalog\Middleware\Product\Edit\FormMiddleware::class,
     \Similik\Module\Catalog\Middleware\Product\Edit\GeneralInfoMiddleware::class,
+    \Similik\Module\Catalog\Middleware\Product\Edit\InventoryMiddleware::class,
     \Similik\Module\Catalog\Middleware\Product\Edit\ImagesMiddleware::class,
     \Similik\Module\Catalog\Middleware\Product\Edit\SeoMiddleware::class,
     \Similik\Module\Catalog\Middleware\Product\Edit\PriceMiddleware::class,

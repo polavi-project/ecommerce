@@ -65,7 +65,7 @@ QUERY
                     $response->addWidget(
                         'product_edit_attributes',
                         'admin_product_edit_inner_right',
-                        5,
+                        10,
                         get_js_file_url("production/catalog/product/edit/attribute.js", true),
                         $props
                     );
@@ -107,7 +107,7 @@ QUERY
                     $response->addWidget(
                         'product_edit_attributes',
                         'admin_product_edit_inner_right',
-                        5,
+                        10,
                         get_js_file_url("production/catalog/product/edit/attribute.js", true),
                         $widget['props']
                     );
