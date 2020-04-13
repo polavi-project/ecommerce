@@ -62,9 +62,9 @@ export default function SaleStatistic() {
             )
         ),
         React.createElement(
-            Recharts.LineChart,
+            Recharts.BarChart,
             {
-                width: 1000,
+                width: 700,
                 height: 300,
                 data: data,
                 margin: {
@@ -76,8 +76,8 @@ export default function SaleStatistic() {
             React.createElement(Recharts.YAxis, null),
             React.createElement(Recharts.Tooltip, null),
             React.createElement(Recharts.Legend, null),
-            React.createElement(Recharts.Line, { type: 'monotone', dataKey: 'value', stroke: '#8884d8', activeDot: { r: 8 } }),
-            React.createElement(Recharts.Line, { type: 'monotone', dataKey: 'count', stroke: '#82ca9d', activeDot: { r: 8 } })
+            React.createElement(Recharts.Bar, { type: 'monotone', dataKey: 'value', fill: '#8884d8' }),
+            React.createElement(Recharts.Bar, { type: 'monotone', dataKey: 'count', fill: '#82ca9d' })
         )
     );
 }

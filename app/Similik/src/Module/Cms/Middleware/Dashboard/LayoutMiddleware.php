@@ -6,7 +6,7 @@
 
 declare(strict_types=1);
 
-namespace Similik\Module\Order\Middleware\Dashboard;
+namespace Similik\Module\Cms\Middleware\Dashboard;
 
 
 use function Similik\get_js_file_url;
@@ -14,16 +14,21 @@ use Similik\Middleware\MiddlewareAbstract;
 use Similik\Services\Http\Request;
 use Similik\Services\Http\Response;
 
-class StatisticMiddleware extends MiddlewareAbstract
+class LayoutMiddleware extends MiddlewareAbstract
 {
 
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
+        if($response->hasWidget('dashboard_layout'))
+            return $delegate;
+
         $response->addWidget(
-            'saleStatistic',
-            'admin_dashboard_middle_left',
+            'dashboard_layout',
+            'content',
             10,
-            get_js_file_url("production/order/dashboard/statistic.js", true)
+            get_js_file_url("production/cms/dashboard/layout.js", true)
         );
+
+        return $delegate;
     }
 }

@@ -51,6 +51,7 @@ $eventDispatcher->addListener(
     'register.dashboard.middleware',
     function (\Similik\Services\MiddlewareManager $middlewareManager) {
         $middlewareManager->registerMiddleware(\Similik\Module\Order\Middleware\Dashboard\StatisticMiddleware::class, 1);
+        $middlewareManager->registerMiddleware(\Similik\Module\Order\Middleware\Dashboard\BestSellersMiddleware::class, 1);
     },
     0
 );
@@ -132,6 +133,41 @@ $eventDispatcher->addListener(
                     }
 
                     return $result;
+                }
+            ],
+            'bestSellers' => [
+                'type' => Type::listOf($container->get(\Similik\Module\Catalog\Services\Type\ProductType::class)),
+                'description' => "Return list of best seller product",
+                'args' => [
+                    'limit' => Type::nonNull(Type::int()),
+                    'language' => Type::nonNull(Type::int())
+                ],
+                'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
+                    $p = \Similik\_mysql()->getTable('product')
+                        ->addFieldToSelect("*")
+                        ->addFieldToSelect("product.qty", "productQty")
+                        ->addFieldToSelect("COUNT(`order_item`.product_id)", "p.count")
+                        ->addFieldToSelect("SUM(`order_item`.qty)", "qty")
+                        ->leftJoin('product_description', null, [
+                            [
+                                'column'      => "product_description.language_id",
+                                'operator'    => "=",
+                                'value'       => $args['language'],
+                                'ao'          => 'and',
+                                'start_group' => null,
+                                'end_group'   => null
+                            ]
+                        ])
+                        ->leftJoin('order_item')
+                        ->where('order_item.order_item_id', "IS NOT", null)
+                        ->groupBy("`order_item`.product_id")
+                        ->fetchAllAssoc([
+                            "sort_by" => "`p.count`",
+                            "sort_order" => "DESC",
+                            "limit" => $args["limit"]
+                        ]);
+
+                    return $p;
                 }
             ]
         ];

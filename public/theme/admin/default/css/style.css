@@ -22,6 +22,9 @@ body .container-fluid{padding-left: 0px; padding-right: 0px}
 .content-wrapper{padding-left: 20px; padding-right: 20px; flex-grow: 1;}
 body{background-color: #E1E1E1!important;}
 .font-color-primary{color: #058C8C}
+.normal-font{font-size:13px; font-weight: normal; line-height: 1.5}
+.sml-flex{display: flex}
+.sml-flex-space-between{display: flex; justify-content: space-between}
 /******* FORM *******/
 .similik-radio input, .similik-checkbox input{display: none}
 .similik-radio .fas, .similik-checkbox .fas{font-size: 16px; padding-right: 5px}
@@ -76,7 +79,7 @@ table .form-group{margin-bottom: 0px}
 .product-upload-images{margin-top: 20px}
 .product-upload-images img{max-width: 100px}
 .product-image-upload{border: 1px dotted #e1e1e1; padding-top: 20px}
-.form-head{padding: 10px; border-radius: 5px; display: flex; justify-content: space-between; margin-bottom: 10px; background-color: #fff; position: sticky; top: 60px; z-index: 100}
+.form-head{padding: 10px 20px; border-radius: 5px; display: flex; justify-content: space-between; margin-bottom: 10px; background-color: #fff; position: sticky; top: 60px; z-index: 100}
 #product-edit-form .buttons button{margin-left: 20px}
 .child-align-middle:after{content: '';display: inline-block; height: 100%; vertical-align: middle; width: 0; }
 .form-head a{vertical-align: middle; display: inline-block;}

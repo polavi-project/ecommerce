@@ -115,6 +115,10 @@ class Processor extends \PDO
             $query .= "*";
         else {
             foreach ($fields as $field=>$alias) {
+                if($field == "*") {
+                    $query .= " {$field},";
+                    continue;
+                }
                 if(strpos($field, "(") !== false) {
                     if($alias == null)
                         $query .= " {$field},";

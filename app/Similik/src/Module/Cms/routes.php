@@ -9,6 +9,7 @@ declare(strict_types=1);
 /** @var \Similik\Services\Routing\Router $router */
 $router->addAdminRoute('dashboard', 'GET', '/', [
     \Similik\Module\Cms\Middleware\Dashboard\TitleMiddleware::class,
+    \Similik\Module\Cms\Middleware\Dashboard\LayoutMiddleware::class
 ]);
 
 $router->addAdminRoute('page.grid', 'GET', '/pages', [
