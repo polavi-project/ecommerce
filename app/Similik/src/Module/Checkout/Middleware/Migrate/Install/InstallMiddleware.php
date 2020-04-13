@@ -172,6 +172,7 @@ class InstallMiddleware extends MiddlewareAbstract
               PRIMARY KEY (`order_item_id`),
               KEY `FK_ORDER` (`order_item_order_id`),
               CONSTRAINT `FK_ORDER` FOREIGN KEY (`order_item_order_id`) REFERENCES `order` (`order_id`) ON DELETE CASCADE
+              CONSTRAINT `FK_ORDER_ITEM_PRODUCT` FOREIGN KEY (`product_id`) REFERENCES `product` (`product_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Order item'");
 
             //Create order_address table
