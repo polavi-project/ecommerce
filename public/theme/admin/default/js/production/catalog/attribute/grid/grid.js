@@ -555,6 +555,7 @@ function ActionColumnRow({ row }) {
             React.createElement(
                 "a",
                 { className: "text-danger",
+                    href: "javascript:void(0);",
                     onClick: () => {
                         if (window.confirm('Are you sure?')) Fetch(row.deleteUrl, false, 'GET');
                     } },
