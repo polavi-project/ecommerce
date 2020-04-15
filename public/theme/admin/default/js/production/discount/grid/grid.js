@@ -14,7 +14,7 @@ function IdColumnHeader({ areaProps }) {
         null,
         React.createElement(
             "div",
-            { className: "header id-header" },
+            { className: "table-header id-header" },
             React.createElement(
                 "div",
                 { className: "title" },
@@ -62,7 +62,7 @@ function CouponColumnHeader({ filters, removeFilter, updateFilter, areaProps }) 
         { className: "column" },
         React.createElement(
             "div",
-            { className: "header coupon-header" },
+            { className: "table-header coupon-header" },
             React.createElement(
                 "div",
                 { className: "title" },
@@ -80,7 +80,7 @@ function CouponColumnHeader({ filters, removeFilter, updateFilter, areaProps }) 
                     ref: filterInput,
                     onKeyPress: e => onKeyPress(e),
                     placeholder: "Coupon",
-                    className: "uk-input uk-form-small uk-form-width-small"
+                    className: "form-control"
                 })
             )
         )
@@ -117,7 +117,7 @@ function DescriptionColumnHeader({ filters, removeFilter, updateFilter, areaProp
         { className: "column" },
         React.createElement(
             "div",
-            { className: "header coupon-header" },
+            { className: "table-header coupon-header" },
             React.createElement(
                 "div",
                 { className: "title" },
@@ -135,7 +135,7 @@ function DescriptionColumnHeader({ filters, removeFilter, updateFilter, areaProp
                     ref: filterInput,
                     onKeyPress: e => onKeyPress(e),
                     placeholder: "Description",
-                    className: "uk-input uk-form-small uk-form-width-small"
+                    className: "form-control"
                 })
             )
         )
@@ -167,23 +167,24 @@ function ActionColumnHeader({ areaProps }) {
 
     return React.createElement(
         "th",
-        { className: "column" },
+        { className: "column action-column" },
         React.createElement(
             "div",
-            { className: "header" },
+            { className: "table-header" },
             React.createElement(
                 "div",
                 { className: "title" },
-                React.createElement(
-                    "span",
-                    null,
-                    "Action"
-                )
+                React.createElement("span", null)
             ),
             React.createElement(
-                "a",
-                { onClick: () => onClick() },
-                "Clean filter"
+                "div",
+                { className: "filter" },
+                React.createElement(
+                    "a",
+                    { onClick: () => onClick(), className: "text-danger", title: "Clear filter", href: "javascript:void(0)" },
+                    React.createElement("i", { className: "fa fa-filter" }),
+                    React.createElement("i", { className: "fa fa-slash", style: { marginLeft: "-13px" } })
+                )
             )
         )
     );
@@ -196,19 +197,23 @@ function ActionColumnRow({ row }) {
         React.createElement(
             "div",
             null,
-            React.createElement(A, { url: _.get(row, 'editUrl', ''), text: "Edit" }),
             React.createElement(
-                "span",
-                null,
-                " "
-            ),
+                A,
+                { url: row.editUrl },
+                React.createElement("i", { className: "fas fa-edit" })
+            )
+        ),
+        React.createElement(
+            "div",
+            null,
             React.createElement(
                 "a",
-                { className: "uk-link-muted",
+                { className: "text-danger",
+                    href: "javascript:void(0);",
                     onClick: () => {
                         if (window.confirm('Are you sure?')) Fetch(row.deleteUrl, false, 'GET');
                     } },
-                "Delete"
+                React.createElement("i", { className: "fas fa-trash-alt" })
             )
         )
     );
@@ -234,7 +239,7 @@ function StatusColumnHeader({ areaProps, filters, updateFilter }) {
         { className: "column" },
         React.createElement(
             "div",
-            { className: "header status-header" },
+            { className: "table-header status-header" },
             React.createElement(
                 "div",
                 { className: "title" },
@@ -252,7 +257,7 @@ function StatusColumnHeader({ areaProps, filters, updateFilter }) {
                     {
                         ref: filterInput,
                         onChange: e => onChange(e),
-                        className: "uk-select uk-form-small uk-form-width-small"
+                        className: "form-control"
                     },
                     React.createElement(
                         "option",
@@ -276,7 +281,7 @@ function StatusColumnRow({ row }) {
         null,
         React.createElement(
             "span",
-            { className: "uk-label uk-label-success" },
+            { className: "badge badge-success" },
             "Enable"
         )
     );else return React.createElement(
@@ -284,7 +289,7 @@ function StatusColumnRow({ row }) {
         null,
         React.createElement(
             "span",
-            { className: "uk-label uk-label-danger" },
+            { className: "badge badge-secondary" },
             "Disabled"
         )
     );
@@ -310,7 +315,7 @@ function FreeShippingColumnHeader({ areaProps, filters, updateFilter }) {
         { className: "column" },
         React.createElement(
             "div",
-            { className: "header status-header" },
+            { className: "table-header status-header" },
             React.createElement(
                 "div",
                 { className: "title" },
@@ -328,7 +333,7 @@ function FreeShippingColumnHeader({ areaProps, filters, updateFilter }) {
                     {
                         ref: filterInput,
                         onChange: e => onChange(e),
-                        className: "uk-select uk-form-small uk-form-width-small"
+                        className: "form-control"
                     },
                     React.createElement(
                         "option",
@@ -352,7 +357,7 @@ function FreeShippingColumnRow({ row }) {
         null,
         React.createElement(
             "span",
-            { className: "uk-label uk-label-success" },
+            { className: "badge badge-success" },
             "Yes"
         )
     );else return React.createElement(
@@ -360,7 +365,7 @@ function FreeShippingColumnRow({ row }) {
         null,
         React.createElement(
             "span",
-            { className: "uk-label uk-label-danger" },
+            { className: "badge badge-secondary" },
             "No"
         )
     );
@@ -408,10 +413,10 @@ export default function CouponGrid({ apiUrl, areaProps }) {
 
     return React.createElement(
         "div",
-        { className: "uk-overflow-auto" },
+        { className: "coupon-grid mt-4" },
         React.createElement(
             "table",
-            { className: "uk-table uk-table-small uk-table-divider" },
+            { className: "table table-bordered" },
             React.createElement(
                 "thead",
                 null,

@@ -38,13 +38,6 @@ class GridMiddleware extends MiddlewareAbstract
         );
 
         $response->addWidget(
-            'coupon_grid_title',
-            'coupon_grid_container',
-            0,
-            get_js_file_url("production/discount/grid/title.js", true)
-        );
-
-        $response->addWidget(
             'coupon-grid',
             'coupon_grid_container',
             20,
