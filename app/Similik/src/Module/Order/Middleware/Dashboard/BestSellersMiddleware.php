@@ -39,7 +39,7 @@ class BestSellersMiddleware extends MiddlewareAbstract
                 /**@var \GraphQL\Executor\ExecutionResult $result */
                 if(isset($result->data['bestSellers'])) {
                     $response->addWidget(
-                        'bestSellers',
+                        'best_sellers',
                         'admin_dashboard_middle_left',
                         20,
                         get_js_file_url("production/order/dashboard/best_sellers.js", true),
@@ -51,8 +51,7 @@ class BestSellersMiddleware extends MiddlewareAbstract
                 }
                 return $result;
             });
-        $promise->otherwise(function($reason) {
-            var_dump($reason);
-        });
+
+        return $delegate;
     }
 }

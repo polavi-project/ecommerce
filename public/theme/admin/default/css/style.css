@@ -83,3 +83,13 @@ table .form-group{margin-bottom: 0px}
 #product-edit-form .buttons button{margin-left: 20px}
 .child-align-middle:after{content: '';display: inline-block; height: 100%; vertical-align: middle; width: 0; }
 .form-head a{vertical-align: middle; display: inline-block;}
+
+/********* DASHBOARD *********/
+.sale-statistic-header a{color: #fff}
+.sale-statistic-header a:hover{color: #fff}
+.lifetime-sale{padding: 5px 20px;  color: #fff}
+.lifetime-sale .title{font-weight: bold; display: inline-block}
+.lifetime-sale table{margin-bottom: 0}
+.lifetime-sale table tr:first-child td{border-top: 0}
+.lifetime-sale table td:first-child{text-align: right}
+.lifetime-sale table td{vertical-align: middle; padding: 20px}

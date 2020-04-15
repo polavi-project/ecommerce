@@ -52,6 +52,8 @@ $eventDispatcher->addListener(
     function (\Similik\Services\MiddlewareManager $middlewareManager) {
         $middlewareManager->registerMiddleware(\Similik\Module\Order\Middleware\Dashboard\StatisticMiddleware::class, 1);
         $middlewareManager->registerMiddleware(\Similik\Module\Order\Middleware\Dashboard\BestSellersMiddleware::class, 1);
+        $middlewareManager->registerMiddleware(\Similik\Module\Order\Middleware\Dashboard\LifetimeSaleMiddleware::class, 1);
+        $middlewareManager->registerMiddleware(\Similik\Module\Order\Middleware\Dashboard\BestCustomersMiddleware::class, 1);
     },
     0
 );

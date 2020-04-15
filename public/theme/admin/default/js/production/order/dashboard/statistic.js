@@ -17,45 +17,42 @@ export default function SaleStatistic() {
     }, [period]);
     return React.createElement(
         'div',
-        { className: 'sale-statistic' },
+        { className: 'sale-statistic sml-block' },
         React.createElement(
             'div',
-            { className: 'sale-statistic-header uk-flex' },
+            { className: 'sale-statistic-header sml-block-title sml-flex-space-between' },
             React.createElement(
-                'h3',
+                'div',
                 null,
                 'Sale statistic'
             ),
             React.createElement(
                 'ul',
-                null,
+                { className: 'list-unstyled sml-flex-space-between' },
                 React.createElement(
                     'li',
-                    null,
+                    { className: 'pl-3' },
                     React.createElement(
-                        'label',
-                        null,
-                        React.createElement('input', { onChange: () => setPeriod('daily'), className: 'uk-radio', type: 'radio', checked: period === 'daily' }),
+                        'a',
+                        { onClick: () => setPeriod('daily'), className: period === 'daily' ? "btn btn-dark" : "btn btn-primary" },
                         ' Daily'
                     )
                 ),
                 React.createElement(
                     'li',
-                    null,
+                    { className: 'pl-3' },
                     React.createElement(
-                        'label',
-                        null,
-                        React.createElement('input', { onChange: () => setPeriod('weekly'), className: 'uk-radio', type: 'radio', checked: period === 'weekly' }),
+                        'a',
+                        { onClick: () => setPeriod('weekly'), className: period === 'weekly' ? "btn btn-dark" : "btn btn-primary" },
                         ' Weekly'
                     )
                 ),
                 React.createElement(
                     'li',
-                    null,
+                    { className: 'pl-3' },
                     React.createElement(
-                        'label',
-                        null,
-                        React.createElement('input', { onChange: () => setPeriod('monthly'), className: 'uk-radio', type: 'radio', checked: period === 'monthly' }),
+                        'a',
+                        { onClick: () => setPeriod('monthly'), className: period === 'monthly' ? "btn btn-dark" : "btn btn-primary" },
                         ' Monthly'
                     )
                 )
@@ -64,7 +61,7 @@ export default function SaleStatistic() {
         React.createElement(
             Recharts.BarChart,
             {
-                width: 700,
+                width: 660,
                 height: 300,
                 data: data,
                 margin: {
