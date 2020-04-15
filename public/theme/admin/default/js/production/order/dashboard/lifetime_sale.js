@@ -101,15 +101,15 @@ export default function LifetimeSale({ orders, total, completed_percentage, canc
                             { className: 'value' },
                             React.createElement(
                                 Recharts.PieChart,
-                                { width: 100, height: 100 },
+                                { width: 80, height: 80 },
                                 React.createElement(
                                     Recharts.Pie,
                                     {
                                         data: data,
-                                        cx: 50,
-                                        cy: 50,
+                                        cx: 30,
+                                        cy: 30,
                                         labelLine: false,
-                                        outerRadius: 40,
+                                        outerRadius: 35,
                                         fill: '#8884d8',
                                         dataKey: 'value'
                                     },
