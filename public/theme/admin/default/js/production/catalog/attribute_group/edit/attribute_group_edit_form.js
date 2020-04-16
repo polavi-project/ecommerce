@@ -4,6 +4,7 @@ import { Form } from "../../../../../../../../js/production/form/form.js";
 import Area from "../../../../../../../../js/production/area.js";
 import Text from "../../../../../../../../js/production/form/fields/text.js";
 import A from "../../../../../../../../js/production/a.js";
+import Checkbox from "../../../../../../../../js/production/form/fields/checkbox.js";
 
 function Attributes({ _attributes = [], _selectedAttributes = [] }) {
     return React.createElement(
@@ -26,24 +27,16 @@ function Attributes({ _attributes = [], _selectedAttributes = [] }) {
                 return React.createElement(
                     "li",
                     { key: attribute_id },
-                    React.createElement(
-                        "label",
-                        null,
-                        React.createElement("input", {
-                            className: "uk-checkbox",
-                            type: "checkbox",
-                            name: 'attributes[' + attribute_id + ']',
-                            value: attribute_id,
-                            defaultChecked: _selectedAttributes.findIndex(e => {
-                                return parseInt(e.attribute_id) === parseInt(attribute_id);
-                            }) !== -1
-                        }),
-                        React.createElement(
-                            "span",
-                            null,
-                            " " + attribute_name
-                        )
-                    )
+                    React.createElement(Checkbox, {
+                        className: "uk-checkbox",
+                        label: attribute_name,
+                        type: "checkbox",
+                        name: 'attributes[' + attribute_id + ']',
+                        value: attribute_id,
+                        isChecked: _selectedAttributes.findIndex(e => {
+                            return parseInt(e.attribute_id) === parseInt(attribute_id);
+                        }) !== -1
+                    })
                 );
             })
         )

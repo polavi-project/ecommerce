@@ -39,15 +39,6 @@ export default function Checkbox(props) {
     return React.createElement(
         "div",
         { className: "form-group similik-checkbox" },
-        props.label && React.createElement(
-            "div",
-            null,
-            React.createElement(
-                "label",
-                null,
-                props.label
-            )
-        ),
         React.createElement(
             "div",
             null,
@@ -59,6 +50,7 @@ export default function Checkbox(props) {
                     className: "uk-checkbox",
                     id: props.name,
                     name: props.name,
+                    value: props.value,
                     onChange: onChange,
                     disabled: isDisabled,
                     checked: isChecked

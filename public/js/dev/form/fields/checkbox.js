@@ -36,13 +36,13 @@ export default function Checkbox (props) {
     };
 
     return <div className="form-group similik-checkbox">
-        {props.label && <div><label>{props.label}</label></div>}
         <div>
             <label htmlFor={props.name}><input
                 type="checkbox"
                 className="uk-checkbox"
                 id={props.name}
                 name={props.name}
+                value={props.value}
                 onChange={onChange}
                 disabled={isDisabled}
                 checked={isChecked}
