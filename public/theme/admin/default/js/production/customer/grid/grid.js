@@ -397,7 +397,7 @@ export default function CustomerGrid({ apiUrl, areaProps, groups = [] }) {
         { className: "customer-grid mt-4" },
         React.createElement(
             "table",
-            { className: "table table-bordered" },
+            { className: "table table-bordered sticky" },
             React.createElement(
                 "thead",
                 null,

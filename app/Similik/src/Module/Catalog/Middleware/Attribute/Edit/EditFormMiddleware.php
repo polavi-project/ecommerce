@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Similik\Module\Catalog\Middleware\Attribute\Edit;
 
+use function Similik\create_mutable_var;
 use function Similik\generate_url;
 use function Similik\get_default_language_Id;
 use function Similik\get_js_file_url;
@@ -31,7 +32,7 @@ class EditFormMiddleware extends MiddlewareAbstract
             $this->getContainer()
             ->get(GraphqlExecutor::class)
             ->waitToExecute([
-                "query"=>"{attribute(id: {$request->attributes->get('id')})
+                "query"=> create_mutable_var("attribute_edit_query", "{attribute(id: {$request->attributes->get('id')})
                     {
                         attribute_id
                         attribute_code
@@ -46,7 +47,7 @@ class EditFormMiddleware extends MiddlewareAbstract
                             option_text
                         }
                     }
-                }"
+                }")
             ])
             ->then(function($result) use ($response, $request) {
                 /**@var \GraphQL\Executor\ExecutionResult $result */
@@ -58,7 +59,9 @@ class EditFormMiddleware extends MiddlewareAbstract
                         get_js_file_url("production/catalog/attribute/edit/attribute_edit_form.js", true),
                         [
                             "attribute" => $result->data['attribute'],
-                            "action" => generate_url('attribute.save', ['id'=>$request->attributes->getInt('id', null)])
+                            "action" => generate_url('attribute.save', ['id'=>$request->attributes->getInt('id', null)]),
+                            "listUrl" => generate_url('attribute.grid'),
+                            "cancelUrl" => $request->attributes->get('id') ? generate_url('attribute.edit', ['id' => $request->attributes->get('id')]) : generate_url('attribute.create')
                         ]
                     );
                 }
@@ -70,7 +73,9 @@ class EditFormMiddleware extends MiddlewareAbstract
                 10,
                 get_js_file_url("production/catalog/attribute/edit/attribute_edit_form.js", true),
                 [
-                    "action" => generate_url('attribute.save')
+                    "action" => generate_url('attribute.save'),
+                    "listUrl" => generate_url('attribute.grid'),
+                    "cancelUrl" => $request->attributes->get('id') ? generate_url('attribute.edit', ['id' => $request->attributes->get('id')]) : generate_url('attribute.create')
                 ]
             );
         return $delegate;

@@ -351,7 +351,7 @@ export default function WidgetGrid({ apiUrl, types, areaProps }) {
         { className: "cms-widget-grid mt-4" },
         React.createElement(
             "table",
-            { className: "table table-bordered" },
+            { className: "table table-bordered sticky" },
             React.createElement(
                 "thead",
                 null,

@@ -2,6 +2,7 @@ import Area from "../../../../../../../../js/production/area.js";
 import Text from "../../../../../../../../js/production/form/fields/text.js";
 import Select from "../../../../../../../../js/production/form/fields/select.js";
 import Tinycme from "../../../../../../../../js/production/form/fields/tinycme.js";
+import Switch from "../../../../../../../../js/production/form/fields/switch.js";
 
 let fields = [{
     component: Text,
@@ -9,24 +10,24 @@ let fields = [{
     sort_order: 10,
     id: "name"
 }, {
+    component: Switch,
+    props: { id: 'status', formId: "category-edit-form", name: "status", label: "Status", isTranslateAble: false, validation_rules: ["notEmpty"] },
+    sort_order: 20,
+    id: "status"
+}, {
     component: Tinycme,
     props: { id: 'description', formId: "category-edit-form", name: "description", label: "Description" },
     sort_order: 30,
     id: "description"
 }, {
-    component: Select,
-    props: { id: 'status', formId: "category-edit-form", name: "status", label: "Status", options: [{ value: 0, text: 'Disabled' }, { value: 1, text: 'Enabled' }], isTranslateAble: false, validation_rules: ["notEmpty"] },
-    sort_order: 70,
-    id: "status"
-}, {
-    component: Select,
-    props: { id: "include_in_nav", formId: "category-edit-form", name: "include_in_nav", label: "Include in navigation ?", options: [{ value: 0, text: 'No' }, { value: 1, text: 'Yes' }], isTranslateAble: false, validation_rules: ["notEmpty"] },
-    sort_order: 80,
+    component: Switch,
+    props: { id: "include_in_nav", formId: "category-edit-form", name: "include_in_nav", label: "Include in navigation ?", isTranslateAble: false, validation_rules: ["notEmpty"] },
+    sort_order: 40,
     id: "include_in_nav"
 }, {
     component: Text,
     props: { id: "position", formId: "category-edit-form", name: "position", type: "text", label: "Position", validation_rules: ["integer"], isTranslateAble: false },
-    sort_order: 90,
+    sort_order: 50,
     id: "position"
 }];
 
@@ -40,15 +41,11 @@ export default function General({ data }) {
     });
     return React.createElement(
         "div",
-        { className: "category-edit-general" },
+        { className: "category-edit-general sml-block" },
         React.createElement(
             "div",
-            null,
-            React.createElement(
-                "strong",
-                null,
-                "General"
-            )
+            { className: "sml-block-title" },
+            "General"
         ),
         React.createElement(Area, { id: "category-edit-general", coreWidgets: fields })
     );

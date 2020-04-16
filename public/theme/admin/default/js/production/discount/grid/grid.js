@@ -416,7 +416,7 @@ export default function CouponGrid({ apiUrl, areaProps }) {
         { className: "coupon-grid mt-4" },
         React.createElement(
             "table",
-            { className: "table table-bordered" },
+            { className: "table table-bordered sticky" },
             React.createElement(
                 "thead",
                 null,

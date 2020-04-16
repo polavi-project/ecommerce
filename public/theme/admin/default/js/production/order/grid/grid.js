@@ -502,7 +502,7 @@ export default function OrderGrid({ apiUrl, areaProps }) {
         { className: "order-grid mt-4" },
         React.createElement(
             "table",
-            { className: "table table-bordered" },
+            { className: "table table-bordered sticky" },
             React.createElement(
                 "thead",
                 null,

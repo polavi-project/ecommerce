@@ -81,7 +81,7 @@ table .form-group{margin-bottom: 0px}
 .product-upload-images img{max-width: 100px}
 .product-image-upload{border: 1px dotted #e1e1e1; padding-top: 20px}
 .form-head{padding: 10px 20px; border-radius: 5px; display: flex; justify-content: space-between; margin-bottom: 10px; background-color: #fff; position: sticky; top: 60px; z-index: 100}
-#product-edit-form .buttons button{margin-left: 20px}
+.form-head .buttons button{margin-left: 10px}
 .child-align-middle:after{content: '';display: inline-block; height: 100%; vertical-align: middle; width: 0; }
 .form-head a{vertical-align: middle; display: inline-block;}
 

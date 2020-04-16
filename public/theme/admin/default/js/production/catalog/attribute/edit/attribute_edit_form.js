@@ -4,6 +4,8 @@ import { Form } from "../../../../../../../../js/production/form/form.js";
 import Area from "../../../../../../../../js/production/area.js";
 import Text from "../../../../../../../../js/production/form/fields/text.js";
 import Select from "../../../../../../../../js/production/form/fields/select.js";
+import Switch from "../../../../../../../../js/production/form/fields/switch.js";
+import A from "../../../../../../../../js/production/a.js";
 
 function Type(props) {
     const changeType = e => {
@@ -38,14 +40,14 @@ function Options({ _options = [] }) {
             "div",
             { className: "group-form-title" },
             React.createElement(
-                "strong",
+                "h5",
                 null,
                 "Options"
             )
         ),
         React.createElement(
             "table",
-            { className: "uk-table uk-table-small" },
+            { className: "table table-bordered" },
             React.createElement(
                 "thead",
                 null,
@@ -83,7 +85,7 @@ function Options({ _options = [] }) {
                             React.createElement(
                                 "a",
                                 { href: "#", onClick: e => removeOption(index, e) },
-                                React.createElement("span", { "uk-icon": "minus-circle" })
+                                React.createElement("i", { className: "fas fa-trash-alt" })
                             )
                         )
                     );
@@ -96,7 +98,7 @@ function Options({ _options = [] }) {
             React.createElement(
                 "a",
                 { href: "#", onClick: e => addOption(e) },
-                React.createElement("span", { "uk-icon": "plus-circle" })
+                React.createElement("i", { className: "fas fa-plus-circle" })
             )
         )
     );
@@ -116,22 +118,22 @@ export default function AttributeEditForm(props) {
             id: "attribute_code"
         }, {
             component: Type,
-            props: { id: 'type', formId: "attribute-edit-form", name: "type", label: "Type", options: [{ value: 'text', text: 'Text' }, { value: 'textarea', text: 'Textarea' }, { value: 'select', text: 'Select' }, { value: 'multiselect', text: 'Multi select' }, { value: 'date', text: 'Date' }] },
+            props: { id: 'type', formId: "attribute-edit-form", name: "type", label: "Type", options: [{ value: 'text', text: 'Text' }, { value: 'textarea', text: 'Textarea' }, { value: 'select', text: 'Select' }, { value: 'multiselect', text: 'Multi select' }, { value: 'date', text: 'Date' }], validation_rules: ["notEmpty"] },
             sort_order: 30,
             id: "type"
         }, {
-            component: Select,
-            props: { id: "is_required", formId: "attribute-edit-form", name: "is_required", label: "Is required?", options: [{ value: 0, text: 'No' }, { value: 1, text: 'Yes' }] },
+            component: Switch,
+            props: { id: "is_required", formId: "attribute-edit-form", name: "is_required", label: "Is required?" },
             sort_order: 40,
             id: "is_required"
         }, {
-            component: Select,
-            props: { id: "display_on_frontend", formId: "attribute-edit-form", name: "display_on_frontend", label: "Show to customer?", options: [{ value: 0, text: 'No' }, { value: 1, text: 'Yes' }] },
+            component: Switch,
+            props: { id: "display_on_frontend", formId: "attribute-edit-form", name: "display_on_frontend", label: "Show to customer?" },
             sort_order: 50,
             id: "display_on_frontend"
         }, {
-            component: Select,
-            props: { id: "is_filterable", formId: "attribute-edit-form", name: "is_filterable", label: "Filterable?", options: [{ value: 0, text: 'No' }, { value: 1, text: 'Yes' }] },
+            component: Switch,
+            props: { id: "is_filterable", formId: "attribute-edit-form", name: "is_filterable", label: "Filterable?" },
             sort_order: 55,
             id: "is_filterable"
         }, {
@@ -150,37 +152,61 @@ export default function AttributeEditForm(props) {
     return React.createElement(
         "div",
         { className: "attribute-edit-container" },
-        _.get(props, 'attribute.attribute_id') && React.createElement(
-            "h2",
-            null,
-            "Edit ",
-            _.get(props, 'attribute.attribute_name'),
-            " attribute"
-        ),
-        _.get(props, 'attribute.attribute_id', null) === null && React.createElement(
-            "h2",
-            null,
-            "Add new attribute"
-        ),
         React.createElement(Area, { id: "admin_attribute_edit_before", widgets: [] }),
         React.createElement(
             Form,
-            _extends({ id: "attribute-edit-form" }, props),
+            _extends({ id: "attribute-edit-form" }, props, { submitText: null }),
             React.createElement(
                 "div",
-                { className: "uk-grid uk-grid-small" },
+                { className: "form-head sticky" },
                 React.createElement(
                     "div",
-                    { className: "uk-width-1-2" },
-                    React.createElement(Area, { id: "admin_attribute_edit_inner_left",
-                        setType: setType,
-                        coreWidgets: fields
-                    })
+                    { className: "child-align-middle" },
+                    React.createElement(
+                        A,
+                        { url: props.listUrl, className: "" },
+                        React.createElement("i", { className: "fas fa-arrow-left" }),
+                        React.createElement(
+                            "span",
+                            { className: "pl-1" },
+                            "Attribute list"
+                        )
+                    )
                 ),
-                (type == 'select' || type == 'multiselect') && React.createElement(
+                React.createElement(
                     "div",
-                    { className: "uk-width-1-2" },
-                    React.createElement(Options, { _options: _.get(props, 'attribute.options', []) })
+                    { className: "buttons" },
+                    React.createElement(
+                        A,
+                        { className: "btn btn-danger", url: props.cancelUrl },
+                        "Cancel"
+                    ),
+                    React.createElement(
+                        "button",
+                        { type: "submit", className: "btn btn-primary" },
+                        "Submit"
+                    )
+                )
+            ),
+            React.createElement(
+                "div",
+                { className: "sml-block" },
+                React.createElement(
+                    "div",
+                    { className: "row" },
+                    React.createElement(
+                        "div",
+                        { className: "col-6" },
+                        React.createElement(Area, { id: "admin_attribute_edit_inner_left",
+                            setType: setType,
+                            coreWidgets: fields
+                        })
+                    ),
+                    (type == 'select' || type == 'multiselect') && React.createElement(
+                        "div",
+                        { className: "col-6" },
+                        React.createElement(Options, { _options: _.get(props, 'attribute.options', []) })
+                    )
                 )
             )
         ),
