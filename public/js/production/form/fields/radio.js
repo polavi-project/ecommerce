@@ -9,6 +9,10 @@ export default function Radio(props) {
     const [isDisabled, setIsDisabled] = React.useState(false);
 
     React.useEffect(() => {
+        PubSub.publishSync(FORM_FIELD_UPDATED, { name: props.name, value });
+    });
+
+    React.useEffect(() => {
         PubSub.publishSync(FORM_FIELD_CREATED, _extends({}, props));
         let tokenOne = PubSub.subscribe(FORM_VALIDATED, function (message, data) {
             if (data.formId === props.formId) {
