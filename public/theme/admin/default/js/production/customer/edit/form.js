@@ -6,7 +6,7 @@ import Text from "../../../../../../../js/production/form/fields/text.js";
 import Password from "../../../../../../../js/production/form/fields/password.js";
 import { Fetch } from "../../../../../../../js/production/fetch.js";
 import { ADD_ALERT } from "../../../../../../../js/production/event-types.js";
-import Select from "../../../../../../../js/production/form/fields/select.js";
+import Switch from "../../../../../../../js/production/form/fields/switch.js";
 
 function Group({ group, selectGroup, removeGroup, updateGroup }) {
     const [onEdit, setOnEdit] = React.useState(false);
@@ -135,7 +135,7 @@ function Groups({ _groups, _selectedGroup }) {
         ),
         React.createElement(
             "table",
-            { className: "uk-table-small uk-table" },
+            { className: "table table-bordered" },
             React.createElement(
                 "tbody",
                 null,
@@ -172,89 +172,88 @@ function CustomerInfo(props) {
     const action = ReactRedux.useSelector(state => _.get(state, 'appState.graphqlApi'));
     return React.createElement(
         "div",
-        { className: "uk-width-1-2" },
+        { className: "col-6" },
         React.createElement(
             "div",
-            null,
+            { className: "sml-block" },
             React.createElement(
-                "h2",
-                null,
-                "Customer edit"
-            )
-        ),
-        React.createElement(
-            Form,
-            _extends({}, props, {
-                id: "customer-edit-form",
-                action: action,
-                onComplete: response => {
-                    if (_.get(response, 'payload.data.updateCustomer.status') === true) {
-                        location.reload();
-                    } else {
-                        dispatch({ 'type': ADD_ALERT, 'payload': { alerts: [{ id: "customer_update_error", message: _.get(response, 'payload.data.updateCustomer.message', 'Something wrong, please try again'), type: "error" }] } });
+                "div",
+                { className: "sml-block-title" },
+                "General information"
+            ),
+            React.createElement(
+                Form,
+                _extends({}, props, {
+                    id: "customer-edit-form",
+                    action: action,
+                    onComplete: response => {
+                        if (_.get(response, 'payload.data.updateCustomer.status') === true) {
+                            location.reload();
+                        } else {
+                            dispatch({ 'type': ADD_ALERT, 'payload': { alerts: [{ id: "customer_update_error", message: _.get(response, 'payload.data.updateCustomer.message', 'Something wrong, please try again'), type: "error" }] } });
+                        }
                     }
-                }
-            }),
-            React.createElement("input", { type: "hidden", name: "variables[customer][customer_id]", value: props.customer.customer_id, readOnly: true }),
-            React.createElement("input", { type: "text", name: "query", value: "mutation UpdateCustomer($customer: updateCustomerInput!) { updateCustomer (customer: $customer) {status message}}", readOnly: true, style: { display: 'none' } }),
-            React.createElement(Area, { id: "admin_customer_edit_inner", coreWidgets: [{
-                    'component': Text,
-                    'props': {
-                        name: "variables[customer][full_name]",
-                        value: props.customer.full_name,
-                        formId: "customer-edit-form",
-                        label: "Full name",
-                        validation_rules: ['notEmpty']
-                    },
-                    'sort_order': 10,
-                    'id': 'full_name'
-                }, {
-                    'component': Text,
-                    'props': {
-                        name: "variables[customer][email]",
-                        value: props.customer.email,
-                        formId: "customer-edit-form",
-                        label: "Email",
-                        validation_rules: ['notEmpty', 'email']
-                    },
-                    'sort_order': 20,
-                    'id': 'email'
-                }, {
-                    'component': Select,
-                    'props': {
-                        name: "variables[customer][status]",
-                        value: props.customer.status,
-                        formId: "customer-edit-form",
-                        label: "Is enabled?",
-                        options: [{ value: 1, text: 'Yes' }, { value: 0, text: 'No' }],
-                        validation_rules: ['notEmpty']
-                    },
-                    'sort_order': 25,
-                    'id': 'status'
-                }, {
-                    'component': Groups,
-                    'props': { _groups: props.groups, _selectedGroup: props.customer.group_id },
-                    'sort_order': 30,
-                    'id': 'group'
-                }, {
-                    'component': Password,
-                    'props': {
-                        name: "variables[customer][password]",
-                        value: "",
-                        formId: "customer-edit-form",
-                        label: "New password",
-                        validation_rules: []
-                    },
-                    'sort_order': 50,
-                    'id': 'password'
-                }] })
+                }),
+                React.createElement("input", { type: "hidden", name: "variables[customer][customer_id]", value: props.customer.customer_id, readOnly: true }),
+                React.createElement("input", { type: "text", name: "query", value: "mutation UpdateCustomer($customer: updateCustomerInput!) { updateCustomer (customer: $customer) {status message}}", readOnly: true, style: { display: 'none' } }),
+                React.createElement(Area, { id: "admin_customer_edit_inner", coreWidgets: [{
+                        'component': Text,
+                        'props': {
+                            name: "variables[customer][full_name]",
+                            value: props.customer.full_name,
+                            formId: "customer-edit-form",
+                            label: "Full name",
+                            validation_rules: ['notEmpty']
+                        },
+                        'sort_order': 10,
+                        'id': 'full_name'
+                    }, {
+                        'component': Text,
+                        'props': {
+                            name: "variables[customer][email]",
+                            value: props.customer.email,
+                            formId: "customer-edit-form",
+                            label: "Email",
+                            validation_rules: ['notEmpty', 'email']
+                        },
+                        'sort_order': 20,
+                        'id': 'email'
+                    }, {
+                        'component': Switch,
+                        'props': {
+                            name: "variables[customer][status]",
+                            value: props.customer.status,
+                            formId: "customer-edit-form",
+                            label: "Is enabled?",
+                            validation_rules: ['notEmpty']
+                        },
+                        'sort_order': 25,
+                        'id': 'status'
+                    }, {
+                        'component': Groups,
+                        'props': { _groups: props.groups, _selectedGroup: props.customer.group_id },
+                        'sort_order': 30,
+                        'id': 'group'
+                    }, {
+                        'component': Password,
+                        'props': {
+                            name: "variables[customer][password]",
+                            value: "",
+                            formId: "customer-edit-form",
+                            label: "New password",
+                            validation_rules: []
+                        },
+                        'sort_order': 50,
+                        'id': 'password'
+                    }] })
+            )
         )
     );
 }
 export default function CustomerEditFormComponent(props) {
     return React.createElement(Area, {
         id: "admin_customer_edit_inner",
-        className: "uk-grid uk-grid-small",
+        className: "row",
         coreWidgets: [{
             component: CustomerInfo,
             props: _extends({}, props),
