@@ -33,6 +33,7 @@ export default function Checkbox (props) {
         if(isDisabled === true)
             return false;
         setChecked(e.target.checked);
+        if (props.handler) props.handler.call(window, e, props);
     };
 
     return <div className="form-group similik-checkbox">

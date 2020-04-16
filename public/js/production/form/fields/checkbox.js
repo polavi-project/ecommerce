@@ -34,6 +34,7 @@ export default function Checkbox(props) {
     const onChange = e => {
         if (isDisabled === true) return false;
         setChecked(e.target.checked);
+        if (props.handler) props.handler.call(window, e, props);
     };
 
     return React.createElement(
