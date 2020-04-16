@@ -3,7 +3,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 import { Form } from "../../../../../../../../js/production/form/form.js";
 import Area from "../../../../../../../../js/production/area.js";
 import Text from "../../../../../../../../js/production/form/fields/text.js";
-import Checkbox from "../../../../../../../../js/production/form/fields/checkbox.js";
+import A from "../../../../../../../../js/production/a.js";
 
 function Attributes({ _attributes = [], _selectedAttributes = [] }) {
     return React.createElement(
@@ -13,14 +13,14 @@ function Attributes({ _attributes = [], _selectedAttributes = [] }) {
             "div",
             { className: "group-form-title" },
             React.createElement(
-                "strong",
+                "h5",
                 null,
                 "Attributes"
             )
         ),
         React.createElement(
             "ul",
-            { className: "uk-list" },
+            { className: "list-unstyled" },
             _attributes.map(a => {
                 let { attribute_id, attribute_name } = a;
                 return React.createElement(
@@ -64,21 +64,57 @@ export default function AttributeGroupEditForm(props) {
         React.createElement(Area, { id: "admin_attribute_group_edit_before", widgets: [] }),
         React.createElement(
             Form,
-            _extends({ id: "attribute-group-edit-form" }, props),
+            _extends({ id: "attribute-group-edit-form" }, props, { submitText: null }),
             React.createElement(
                 "div",
-                { className: "uk-grid uk-grid-small" },
+                { className: "form-head sticky" },
                 React.createElement(
                     "div",
-                    { className: "uk-width-1-2" },
-                    React.createElement(Area, { id: "admin_attribute_group_edit_inner_left",
-                        coreWidgets: fields
-                    })
+                    { className: "child-align-middle" },
+                    React.createElement(
+                        A,
+                        { url: props.listUrl, className: "" },
+                        React.createElement("i", { className: "fas fa-arrow-left" }),
+                        React.createElement(
+                            "span",
+                            { className: "pl-1" },
+                            "Attribute group list"
+                        )
+                    )
                 ),
                 React.createElement(
                     "div",
-                    { className: "uk-width-1-2" },
-                    React.createElement(Attributes, { _attributes: _.get(props, 'attributes', []), _selectedAttributes: _.get(props, 'group.attributes', []) })
+                    { className: "buttons" },
+                    React.createElement(
+                        A,
+                        { className: "btn btn-danger", url: props.cancelUrl },
+                        "Cancel"
+                    ),
+                    React.createElement(
+                        "button",
+                        { type: "submit", className: "btn btn-primary" },
+                        "Submit"
+                    )
+                )
+            ),
+            React.createElement(
+                "div",
+                { className: "sml-block" },
+                React.createElement(
+                    "div",
+                    { className: "row" },
+                    React.createElement(
+                        "div",
+                        { className: "col-6" },
+                        React.createElement(Area, { id: "admin_attribute_group_edit_inner_left",
+                            coreWidgets: fields
+                        })
+                    ),
+                    React.createElement(
+                        "div",
+                        { className: "col-6" },
+                        React.createElement(Attributes, { _attributes: _.get(props, 'attributes', []), _selectedAttributes: _.get(props, 'group.attributes', []) })
+                    )
                 )
             )
         ),
