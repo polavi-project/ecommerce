@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Similik\Module\Catalog\Middleware\AttributeGroup\Edit;
 
+use function Similik\create_mutable_var;
 use function Similik\generate_url;
 use function Similik\get_js_file_url;
 use Similik\Module\Graphql\Services\GraphqlExecutor;
@@ -30,7 +31,7 @@ class EditFormMiddleware extends MiddlewareAbstract
             $this->getContainer()
             ->get(GraphqlExecutor::class)
             ->waitToExecute([
-                "query"=>"{
+                "query" => create_mutable_var("attribute_group_edit_query", "{
                     attributeGroup(id: {$request->attributes->get('id')})
                     {
                         attribute_group_id
@@ -39,7 +40,7 @@ class EditFormMiddleware extends MiddlewareAbstract
                             attribute_id
                         }
                     }
-                }"
+                }")
             ])
             ->then(function($result) use ($response, $request) {
                 /**@var \GraphQL\Executor\ExecutionResult $result */
@@ -51,7 +52,9 @@ class EditFormMiddleware extends MiddlewareAbstract
                         get_js_file_url("production/catalog/attribute_group/edit/attribute_group_edit_form.js", true),
                         [
                             "group" => $result->data['attributeGroup'],
-                            "action" => generate_url('attribute.group.save', ['id'=>$request->attributes->getInt('id', null)])
+                            "action" => generate_url('attribute.group.save', ['id'=>$request->attributes->getInt('id', null)]),
+                            "listUrl" => generate_url('attribute.group.grid'),
+                            "cancelUrl" => $request->attributes->get('id') ? generate_url('attribute.group.edit', ['id' => $request->attributes->get('id')]) : generate_url('attribute.group.create')
                         ]
                     );
                 }
@@ -63,7 +66,9 @@ class EditFormMiddleware extends MiddlewareAbstract
                 10,
                 get_js_file_url("production/catalog/attribute_group/edit/attribute_group_edit_form.js", true),
                 [
-                    "action" => generate_url('attribute.group.save')
+                    "action" => generate_url('attribute.group.save'),
+                    "listUrl" => generate_url('attribute.group.grid'),
+                    "cancelUrl" => $request->attributes->get('id') ? generate_url('attribute.group.edit', ['id' => $request->attributes->get('id')]) : generate_url('attribute.group.create')
                 ]
             );
 
