@@ -8,9 +8,8 @@ declare(strict_types=1);
 
 namespace Similik\Module\Cms\Middleware\Page\Edit;
 
-use function Similik\get_config;
+use function Similik\generate_url;
 use function Similik\get_default_language_Id;
-use function Similik\get_display_languages;
 use function Similik\get_js_file_url;
 use Similik\Module\Graphql\Services\GraphqlExecutor;
 use Similik\Services\Http\Request;
@@ -54,7 +53,9 @@ class FormMiddleware extends MiddlewareAbstract
                             get_js_file_url("production/cms/page/edit/page_edit_form.js", true),
                             $result->data['cmsPage'] + [
                                 "action" => $this->getContainer()->get(Router::class)->generateUrl("admin.graphql.api", ['type'=> 'createCmsPage']),
-                                "pageId" => $request->attributes->get('id')
+                                "pageId" => $request->attributes->get('id'),
+                                "listUrl" => generate_url('page.grid'),
+                                "cancelUrl" => $request->attributes->get('id') ? generate_url('page.edit', ['id' => $request->attributes->get('id')]) : generate_url('page.create')
                             ]
                         );
                     }
@@ -66,7 +67,9 @@ class FormMiddleware extends MiddlewareAbstract
                 10,
                 get_js_file_url("production/cms/page/edit/page_edit_form.js", true),
                 [
-                    "action" => $this->getContainer()->get(Router::class)->generateUrl("admin.graphql.api", ['type'=> 'createCmsPage'])
+                    "action" => $this->getContainer()->get(Router::class)->generateUrl("admin.graphql.api", ['type'=> 'createCmsPage']),
+                    "listUrl" => generate_url('page.grid'),
+                    "cancelUrl" => $request->attributes->get('id') ? generate_url('page.edit', ['id' => $request->attributes->get('id')]) : generate_url('page.create')
                 ]
             );
 
