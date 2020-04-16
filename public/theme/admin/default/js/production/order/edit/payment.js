@@ -15,7 +15,7 @@ function Info({ orderId, method, methodName, status, grandTotal }) {
         { className: "payment-info" },
         React.createElement(
             "table",
-            { className: "uk-table uk-table-small" },
+            { className: "table table-bordered" },
             React.createElement(
                 "thead",
                 null,
@@ -106,17 +106,12 @@ export default function Transaction({ transactions }) {
         React.createElement(
             "div",
             null,
-            React.createElement("span", { "uk-icon": "credit-card" }),
-            " ",
-            React.createElement(
-                "strong",
-                null,
-                "Payment transactions"
-            )
+            React.createElement("i", { className: "fas fa-credit-card" }),
+            " Payment transactions"
         ),
         React.createElement(
             "table",
-            { className: "uk-table uk-table-small" },
+            { className: "table table-bordered" },
             React.createElement(
                 "thead",
                 null,
@@ -254,37 +249,29 @@ function Payment() {
     const grandTotal = ReactRedux.useSelector(state => _.get(state, 'appState.orderData.grand_total'));
     return React.createElement(
         "div",
-        { className: "uk-width-1-1 uk-margin-top" },
+        { className: "sml-block mt-4" },
         React.createElement(
             "div",
-            { className: "border-block" },
-            React.createElement(
-                "div",
-                null,
-                React.createElement(
-                    "h3",
-                    null,
-                    "Payment"
-                )
-            ),
-            React.createElement(
-                "div",
-                { className: "uk-overflow-auto" },
-                React.createElement(Area, {
-                    id: "order_payment_block",
-                    orderId: orderId,
-                    method: method,
-                    methodName: methodName,
-                    grandTotal: grandTotal,
-                    status: status,
-                    coreWidgets: [{
-                        'component': Info,
-                        'props': { orderId, method, methodName, status, grandTotal },
-                        'sort_order': 10,
-                        'id': 'order_payment_fo'
-                    }]
-                })
-            )
+            { className: "sml-block-title" },
+            "Payment"
+        ),
+        React.createElement(
+            "div",
+            { className: "overflow-auto" },
+            React.createElement(Area, {
+                id: "order_payment_block",
+                orderId: orderId,
+                method: method,
+                methodName: methodName,
+                grandTotal: grandTotal,
+                status: status,
+                coreWidgets: [{
+                    'component': Info,
+                    'props': { orderId, method, methodName, status, grandTotal },
+                    'sort_order': 10,
+                    'id': 'order_payment_fo'
+                }]
+            })
         )
     );
 }

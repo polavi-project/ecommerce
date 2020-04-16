@@ -6,10 +6,10 @@ import { OrderSummary } from "./summary.js";
 export default function OrderEdit() {
     return React.createElement(
         "div",
-        { className: "uk-grid uk-grid-small order-edit-page" },
+        { className: "row order-edit-page" },
         React.createElement(Area, {
             id: "order_edit_left",
-            className: "uk-width-2-3",
+            className: "col-8",
             coreWidgets: [{
                 component: OrderInfo,
                 props: {},
@@ -24,7 +24,7 @@ export default function OrderEdit() {
         }),
         React.createElement(Area, {
             id: "order_edit_right",
-            className: "uk-width-1-3",
+            className: "col-4",
             coreWidgets: [{
                 component: OrderSummary,
                 props: {},
