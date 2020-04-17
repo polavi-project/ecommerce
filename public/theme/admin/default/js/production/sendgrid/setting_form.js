@@ -4,18 +4,20 @@ import { Form } from "../../../../../../js/production/form/form.js";
 import Area from "../../../../../../js/production/area.js";
 import Text from "../../../../../../js/production/form/fields/text.js";
 import Select from "../../../../../../js/production/form/fields/select.js";
+import Switch from "../../../../../../js/production/form/fields/switch.js";
+import A from "../../../../../../js/production/a.js";
 
 function General(props) {
     return React.createElement(
         "div",
-        { className: "uk-width-1-2" },
+        { className: "sml-block mt-4" },
         React.createElement(
-            "h3",
-            null,
+            "div",
+            { className: "sml-block-title" },
             "Store email"
         ),
         React.createElement(Area, {
-            id: "sendgrid-setting-general",
+            id: "sendgrid_setting_general",
             coreWidgets: [{
                 'component': Text,
                 'props': {
@@ -39,24 +41,22 @@ function General(props) {
                 'sort_order': 20,
                 'id': 'sendgrid_sender_email'
             }, {
-                'component': Select,
+                'component': Switch,
                 'props': {
                     name: 'sendgrid_status',
                     size: 'medium',
                     value: _.get(props, 'sendgrid_status', ''),
-                    label: 'Enable Transaction Email?',
-                    options: [{ value: 1, text: 'Yes' }, { value: 0, text: 'No' }]
+                    label: 'Enable Transaction Email?'
                 },
                 'sort_order': 30,
                 'id': 'sendgrid_status'
             }, {
-                'component': Select,
+                'component': Switch,
                 'props': {
                     name: 'sendgrid_log',
                     size: 'medium',
                     value: _.get(props, 'sendgrid_log', ''),
-                    label: 'Enable log?',
-                    options: [{ value: 1, text: 'Yes' }, { value: 0, text: 'No' }]
+                    label: 'Enable log?'
                 },
                 'sort_order': 40,
                 'id': 'sendgrid_log'
@@ -73,6 +73,8 @@ function Api({ apiKey = '', setTemplates }) {
     React.useEffect(function () {
         loadTemplate();
     }, []);
+
+    //TODO: remove Axios
     const loadTemplate = () => {
         axios({
             method: 'get',
@@ -101,15 +103,11 @@ function Api({ apiKey = '', setTemplates }) {
     };
     return React.createElement(
         "div",
-        { className: "uk-width-1-2" },
+        { className: "sml-block" },
         React.createElement(
             "div",
-            null,
-            React.createElement(
-                "h3",
-                null,
-                "SendGrid api key"
-            )
+            { className: "sml-block-title" },
+            "SendGrid api key"
         ),
         React.createElement(Text, {
             name: 'sendgrid_apiKey',
@@ -123,7 +121,7 @@ function Api({ apiKey = '', setTemplates }) {
             "a",
             { href: "#", onClick: e => {
                     e.preventDefault();loadTemplate();
-                }, className: "uk-button uk-button-small" },
+                }, className: "btn btn-primary" },
             React.createElement(
                 "span",
                 null,
@@ -141,15 +139,15 @@ function Api({ apiKey = '', setTemplates }) {
 function Customer(props) {
     return React.createElement(
         "div",
-        { className: "uk-width-1-2" },
+        { className: "sml-block" },
         React.createElement(
-            "h2",
-            null,
+            "div",
+            { className: "sml-block-title" },
             "Customer emails"
         ),
         React.createElement(Area, {
-            id: "sendgrid-setting-customer",
-            className: "uk-width-1-2",
+            id: "sendgrid_setting_customer",
+            className: "col-6",
             coreWidgets: [{
                 'component': Select,
                 'props': {
@@ -168,15 +166,15 @@ function Customer(props) {
 function Order(props) {
     return React.createElement(
         "div",
-        { className: "uk-width-1-2" },
+        { className: "sml-block mt-4" },
         React.createElement(
-            "h2",
-            null,
+            "div",
+            { className: "sml-block-title" },
             "Order emails"
         ),
         React.createElement(Area, {
             id: "sendgrid-setting-order",
-            className: "uk-width-1-2",
+            className: "col-6",
             coreWidgets: [{
                 'component': Select,
                 'props': {
@@ -203,45 +201,82 @@ function Order(props) {
 }
 
 export default function SendGridSetting(props) {
-
     const [templates, setTemplates] = React.useState([]);
 
     return React.createElement(
-        "div",
-        null,
+        Form,
+        {
+            id: "sendgrid-setting-form",
+            action: props.formAction,
+            submitText: null
+        },
         React.createElement(
-            Form,
-            {
-                id: "sendgrid-setting-form",
-                action: props.formAction
-            },
+            "div",
+            { className: "form-head sticky" },
+            React.createElement(
+                "div",
+                { className: "child-align-middle" },
+                React.createElement(
+                    A,
+                    { url: props.dashboardUrl, className: "" },
+                    React.createElement("i", { className: "fas fa-arrow-left" }),
+                    React.createElement(
+                        "span",
+                        { className: "pl-1" },
+                        "Dashboard"
+                    )
+                )
+            ),
+            React.createElement(
+                "div",
+                { className: "buttons" },
+                React.createElement(
+                    A,
+                    { className: "btn btn-danger", url: props.cancelUrl },
+                    "Cancel"
+                ),
+                React.createElement(
+                    "button",
+                    { type: "submit", className: "btn btn-primary" },
+                    "Submit"
+                )
+            )
+        ),
+        React.createElement(
+            "div",
+            { className: "row" },
             React.createElement(Area, {
-                id: "sendgrid-setting-form-inner",
-                className: "uk-grid uk-grid-small",
+                id: "sendgrid_setting_form_left",
+                className: "col-4",
                 coreWidgets: [{
-                    'component': General,
-                    'props': props,
-                    'sort_order': 10,
-                    'id': 'sendgrid-setting-general'
-                }, {
                     'component': Api,
                     'props': {
                         apiKey: _.get(props, 'sendgrid_apiKey', ''),
                         setTemplates: setTemplates
                     },
-                    'sort_order': 20,
+                    'sort_order': 10,
                     'id': 'sendgrid-setting-api'
                 }, {
+                    'component': General,
+                    'props': props,
+                    'sort_order': 20,
+                    'id': 'sendgrid-setting-general'
+                }]
+            }),
+            React.createElement(Area, {
+                id: "sendgrid_setting_form_right",
+                className: "col-8",
+                coreWidgets: [{
                     'component': Customer,
                     'props': _extends({
                         templates: templates }, props),
-                    'sort_order': 30,
+                    'sort_order': 10,
                     'id': 'sendgrid-setting-customer'
                 }, {
                     'component': Order,
                     'props': _extends({
                         templates: templates }, props),
-                    'sort_order': 40,
+                    'sort_order': 20,
                     'id': 'sendgrid-setting-order'
                 }]
             })

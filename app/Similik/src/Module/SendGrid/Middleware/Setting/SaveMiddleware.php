@@ -56,7 +56,7 @@ class SaveMiddleware extends MiddlewareAbstract
             }
 
             $processor->commit();
-            $response->addAlert('sendgrid_setting_update_success', 'success', 'Setting saved');
+            $response->addAlert('sendgrid_setting_update_success', 'success', 'Setting saved successfully');
             $response->redirect($this->getContainer()->get(Router::class)->generateUrl('setting.sendgrid'));
         } catch (\Exception $e) {
             $processor->rollback();
