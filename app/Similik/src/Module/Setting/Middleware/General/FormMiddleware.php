@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace Similik\Module\Setting\Middleware\General;
 
 use function Similik\_mysql;
+use function Similik\generate_url;
 use function Similik\get_default_language_Id;
 use function Similik\get_js_file_url;
 use Similik\Services\Helmet;
@@ -50,7 +51,9 @@ AND `name` LIKE 'general_%'", ['language' => $request->attributes->get('language
             get_js_file_url("production/setting/general/form.js", true),
             [
                 "action" =>$this->getContainer()->get(Router::class)->generateUrl('setting.general'),
-                "data" => $data
+                "data" => $data,
+                "dashboardUrl" => generate_url("dashboard"),
+                "cancelUrl" => generate_url("setting.general")
             ]
         );
 

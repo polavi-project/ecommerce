@@ -35,7 +35,7 @@ const Fetch = (url, pushState = false, method = "GET", data = {}, onStart = null
     }).then(response => {
         store.dispatch({ 'type': ADD_ALERT, 'payload': { alerts: _.get(response, 'alerts', []) } });
         if (response.redirectUrl !== undefined) {
-            window.location.assign(response.redirectUrl);
+            Fetch(response.redirectUrl, true);
             return true;
         }
 
