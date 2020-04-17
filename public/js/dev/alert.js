@@ -2,33 +2,38 @@ import {REMOVE_ALERT} from "../production/event-types.js";
 
 function Alert({alert}) {
     const dispatch = ReactRedux.useDispatch();
-
+    const [className, setClassName] = React.useState("fadeInDownBig");
     React.useEffect(() => {
         const timer = setTimeout(() => {
-            dispatch({'type' : REMOVE_ALERT, 'payload': {alerts: [alert]}});
+            setClassName("fadeOutUp");
         }, 10000);
         return () => clearTimeout(timer);
     }, []);
 
-    const close = (e, alert) => {
+    const remove = (e) => {
         e.preventDefault();
-        dispatch({'type' : REMOVE_ALERT, 'payload': {alerts: [alert]}});
+        dispatch({'type' : REMOVE_ALERT, 'payload': {key: alert.key}});
+    };
+
+    const close = (e) => {
+        e.preventDefault();
+        setClassName("fadeOutUp");
     };
 
     return <React.Fragment>
-        { alert.type == "error" && <div className="alert alert-danger animated fadeInDownBig slow sml-flex-space-between" role="alert">
+        { alert.type == "error" && <div onAnimationEnd={(e)=> { if(className == "fadeOutUp") remove(e);}} className={className + " " + "alert alert-danger animated slow sml-flex-space-between"} role="alert">
             <span>{alert.message}</span>
             <a href="#" onClick={(e)=> close(e, alert)}>x</a>
         </div>}
-        { alert.type == "warning" && <div className="alert alert-warning animated fadeInDownBig slow sml-flex-space-between" role="alert">
+        { alert.type == "warning" && <div onAnimationEnd={(e)=> { if(className == "fadeOutUp") remove(e);}} className={className + " " + "alert alert-warning animated slow sml-flex-space-between"} role="alert">
             <span>{alert.message}</span>
             <a href="#" onClick={(e)=> close(e, alert)}>x</a>
         </div>}
-        { alert.type == "success" && <div className="alert alert-success animated fadeInDownBig slow sml-flex-space-between" role="alert">
+        { alert.type == "success" && <div onAnimationEnd={(e)=> { if(className == "fadeOutUp") remove(e);}} className={className + " " + "alert alert-success animated slow sml-flex-space-between"} role="alert">
             <span>{alert.message}</span>
             <a href="#" onClick={(e)=> close(e, alert)}>x</a>
         </div>}
-        { (alert.type != "error" && alert.type != "success" && alert.type != "warning") && <div className="alert alert-primary slow animated fadeInDownBig sml-flex-space-between" role="alert">
+        { (alert.type != "error" && alert.type != "success" && alert.type != "warning") && <div onAnimationEnd={(e)=> { if(className == "fadeOutUp") remove(e);}} className={className + " " + "alert alert-primary slow animated sml-flex-space-between"} role="alert">
             <span>{alert.message}</span>
             <a href="#" onClick={(e)=> close(e, alert)}>x</a>
         </div>}
@@ -39,7 +44,7 @@ export default function Alerts() {
 
     return <div className="notification">
         {alerts.map((alert, index) => {
-            return <Alert alert={alert} key={index}/>
+            return <Alert alert={alert} key={alert.key}/>
         })}
     </div>;
 }

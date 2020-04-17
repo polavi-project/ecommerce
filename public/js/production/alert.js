@@ -2,76 +2,89 @@ import { REMOVE_ALERT } from "../production/event-types.js";
 
 function Alert({ alert }) {
     const dispatch = ReactRedux.useDispatch();
-
+    const [className, setClassName] = React.useState("fadeInDownBig");
     React.useEffect(() => {
         const timer = setTimeout(() => {
-            dispatch({ 'type': REMOVE_ALERT, 'payload': { alerts: [alert] } });
+            setClassName("fadeOutUp");
         }, 10000);
         return () => clearTimeout(timer);
     }, []);
 
-    const close = (e, alert) => {
+    const remove = e => {
         e.preventDefault();
-        dispatch({ 'type': REMOVE_ALERT, 'payload': { alerts: [alert] } });
+        dispatch({ 'type': REMOVE_ALERT, 'payload': { key: alert.key } });
+    };
+
+    const close = e => {
+        e.preventDefault();
+        setClassName("fadeOutUp");
     };
 
     return React.createElement(
         React.Fragment,
         null,
         alert.type == "error" && React.createElement(
-            'div',
-            { className: 'alert alert-danger animated fadeInDownBig slow sml-flex-space-between', role: 'alert' },
+            "div",
+            { onAnimationEnd: e => {
+                    if (className == "fadeOutUp") remove(e);
+                }, className: className + " " + "alert alert-danger animated slow sml-flex-space-between", role: "alert" },
             React.createElement(
-                'span',
+                "span",
                 null,
                 alert.message
             ),
             React.createElement(
-                'a',
-                { href: '#', onClick: e => close(e, alert) },
-                'x'
+                "a",
+                { href: "#", onClick: e => close(e, alert) },
+                "x"
             )
         ),
         alert.type == "warning" && React.createElement(
-            'div',
-            { className: 'alert alert-warning animated fadeInDownBig slow sml-flex-space-between', role: 'alert' },
+            "div",
+            { onAnimationEnd: e => {
+                    if (className == "fadeOutUp") remove(e);
+                }, className: className + " " + "alert alert-warning animated slow sml-flex-space-between", role: "alert" },
             React.createElement(
-                'span',
+                "span",
                 null,
                 alert.message
             ),
             React.createElement(
-                'a',
-                { href: '#', onClick: e => close(e, alert) },
-                'x'
+                "a",
+                { href: "#", onClick: e => close(e, alert) },
+                "x"
             )
         ),
         alert.type == "success" && React.createElement(
-            'div',
-            { className: 'alert alert-success animated fadeInDownBig slow sml-flex-space-between', role: 'alert' },
+            "div",
+            { onAnimationEnd: e => {
+                    if (className == "fadeOutUp") remove(e);
+                }, className: className + " " + "alert alert-success animated slow sml-flex-space-between", role: "alert" },
             React.createElement(
-                'span',
+                "span",
                 null,
                 alert.message
             ),
             React.createElement(
-                'a',
-                { href: '#', onClick: e => close(e, alert) },
-                'x'
+                "a",
+                { href: "#", onClick: e => close(e, alert) },
+                "x"
             )
         ),
         alert.type != "error" && alert.type != "success" && alert.type != "warning" && React.createElement(
-            'div',
-            { className: 'alert alert-primary slow animated fadeInDownBig sml-flex-space-between', role: 'alert' },
+            "div",
+            { onAnimationEnd: e => {
+                    if (className == "fadeOutUp") remove(e);
+                }, className: className + " " + "alert alert-primary slow animated sml-flex-space-between", role: "alert" },
             React.createElement(
-                'span',
+                "span",
                 null,
                 alert.message
             ),
             React.createElement(
-                'a',
-                { href: '#', onClick: e => close(e, alert) },
-                'x'
+                "a",
+                { href: "#", onClick: e => close(e, alert) },
+                "x"
             )
         )
     );
@@ -80,10 +93,10 @@ export default function Alerts() {
     const alerts = ReactRedux.useSelector(state => state.alerts);
 
     return React.createElement(
-        'div',
-        { className: 'notification' },
+        "div",
+        { className: "notification" },
         alerts.map((alert, index) => {
-            return React.createElement(Alert, { alert: alert, key: index });
+            return React.createElement(Alert, { alert: alert, key: alert.key });
         })
     );
 }

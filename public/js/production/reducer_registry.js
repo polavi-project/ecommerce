@@ -7,14 +7,14 @@ let reducers = {
     alerts: (state = [], action) => {
         if (action.type === ADD_ALERT) {
             if (action.payload.alerts !== undefined) {
-                return state.concat(action.payload.alerts);
+                return state.concat(action.payload.alerts.map(a => {
+                    a['key'] = Math.random().toString(36).substr(2, 9);return a;
+                }));
             }
         }
         if (action.type === REMOVE_ALERT) {
-            if (action.payload.alerts !== undefined) {
-                return state.filter((a, i) => {
-                    return action.payload.alerts.find(e => e.id != a.id);
-                });
+            if (action.payload.key !== undefined) {
+                return state.filter((a, i) => a.key != action.payload.key);
             }
         }
 

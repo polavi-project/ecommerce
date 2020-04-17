@@ -9,10 +9,8 @@ declare(strict_types=1);
 namespace Similik\Middleware;
 
 use function Similik\get_js_file_url;
-use Symfony\Component\HttpFoundation\Session\Session;
 use Similik\Services\Http\Request;
 use Similik\Services\Http\Response;
-use Similik\Services\Helper;
 
 class AlertMiddleware extends MiddlewareAbstract
 {
