@@ -94,3 +94,7 @@ table .form-group{margin-bottom: 0px}
 .lifetime-sale table tr:first-child td{border-top: 0}
 .lifetime-sale table td:first-child{text-align: right}
 .lifetime-sale table td{vertical-align: middle; padding: 20px}
+
+/* NOTIFICATION */
+.notification{position: absolute; top: 30px; z-index: 1001; left: 0; width: 100%; display: flex; flex-flow: column; justify-content: center}
+.notification .alert{width: 450px; margin: 10px auto}

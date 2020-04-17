@@ -78,6 +78,7 @@ class ResponseMiddleware extends MiddlewareAbstract
                     ->get(Helmet::class)
                     ->addScript(['src'=> get_js_file_url('production/simplebar.min.js', true), 'type'=>'text/javascript'], 10)
                     ->addLink(['rel'=>'stylesheet', 'href'=> get_css_file_url('simplebar.css', $request->isAdmin())])
+                    ->addLink(['rel'=>'stylesheet', 'href'=> get_css_file_url('animate.min.css', $request->isAdmin())])
                     ->addLink(['rel'=>'stylesheet', 'href'=> get_css_file_url('fontawesome/css/all.min.css', $request->isAdmin())])
                     ->addLink(['rel'=>'stylesheet', 'href'=> get_css_file_url('bootstrap.css', $request->isAdmin())])
                     ->addLink(['rel'=>'stylesheet', 'href'=> get_css_file_url('style.css', $request->isAdmin())]);

@@ -8,6 +8,7 @@ import Select from "../../../../../../../../js/production/form/fields/select.js"
 import { ADD_ALERT } from "../../../../../../../../js/production/event-types.js";
 import A from "../../../../../../../../js/production/a.js";
 import Switch from "../../../../../../../../js/production/form/fields/switch.js";
+import { Fetch } from "../../../../../../../../js/production/fetch.js";
 
 function General({ pageId, name, content, layout, status }) {
     return React.createElement(
@@ -82,7 +83,10 @@ function SEO({ url_key, meta_keywords, meta_title, meta_description }) {
 export default function PageEditFormComponent(props) {
     const dispatch = ReactRedux.useDispatch();
     const onComplete = response => {
-        if (_.get(response, 'payload.data.createCmsPage.status') === true) dispatch({ 'type': ADD_ALERT, 'payload': { alerts: [{ id: "cms_page_update_success", message: 'Page has been saved successfully', type: "success" }] } });else dispatch({ 'type': ADD_ALERT, 'payload': { alerts: [{ id: "cms_page_update_error", message: _.get(response, 'payload.data.createCmsPage.message', 'Something wrong, please try again'), type: "error" }] } });
+        if (_.get(response, 'payload.data.createCmsPage.status') === true) {
+            dispatch({ 'type': ADD_ALERT, 'payload': { alerts: [{ id: "cms_page_update_success", message: 'Page has been saved successfully', type: "success" }] } });
+            Fetch(props.listUrl, true);
+        } else dispatch({ 'type': ADD_ALERT, 'payload': { alerts: [{ id: "cms_page_update_error", message: _.get(response, 'payload.data.createCmsPage.message', 'Something wrong, please try again'), type: "error" }] } });
     };
     return React.createElement(
         "div",
