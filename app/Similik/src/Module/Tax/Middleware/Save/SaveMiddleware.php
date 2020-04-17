@@ -49,6 +49,7 @@ class SaveMiddleware extends MiddlewareAbstract
                 $conn->getTable('tax_rate')->insert($value);
             }
             $conn->commit();
+            $response->addAlert('tax_class_update_success', 'success', "Tax setting saved successfully");
             $response->redirect($this->getContainer()->get(Router::class)->generateUrl('tax.class.list'));
         } catch (\Exception $e) {
             $conn->rollback();
