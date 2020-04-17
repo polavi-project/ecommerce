@@ -48,7 +48,7 @@ export default function CodSettingForm(props) {
                             id: "payment_cod_name"
                         }, {
                             component: Switch,
-                            props: { id: 'payment_cod_status', value: _.get(props, 'payment_cod_status', ''), formId: "cod-setting-form", name: "payment_cod_status", type: "select", label: "Status", options: [{ value: 0, text: 'Disabled' }, { value: 1, text: 'Enabled' }], isTranslateAble: false },
+                            props: { id: 'payment_cod_status', value: _.get(props, 'payment_cod_status', ''), formId: "cod-setting-form", name: "payment_cod_status", type: "select", label: "Status", isTranslateAble: false },
                             sort_order: 20,
                             id: "payment_cod_status"
                         }, {
