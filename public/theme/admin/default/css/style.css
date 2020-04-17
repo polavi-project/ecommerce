@@ -26,6 +26,7 @@ body{background-color: #E1E1E1!important;}
 .sml-flex{display: flex}
 .sml-flex-space-between{display: flex; justify-content: space-between}
 .badge{padding: 2px 10px; line-height: 150%; border-radius: 1.25rem}
+.font-weight-semi-bold{font-weight: 500}
 /******* FORM *******/
 .similik-radio input, .similik-checkbox input{display: none}
 .similik-radio .fas, .similik-checkbox .fas{font-size: 16px; padding-right: 5px}
