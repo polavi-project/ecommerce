@@ -9,14 +9,11 @@ declare(strict_types=1);
 namespace Similik\Module\SendGrid\Middleware\Setting;
 
 use function Similik\_mysql;
-use function Similik\get_config;
 use function Similik\get_default_language_Id;
-use Similik\Services\Db\Processor;
 use Similik\Services\Http\Request;
 use Similik\Services\Http\Response;
 use Similik\Middleware\MiddlewareAbstract;
 use Similik\Services\Routing\Router;
-use Symfony\Component\HttpFoundation\Session\Session;
 
 class SaveMiddleware extends MiddlewareAbstract
 {
