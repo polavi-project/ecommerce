@@ -99,3 +99,10 @@ table .form-group{margin-bottom: 0px}
 /* NOTIFICATION */
 .notification{position: absolute; top: 30px; z-index: 1001; left: 0; width: 100%; display: flex; flex-flow: column; justify-content: center}
 .notification .alert{width: 450px; margin: 10px auto}
+
+/************ ADMIN LOGIN ************/
+.admin-login-form-container{min-height: calc(100vh - 150px)}
+.admin-login-inner{margin: 100px auto; width: 300px}
+.admin-login h3.page-title{display: none}
+.login-logo img{max-width: 35px}
+.admin-login-form .similik-form-button{display: flex; flex-direction: row-reverse}

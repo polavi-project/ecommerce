@@ -26,9 +26,8 @@ class AdminLayoutMiddleware extends MiddlewareAbstract
             'wrapper',
             0,
             get_js_file_url("production/area.js"),
-            ["id"=> "container", "className" => "container-fluid"]
+            ["id"=> "container", "className" => "container-fluid " . str_replace(".", "-", $request->attributes->get("_matched_route"))]
         );
-
 
         $response->addWidget(
             'admin_menu',
