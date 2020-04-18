@@ -10,7 +10,6 @@ namespace Similik\Module\Customer\Middleware\Logout;
 
 
 use Similik\Middleware\MiddlewareAbstract;
-use Similik\Module\Checkout\Services\Cart\Cart;
 use Similik\Services\Http\Request;
 use Similik\Services\Http\Response;
 use Similik\Services\Routing\Router;

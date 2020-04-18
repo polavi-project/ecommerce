@@ -236,11 +236,24 @@ class Cart
                             $items[$item->getId()] = $item;
                         }
                     } else {
-                        $is = _mysql()->getTable('cart_item')->where('cart_id', '=', $this->getData('cart_id'))->fetchAllAssoc();
+                        $conn = _mysql();
+                        $is = $conn->getTable('cart_item')->where('cart_id', '=', $this->getData('cart_id'))->fetchAllAssoc();
                         foreach ($is as $v) {
                             $i = new Item($cart, $v);
-                            $items[$i->getId()] = $i;
+                            $flag = true;
+                            foreach ($items as $id=>$_i) {
+                                if($_i->getData('product_sku') == $i->getData('product_sku') && $_i->getData('product_custom_options') == $i->getData('product_custom_options')) {
+                                    $_i->setData('qty', $_i->getData('qty') + $i->getData('qty'));
+                                    $flag = false;
+                                    break;
+                                }
+                            }
+                            if($flag == false) {
+                                $conn->getTable("cart_item")->where("cart_item_id", "=", $v['cart_item_id'])->delete();
+                            } else
+                                $items[$i->getId()] = $i;
                         }
+                        $this->dataSource["items"] = $items;
                     }
 
                     return $items;
@@ -510,7 +523,8 @@ class Cart
     {
         $this->dataSource = [];
         $this->fields = [];
-        $this->setData('cart_id', null);
+        $this->error = null;
+
     }
 
     protected function sortFields(array $fields)
