@@ -510,7 +510,8 @@ class Cart
     {
         $this->dataSource = [];
         $this->fields = [];
-        $this->setData('cart_id', null);
+        $this->error = null;
+
     }
 
     protected function sortFields(array $fields)
