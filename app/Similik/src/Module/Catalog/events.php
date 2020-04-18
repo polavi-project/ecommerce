@@ -144,63 +144,6 @@ $eventDispatcher->addListener(
 );
 
 $eventDispatcher->addListener(
-    'filter.mutation.type',
-    function (&$fields, Container $container) {
-        $fields['deleteProduct'] = [
-            'args' => [
-                'productId' => Type::nonNull(Type::int())
-            ],
-            'type' => new ObjectType([
-                'name'=> 'deleteProductOutput',
-                'fields' => [
-                    'status' => Type::nonNull(Type::boolean()),
-                    'message'=> Type::string(),
-                    'product' => new ObjectType([
-                        'name' => 'deletedProduct',
-                        'fields' => [
-                            'id' => Type::nonNull(Type::int()),
-                            'sku' => Type::string(),
-                            'name'=> Type::string()
-                        ]
-                    ])
-                ]
-            ]),
-            'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
-                $conn = _mysql();
-                if(
-                    $container->get(Request::class)->isAdmin() == false
-                )
-                    return ['status'=> false, 'product' => null, 'message' => 'Permission denied'];
-                \Similik\dispatch_event("before_delete_product", [$args]);
-                $product = $conn->getTable('product')->leftJoin('product_description', null, [
-                    [
-                        'column'      => "product_description.language_id",
-                        'operator'    => "=",
-                        'value'       => get_default_language_Id(),
-                        'ao'          => 'and',
-                        'start_group' => null,
-                        'end_group'   => null
-                    ]
-                ])->load($args['productId']);
-
-                if(!$product)
-                    return ['status'=> false, 'product' => null, 'message' => 'Requested product does not exist'];
-                $conn->getTable('product')->where('product_id', '=', $args['productId'])->delete();
-                $result = [
-                    'status'=> true,
-                    'product' => ['id' => $args['productId'], 'sku' => $product['sku'], 'name' => $product['name']],
-                    'message' => null
-                ];
-                \Similik\dispatch_event("after_delete_product", [$result]);
-                // TODO: use promises here to support side effect
-                return $result;
-            }
-        ];
-    },
-    5
-);
-
-$eventDispatcher->addListener(
     "admin_menu",
     function (array $items) {
         return array_merge($items, [
