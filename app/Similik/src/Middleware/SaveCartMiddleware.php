@@ -28,6 +28,7 @@ class SaveCartMiddleware extends MiddlewareAbstract
                 $promise = settle($cart->getPromises());
                 $promise->wait();
             }
+            $response->addState('cart', create_mutable_var("cart_state_empty", [], [$cart]));
             return $delegate;
         }
 
