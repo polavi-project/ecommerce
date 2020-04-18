@@ -512,152 +512,148 @@ function BuyXGetY({ _products }) {
         null,
         active && React.createElement(
             "div",
-            { className: "col-6 mt-4" },
+            { className: "sml-block mt-4" },
             React.createElement(
                 "div",
-                { className: "sml-block" },
+                { className: "sml-block-title" },
                 React.createElement(
-                    "div",
-                    { className: "sml-block-title" },
-                    React.createElement(
-                        "span",
-                        null,
-                        "Buy X get Y"
-                    )
-                ),
+                    "span",
+                    null,
+                    "Buy X get Y"
+                )
+            ),
+            React.createElement(
+                "table",
+                { className: "table table-bordered" },
                 React.createElement(
-                    "table",
-                    { className: "table table-bordered" },
+                    "thead",
+                    null,
                     React.createElement(
-                        "thead",
+                        "tr",
                         null,
                         React.createElement(
-                            "tr",
+                            "th",
                             null,
                             React.createElement(
-                                "th",
+                                "span",
                                 null,
-                                React.createElement(
-                                    "span",
-                                    null,
-                                    "Sku"
-                                )
-                            ),
+                                "Sku"
+                            )
+                        ),
+                        React.createElement(
+                            "th",
+                            null,
                             React.createElement(
-                                "th",
+                                "span",
                                 null,
-                                React.createElement(
-                                    "span",
-                                    null,
-                                    "X"
-                                )
-                            ),
+                                "X"
+                            )
+                        ),
+                        React.createElement(
+                            "th",
+                            null,
                             React.createElement(
-                                "th",
+                                "span",
                                 null,
-                                React.createElement(
-                                    "span",
-                                    null,
-                                    "Y"
-                                )
-                            ),
+                                "Y"
+                            )
+                        ),
+                        React.createElement(
+                            "th",
+                            null,
                             React.createElement(
-                                "th",
+                                "span",
                                 null,
-                                React.createElement(
-                                    "span",
-                                    null,
-                                    "Max of Y"
-                                )
-                            ),
+                                "Max of Y"
+                            )
+                        ),
+                        React.createElement(
+                            "th",
+                            null,
                             React.createElement(
-                                "th",
+                                "span",
                                 null,
-                                React.createElement(
-                                    "span",
-                                    null,
-                                    "Discount percent"
-                                )
-                            ),
-                            React.createElement("th", null)
-                        )
-                    ),
-                    React.createElement(
-                        "tbody",
-                        null,
-                        products.map((p, i) => {
-                            return React.createElement(
-                                "tr",
-                                { key: i },
-                                React.createElement(
-                                    "td",
-                                    null,
-                                    React.createElement(Text, {
-                                        name: `buyx_gety[${i}][sku]`,
-                                        formId: "coupon-edit-form",
-                                        value: p.sku,
-                                        validation_rules: ['notEmpty']
-                                    })
-                                ),
-                                React.createElement(
-                                    "td",
-                                    null,
-                                    React.createElement(Text, {
-                                        name: `buyx_gety[${i}][x]`,
-                                        formId: "coupon-edit-form",
-                                        value: p.x,
-                                        validation_rules: ['notEmpty']
-                                    })
-                                ),
-                                React.createElement(
-                                    "td",
-                                    null,
-                                    React.createElement(Text, {
-                                        name: `buyx_gety[${i}][y]`,
-                                        formId: "coupon-edit-form",
-                                        value: p.y,
-                                        validation_rules: ['notEmpty']
-                                    })
-                                ),
-                                React.createElement(
-                                    "td",
-                                    null,
-                                    React.createElement(Text, {
-                                        name: `buyx_gety[${i}][max_y]`,
-                                        formId: "coupon-edit-form",
-                                        value: p.max_y,
-                                        validation_rules: ['notEmpty']
-                                    })
-                                ),
-                                React.createElement(
-                                    "td",
-                                    null,
-                                    React.createElement(Text, {
-                                        name: `buyx_gety[${i}][discount]`,
-                                        formId: "coupon-edit-form",
-                                        value: p.discount,
-                                        validation_rules: ['notEmpty']
-                                    })
-                                ),
-                                React.createElement(
-                                    "td",
-                                    null,
-                                    React.createElement(
-                                        "a",
-                                        { className: "text-danger", href: "javascript:void(0);", onClick: e => removeProduct(e, i) },
-                                        React.createElement("i", { className: "fas fa-trash-alt" })
-                                    )
-                                )
-                            );
-                        })
+                                "Discount percent"
+                            )
+                        ),
+                        React.createElement("th", null)
                     )
                 ),
                 React.createElement(
-                    "a",
-                    { href: "javascript:void(0);", onClick: e => addProduct(e) },
-                    React.createElement("i", { className: "fas fa-plus-circle" }),
-                    " Add product"
+                    "tbody",
+                    null,
+                    products.map((p, i) => {
+                        return React.createElement(
+                            "tr",
+                            { key: i },
+                            React.createElement(
+                                "td",
+                                null,
+                                React.createElement(Text, {
+                                    name: `buyx_gety[${i}][sku]`,
+                                    formId: "coupon-edit-form",
+                                    value: p.sku,
+                                    validation_rules: ['notEmpty']
+                                })
+                            ),
+                            React.createElement(
+                                "td",
+                                null,
+                                React.createElement(Text, {
+                                    name: `buyx_gety[${i}][x]`,
+                                    formId: "coupon-edit-form",
+                                    value: p.x,
+                                    validation_rules: ['notEmpty']
+                                })
+                            ),
+                            React.createElement(
+                                "td",
+                                null,
+                                React.createElement(Text, {
+                                    name: `buyx_gety[${i}][y]`,
+                                    formId: "coupon-edit-form",
+                                    value: p.y,
+                                    validation_rules: ['notEmpty']
+                                })
+                            ),
+                            React.createElement(
+                                "td",
+                                null,
+                                React.createElement(Text, {
+                                    name: `buyx_gety[${i}][max_y]`,
+                                    formId: "coupon-edit-form",
+                                    value: p.max_y,
+                                    validation_rules: ['notEmpty']
+                                })
+                            ),
+                            React.createElement(
+                                "td",
+                                null,
+                                React.createElement(Text, {
+                                    name: `buyx_gety[${i}][discount]`,
+                                    formId: "coupon-edit-form",
+                                    value: p.discount,
+                                    validation_rules: ['notEmpty']
+                                })
+                            ),
+                            React.createElement(
+                                "td",
+                                null,
+                                React.createElement(
+                                    "a",
+                                    { className: "text-danger", href: "javascript:void(0);", onClick: e => removeProduct(e, i) },
+                                    React.createElement("i", { className: "fas fa-trash-alt" })
+                                )
+                            )
+                        );
+                    })
                 )
+            ),
+            React.createElement(
+                "a",
+                { href: "javascript:void(0);", onClick: e => addProduct(e) },
+                React.createElement("i", { className: "fas fa-plus-circle" }),
+                " Add product"
             )
         )
     );
@@ -666,27 +662,23 @@ function BuyXGetY({ _products }) {
 function OrderCondition(props) {
     return React.createElement(
         "div",
-        { className: "col-6 mt-4" },
+        { className: "sml-block" },
         React.createElement(
             "div",
-            { className: "sml-block" },
-            React.createElement(
-                "div",
-                { className: "sml-block-title" },
-                "Order condition"
-            ),
-            React.createElement(Text, {
-                name: "condition[order_total]",
-                label: "Minimum purchase amount",
-                value: props.order_total ? props.order_total : ''
-            }),
-            React.createElement(Text, {
-                name: "condition[order_qty]",
-                label: "Minimum purchase qty",
-                value: props.order_qty ? props.order_qty : ''
-            }),
-            React.createElement(RequiredProducts, { requiredProducts: props.required_product ? props.required_product : [] })
-        )
+            { className: "sml-block-title" },
+            "Order condition"
+        ),
+        React.createElement(Text, {
+            name: "condition[order_total]",
+            label: "Minimum purchase amount",
+            value: props.order_total ? props.order_total : ''
+        }),
+        React.createElement(Text, {
+            name: "condition[order_qty]",
+            label: "Minimum purchase qty",
+            value: props.order_qty ? props.order_qty : ''
+        }),
+        React.createElement(RequiredProducts, { requiredProducts: props.required_product ? props.required_product : [] })
     );
 }
 
@@ -694,52 +686,48 @@ function CustomerCondition(props) {
     const customerGroups = ReactRedux.useSelector(state => _.get(state, 'appState.customerGroups'));
     return React.createElement(
         "div",
-        { className: "col-6 mt-4" },
+        { className: "sml-block" },
         React.createElement(
             "div",
-            { className: "sml-block" },
-            React.createElement(
-                "div",
-                { className: "sml-block-title" },
-                "Customer condition"
-            ),
-            React.createElement(Area, {
-                id: "coupon_customer_condition",
-                coreWidgets: [{
-                    component: Select,
-                    props: {
-                        name: "user_condition[group]",
-                        label: "Customer group",
-                        value: props.group ? props.group : 999,
-                        options: customerGroups
-                    },
-                    sort_order: 10,
-                    id: "coupon_customer_condition_group"
-                }, {
-                    component: Text,
-                    props: {
-                        name: "user_condition[email]",
-                        label: "Customer email",
-                        value: props.email ? props.email : '',
-                        validation_rules: ['email'],
-                        comment: "Use comma when you have multi email"
-                    },
-                    sort_order: 20,
-                    id: "coupon_customer_condition_email"
-                }, {
-                    component: Text,
-                    props: {
-                        name: "user_condition[purchased]",
-                        label: "Customer's purchase",
-                        value: props.purchased ? props.purchased : '',
-                        validation_rules: ['number'],
-                        comment: "Minimum purchased amount"
-                    },
-                    sort_order: 30,
-                    id: "coupon_customer_condition_purchased"
-                }]
-            })
-        )
+            { className: "sml-block-title" },
+            "Customer condition"
+        ),
+        React.createElement(Area, {
+            id: "coupon_customer_condition",
+            coreWidgets: [{
+                component: Select,
+                props: {
+                    name: "user_condition[group]",
+                    label: "Customer group",
+                    value: props.group ? props.group : 999,
+                    options: customerGroups
+                },
+                sort_order: 10,
+                id: "coupon_customer_condition_group"
+            }, {
+                component: Text,
+                props: {
+                    name: "user_condition[email]",
+                    label: "Customer email",
+                    value: props.email ? props.email : '',
+                    validation_rules: ['email'],
+                    comment: "Use comma when you have multi email"
+                },
+                sort_order: 20,
+                id: "coupon_customer_condition_email"
+            }, {
+                component: Text,
+                props: {
+                    name: "user_condition[purchased]",
+                    label: "Customer's purchase",
+                    value: props.purchased ? props.purchased : '',
+                    validation_rules: ['number'],
+                    comment: "Minimum purchased amount"
+                },
+                sort_order: 30,
+                id: "coupon_customer_condition_purchased"
+            }]
+        })
     );
 }
 
@@ -771,22 +759,18 @@ function TargetProduct({ products, discount_type }) {
         null,
         active === true && React.createElement(
             "div",
-            { className: "col-6 mt-4" },
+            { className: "sml-block mt-4" },
             React.createElement(
                 "div",
-                { className: "sml-block" },
-                React.createElement(
-                    "div",
-                    { className: "sml-block-title" },
-                    React.createElement(Text, {
-                        name: "target_products",
-                        value: products,
-                        validation_rules: ['notEmpty'],
-                        formId: "coupon-edit-form",
-                        label: "Target products",
-                        comment: "Use comma to separate in case multiple products"
-                    })
-                )
+                { className: "sml-block-title" },
+                React.createElement(Text, {
+                    name: "target_products",
+                    value: products,
+                    validation_rules: ['notEmpty'],
+                    formId: "coupon-edit-form",
+                    label: "Target products",
+                    comment: "Use comma to separate in case multiple products"
+                })
             )
         )
     );
@@ -797,68 +781,68 @@ export default function CouponForm(props) {
     const user_condition = props.user_condition ? JSON.parse(props.user_condition) : {};
     const buyx_gety = props.buyx_gety ? JSON.parse(props.buyx_gety) : [];
     return React.createElement(
-        "div",
-        { className: "uk-grid uk-grid-small uk-child-width-expand@s" },
+        Form,
+        _extends({
+            id: "coupon-edit-form",
+            onComplete: response => {
+                if (_.get(response, 'redirect', undefined) !== undefined) Fetch(_.get(response, 'redirect', undefined), true);
+            }
+        }, props, {
+            submitText: null
+        }),
         React.createElement(
-            Form,
-            _extends({
-                id: "coupon-edit-form",
-                onComplete: response => {
-                    if (_.get(response, 'redirect', undefined) !== undefined) Fetch(_.get(response, 'redirect', undefined), true);
-                }
-            }, props, {
-                submitText: null
-            }),
+            "div",
+            { className: "form-head sticky" },
             React.createElement(
                 "div",
-                { className: "form-head sticky" },
+                { className: "child-align-middle" },
                 React.createElement(
-                    "div",
-                    { className: "child-align-middle" },
+                    A,
+                    { url: props.listUrl, className: "" },
+                    React.createElement("i", { className: "fas fa-arrow-left" }),
                     React.createElement(
-                        A,
-                        { url: props.listUrl, className: "" },
-                        React.createElement("i", { className: "fas fa-arrow-left" }),
-                        React.createElement(
-                            "span",
-                            { className: "pl-1" },
-                            "Coupons"
-                        )
-                    )
-                ),
-                React.createElement(
-                    "div",
-                    { className: "buttons" },
-                    React.createElement(
-                        A,
-                        { className: "btn btn-danger", url: props.cancelUrl },
-                        "Cancel"
-                    ),
-                    React.createElement(
-                        "button",
-                        { type: "submit", className: "btn btn-primary" },
-                        "Submit"
+                        "span",
+                        { className: "pl-1" },
+                        "Coupons"
                     )
                 )
             ),
+            React.createElement(
+                "div",
+                { className: "buttons" },
+                React.createElement(
+                    A,
+                    { className: "btn btn-danger", url: props.cancelUrl },
+                    "Cancel"
+                ),
+                React.createElement(
+                    "button",
+                    { type: "submit", className: "btn btn-primary" },
+                    "Submit"
+                )
+            )
+        ),
+        React.createElement(Area, {
+            id: "coupon_edit_general",
+            className: "row",
+            coreWidgets: [{
+                component: General,
+                props: props,
+                sort_order: 10,
+                id: "coupon-general"
+            }]
+        }),
+        React.createElement(
+            "div",
+            { className: "row mt-4" },
             React.createElement(Area, {
-                id: "coupon-general",
-                className: "row",
+                id: "coupon_edit_left",
+                className: "col-8",
                 coreWidgets: [{
-                    component: General,
-                    props: props,
-                    sort_order: 10,
-                    id: "coupon-general"
-                }, {
                     component: OrderCondition,
                     props: condition,
                     sort_order: 20,
                     id: "coupon-order-condition"
-                }, {
-                    component: CustomerCondition,
-                    props: user_condition,
-                    sort_order: 25,
-                    id: "coupon-customer-condition"
                 }, {
                     component: TargetProduct,
                     props: { products: props.target_products ? props.target_products : "", "discount_type": props.discount_type },
@@ -869,6 +853,16 @@ export default function CouponForm(props) {
                     props: { _products: buyx_gety },
                     sort_order: 30,
                     id: "coupon-order-buyx_gety"
+                }]
+            }),
+            React.createElement(Area, {
+                id: "coupon_edit_right",
+                className: "col-4",
+                coreWidgets: [{
+                    component: CustomerCondition,
+                    props: user_condition,
+                    sort_order: 25,
+                    id: "coupon-customer-condition"
                 }]
             })
         )
