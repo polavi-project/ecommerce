@@ -140,6 +140,13 @@ class ProductType extends ObjectType
                                 return null;
                             return $container->get(Router::class)->generateUrl('product.edit', ["id"=>$product['product_id']]);                        }
                     ],
+                    'deleteUrl' => [
+                        'type' => Type::string(),
+                        'resolve' => function($product, $args, Container $container, ResolveInfo $info) {
+                            if($container->get(Request::class)->isAdmin() == false)
+                                return null;
+                            return $container->get(Router::class)->generateUrl('product.delete', ["id"=>$product['product_id']]);                        }
+                    ],
                     'meta_title' => [
                         'type' => Type::string()
                     ],

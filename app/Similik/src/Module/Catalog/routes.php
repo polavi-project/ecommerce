@@ -35,10 +35,8 @@ $router->addAdminRoute('product.save', 'POST', '/product/save[/{id:\d+}]', [
     \Similik\Module\Catalog\Middleware\Product\Save\CreateMiddleware::class
 ]);
 
-$router->addAdminRoute('product.delete', 'GET', '/product/delete/{id:\d+}', [
-//    \Similik\Module\Catalog\Middleware\Product\Save\ValidateMiddleware::class,
-//    \Similik\Module\Catalog\Middleware\Product\Save\UpdateMiddleware::class,
-//    \Similik\Module\Catalog\Middleware\Product\Save\CreateMiddleware::class
+$router->addAdminRoute('product.delete', ['GET', 'POST'], '/product/delete/{id:\d+}', [
+    Similik\Module\Catalog\Middleware\Product\Delete\DeleteMiddleware::class
 ]);
 
 //////////////// CATEGORY ////////////////////

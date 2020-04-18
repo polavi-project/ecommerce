@@ -2,6 +2,7 @@ export default function ActionColumnHeader({ areaProps }) {
     React.useEffect(() => {
         areaProps.addField('product_id');
         areaProps.addField('editUrl');
+        areaProps.addField('deleteUrl');
     }, []);
 
     const onClick = () => {
