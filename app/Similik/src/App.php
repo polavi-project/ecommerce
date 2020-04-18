@@ -14,6 +14,7 @@ use function GuzzleHttp\Promise\settle;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Similik\Middleware\AdminNavigationMiddleware;
+use Similik\Middleware\BlockDeleteMiddleware;
 use Similik\Middleware\CartInitMiddleware;
 use Similik\Middleware\PromiseWaiterMiddleware;
 use Similik\Middleware\SaveCartMiddleware;
@@ -168,6 +169,7 @@ class App
                 10 => SessionMiddleware::class,
                 20 => RoutingMiddleware::class,
                 30 => AuthenticateMiddleware::class,
+                35 => BlockDeleteMiddleware::class,
                 40 => CartInitMiddleware::class,
                 50 => HandlerMiddleware::class,
                 60 => PromiseWaiterMiddleware::class,
