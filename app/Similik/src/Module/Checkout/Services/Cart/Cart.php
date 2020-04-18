@@ -482,7 +482,7 @@ class Cart
                 ->where('cart_id', '=', $this->getData('cart_id'))
                 ->update(['status'=>0]);
             $conn->commit();
-
+            $this->destroy();
             return $orderId;
         } catch (\Exception $e) {
             $conn->rollback();
@@ -509,6 +509,7 @@ class Cart
     public function destroy()
     {
         $this->dataSource = [];
+        $this->fields = [];
         $this->setData('cart_id', null);
     }
 
