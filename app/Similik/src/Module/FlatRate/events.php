@@ -34,7 +34,7 @@ $eventDispatcher->addListener(
             $requestingMethod == 'flat_rate' and
             get_config('shipment_flat_rate_status') == 1 and
             (
-                in_array($shippingAddress['country'] ?? null, get_config('shipment_flat_rate_countries', ['US'])) ||
+                in_array($shippingAddress['country'] ?? null, get_config('shipment_flat_rate_countries', [])) ||
                 get_config('shipment_flat_rate_countries', []) == []
             )
         )
