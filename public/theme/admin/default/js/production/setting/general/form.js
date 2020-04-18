@@ -10,6 +10,7 @@ import { LanguageOptions } from "../../../../../../../js/production/locale/langu
 import { CurrencyOptions } from "../../../../../../../js/production/locale/currency_option.js";
 import { TimezoneOptions } from "../../../../../../../js/production/locale/timezone_option.js";
 import { Fetch } from "../../../../../../../js/production/fetch.js";
+import A from "../../../../../../../js/production/a.js";
 
 function Logo({ value = null }) {
     const uploadApi = ReactRedux.useSelector(state => _.get(state, 'appState.graphqlApi'));
@@ -131,18 +132,14 @@ function Timezone({ value = 'Europe/London' }) {
 function General(props) {
     return React.createElement(
         "div",
-        { className: "uk-width-1-3" },
+        { className: "col-4" },
         React.createElement(
             "div",
-            { className: "border-block" },
+            { className: "sml-block" },
             React.createElement(
                 "div",
-                null,
-                React.createElement(
-                    "strong",
-                    null,
-                    "General"
-                )
+                { className: "sml-block-title" },
+                "General"
             ),
             React.createElement(Area, {
                 id: "general_setting_form_general",
@@ -187,18 +184,14 @@ function General(props) {
 function Ecommerce(props) {
     return React.createElement(
         "div",
-        { className: "uk-width-1-3" },
+        { className: "col-4" },
         React.createElement(
             "div",
-            { className: "border-block" },
+            { className: "sml-block" },
             React.createElement(
                 "div",
-                null,
-                React.createElement(
-                    "strong",
-                    null,
-                    "E-Commerce"
-                )
+                { className: "sml-block-title" },
+                "E-Commerce"
             ),
             React.createElement(Area, {
                 id: "general_setting_form_ecommerce",
@@ -235,18 +228,14 @@ function Ecommerce(props) {
 function Web(props) {
     return React.createElement(
         "div",
-        { className: "uk-width-1-3" },
+        { className: "col-4" },
         React.createElement(
             "div",
-            { className: "border-block" },
+            { className: "sml-block" },
             React.createElement(
                 "div",
-                null,
-                React.createElement(
-                    "strong",
-                    null,
-                    "Web"
-                )
+                { className: "sml-block-title" },
+                "Web"
             ),
             React.createElement(Area, {
                 id: "general_setting_form_web",
@@ -300,36 +289,55 @@ function Web(props) {
 
 export default function GeneralSettingForms(props) {
     return React.createElement(
-        "div",
-        { className: "uk-flex-center" },
+        Form,
+        { id: "general_setting_form", action: props.action, submitText: null },
         React.createElement(
             "div",
-            null,
+            { className: "form-head sticky" },
             React.createElement(
-                "h2",
-                null,
-                "General setting"
+                "div",
+                { className: "child-align-middle" },
+                React.createElement(
+                    A,
+                    { url: props.dashboardUrl, className: "" },
+                    React.createElement("i", { className: "fas fa-arrow-left" }),
+                    React.createElement(
+                        "span",
+                        { className: "pl-1" },
+                        "Dashboard"
+                    )
+                )
+            ),
+            React.createElement(
+                "div",
+                { className: "buttons" },
+                React.createElement(
+                    A,
+                    { className: "btn btn-danger", url: props.cancelUrl },
+                    "Cancel"
+                ),
+                React.createElement(
+                    "button",
+                    { type: "submit", className: "btn btn-primary" },
+                    "Submit"
+                )
             )
         ),
-        React.createElement(
-            Form,
-            { id: "general_setting_form", action: props.action },
-            React.createElement(Area, { id: "general_setting_form_inner", className: "uk-grid uk-grid-small", coreWidgets: [{
-                    component: General,
-                    props: _extends({}, props.data),
-                    sort_order: 10,
-                    id: "general_setting_general"
-                }, {
-                    component: Ecommerce,
-                    props: _extends({}, props.data),
-                    sort_order: 20,
-                    id: "general_setting_catalog"
-                }, {
-                    component: Web,
-                    props: _extends({}, props.data),
-                    sort_order: 30,
-                    id: "general_setting_form_web"
-                }] })
-        )
+        React.createElement(Area, { id: "general_setting_form_inner", className: "row", coreWidgets: [{
+                component: General,
+                props: _extends({}, props.data),
+                sort_order: 10,
+                id: "general_setting_general"
+            }, {
+                component: Ecommerce,
+                props: _extends({}, props.data),
+                sort_order: 20,
+                id: "general_setting_catalog"
+            }, {
+                component: Web,
+                props: _extends({}, props.data),
+                sort_order: 30,
+                id: "general_setting_form_web"
+            }] })
     );
 }

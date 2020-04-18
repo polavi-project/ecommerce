@@ -1,5 +1,6 @@
 import Text from "../../../../../../../../js/production/form/fields/text.js";
 import Select from "../../../../../../../../js/production/form/fields/select.js";
+import Switch from "../../../../../../../../js/production/form/fields/switch.js";
 
 export default function CustomOption(props) {
     const [options, setOptions] = React.useState(props.options);
@@ -10,7 +11,7 @@ export default function CustomOption(props) {
             option_id: Date.now(),
             option_name: "",
             option_type: "",
-            is_required: "",
+            is_required: 0,
             sort_order: ""
         }));
     };
@@ -52,28 +53,24 @@ export default function CustomOption(props) {
 
     return React.createElement(
         "div",
-        { className: "product-edit-custom-option border-block" },
+        { className: "product-edit-custom-option sml-block mt-4" },
         React.createElement(
             "div",
-            { className: "group-form-title" },
-            React.createElement(
-                "strong",
-                null,
-                "Custom Options"
-            )
+            { className: "sml-block-title" },
+            "Custom Options"
         ),
         React.createElement(
             "ul",
-            { className: "uk-list" },
+            { className: "list-unstyled" },
             options.map((option, index) => {
                 let values = option['values'] === undefined ? [] : option['values'];
                 let { option_id, option_name, sort_order, option_type, is_required } = option;
                 return React.createElement(
                     "li",
-                    { key: index, className: "uk-overflow-auto" },
+                    { key: index, className: "overflow-auto" },
                     React.createElement(
                         "table",
-                        { className: "uk-table uk-table-small" },
+                        { className: "table table-bordered" },
                         React.createElement(
                             "thead",
                             null,
@@ -102,11 +99,11 @@ export default function CustomOption(props) {
                                 ),
                                 React.createElement(
                                     "td",
-                                    null,
+                                    { className: "align-middle" },
                                     React.createElement(
                                         "a",
-                                        { href: "#", onClick: e => removeOption(index, e) },
-                                        React.createElement("span", { "uk-icon": "minus-circle" })
+                                        { href: "#", onClick: e => removeOption(index, e), className: "text-danger" },
+                                        React.createElement("i", { className: "fas fa-trash-alt" })
                                     )
                                 )
                             )
@@ -134,10 +131,9 @@ export default function CustomOption(props) {
                                 React.createElement(
                                     "td",
                                     null,
-                                    React.createElement(Select, {
+                                    React.createElement(Switch, {
                                         name: 'options[' + option_id + '][is_required]',
-                                        value: is_required,
-                                        options: [{ value: '1', text: 'Yes' }, { value: '0', text: 'No' }]
+                                        value: is_required
                                     })
                                 ),
                                 React.createElement(
@@ -150,7 +146,7 @@ export default function CustomOption(props) {
                     ),
                     React.createElement(
                         "table",
-                        null,
+                        { className: "table-bordered table" },
                         React.createElement(
                             "thead",
                             null,
@@ -208,8 +204,8 @@ export default function CustomOption(props) {
                                         { colSpan: "3" },
                                         React.createElement(
                                             "a",
-                                            { href: "#", onClick: e => removeCustomOptionValue(option_id, value_id, e) },
-                                            React.createElement("span", { "uk-icon": "minus-circle" })
+                                            { href: "#", onClick: e => removeCustomOptionValue(option_id, value_id, e), className: "text-danger" },
+                                            React.createElement("i", { className: "fas fa-trash-alt" })
                                         )
                                     )
                                 );
@@ -226,8 +222,8 @@ export default function CustomOption(props) {
                                     { colSpan: "3" },
                                     React.createElement(
                                         "a",
-                                        { href: "#", onClick: e => addCustomOptionValue(option_id, e) },
-                                        React.createElement("span", { "uk-icon": "plus-circle" })
+                                        { href: "javascript:void(0)", onClick: e => addCustomOptionValue(option_id, e) },
+                                        React.createElement("i", { className: "fas fa-plus" })
                                     )
                                 )
                             )
@@ -242,7 +238,13 @@ export default function CustomOption(props) {
             React.createElement(
                 "a",
                 { href: "#", onClick: e => addOption(e) },
-                React.createElement("span", { "uk-icon": "plus-circle" })
+                React.createElement("i", { className: "fas fa-plus" }),
+                " ",
+                React.createElement(
+                    "span",
+                    { className: "pl-1" },
+                    "Add option"
+                )
             )
         )
     );

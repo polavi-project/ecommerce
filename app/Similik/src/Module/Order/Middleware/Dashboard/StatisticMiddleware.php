@@ -21,9 +21,9 @@ class StatisticMiddleware extends MiddlewareAbstract
     {
         $response->addWidget(
             'saleStatistic',
-            'content',
+            'admin_dashboard_middle_left',
             10,
-            get_js_file_url("production/order/statistic/sale.js", true)
+            get_js_file_url("production/order/dashboard/statistic.js", true)
         );
     }
 }

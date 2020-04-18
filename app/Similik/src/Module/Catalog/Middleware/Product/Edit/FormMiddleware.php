@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Similik\Module\Catalog\Middleware\Product\Edit;
 
+use function Similik\generate_url;
 use function Similik\get_default_language_Id;
 use function Similik\get_js_file_url;
 use Similik\Services\Http\Request;
@@ -33,7 +34,9 @@ class FormMiddleware extends MiddlewareAbstract
                 "id"=> 'product-edit-form',
                 "action" => $this->getContainer()->get(Router::class)->generateUrl("product.save", ['id'=>$request->attributes->get('id', null)], $request->query->get('language', null) != null ? ['language' => $request->query->get('language')] : null),
                 "defaultLanguage" => get_default_language_Id(),
-                "currentLanguage" => $request->query->get('language') != null ? $request->query->get('language') : get_default_language_Id()
+                "currentLanguage" => $request->query->get('language') != null ? $request->query->get('language') : get_default_language_Id(),
+                "listUrl" => generate_url('product.grid'),
+                "cancelUrl" => $request->attributes->get('id') ? generate_url('product.edit', ['id' => $request->attributes->get('id')]) : generate_url('product.create')
             ]
         );
 

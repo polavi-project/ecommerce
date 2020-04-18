@@ -8,7 +8,8 @@ declare(strict_types=1);
 
 namespace Similik\Module\Discount\Middleware\Edit;
 
-use function Similik\_mysql;
+use function Similik\create_mutable_var;
+use function Similik\generate_url;
 use function Similik\get_js_file_url;
 use Similik\Module\Graphql\Services\GraphqlExecutor;
 use Similik\Services\Helmet;
@@ -27,12 +28,12 @@ class FormMiddleware extends MiddlewareAbstract
      */
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
-        if($request->attributes->get('_matched_route') == 'coupon.edit')
+        if($request->attributes->get('_matched_route') == 'coupon.edit') {
+            $this->getContainer()->get(Helmet::class)->setTitle("Edit coupon");
             $this->getContainer()
-            ->get(GraphqlExecutor::class)
-            ->waitToExecute([
-                "query"=> <<< QUERY
-                    {
+                ->get(GraphqlExecutor::class)
+                ->waitToExecute([
+                    "query"=> create_mutable_var("edit_coupon_query", "{
                         coupon (id: {$request->get('id')}) {
                             coupon_id
                             status
@@ -51,37 +52,42 @@ class FormMiddleware extends MiddlewareAbstract
                             start_date
                             end_date
                         }
+                    }")
+                ])
+                ->then(function($result) use ($request, $response) {
+                    $advancedPrice = [];
+                    /**@var \GraphQL\Executor\ExecutionResult $result */
+                    if (isset($result->data['coupon'])) {
+                        $response->addWidget(
+                            'coupon_edit_form',
+                            'content',
+                            10,
+                            get_js_file_url("production/discount/edit/coupon_form.js", true),
+                            array_merge($result->data['coupon'],
+                                [
+                                    "action"=> $this->getContainer()->get(Router::class)->generateUrl("coupon.save", ['id'=>$request->attributes->get('id', null)]),
+                                    "listUrl" => generate_url('coupon.grid'),
+                                    "cancelUrl" => $request->attributes->get('id') ? generate_url('coupon.edit', ['id' => $request->attributes->get('id')]) : generate_url('coupon.create')
+                                ]
+                            )
+                        );
                     }
-QUERY
-            ])
-            ->then(function($result) use ($request, $response) {
-                $advancedPrice = [];
-                /**@var \GraphQL\Executor\ExecutionResult $result */
-                if (isset($result->data['coupon'])) {
-                    $this->getContainer()->get(Helmet::class)->setTitle("Edit coupon {$result->data['coupon']['coupon']}");
-                    $response->addWidget(
-                        'coupon_edit_form',
-                        'content',
-                        10,
-                        get_js_file_url("production/discount/edit/coupon_form.js", true),
-                        array_merge($result->data['coupon'],
-                            [
-                                "action"=> $this->getContainer()->get(Router::class)->generateUrl("coupon.save", ['id'=>$request->attributes->get('id', null)])
-                            ]
-                        )
-                    );
-                }
-            });
-        else
+                });
+        } else {
+            $this->getContainer()->get(Helmet::class)->setTitle("Create coupon");
             $response->addWidget(
                 'coupon_edit_form',
                 'content',
                 10,
                 get_js_file_url("production/discount/edit/coupon_form.js", true),
                 [
-                    "action"=> $this->getContainer()->get(Router::class)->generateUrl("coupon.save", ['id'=>$request->attributes->get('id', null)])
+                    "action"=> $this->getContainer()->get(Router::class)->generateUrl("coupon.save", ['id'=>$request->attributes->get('id', null)]),
+                    "listUrl" => generate_url('coupon.grid'),
+                    "cancelUrl" => $request->attributes->get('id') ? generate_url('coupon.edit', ['id' => $request->attributes->get('id')]) : generate_url('coupon.create')
                 ]
             );
+        }
+
         return $delegate;
     }
 }

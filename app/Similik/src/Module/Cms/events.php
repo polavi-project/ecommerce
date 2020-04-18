@@ -287,30 +287,34 @@ $eventDispatcher->addListener(
 );
 
 $eventDispatcher->addListener(
-    'before_execute_' . strtolower(str_replace('\\', '_', \Similik\Middleware\AdminNavigationMiddleware::class)),
-    function (\Similik\Services\Di\Container $container) {
-        $container->get(\Similik\Module\Cms\Services\NavigationManager::class)->addItem(
-            'cms',
-            'CMS',
-            '',
-            'copy',
-            null,
-            20
-        )->addItem(
-            'page.grid',
-            'All pages',
-            $container->get(Router::class)->generateUrl('page.grid'),
-            'file-text',
-            'cms',
-            0
-        )->addItem(
-            'widget.grid',
-            'All widgets',
-            $container->get(Router::class)->generateUrl('widget.grid'),
-            'thumbnails',
-            'cms',
-            10
-        );
+        "admin_menu",
+        function (array $items) {
+            return array_merge($items, [
+                [
+                    "id" => "cms",
+                    "sort_order" => 40,
+                    "url" => null,
+                    "title" => "CMS",
+                    "parent_id" => null
+                ],
+                [
+                    "id" => "cms_pages",
+                    "sort_order" => 10,
+                    "url" => \Similik\generate_url("page.grid"),
+                    "title" => "Pages",
+                    "icon" => "file-alt",
+                    "parent_id" => "cms"
+                ],
+                [
+                    "id" => "cms_widgets",
+                    "sort_order" => 20,
+                    "url" => \Similik\generate_url("widget.grid"),
+                    "title" => "Widgets",
+                    "icon" => "th-large
+                    ",
+                    "parent_id" => "cms"
+                ]
+            ]);
     },
     0
 );
@@ -347,7 +351,6 @@ $eventDispatcher->addListener(
         $middlewareManager->registerMiddleware(\Similik\Module\Cms\Middleware\MenuWidget\MenuWidgetMiddleware::class, 21);
         $middlewareManager->registerMiddleware(\Similik\Module\Cms\Middleware\Page\View\LogoMiddleware::class, 22);
         $middlewareManager->registerMiddlewareBefore(\Similik\Middleware\ResponseMiddleware::class, \Similik\Module\Cms\Middleware\Page\View\NotFoundPageMiddleware::class);
-        $middlewareManager->registerMiddlewareBefore(\Similik\Middleware\ResponseMiddleware::class, \Similik\Module\Cms\Middleware\Dashboard\LogoMiddleware::class);
     },
     5
 );

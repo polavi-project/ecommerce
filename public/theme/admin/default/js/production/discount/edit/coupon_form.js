@@ -10,14 +10,16 @@ import { FORM_FIELD_CREATED, FORM_FIELD_UPDATED } from "../../../../../../../js/
 import Checkbox from "../../../../../../../js/production/form/fields/checkbox.js";
 import { Fetch } from "../../../../../../../js/production/fetch.js";
 import Datetime from "../../../../../../../js/production/form/fields/datetime.js";
+import Switch from "../../../../../../../js/production/form/fields/switch.js";
+import A from "../../../../../../../js/production/a.js";
 
 function StartEnd({ start_date = "", end_date = "" }) {
     return React.createElement(
         "div",
-        { className: "uk-grid uk-child-width-1-2" },
+        { className: "row" },
         React.createElement(
             "div",
-            null,
+            { className: "col-6" },
             React.createElement(Datetime, {
                 name: "start_date",
                 formId: "coupon-edit-form",
@@ -27,7 +29,7 @@ function StartEnd({ start_date = "", end_date = "" }) {
         ),
         React.createElement(
             "div",
-            null,
+            { className: "col-6" },
             React.createElement(Datetime, {
                 name: "end_date",
                 formId: "coupon-edit-form",
@@ -40,7 +42,7 @@ function StartEnd({ start_date = "", end_date = "" }) {
 function GeneralLeft(props) {
     return React.createElement(
         "div",
-        { className: "uk-width-1-2" },
+        { className: "col-6" },
         React.createElement(Area, {
             id: "coupon-general-content",
             coreWidgets: [{
@@ -55,17 +57,10 @@ function GeneralLeft(props) {
                 'sort_order': 10,
                 'id': 'coupon_coupon'
             }, {
-                'component': Radio,
+                'component': Switch,
                 'props': {
                     name: "status",
                     value: _.get(props, 'status', 1).toString(),
-                    options: [{
-                        'value': '1',
-                        'text': 'Enable'
-                    }, {
-                        'value': '0',
-                        'text': 'Disable'
-                    }],
                     validation_rules: ['notEmpty'],
                     formId: "coupon-edit-form",
                     label: "Status"
@@ -99,7 +94,7 @@ function GeneralLeft(props) {
 function GeneralRight(props) {
     return React.createElement(
         "div",
-        { className: "uk-width-1-2" },
+        { className: "col-6" },
         React.createElement(Area, {
             id: "coupon-general-content",
             coreWidgets: [{
@@ -157,43 +152,33 @@ function GeneralRight(props) {
 }
 
 function General(props) {
-
-    // React.useEffect(() => {
-    //     let tokenOne = PubSub.subscribe(FORM_FIELD_CREATED, function(message, data) {
-    //         console.log(data);
-    //     });
-    //
-    //     return function cleanup() {
-    //         PubSub.unsubscribe(tokenOne);
-    //     };
-    // });
     return React.createElement(
         "div",
-        { className: "uk-width-1-1" },
+        { className: "col-12" },
         React.createElement(
             "div",
-            null,
+            { className: "sml-block" },
             React.createElement(
-                "strong",
-                null,
+                "div",
+                { className: "sml-block-title" },
                 "General"
-            )
-        ),
-        React.createElement(Area, {
-            id: "coupon-general-content",
-            className: "uk-grid uk-grid-small",
-            coreWidgets: [{
-                'component': GeneralLeft,
-                'props': _extends({}, props),
-                'sort_order': 10,
-                'id': 'general_left'
-            }, {
-                'component': GeneralRight,
-                'props': _extends({}, props),
-                'sort_order': 15,
-                'id': 'general_right'
-            }]
-        })
+            ),
+            React.createElement(Area, {
+                id: "coupon-general-content",
+                className: "row",
+                coreWidgets: [{
+                    'component': GeneralLeft,
+                    'props': _extends({}, props),
+                    'sort_order': 10,
+                    'id': 'general_left'
+                }, {
+                    'component': GeneralRight,
+                    'props': _extends({}, props),
+                    'sort_order': 15,
+                    'id': 'general_right'
+                }]
+            })
+        )
     );
 }
 
@@ -238,12 +223,12 @@ function RequiredProducts({ requiredProducts }) {
             React.createElement(
                 "span",
                 null,
-                "Order must contains product matched bellow condition(All)"
+                "Order must contains product matched bellow conditions(All)"
             )
         ),
         React.createElement(
             "table",
-            { className: "uk-table uk-table-small", style: { "marginTop": 0 } },
+            { className: "table table-bordered", style: { "marginTop": 0 } },
             React.createElement(
                 "thead",
                 null,
@@ -303,7 +288,7 @@ function RequiredProducts({ requiredProducts }) {
                                 "select",
                                 {
                                     name: `condition[required_product][${i}][key]`,
-                                    className: "uk-select uk-form-small uk-form-width-small",
+                                    className: "form-control",
                                     value: p.key,
                                     onChange: e => updateProduct(e, 'key', i)
                                 },
@@ -361,7 +346,7 @@ function RequiredProducts({ requiredProducts }) {
                                 "select",
                                 {
                                     name: `condition[required_product][${i}][operator]`,
-                                    className: "uk-select uk-form-small uk-form-width-small",
+                                    className: "form-control",
                                     value: p.operator,
                                     onChange: e => updateProduct(e, 'operator', i)
                                 },
@@ -469,8 +454,8 @@ function RequiredProducts({ requiredProducts }) {
                             null,
                             React.createElement(
                                 "a",
-                                { onClick: e => removeProduct(e, i) },
-                                "Remove"
+                                { href: "javascript:void(0);", className: "text-danger", onClick: e => removeProduct(e, i) },
+                                React.createElement("i", { className: "fas fa-trash-alt" })
                             )
                         )
                     );
@@ -479,8 +464,9 @@ function RequiredProducts({ requiredProducts }) {
         ),
         React.createElement(
             "a",
-            { onClick: e => addProduct(e) },
-            "Add condition"
+            { href: "javascript:void(0);", onClick: e => addProduct(e) },
+            React.createElement("i", { className: "fas fa-plus-circle" }),
+            " Add condition"
         )
     );
 }
@@ -522,14 +508,14 @@ function BuyXGetY({ _products }) {
     };
 
     return React.createElement(
-        "div",
+        React.Fragment,
         null,
         active && React.createElement(
             "div",
-            null,
+            { className: "sml-block mt-4" },
             React.createElement(
                 "div",
-                null,
+                { className: "sml-block-title" },
                 React.createElement(
                     "span",
                     null,
@@ -538,7 +524,7 @@ function BuyXGetY({ _products }) {
             ),
             React.createElement(
                 "table",
-                { className: "uk-table uk-table-small" },
+                { className: "table table-bordered" },
                 React.createElement(
                     "thead",
                     null,
@@ -655,8 +641,8 @@ function BuyXGetY({ _products }) {
                                 null,
                                 React.createElement(
                                     "a",
-                                    { onClick: e => removeProduct(e, i) },
-                                    "Remove"
+                                    { className: "text-danger", href: "javascript:void(0);", onClick: e => removeProduct(e, i) },
+                                    React.createElement("i", { className: "fas fa-trash-alt" })
                                 )
                             )
                         );
@@ -665,8 +651,9 @@ function BuyXGetY({ _products }) {
             ),
             React.createElement(
                 "a",
-                { onClick: e => addProduct(e) },
-                "Add product"
+                { href: "javascript:void(0);", onClick: e => addProduct(e) },
+                React.createElement("i", { className: "fas fa-plus-circle" }),
+                " Add product"
             )
         )
     );
@@ -675,31 +662,23 @@ function BuyXGetY({ _products }) {
 function OrderCondition(props) {
     return React.createElement(
         "div",
-        { className: "uk-width-1-2 uk-margin-medium-top" },
+        { className: "sml-block" },
         React.createElement(
             "div",
-            { className: "border-block" },
-            React.createElement(
-                "div",
-                null,
-                React.createElement(
-                    "strong",
-                    null,
-                    "Order condition"
-                )
-            ),
-            React.createElement(Text, {
-                name: "condition[order_total]",
-                label: "Minimum purchase amount",
-                value: props.order_total ? props.order_total : ''
-            }),
-            React.createElement(Text, {
-                name: "condition[order_qty]",
-                label: "Minimum purchase qty",
-                value: props.order_qty ? props.order_qty : ''
-            }),
-            React.createElement(RequiredProducts, { requiredProducts: props.required_product ? props.required_product : [] })
-        )
+            { className: "sml-block-title" },
+            "Order condition"
+        ),
+        React.createElement(Text, {
+            name: "condition[order_total]",
+            label: "Minimum purchase amount",
+            value: props.order_total ? props.order_total : ''
+        }),
+        React.createElement(Text, {
+            name: "condition[order_qty]",
+            label: "Minimum purchase qty",
+            value: props.order_qty ? props.order_qty : ''
+        }),
+        React.createElement(RequiredProducts, { requiredProducts: props.required_product ? props.required_product : [] })
     );
 }
 
@@ -707,56 +686,48 @@ function CustomerCondition(props) {
     const customerGroups = ReactRedux.useSelector(state => _.get(state, 'appState.customerGroups'));
     return React.createElement(
         "div",
-        { className: "uk-width-1-2 uk-margin-medium-top" },
+        { className: "sml-block" },
         React.createElement(
             "div",
-            { className: "border-block" },
-            React.createElement(
-                "div",
-                null,
-                React.createElement(
-                    "strong",
-                    null,
-                    "Customer condition"
-                )
-            ),
-            React.createElement(Area, {
-                id: "coupon_customer_condition",
-                coreWidgets: [{
-                    component: Select,
-                    props: {
-                        name: "user_condition[group]",
-                        label: "Customer group",
-                        value: props.group ? props.group : 999,
-                        options: customerGroups
-                    },
-                    sort_order: 10,
-                    id: "coupon_customer_condition_group"
-                }, {
-                    component: Text,
-                    props: {
-                        name: "user_condition[email]",
-                        label: "Customer email",
-                        value: props.email ? props.email : '',
-                        validation_rules: ['email'],
-                        comment: "Use comma when you have multi email"
-                    },
-                    sort_order: 20,
-                    id: "coupon_customer_condition_email"
-                }, {
-                    component: Text,
-                    props: {
-                        name: "user_condition[purchased]",
-                        label: "Customer's purchase",
-                        value: props.purchased ? props.purchased : '',
-                        validation_rules: ['number'],
-                        comment: "Minimum purchased amount"
-                    },
-                    sort_order: 30,
-                    id: "coupon_customer_condition_purchased"
-                }]
-            })
-        )
+            { className: "sml-block-title" },
+            "Customer condition"
+        ),
+        React.createElement(Area, {
+            id: "coupon_customer_condition",
+            coreWidgets: [{
+                component: Select,
+                props: {
+                    name: "user_condition[group]",
+                    label: "Customer group",
+                    value: props.group ? props.group : 999,
+                    options: customerGroups
+                },
+                sort_order: 10,
+                id: "coupon_customer_condition_group"
+            }, {
+                component: Text,
+                props: {
+                    name: "user_condition[email]",
+                    label: "Customer email",
+                    value: props.email ? props.email : '',
+                    validation_rules: ['email'],
+                    comment: "Use comma when you have multi email"
+                },
+                sort_order: 20,
+                id: "coupon_customer_condition_email"
+            }, {
+                component: Text,
+                props: {
+                    name: "user_condition[purchased]",
+                    label: "Customer's purchase",
+                    value: props.purchased ? props.purchased : '',
+                    validation_rules: ['number'],
+                    comment: "Minimum purchased amount"
+                },
+                sort_order: 30,
+                id: "coupon_customer_condition_purchased"
+            }]
+        })
     );
 }
 
@@ -784,19 +755,23 @@ function TargetProduct({ products, discount_type }) {
     }, []);
 
     return React.createElement(
-        "div",
+        React.Fragment,
         null,
         active === true && React.createElement(
             "div",
-            null,
-            React.createElement(Text, {
-                name: "target_products",
-                value: products,
-                validation_rules: ['notEmpty'],
-                formId: "coupon-edit-form",
-                label: "Target products",
-                comment: "Use comma to separate in case multiple products"
-            })
+            { className: "sml-block mt-4" },
+            React.createElement(
+                "div",
+                { className: "sml-block-title" },
+                React.createElement(Text, {
+                    name: "target_products",
+                    value: products,
+                    validation_rules: ['notEmpty'],
+                    formId: "coupon-edit-form",
+                    label: "Target products",
+                    comment: "Use comma to separate in case multiple products"
+                })
+            )
         )
     );
 }
@@ -806,34 +781,68 @@ export default function CouponForm(props) {
     const user_condition = props.user_condition ? JSON.parse(props.user_condition) : {};
     const buyx_gety = props.buyx_gety ? JSON.parse(props.buyx_gety) : [];
     return React.createElement(
-        "div",
-        { className: "uk-grid uk-grid-small uk-child-width-expand@s" },
+        Form,
+        _extends({
+            id: "coupon-edit-form",
+            onComplete: response => {
+                if (_.get(response, 'redirect', undefined) !== undefined) Fetch(_.get(response, 'redirect', undefined), true);
+            }
+        }, props, {
+            submitText: null
+        }),
         React.createElement(
-            Form,
-            _extends({
-                id: "coupon-edit-form",
-                onComplete: response => {
-                    if (_.get(response, 'redirect', undefined) !== undefined) Fetch(_.get(response, 'redirect', undefined), true);
-                }
-            }, props),
+            "div",
+            { className: "form-head sticky" },
+            React.createElement(
+                "div",
+                { className: "child-align-middle" },
+                React.createElement(
+                    A,
+                    { url: props.listUrl, className: "" },
+                    React.createElement("i", { className: "fas fa-arrow-left" }),
+                    React.createElement(
+                        "span",
+                        { className: "pl-1" },
+                        "Coupons"
+                    )
+                )
+            ),
+            React.createElement(
+                "div",
+                { className: "buttons" },
+                React.createElement(
+                    A,
+                    { className: "btn btn-danger", url: props.cancelUrl },
+                    "Cancel"
+                ),
+                React.createElement(
+                    "button",
+                    { type: "submit", className: "btn btn-primary" },
+                    "Submit"
+                )
+            )
+        ),
+        React.createElement(Area, {
+            id: "coupon_edit_general",
+            className: "row",
+            coreWidgets: [{
+                component: General,
+                props: props,
+                sort_order: 10,
+                id: "coupon-general"
+            }]
+        }),
+        React.createElement(
+            "div",
+            { className: "row mt-4" },
             React.createElement(Area, {
-                id: "coupon-general",
-                className: "uk-grid uk-grid-small",
+                id: "coupon_edit_left",
+                className: "col-8",
                 coreWidgets: [{
-                    component: General,
-                    props: props,
-                    sort_order: 10,
-                    id: "coupon-general"
-                }, {
                     component: OrderCondition,
                     props: condition,
                     sort_order: 20,
                     id: "coupon-order-condition"
-                }, {
-                    component: CustomerCondition,
-                    props: user_condition,
-                    sort_order: 25,
-                    id: "coupon-customer-condition"
                 }, {
                     component: TargetProduct,
                     props: { products: props.target_products ? props.target_products : "", "discount_type": props.discount_type },
@@ -844,6 +853,16 @@ export default function CouponForm(props) {
                     props: { _products: buyx_gety },
                     sort_order: 30,
                     id: "coupon-order-buyx_gety"
+                }]
+            }),
+            React.createElement(Area, {
+                id: "coupon_edit_right",
+                className: "col-4",
+                coreWidgets: [{
+                    component: CustomerCondition,
+                    props: user_condition,
+                    sort_order: 25,
+                    id: "coupon-customer-condition"
                 }]
             })
         )

@@ -6,6 +6,7 @@ import Text from "../../../../../../js/production/form/fields/text.js";
 import Select from "../../../../../../js/production/form/fields/select.js";
 import { CountryOptions } from "../../../../../../js/production/locale/country_option.js";
 import { ProvinceOptions } from "../../../../../../js/production/locale/province_option.js";
+import Switch from "../../../../../../js/production/form/fields/switch.js";
 
 function Rates(props) {
     const [rates, setRates] = React.useState(props.rates);
@@ -19,7 +20,7 @@ function Rates(props) {
             province: "",
             postcode: "",
             rate: "",
-            is_compound: "",
+            is_compound: 0,
             priority: ""
         }));
     };
@@ -41,19 +42,19 @@ function Rates(props) {
 
     return React.createElement(
         "div",
-        { className: "uk-overflow-auto" },
+        { className: "overflow-auto" },
         React.createElement(
             "div",
             null,
             React.createElement(
-                "strong",
-                null,
+                "span",
+                { className: "font-weight-semi-bold" },
                 "Tax rates"
             )
         ),
         React.createElement(
             "table",
-            { className: "uk-table uk-table-divider uk-table-striped uk-table-small uk-table-justify" },
+            { className: "table table-bordered" },
             React.createElement(
                 "thead",
                 null,
@@ -112,7 +113,12 @@ function Rates(props) {
                         React.createElement(
                             "td",
                             null,
-                            React.createElement(Text, { name: 'tax_rate[' + index + '][name]', value: rate.name, validation_rules: ["required"] })
+                            React.createElement(Text, {
+                                name: 'tax_rate[' + index + '][name]',
+                                formId: props.formId,
+                                value: rate.name,
+                                validation_rules: ["notEmpty"]
+                            })
                         ),
                         React.createElement(
                             "td",
@@ -124,7 +130,8 @@ function Rates(props) {
                                     name: 'tax_rate[' + index + '][country]',
                                     value: rate.country,
                                     index: index,
-                                    handler: e => onChangeCountry(e, index)
+                                    handler: e => onChangeCountry(e, index),
+                                    formId: props.formId
                                 })
                             )
                         ),
@@ -136,33 +143,27 @@ function Rates(props) {
                                 { country: rate.country },
                                 React.createElement(Select, {
                                     name: 'tax_rate[' + index + '][province]',
-                                    value: rate.province
+                                    value: rate.province,
+                                    formId: props.formId
                                 })
                             )
                         ),
                         React.createElement(
                             "td",
                             null,
-                            React.createElement(Text, { name: 'tax_rate[' + index + '][postcode]', value: rate.postcode })
+                            React.createElement(Text, { name: 'tax_rate[' + index + '][postcode]', value: rate.postcode, formId: props.formId })
                         ),
                         React.createElement(
                             "td",
                             null,
-                            React.createElement(Text, { name: 'tax_rate[' + index + '][rate]', value: rate.rate })
+                            React.createElement(Text, { name: 'tax_rate[' + index + '][rate]', value: rate.rate, validation_rules: ["notEmpty"], formId: props.formId })
                         ),
                         React.createElement(
                             "td",
                             null,
-                            React.createElement(Select, {
+                            React.createElement(Switch, {
                                 name: 'tax_rate[' + index + '][is_compound]',
-                                value: rate.is_compound,
-                                options: [{
-                                    value: 0,
-                                    text: 'No'
-                                }, {
-                                    value: 1,
-                                    text: 'Yes'
-                                }]
+                                value: rate.is_compound
                             })
                         ),
                         React.createElement(
@@ -175,12 +176,8 @@ function Rates(props) {
                             null,
                             React.createElement(
                                 "a",
-                                { onClick: () => removeRate(index) },
-                                React.createElement(
-                                    "span",
-                                    null,
-                                    "Remove"
-                                )
+                                { onClick: () => removeRate(index), href: "javascript:void(0)", className: "text-danger" },
+                                React.createElement("i", { className: "fas fa-trash-alt" })
                             )
                         )
                     );
@@ -197,11 +194,12 @@ function Rates(props) {
                         null,
                         React.createElement(
                             "a",
-                            { className: "uk-button-primary uk-button-small", onClick: e => addRate(e) },
+                            { href: "javascript:void(0)", onClick: e => addRate(e) },
                             React.createElement(
                                 "span",
                                 null,
-                                "Add rate"
+                                React.createElement("i", { className: "fas fa-plus-circle" }),
+                                " Add rate"
                             )
                         )
                     )
@@ -217,12 +215,12 @@ function TaxClass(props) {
         null,
         React.createElement(
             "a",
-            { className: "uk-accordion-title", href: "#" },
+            { href: "#" },
             props.name
         ),
         React.createElement(
             "div",
-            { className: "uk-accordion-content" },
+            null,
             React.createElement(
                 Form,
                 _extends({ id: props.formId }, props),
@@ -239,7 +237,7 @@ function TaxClass(props) {
                         'id': 'tax_class_edit_name'
                     }, {
                         'component': Rates,
-                        'props': { rates: props.rates ? props.rates : [] },
+                        'props': { rates: props.rates ? props.rates : [], formId: props.formId },
                         'sort_order': 20,
                         'id': 'tax_class_edit_rates'
                     }] })
@@ -268,26 +266,23 @@ export default function Taxes({ classes, saveAction }) {
 
     return React.createElement(
         "div",
-        null,
+        { className: "sml-block" },
         React.createElement(
             "div",
-            null,
-            React.createElement(
-                "h2",
-                null,
-                "Tax class"
-            )
+            { className: "sml-block-title" },
+            "Tax class"
         ),
         React.createElement(
             "ul",
-            { "uk-accordion": "multiple: true" },
+            { className: "list-unstyled" },
             taxes.map((t, i) => {
                 return React.createElement(TaxClass, _extends({ key: i, action: saveAction }, t));
             })
         ),
         React.createElement(
             "a",
-            { onClick: e => addTax(e) },
+            { href: "javascript:void(0)", onClick: e => addTax(e) },
+            React.createElement("i", { className: "fas fa-plus-circle" }),
             "Add tax class"
         )
     );

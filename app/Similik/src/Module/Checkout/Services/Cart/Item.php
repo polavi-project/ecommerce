@@ -133,7 +133,7 @@ class Item
                     $items = $this->cart->getItems();
                     $addedQty = 0;
                     foreach ($items as $key=>$i)
-                        if($i->getData('product_sku') == $this->dataSource['product']['sku'])
+                        if($i->getData('product_sku') == $this->dataSource['product']['sku'] && $i->getId() !== $item->getId())
                             $addedQty = $i->getData('qty');
 
                     if(!isset($item->getDataSource()['qty']) || $item->getDataSource()['qty'] <= 0) {
@@ -142,7 +142,7 @@ class Item
                     }
 
                     if(($this->dataSource['product']['qty'] - $addedQty < $item->getDataSource()['qty'] || $item->getDataSource()['product']['stock_availability'] == 0) && $this->dataSource['product']['manage_stock'] == 1)  {
-                        $item->setError("qty", "Not enough stock");
+                        $item->setError("qty", "Not enough stockkkkk");
                         return null;
                     }
                     return $item->getDataSource()['qty'] ?? $item->getData('qty');

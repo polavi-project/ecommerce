@@ -37,12 +37,6 @@ class GridMiddleware extends MiddlewareAbstract
         );
 
         $response->addWidget(
-            'attribute_grid_title',
-            'attribute_grid_container',
-            0, get_js_file_url("production/catalog/attribute/grid/title.js", true)
-        );
-
-        $response->addWidget(
             'attribute_grid',
             'attribute_grid_container',
             10, get_js_file_url("production/catalog/attribute/grid/grid.js", true),

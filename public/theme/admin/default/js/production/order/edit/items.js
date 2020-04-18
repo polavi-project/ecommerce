@@ -9,7 +9,7 @@ function ItemOptions({ options = [] }) {
         { className: 'cart-item-options' },
         React.createElement(
             'ul',
-            { className: 'uk-list' },
+            { className: 'list-unstyled' },
             options.map((o, i) => {
                 return React.createElement(
                     'li',
@@ -90,22 +90,18 @@ export default function Items({ items }) {
     const currency = ReactRedux.useSelector(state => _.get(state, 'appState.orderData.currency', 'USD'));
     return React.createElement(
         'div',
-        { className: "uk-width-1-1 uk-overflow-auto" },
+        { className: 'overflow-auto mt-4' },
         React.createElement(
             'div',
-            { className: 'border-block' },
+            { className: 'sml-block' },
             React.createElement(
                 'div',
-                null,
-                React.createElement(
-                    'h3',
-                    null,
-                    'Products'
-                )
+                { className: 'sml-block-title' },
+                'Products'
             ),
             React.createElement(
                 'table',
-                { className: "uk-table uk-table-small" },
+                { className: 'table table-bordered' },
                 React.createElement(
                     'thead',
                     null,
@@ -167,7 +163,7 @@ export default function Items({ items }) {
                             null,
                             React.createElement(Area, {
                                 key: k,
-                                id: "order_item_row_" + i.itemId,
+                                id: "order_item_row_" + i.item_id,
                                 noOuter: true,
                                 item: i,
                                 coreWidgets: [{

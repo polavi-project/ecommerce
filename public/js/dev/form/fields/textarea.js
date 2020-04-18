@@ -33,10 +33,10 @@ export default function TextArea (props) {
         setValue(e.target.value);
     };
 
-    return <div className="form-field form-textarea">
-        <div className="field-label"><label htmlFor={props.name}>{props.label}</label></div>
+    return <div className="form-group">
+        {props.label && <label htmlFor={props.name}>{props.label}</label>}
         <textarea
-            className={"uk-textarea uk-form-small uk-form-width-" + props.size}
+            className={"form-control"}
             id={props.name}
             name={props.name}
             placeholder={props.placeholder}

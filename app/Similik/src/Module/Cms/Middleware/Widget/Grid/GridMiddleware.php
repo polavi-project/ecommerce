@@ -33,11 +33,6 @@ class GridMiddleware extends MiddlewareAbstract
                 "id"=>"cms_widget_grid_container"
             ]
         );
-        $response->addWidget(
-            'cms_widget_grid_title',
-            'cms_widget_grid_container',
-            0, get_js_file_url("production/cms/widget/grid/title.js", true)
-        );
 
         $response->addWidget(
             'widgets',

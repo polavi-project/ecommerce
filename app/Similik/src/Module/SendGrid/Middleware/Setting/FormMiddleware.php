@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace Similik\Module\SendGrid\Middleware\Setting;
 
 use function Similik\_mysql;
+use function Similik\generate_url;
 use function Similik\get_default_language_Id;
 use function Similik\get_js_file_url;
 use Similik\Services\Helmet;
@@ -49,7 +50,9 @@ AND `name` LIKE 'sendgrid_%'", ['language' => $request->attributes->get('languag
             10,
             get_js_file_url("production/sendgrid/setting_form.js", true),
             array_merge($setting, [
-                "formAction"=>$this->getContainer()->get(Router::class)->generateUrl('setting.sendgrid')
+                "formAction"=>$this->getContainer()->get(Router::class)->generateUrl('setting.sendgrid'),
+                "dashboardUrl" => generate_url("dashboard"),
+                "cancelUrl" => generate_url("setting.sendgrid")
             ])
         );
 

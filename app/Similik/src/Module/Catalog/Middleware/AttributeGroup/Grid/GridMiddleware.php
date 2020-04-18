@@ -29,14 +29,17 @@ class GridMiddleware extends MiddlewareAbstract
 
         $this->getContainer()->get(Helmet::class)->setTitle("Attribute groups");
         $response->addWidget(
-            'attribute_group_grid_title',
+            'attribute_group_grid_container',
             'content',
-            0, get_js_file_url("production/catalog/attribute_group/grid/title.js", true)
+            10,
+            get_js_file_url("production/grid/grid.js", true),
+            ['id'=>"attribute_group_grid_container"]
         );
         $response->addWidget(
             'attribute-group-grid',
-            'content',
-            20, get_js_file_url("production/catalog/attribute_group/grid/grid.js", true),
+            'attribute_group_grid_container',
+            10,
+            get_js_file_url("production/catalog/attribute_group/grid/grid.js", true),
             [
                 "apiUrl" => generate_url('admin.graphql.api')
             ]

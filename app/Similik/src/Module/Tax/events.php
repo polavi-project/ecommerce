@@ -12,19 +12,20 @@ use function Similik\_mysql;
 use Similik\Module\Checkout\Services\Cart\Cart;
 use Similik\Module\Checkout\Services\Cart\Item;
 use Similik\Module\Tax\Services\TaxCalculator;
-use Similik\Services\Routing\Router;
 
 $eventDispatcher->addListener(
-        'before_execute_' . strtolower(str_replace('\\', '_', \Similik\Middleware\AdminNavigationMiddleware::class)),
-        function (\Similik\Services\Di\Container $container) {
-            $container->get(\Similik\Module\Cms\Services\NavigationManager::class)->addItem(
-                'tax_class',
-                'Tax',
-                $container->get(Router::class)->generateUrl('tax.class.list'),
-                'print',
-                'setting',
-                10
-            );
+        "admin_menu",
+        function (array $items) {
+            return array_merge($items, [
+                [
+                    "id" => "setting_tax",
+                    "sort_order" => 60,
+                    "url" => \Similik\generate_url("tax.class.list"),
+                    "title" => "Tax",
+                    "icon" => "money-check",
+                    "parent_id" => "setting"
+                ]
+            ]);
         },
         0
 );

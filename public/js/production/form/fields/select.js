@@ -38,20 +38,16 @@ export default function Select(props) {
 
     return React.createElement(
         "div",
-        { className: "form-field form-select" },
-        React.createElement(
-            "div",
-            { className: "field-label" },
-            React.createElement(
-                "label",
-                { htmlFor: props.name },
-                props.label
-            )
+        { className: "form-group" },
+        props.label && React.createElement(
+            "label",
+            { htmlFor: props.name },
+            props.label
         ),
         React.createElement(
             "select",
             {
-                className: "uk-select uk-form-small uk-form-width-" + props.size,
+                className: "form-control",
                 id: props.name,
                 name: props.name,
                 value: value,

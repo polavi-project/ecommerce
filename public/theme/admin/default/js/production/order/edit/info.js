@@ -7,19 +7,15 @@ export function OrderInfo() {
     let number = ReactRedux.useSelector(state => _.get(state, 'appState.orderData.order_number'));
     return React.createElement(
         'div',
-        { className: "uk-width-1-1 order-edit-info" },
+        { className: "order-edit-info" },
         React.createElement(Area, {
             id: 'order_edit_general_info',
-            className: 'border-block',
+            className: 'sml-block',
             coreWidgets: [{
                 component: () => React.createElement(
                     'div',
-                    null,
-                    React.createElement(
-                        'h3',
-                        null,
-                        'General info'
-                    )
+                    { className: 'sml-block-title' },
+                    'General info'
                 ),
                 props: {},
                 sort_order: 10,

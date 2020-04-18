@@ -33,18 +33,26 @@ export default function Checkbox (props) {
         if(isDisabled === true)
             return false;
         setChecked(e.target.checked);
+        if (props.handler) props.handler.call(window, e, props);
     };
 
-    return <div className="form-field form-checkbox">
-        <label htmlFor={name}><input
-            type="checkbox"
-            className="uk-checkbox"
-            id={props.name}
-            name={props.name}
-            onChange={onChange}
-            disabled={isDisabled}
-            checked={isChecked}
-        /> {props.label}</label>
+    return <div className="form-group similik-checkbox">
+        <div>
+            <label htmlFor={props.name}><input
+                type="checkbox"
+                className="uk-checkbox"
+                id={props.name}
+                name={props.name}
+                value={props.value}
+                onChange={onChange}
+                disabled={isDisabled}
+                checked={isChecked}
+            />
+                {!isChecked && <i className="fas fa-square font-color-primary"></i>}
+                {isChecked && <i className="fas fa-check-square font-color-primary"></i>}
+                {props.label}
+            </label>
+        </div>
         { props.comment &&
             <p><i>{props.comment}</i></p>
         }

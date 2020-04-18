@@ -38,6 +38,7 @@ class GreetingMiddleware extends MiddlewareAbstract
             [
                 "fullName" => $user['full_name'],
                 "logoutUrl" => generate_url('admin.logout'),
+                "time" => date("F j, Y, g:i a"),
             ]
         );
 

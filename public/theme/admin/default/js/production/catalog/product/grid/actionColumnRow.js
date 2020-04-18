@@ -31,7 +31,11 @@ export default function ActionColumnRow({ areaProps, deleteUrl }) {
         React.createElement(
             "div",
             null,
-            React.createElement(A, { url: _.get(areaProps, 'row.editUrl', ''), text: "Edit" })
+            React.createElement(
+                A,
+                { url: _.get(areaProps, 'row.editUrl', '') },
+                React.createElement("i", { className: "fas fa-edit" })
+            )
         ),
         React.createElement(
             "div",
@@ -40,12 +44,8 @@ export default function ActionColumnRow({ areaProps, deleteUrl }) {
                 "a",
                 { href: "#", onClick: e => {
                         e.preventDefault();deleteProduct(areaProps.row.product_id);
-                    } },
-                React.createElement(
-                    "span",
-                    { className: "text-danger" },
-                    "Delete"
-                )
+                    }, className: "text-danger" },
+                React.createElement("i", { className: "fas fa-trash-alt" })
             )
         )
     );

@@ -63,15 +63,27 @@ class ResponseMiddleware extends MiddlewareAbstract
                 ->addScript(['src'=> get_js_file_url('production/react-redux.min.js'), 'type'=>'text/javascript', 'defer'=> "true"], 5)
                 ->addScript(['src'=> get_js_file_url('production/pubsub.js'), 'type'=>'text/javascript', 'defer'=> "true"], 5)
                 ->addScript(['src'=> get_js_file_url('production/app.js'), 'type'=>'module', 'defer'=> "true"], 8)
-                ->addScript(['src'=> get_js_file_url('production/uikit.min.js'), 'type'=>'text/javascript', 'defer'=> "true"], 9)
-                ->addScript(['src'=> get_js_file_url('production/uikit-icons.min.js'), 'type'=>'text/javascript', 'defer'=> "true"], 10)
                 ->addScript(['src'=> get_js_file_url('production/jquery-3.3.1.min.js'), 'type'=>'text/javascript', 'defer'=> "true"], 11);
-
-            $this
-                ->getContainer()
-                ->get(Helmet::class)
-                ->addLink(['rel'=>'stylesheet', 'href'=> get_css_file_url('style.css', $request->isAdmin())])
-                ->addLink(['rel'=>'stylesheet', 'href'=> get_css_file_url('uikit.min.css', $request->isAdmin())]);
+            if(!$request->isAdmin())
+                $this
+                    ->getContainer()
+                    ->get(Helmet::class)
+                    ->addScript(['src'=> get_js_file_url('production/uikit.min.js'), 'type'=>'text/javascript', 'defer'=> "true"], 9)
+                    ->addScript(['src'=> get_js_file_url('production/uikit-icons.min.js'), 'type'=>'text/javascript', 'defer'=> "true"], 10)
+                    ->addLink(['rel'=>'stylesheet', 'href'=> get_css_file_url('animate.min.css', $request->isAdmin())])
+                    ->addLink(['rel'=>'stylesheet', 'href'=> get_css_file_url('bootstrap.css', $request->isAdmin())])
+                    ->addLink(['rel'=>'stylesheet', 'href'=> get_css_file_url('style.css', $request->isAdmin())])
+                    ->addLink(['rel'=>'stylesheet', 'href'=> get_css_file_url('uikit.min.css', $request->isAdmin())]);
+            else
+                $this
+                    ->getContainer()
+                    ->get(Helmet::class)
+                    ->addScript(['src'=> get_js_file_url('production/simplebar.min.js', true), 'type'=>'text/javascript'], 10)
+                    ->addLink(['rel'=>'stylesheet', 'href'=> get_css_file_url('simplebar.css', $request->isAdmin())])
+                    ->addLink(['rel'=>'stylesheet', 'href'=> get_css_file_url('animate.min.css', $request->isAdmin())])
+                    ->addLink(['rel'=>'stylesheet', 'href'=> get_css_file_url('fontawesome/css/all.min.css', $request->isAdmin())])
+                    ->addLink(['rel'=>'stylesheet', 'href'=> get_css_file_url('bootstrap.css', $request->isAdmin())])
+                    ->addLink(['rel'=>'stylesheet', 'href'=> get_css_file_url('style.css', $request->isAdmin())]);
 
             $response->setContent($this->renderHtml($response));
             $response->send($request->isAjax(), $response->getStatusCode());

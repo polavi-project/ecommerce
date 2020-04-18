@@ -35,14 +35,13 @@ export default function Grid({id, defaultFilter = []})
         setFilters(defaultFilter);
     };
 
-    return <div className={"uk-overflow-auto"}>
-        <Area
-            id={id}
-            filters={filters}
-            addFilter={addFilter}
-            updateFilter={updateFilter}
-            removeFilter={removeFilter}
-            cleanFilter={cleanFilter}
-        />
-    </div>
+    return <Area
+        id={id}
+        filters={filters}
+        addFilter={addFilter}
+        updateFilter={updateFilter}
+        removeFilter={removeFilter}
+        cleanFilter={cleanFilter}
+        className={"grid sml-block"}
+    />
 }

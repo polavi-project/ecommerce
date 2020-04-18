@@ -4,7 +4,7 @@ import { Error } from "./error.js";
 import { FORM_FIELD_CREATED, FORM_VALIDATED, FORM_FIELD_REMOVED, FORM_LANGUAGE_CHANGED, FORM_FIELD_UPDATED } from "./../../event-types.js";
 
 export default function Radio(props) {
-    const [value, setValue] = React.useState(props.value ? props.value : '');
+    const [value, setValue] = React.useState(props.value !== undefined ? props.value : '');
     const [error, setError] = React.useState(undefined);
     const [isDisabled, setIsDisabled] = React.useState(false);
 
@@ -36,30 +36,43 @@ export default function Radio(props) {
     }, []);
 
     const onChange = e => {
-        if (isDisabled === true) return false;
         setValue(e.target.value);
+        if (props.handler) props.handler.call(window, e, props);
     };
-
-    const options = props.options ? props.options : [];
 
     return React.createElement(
         "div",
-        { className: "form-field form-radio" },
-        options.map((o, i) => {
-            return React.createElement(
+        { className: "form-group similik-radio" },
+        props.label && React.createElement(
+            "div",
+            null,
+            React.createElement(
                 "label",
-                { style: { display: 'block' }, key: i, htmlFor: name },
-                React.createElement("input", {
-                    type: "radio",
-                    className: "uk-radio",
-                    name: props.name,
-                    value: o.value,
-                    checked: value === o.value,
-                    onChange: onChange,
-                    disabled: isDisabled
-                }),
-                " ",
-                o.text
+                null,
+                props.label
+            )
+        ),
+        props.options.map((o, i) => {
+            return React.createElement(
+                "div",
+                null,
+                React.createElement(
+                    "label",
+                    { key: i, htmlFor: props.name + i },
+                    React.createElement("input", {
+                        type: "radio",
+                        className: "uk-radio",
+                        name: props.name,
+                        id: props.name + i,
+                        value: o.value,
+                        checked: value == o.value,
+                        onChange: onChange,
+                        disabled: isDisabled
+                    }),
+                    value != o.value && React.createElement("i", { className: "fas fa-circle font-color-primary" }),
+                    value == o.value && React.createElement("i", { className: "fas fa-check-circle font-color-primary" }),
+                    o.text
+                )
             );
         }),
         props.comment && React.createElement(

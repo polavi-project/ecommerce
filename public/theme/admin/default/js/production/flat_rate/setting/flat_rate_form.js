@@ -3,9 +3,9 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 import { Form } from "../../../../../../../js/production/form/form.js";
 import Area from "../../../../../../../js/production/area.js";
 import Text from "../../../../../../../js/production/form/fields/text.js";
-import Select from "../../../../../../../js/production/form/fields/select.js";
 import { CountryOptions } from "../../../../../../../js/production/locale/country_option.js";
 import Multiselect from "../../../../../../../js/production/form/fields/multiselect.js";
+import Switch from "../../../../../../../js/production/form/fields/switch.js";
 
 function Country({ countries = [] }) {
     return React.createElement(
@@ -17,16 +17,15 @@ function Country({ countries = [] }) {
             React.createElement(Multiselect, {
                 value: countries,
                 label: "Applicable countries",
-                name: "shipment_flat_rate_countries[]",
-                className: "uk-form-small"
+                name: "shipment_flat_rate_countries[]"
             })
         )
     );
 }
 
 export default function FlatRateSettingForm(props) {
-
     const [showForm, setShowForm] = React.useState(false);
+
     const onClick = e => {
         e.preventDefault();
         setShowForm(!showForm);
@@ -34,23 +33,27 @@ export default function FlatRateSettingForm(props) {
 
     return React.createElement(
         "div",
-        { className: "uk-width-1-3" },
+        { className: "col-4" },
         React.createElement(
             "div",
-            { className: "border-block" },
+            { className: "sml-block" },
             React.createElement(
                 "div",
-                null,
-                "Flat Rate  ",
+                { className: "sml-block-title sml-flex-space-between mb-0" },
+                React.createElement(
+                    "span",
+                    { className: "normal-font font-weight-semi-bold" },
+                    "Flat Rate"
+                ),
                 React.createElement(
                     "a",
-                    { onClick: e => onClick(e) },
+                    { onClick: e => onClick(e), href: "#", className: "text-primary normal-font" },
                     "Edit"
                 )
             ),
             React.createElement(
                 "div",
-                { style: { display: showForm ? 'block' : 'none' } },
+                { style: { display: showForm ? 'block' : 'none' }, className: "mt-4" },
                 React.createElement(
                     Form,
                     _extends({
@@ -67,8 +70,8 @@ export default function FlatRateSettingForm(props) {
                             sort_order: 20,
                             id: "shipment_flat_rate_fee"
                         }, {
-                            component: Select,
-                            props: { id: 'shipment_flat_rate_status', value: _.get(props, 'shipment_flat_rate_status', ''), formId: "flat_rate-setting-form", name: "shipment_flat_rate_status", label: "Status", options: [{ value: 0, text: 'Disabled' }, { value: 1, text: 'Enabled' }], isTranslateAble: false },
+                            component: Switch,
+                            props: { id: 'shipment_flat_rate_status', value: _.get(props, 'shipment_flat_rate_status', ''), formId: "flat_rate-setting-form", name: "shipment_flat_rate_status", label: "Status", isTranslateAble: false },
                             sort_order: 30,
                             id: "shipment_flat_rate_status"
                         }, {

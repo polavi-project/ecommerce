@@ -3,7 +3,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 import { Form } from "../../../../../../../js/production/form/form.js";
 import Area from "../../../../../../../js/production/area.js";
 import Text from "../../../../../../../js/production/form/fields/text.js";
-import Select from "../../../../../../../js/production/form/fields/select.js";
+import Switch from "../../../../../../../js/production/form/fields/switch.js";
 
 export default function CodSettingForm(props) {
 
@@ -15,23 +15,27 @@ export default function CodSettingForm(props) {
 
     return React.createElement(
         "div",
-        { className: "uk-width-1-3" },
+        { className: "col-4" },
         React.createElement(
             "div",
-            { className: "border-block" },
+            { className: "sml-block" },
             React.createElement(
                 "div",
-                null,
-                "Cash on delivery   ",
+                { className: "sml-block-title sml-flex-space-between mb-0" },
+                React.createElement(
+                    "span",
+                    { className: "normal-font font-weight-semi-bold" },
+                    "Cash on delivery"
+                ),
                 React.createElement(
                     "a",
-                    { onClick: e => onClick(e) },
+                    { onClick: e => onClick(e), href: "#", className: "text-primary normal-font" },
                     "Edit"
                 )
             ),
             React.createElement(
                 "div",
-                { style: { display: showForm ? 'block' : 'none' } },
+                { style: { display: showForm ? 'block' : 'none' }, className: "mt-4" },
                 React.createElement(
                     Form,
                     _extends({
@@ -43,8 +47,8 @@ export default function CodSettingForm(props) {
                             sort_order: 10,
                             id: "payment_cod_name"
                         }, {
-                            component: Select,
-                            props: { id: 'payment_cod_status', value: _.get(props, 'payment_cod_status', ''), formId: "cod-setting-form", name: "payment_cod_status", type: "select", label: "Status", options: [{ value: 0, text: 'Disabled' }, { value: 1, text: 'Enabled' }], isTranslateAble: false },
+                            component: Switch,
+                            props: { id: 'payment_cod_status', value: _.get(props, 'payment_cod_status', ''), formId: "cod-setting-form", name: "payment_cod_status", type: "select", label: "Status", isTranslateAble: false },
                             sort_order: 20,
                             id: "payment_cod_status"
                         }, {

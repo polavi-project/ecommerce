@@ -38,11 +38,11 @@ export default function DateTime (props) {
         setValue(e.target.value);
     };
 
-    return <div className="form-field form-date-time">
-        <div className="field-label"><label htmlFor={props.name}>{props.label}</label></div>
+    return <div className="form-group">
+        {props.label && <label htmlFor={props.name}>{props.label}</label>}
         <input
             type="text"
-            className="uk-form-small uk-input"
+            className="form-control"
             id={props.name}
             name={props.name}
             placeholder={props.placeholder}

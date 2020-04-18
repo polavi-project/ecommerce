@@ -63,7 +63,7 @@ class SaveMiddleware extends MiddlewareAbstract
 //                $this->copyAttributeTextValue($newLanguages, $processor);
 //            }
             $processor->commit();
-            $response->addAlert('catalog_setting_update_success', 'success', 'Setting saved');
+            $response->addAlert('catalog_setting_update_success', 'success', 'Setting saved successfully');
             $response->redirect($this->getContainer()->get(Router::class)->generateUrl('setting.catalog'));
         } catch (\Exception $e) {
             $processor->rollback();

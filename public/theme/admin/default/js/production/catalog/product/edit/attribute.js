@@ -25,27 +25,18 @@ export default function Attributes(props) {
 
     return React.createElement(
         "div",
-        { className: "product-edit-attribute border-block" },
+        { className: "product-edit-attribute sml-block" },
         React.createElement(
             "div",
-            null,
-            React.createElement(
-                "strong",
-                null,
-                "Attribute"
-            )
+            { className: "sml-block-title" },
+            "Attribute"
         ),
         React.createElement(
             "div",
             null,
-            React.createElement(
-                "span",
-                null,
-                "Attribute Group"
-            ),
-            React.createElement("br", null),
             React.createElement(Select, {
                 name: "group_id",
+                label: "Attribute groups",
                 formId: props.formId,
                 isTranslateAble: false,
                 value: props.selected_group === undefined ? parseInt(props.attributeGroups[0]['attribute_group_id']) : parseInt(props.selected_group),
@@ -74,7 +65,7 @@ export default function Attributes(props) {
         ),
         React.createElement(
             "table",
-            { className: "uk-table uk-table-small" },
+            { className: "table table-bordered" },
             React.createElement(
                 "tbody",
                 null,

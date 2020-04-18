@@ -27,15 +27,11 @@ export default function Seo({ data }) {
 
     return React.createElement(
         "div",
-        { className: "product-edit-seo border-block" },
+        { className: "product-edit-seo sml-block mt-4" },
         React.createElement(
             "div",
-            null,
-            React.createElement(
-                "strong",
-                null,
-                "SEO"
-            )
+            { className: "sml-block-title" },
+            "SEO"
         ),
         React.createElement(Area, { id: "product-edit-seo", coreWidgets: fields })
     );

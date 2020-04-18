@@ -2,7 +2,7 @@ import {Error} from "./error.js"
 import {FORM_FIELD_CREATED, FORM_VALIDATED, FORM_FIELD_REMOVED, FORM_LANGUAGE_CHANGED, FORM_FIELD_UPDATED} from "./../../event-types.js";
 
 export default function Radio (props) {
-    const [value, setValue] = React.useState(props.value ? props.value : '');
+    const [value, setValue] = React.useState(props.value !== undefined ? props.value : '');
     const [error, setError] = React.useState(undefined);
     const [isDisabled, setIsDisabled] = React.useState(false);
 
@@ -34,25 +34,30 @@ export default function Radio (props) {
     }, []);
 
     const onChange = (e)=> {
-        if(isDisabled === true)
-            return false;
         setValue(e.target.value);
+        if (props.handler) props.handler.call(window, e, props);
     };
 
-    const options = props.options ? props.options : [];
-
-    return <div className="form-field form-radio">
+    return <div className="form-group similik-radio">
+        {props.label && <div><label>{props.label}</label></div>}
         {
-            options.map((o,i) => {
-                return <label style={{display: 'block'}} key={i} htmlFor={name}><input
-                    type="radio"
-                    className="uk-radio"
-                    name={props.name}
-                    value={o.value}
-                    checked={value === o.value}
-                    onChange={onChange}
-                    disabled={isDisabled}
-                /> {o.text}</label>
+            props.options.map((o,i) => {
+                return <div>
+                    <label key={i} htmlFor={props.name + i}><input
+                        type="radio"
+                        className="uk-radio"
+                        name={props.name}
+                        id={props.name + i}
+                        value={o.value}
+                        checked={value == o.value}
+                        onChange={onChange}
+                        disabled={isDisabled}
+                    />
+                        {value != o.value && <i className="fas fa-circle font-color-primary"></i>}
+                        {value == o.value && <i className="fas fa-check-circle font-color-primary"></i>}
+                        {o.text}
+                    </label>
+                </div>
             })
         }
         { props.comment &&

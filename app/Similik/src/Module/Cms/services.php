@@ -8,9 +8,6 @@ declare(strict_types=1);
 
 /**@var \Similik\Services\Di\Container $container */
 
-$container[\Similik\Module\Cms\Services\NavigationManager::class] =  function() {
-    return new \Similik\Module\Cms\Services\NavigationManager();
-};
 
 $container[\Similik\Module\Cms\Services\Type\FileType::class] =  function() use ($container) {
     return new \Similik\Module\Cms\Services\Type\FileType($container);

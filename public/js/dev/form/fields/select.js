@@ -34,10 +34,10 @@ export default function Select (props) {
         if (props.handler) props.handler.call(window, e, props);
     };
 
-    return <div className="form-field form-select">
-        <div className="field-label"><label htmlFor={props.name}>{props.label}</label></div>
+    return <div className="form-group">
+        {props.label && <label htmlFor={props.name}>{props.label}</label>}
         <select
-            className={"uk-select uk-form-small uk-form-width-" + props.size}
+            className={"form-control"}
             id={props.name}
             name={props.name}
             value={value}

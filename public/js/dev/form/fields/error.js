@@ -3,7 +3,7 @@ let Error = (props)=> {
     if(!error)
         return "";
     else
-        return (<div className="form-field-error"><span>{error}</span></div>);
+        return (<div className="field-validation-error"><span>{error}</span></div>);
 };
 
 export {Error}

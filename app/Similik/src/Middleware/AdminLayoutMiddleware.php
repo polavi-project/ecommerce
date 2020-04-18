@@ -26,16 +26,9 @@ class AdminLayoutMiddleware extends MiddlewareAbstract
             'wrapper',
             0,
             get_js_file_url("production/area.js"),
-            ["id"=> "container", "className" => "container"]
+            ["id"=> "container", "className" => "container-fluid " . str_replace(".", "-", $request->attributes->get("_matched_route"))]
         );
 
-        $response->addWidget(
-            'admin_header',
-            'container',
-            0,
-            get_js_file_url("production/area.js", true),
-            ["id"=> "header", "className" => "header"]
-        );
         $response->addWidget(
             'admin_menu',
             'container',
@@ -43,15 +36,46 @@ class AdminLayoutMiddleware extends MiddlewareAbstract
             get_js_file_url("production/area.js", true),
             ["id"=> "menu", "className" => "admin-navigation"]
         );
+
         $response->addWidget(
             'admin_content',
             'container',
             20,
             get_js_file_url("production/area.js", true),
             [
-                "id"=> "content",
-                "className"=> "content"
+                "id"=> "content_wrapper",
+                "className"=> "content-wrapper"
             ]
+        );
+
+        $response->addWidget(
+            'admin_header',
+            'content_wrapper',
+            0,
+            get_js_file_url("production/area.js", true),
+            ["id"=> "header", "className" => "header"]
+        );
+
+        $response->addWidget(
+            'dashboard_title',
+            'content',
+            0,
+            get_js_file_url("production/cms/title.js", true)
+        );
+
+        $response->addWidget(
+            'admin_content_inner',
+            'content_wrapper',
+            10,
+            get_js_file_url("production/area.js", true),
+            ["id"=> "content", "className" => "content"]
+        );
+
+        $response->addWidget(
+            'admin_footer',
+            'content_wrapper',
+            20,
+            get_js_file_url("production/cms/footer.js", true)
         );
 
         return $delegate;

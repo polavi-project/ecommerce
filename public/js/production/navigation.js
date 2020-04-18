@@ -20,17 +20,18 @@ export default function Navigation(props) {
 
     const renderChildren = id => {
         let items = getChildrenItems(id);
+        if (items.length == 0) return null;
         return React.createElement(
             "ul",
-            { className: "uk-nav-sub" },
+            { className: "list-unstyled" },
             items.map((r, i) => {
                 return React.createElement(
                     "li",
-                    { key: i, className: "uk-parent" },
+                    { key: i, className: "nav-item" },
                     React.createElement(
                         A,
                         { url: r.url },
-                        r.icon && React.createElement("span", { className: "uk-margin-small-right", "uk-icon": "icon: " + r.icon + "; ratio: 1" }),
+                        r.icon && React.createElement("i", { className: "fas fa-" + r.icon }),
                         r.title
                     ),
                     renderChildren(r.id)
@@ -40,24 +41,26 @@ export default function Navigation(props) {
     };
     let rootItems = getRootItems();
     return React.createElement(
-        "div",
-        null,
-        React.createElement(
-            "ul",
-            { className: "uk-nav-default uk-nav-parent-icon", "uk-nav": "multiple: true" },
-            rootItems.map((r, i) => {
-                return React.createElement(
-                    "li",
-                    { key: i, className: "uk-parent" },
-                    React.createElement(
-                        A,
-                        { url: r.url },
-                        r.icon && React.createElement("span", { className: "uk-margin-small-right", "uk-icon": "icon: " + r.icon + "; ratio: 1" }),
-                        r.title
-                    ),
-                    renderChildren(r.id)
-                );
-            })
-        )
+        "ul",
+        { className: "list-unstyled" },
+        rootItems.map((r, i) => {
+            return React.createElement(
+                "li",
+                { key: i, className: "nav-item" },
+                r.url && React.createElement(
+                    A,
+                    { url: r.url, className: "root-label" },
+                    r.icon && React.createElement("i", { className: "fas fa-" + r.icon }),
+                    r.title
+                ),
+                !r.url && React.createElement(
+                    "span",
+                    { className: "root-label" },
+                    r.icon && React.createElement("i", { className: "fas fa-" + r.icon }),
+                    r.title
+                ),
+                renderChildren(r.id)
+            );
+        })
     );
 }

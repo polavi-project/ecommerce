@@ -3,9 +3,6 @@ import A from "../../../../../../../../js/production/a.js";
 import { Fetch } from "../../../../../../../../js/production/fetch.js";
 
 function IdColumnHeader({ areaProps }) {
-    const filterFrom = React.useRef(null);
-    const filterTo = React.useRef(null);
-
     React.useEffect(() => {
         areaProps.addField("attribute_group_id");
     }, []);
@@ -15,7 +12,7 @@ function IdColumnHeader({ areaProps }) {
         null,
         React.createElement(
             "div",
-            { className: "header id-header" },
+            { className: "table-header id-header" },
             React.createElement(
                 "div",
                 { className: "title" },
@@ -49,11 +46,11 @@ function NameColumnHeader({ areaProps }) {
     }, []);
 
     return React.createElement(
-        "td",
+        "th",
         null,
         React.createElement(
             "div",
-            { className: "header name-header" },
+            { className: "table-header name-header" },
             React.createElement(
                 "div",
                 { className: "title" },
@@ -73,7 +70,7 @@ function NameColumnHeader({ areaProps }) {
                         if (e.key === 'Enter') areaProps.addFilter("group_name", "LIKE", `%${e.target.value}%`);
                     },
                     placeholder: "Group name",
-                    className: "uk-input uk-form-small uk-form-width-small"
+                    className: "form-control"
                 })
             )
         )
@@ -97,19 +94,26 @@ function ActionColumnHeader({ areaProps }) {
         areaProps.addField('editUrl');
         areaProps.addField('deleteUrl');
     }, []);
+
     return React.createElement(
-        "td",
-        null,
+        "th",
+        { className: "column action-column" },
         React.createElement(
             "div",
-            { className: "header" },
+            { className: "table-header" },
             React.createElement(
                 "div",
                 { className: "title" },
+                React.createElement("span", null)
+            ),
+            React.createElement(
+                "div",
+                { className: "filter" },
                 React.createElement(
-                    "span",
-                    null,
-                    "Action"
+                    "a",
+                    { onClick: () => onClick(), className: "text-danger", title: "Clear filter", href: "javascript:void(0)" },
+                    React.createElement("i", { className: "fa fa-filter" }),
+                    React.createElement("i", { className: "fa fa-slash", style: { marginLeft: "-13px" } })
                 )
             )
         )
@@ -123,19 +127,22 @@ function ActionColumnRow({ row }) {
         React.createElement(
             "div",
             null,
-            React.createElement(A, { url: _.get(row, 'editUrl', ''), text: "Edit" }),
             React.createElement(
-                "span",
-                null,
-                " "
-            ),
+                A,
+                { url: row.editUrl },
+                React.createElement("i", { className: "fas fa-edit" })
+            )
+        ),
+        React.createElement(
+            "div",
+            null,
             React.createElement(
                 "a",
-                { className: "uk-link-muted",
+                { className: "text-danger",
                     onClick: () => {
                         if (window.confirm('Are you sure?')) Fetch(row.deleteUrl, false, 'GET');
                     } },
-                "Delete"
+                React.createElement("i", { className: "fas fa-trash-alt" })
             )
         )
     );
@@ -213,10 +220,10 @@ export default function AttributeGrid({ apiUrl }) {
 
     return React.createElement(
         "div",
-        { className: "uk-overflow-auto" },
+        { className: "attribute-group-grid mt-4" },
         React.createElement(
             "table",
-            { className: "uk-table uk-table-small uk-table-divider" },
+            { className: "table table-bordered sticky" },
             React.createElement(
                 "thead",
                 null,

@@ -5,6 +5,8 @@ import Area from "../../../../../../../js/production/area.js";
 import Text from "../../../../../../../js/production/form/fields/text.js";
 import Select from "../../../../../../../js/production/form/fields/select.js";
 import { Fetch } from "../../../../../../../js/production/fetch.js";
+import Radio from "../../../../../../../js/production/form/fields/radio.js";
+import A from "../../../../../../../js/production/a.js";
 
 function NoImagePlaceHolder({ value = null }) {
     const uploadApi = ReactRedux.useSelector(state => _.get(state, 'appState.graphqlApi'));
@@ -53,18 +55,14 @@ function NoImagePlaceHolder({ value = null }) {
 function ListingPage(props) {
     return React.createElement(
         "div",
-        { className: "uk-width-1-3" },
+        { className: "col-4" },
         React.createElement(
             "div",
-            { className: "border-block" },
+            { className: "sml-block" },
             React.createElement(
                 "div",
-                null,
-                React.createElement(
-                    "strong",
-                    null,
-                    "Listing page"
-                )
+                { className: "sml-block-title" },
+                "Listing page"
             ),
             React.createElement(Area, {
                 id: "catalog_setting_form_listing",
@@ -136,18 +134,14 @@ function ListingPage(props) {
 function DetailPage(props) {
     return React.createElement(
         "div",
-        { className: "uk-width-1-3" },
+        { className: "col-4" },
         React.createElement(
             "div",
-            { className: "border-block" },
+            { className: "sml-block" },
             React.createElement(
                 "div",
-                null,
-                React.createElement(
-                    "strong",
-                    null,
-                    "Detail page"
-                )
+                { className: "sml-block-title" },
+                "Listing page"
             ),
             React.createElement(Area, {
                 id: "catalog_setting_form_detail",
@@ -182,23 +176,19 @@ function DetailPage(props) {
 function General(props) {
     return React.createElement(
         "div",
-        { className: "uk-width-1-3" },
+        { className: "col-4" },
         React.createElement(
             "div",
-            { className: "border-block" },
+            { className: "sml-block" },
             React.createElement(
                 "div",
-                null,
-                React.createElement(
-                    "strong",
-                    null,
-                    "General"
-                )
+                { className: "sml-block-title" },
+                "General"
             ),
             React.createElement(Area, {
                 id: "catalog_setting_form_general",
                 coreWidgets: [{
-                    component: Select,
+                    component: Radio,
                     props: {
                         id: 'catalog_out_of_stock_display',
                         formId: "catalog_setting_form",
@@ -225,36 +215,55 @@ function General(props) {
 
 export default function CatalogSettingForms(props) {
     return React.createElement(
-        "div",
-        { className: "uk-flex-center" },
+        Form,
+        { id: "catalog_setting_form", action: props.action, submitText: null },
         React.createElement(
             "div",
-            null,
+            { className: "form-head sticky" },
             React.createElement(
-                "h2",
-                null,
-                "Catalog"
+                "div",
+                { className: "child-align-middle" },
+                React.createElement(
+                    A,
+                    { url: props.dashboardUrl, className: "" },
+                    React.createElement("i", { className: "fas fa-arrow-left" }),
+                    React.createElement(
+                        "span",
+                        { className: "pl-1" },
+                        "Dashboard"
+                    )
+                )
+            ),
+            React.createElement(
+                "div",
+                { className: "buttons" },
+                React.createElement(
+                    A,
+                    { className: "btn btn-danger", url: props.cancelUrl },
+                    "Cancel"
+                ),
+                React.createElement(
+                    "button",
+                    { type: "submit", className: "btn btn-primary" },
+                    "Submit"
+                )
             )
         ),
-        React.createElement(
-            Form,
-            { id: "catalog_setting_form", action: props.action },
-            React.createElement(Area, { id: "catalog_setting_form_inner", className: "uk-grid uk-grid-small", coreWidgets: [{
-                    component: General,
-                    props: _extends({}, props),
-                    sort_order: 10,
-                    id: "catalog_setting_general"
-                }, {
-                    component: ListingPage,
-                    props: _extends({}, props),
-                    sort_order: 20,
-                    id: "catalog_setting_listing"
-                }, {
-                    component: DetailPage,
-                    props: _extends({}, props),
-                    sort_order: 30,
-                    id: "catalog_setting_detail"
-                }] })
-        )
+        React.createElement(Area, { id: "catalog_setting_form_inner", className: "row", coreWidgets: [{
+                component: General,
+                props: _extends({}, props),
+                sort_order: 10,
+                id: "catalog_setting_general"
+            }, {
+                component: ListingPage,
+                props: _extends({}, props),
+                sort_order: 20,
+                id: "catalog_setting_listing"
+            }, {
+                component: DetailPage,
+                props: _extends({}, props),
+                sort_order: 30,
+                id: "catalog_setting_detail"
+            }] })
     );
 }

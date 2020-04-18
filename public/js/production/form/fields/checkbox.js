@@ -34,25 +34,32 @@ export default function Checkbox(props) {
     const onChange = e => {
         if (isDisabled === true) return false;
         setChecked(e.target.checked);
+        if (props.handler) props.handler.call(window, e, props);
     };
 
     return React.createElement(
         "div",
-        { className: "form-field form-checkbox" },
+        { className: "form-group similik-checkbox" },
         React.createElement(
-            "label",
-            { htmlFor: name },
-            React.createElement("input", {
-                type: "checkbox",
-                className: "uk-checkbox",
-                id: props.name,
-                name: props.name,
-                onChange: onChange,
-                disabled: isDisabled,
-                checked: isChecked
-            }),
-            " ",
-            props.label
+            "div",
+            null,
+            React.createElement(
+                "label",
+                { htmlFor: props.name },
+                React.createElement("input", {
+                    type: "checkbox",
+                    className: "uk-checkbox",
+                    id: props.name,
+                    name: props.name,
+                    value: props.value,
+                    onChange: onChange,
+                    disabled: isDisabled,
+                    checked: isChecked
+                }),
+                !isChecked && React.createElement("i", { className: "fas fa-square font-color-primary" }),
+                isChecked && React.createElement("i", { className: "fas fa-check-square font-color-primary" }),
+                props.label
+            )
         ),
         props.comment && React.createElement(
             "p",

@@ -9,8 +9,8 @@ function Pending({ status, noOuter = false }) {
         'Pending'
     );else if (status == 'pending') return React.createElement(
         'span',
-        { className: 'uk-label uk-label-warning' },
-        React.createElement('span', { 'uk-icon': 'icon: tag; ratio: 0.8' }),
+        { className: 'badge badge-secondary' },
+        React.createElement('i', { className: 'fas fa-tag' }),
         ' Pending'
     );else return null;
 }
@@ -22,8 +22,8 @@ function Paid({ status, noOuter = false }) {
         'Paid'
     );else if (status == 'paid') return React.createElement(
         'span',
-        { className: 'uk-label uk-label-success' },
-        React.createElement('span', { 'uk-icon': 'icon: tag; ratio: 0.8' }),
+        { className: 'badge badge-success' },
+        React.createElement('i', { className: 'fas fa-tag' }),
         ' Paid'
     );else return null;
 }
@@ -35,8 +35,8 @@ function Refunded({ status, noOuter = false }) {
         'Refunded'
     );else if (status == 'refunded') return React.createElement(
         'span',
-        { className: 'uk-label uk-label-danger' },
-        React.createElement('span', { 'uk-icon': 'icon: tag; ratio: 0.8' }),
+        { className: 'badge badge-danger' },
+        React.createElement('i', { className: 'fas fa-tag' }),
         ' Refunded'
     );else return null;
 }

@@ -9,7 +9,7 @@ function Pending({ status, noOuter = false }) {
         'Pending'
     );else if (status == 'pending') return React.createElement(
         'span',
-        { className: 'uk-label uk-label-warning' },
+        { className: 'badge badge-secondary' },
         React.createElement('span', { 'uk-icon': 'icon: tag; ratio: 0.8' }),
         ' Pending'
     );else return null;
@@ -22,7 +22,7 @@ function Delivering({ status, noOuter = false }) {
         'Delivering'
     );else if (status == 'delivering') return React.createElement(
         'span',
-        { className: 'uk-label uk-label-warning' },
+        { className: 'badge badge-success' },
         React.createElement('span', { 'uk-icon': 'icon: tag; ratio: 0.8' }),
         ' Delivering'
     );else return null;
@@ -35,7 +35,7 @@ function Delivered({ status, noOuter = false }) {
         'Delivered'
     );else if (status == 'delivered') return React.createElement(
         'span',
-        { className: 'uk-label uk-label-success' },
+        { className: 'badge badge-success' },
         React.createElement('span', { 'uk-icon': 'icon: tag; ratio: 0.8' }),
         ' Delivered'
     );else return null;

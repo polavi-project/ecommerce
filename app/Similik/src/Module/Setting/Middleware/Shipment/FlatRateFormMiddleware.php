@@ -15,7 +15,7 @@ use Similik\Services\Http\Request;
 use Similik\Middleware\MiddlewareAbstract;
 use Similik\Services\Http\Response;
 use Similik\Services\Routing\Router;
-
+// TODO: move this middlewre to Flatrate module
 class FlatRateFormMiddleware extends MiddlewareAbstract
 {
     public function __invoke(Request $request, Response $response, $delegate = null)

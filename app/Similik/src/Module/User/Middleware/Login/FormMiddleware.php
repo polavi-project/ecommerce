@@ -25,7 +25,8 @@ class FormMiddleware extends MiddlewareAbstract
             get_js_file_url("production/user/login/admin_login_form.js", true),
             [
                 "id"=> "admin_login_form",
-                "action"=> $this->getContainer()->get(Router::class)->generateUrl("admin.authenticate")
+                "action"=> $this->getContainer()->get(Router::class)->generateUrl("admin.authenticate"),
+                "logoUrl" => \Similik\get_base_url_scheme_less() . '/public/theme/admin/default/image/logo.png',
             ]
         );
         

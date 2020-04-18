@@ -28,16 +28,13 @@ export default function Grid({ id, defaultFilter = [] }) {
         setFilters(defaultFilter);
     };
 
-    return React.createElement(
-        "div",
-        { className: "uk-overflow-auto" },
-        React.createElement(Area, {
-            id: id,
-            filters: filters,
-            addFilter: addFilter,
-            updateFilter: updateFilter,
-            removeFilter: removeFilter,
-            cleanFilter: cleanFilter
-        })
-    );
+    return React.createElement(Area, {
+        id: id,
+        filters: filters,
+        addFilter: addFilter,
+        updateFilter: updateFilter,
+        removeFilter: removeFilter,
+        cleanFilter: cleanFilter,
+        className: "grid sml-block"
+    });
 }

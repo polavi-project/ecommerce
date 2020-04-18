@@ -1,20 +1,50 @@
-export default function Alert() {
+import {REMOVE_ALERT} from "../production/event-types.js";
+
+function Alert({alert}) {
+    const dispatch = ReactRedux.useDispatch();
+    const [className, setClassName] = React.useState("fadeInDownBig");
+    React.useEffect(() => {
+        const timer = setTimeout(() => {
+            setClassName("fadeOutUp");
+        }, 10000);
+        return () => clearTimeout(timer);
+    }, []);
+
+    const remove = (e) => {
+        e.preventDefault();
+        dispatch({'type' : REMOVE_ALERT, 'payload': {key: alert.key}});
+    };
+
+    const close = (e) => {
+        e.preventDefault();
+        setClassName("fadeOutUp");
+    };
+
+    return <React.Fragment>
+        { alert.type == "error" && <div onAnimationEnd={(e)=> { if(className == "fadeOutUp") remove(e);}} className={className + " " + "alert alert-danger animated slow sml-flex-space-between"} role="alert">
+            <span>{alert.message}</span>
+            <a href="#" onClick={(e)=> close(e, alert)}>x</a>
+        </div>}
+        { alert.type == "warning" && <div onAnimationEnd={(e)=> { if(className == "fadeOutUp") remove(e);}} className={className + " " + "alert alert-warning animated slow sml-flex-space-between"} role="alert">
+            <span>{alert.message}</span>
+            <a href="#" onClick={(e)=> close(e, alert)}>x</a>
+        </div>}
+        { alert.type == "success" && <div onAnimationEnd={(e)=> { if(className == "fadeOutUp") remove(e);}} className={className + " " + "alert alert-success animated slow sml-flex-space-between"} role="alert">
+            <span>{alert.message}</span>
+            <a href="#" onClick={(e)=> close(e, alert)}>x</a>
+        </div>}
+        { (alert.type != "error" && alert.type != "success" && alert.type != "warning") && <div onAnimationEnd={(e)=> { if(className == "fadeOutUp") remove(e);}} className={className + " " + "alert alert-primary slow animated sml-flex-space-between"} role="alert">
+            <span>{alert.message}</span>
+            <a href="#" onClick={(e)=> close(e, alert)}>x</a>
+        </div>}
+    </React.Fragment>
+}
+export default function Alerts() {
     const alerts = ReactRedux.useSelector(state => state.alerts);
 
-    React.useEffect(()=>{
-        alerts.map((alert, index) => {
-            switch (alert.type) {
-                case "error":
-                    UIkit.notification({message: alert.message, status: 'danger'});
-                    break;
-                case "success":
-                    UIkit.notification({message: alert.message, status: 'success'});
-                    break;
-                default:
-                    UIkit.notification({message: alert.message, status: 'primary'});
-            }
-        })
-    }, [alerts]);
-
-    return null;
+    return <div className="notification">
+        {alerts.map((alert, index) => {
+            return <Alert alert={alert} key={alert.key}/>
+        })}
+    </div>;
 }

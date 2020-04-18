@@ -23,24 +23,33 @@ use Similik\Services\Http\Request;
 use Similik\Services\Routing\Router;
 
 $eventDispatcher->addListener(
-        'before_execute_' . strtolower(str_replace('\\', '_', \Similik\Middleware\AdminNavigationMiddleware::class)),
-        function (\Similik\Services\Di\Container $container) {
-            $container->get(\Similik\Module\Cms\Services\NavigationManager::class)->addItem(
-                'discount',
-                'Discount',
-                '',
-                'tag',
-                null,
-                10
-            );
-            $container->get(\Similik\Module\Cms\Services\NavigationManager::class)->addItem(
-                'coupon.grid',
-                'All coupon',
-                $container->get(Router::class)->generateUrl('coupon.grid'),
-                'list',
-                'discount',
-                10
-            );
+        "admin_menu",
+        function (array $items) {
+            return array_merge($items, [
+                [
+                    "id" => "coupon_add_new",
+                    "sort_order" => 10,
+                    "url" => \Similik\generate_url("coupon.create"),
+                    "title" => "New Coupon",
+                    "icon" => "hand-holding-usd",
+                    "parent_id" => "quick_links"
+                ],
+                [
+                    "id" => "coupon",
+                    "sort_order" => 40,
+                    "url" => null,
+                    "title" => "Coupon",
+                    "parent_id" => null
+                ],
+                [
+                    "id" => "coupon_grid",
+                    "sort_order" => 10,
+                    "url" => \Similik\generate_url("coupon.grid"),
+                    "title" => "Coupons",
+                    "icon" => "tags",
+                    "parent_id" => "coupon"
+                ]
+            ]);
         },
         0
 );

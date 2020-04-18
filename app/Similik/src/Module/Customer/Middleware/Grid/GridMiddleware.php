@@ -37,13 +37,6 @@ class GridMiddleware extends MiddlewareAbstract
             ['id'=>"customer_grid_container"]
         );
 
-        $response->addWidget(
-            'customer_grid_title',
-            'customer_grid_container',
-            0,
-            get_js_file_url("production/customer/grid/title.js", true)
-        );
-
         $groups = _mysql()->getTable('customer_group')->where('customer_group_id', '<', 999)->fetchAllAssoc();
         $response->addWidget(
             'customer_grid',

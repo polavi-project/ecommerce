@@ -26,7 +26,7 @@ class AddNewButtonMiddleware extends MiddlewareAbstract
     {
         $response->addWidget(
             'attribute-group-grid-add-new',
-            'content',
+            'attribute_group_grid_container',
             5,
             get_js_file_url("production/catalog/attribute_group/grid/add_new_button.js", true),
             [

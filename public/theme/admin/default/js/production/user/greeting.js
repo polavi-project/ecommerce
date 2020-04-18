@@ -1,4 +1,4 @@
-export default function AdminUserGreeting({ fullName, logoutUrl }) {
+export default function AdminUserGreeting({ fullName, logoutUrl, time }) {
     return React.createElement(
         "div",
         { className: "admin-user-greeting" },
@@ -6,25 +6,39 @@ export default function AdminUserGreeting({ fullName, logoutUrl }) {
             "div",
             null,
             React.createElement(
-                "span",
+                "div",
                 null,
-                "Hello"
+                React.createElement(
+                    "span",
+                    null,
+                    "Hello"
+                ),
+                " ",
+                React.createElement(
+                    "span",
+                    { className: "user-name" },
+                    fullName
+                ),
+                "!"
             ),
-            " ",
             React.createElement(
-                "span",
-                { className: "user-name" },
-                fullName
-            ),
-            "! ",
+                "i",
+                { className: "time" },
+                time
+            )
+        ),
+        React.createElement(
+            "div",
+            null,
             React.createElement(
                 "a",
-                { href: logoutUrl },
+                { href: logoutUrl, className: "logout" },
                 React.createElement(
                     "span",
                     null,
                     "Logout"
-                )
+                ),
+                React.createElement("i", { className: "fas fa-sign-out-alt" })
             )
         )
     );

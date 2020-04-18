@@ -31,5 +31,15 @@ export default function Seo({ data }) {
         });
         return null;
     });
-    return React.createElement(Area, { id: "category-edit-seo", coreWidgets: fields });
+
+    return React.createElement(
+        "div",
+        { className: "sml-block mt-4" },
+        React.createElement(
+            "div",
+            { className: "sml-block-title" },
+            "Seo"
+        ),
+        React.createElement(Area, { id: "category-edit-seo", coreWidgets: fields })
+    );
 }
