@@ -1,35 +1,15 @@
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 import { Fetch } from "../../../../../../../js/production/fetch.js";
-import Address from "./address.js";
+import AddressForm from "./address-form.js";
 import { ADD_ALERT } from "../../../../../../../js/production/event-types.js";
+import AddressSummary from "./address_summary.js";
 
 function AddressInfo({ address }) {
     return React.createElement(
         "div",
         null,
-        React.createElement(
-            "div",
-            null,
-            address.full_name
-        ),
-        React.createElement(
-            "div",
-            null,
-            address.address_1
-        ),
-        React.createElement(
-            "div",
-            null,
-            address.city,
-            " ",
-            address.province
-        ),
-        React.createElement(
-            "div",
-            null,
-            address.country
-        ),
+        React.createElement(AddressSummary, { address: address }),
         React.createElement(
             "div",
             null,
@@ -52,7 +32,6 @@ export default function Addresses(props) {
     };
 
     const deleteAddress = address => {
-        console.log(address);
         if (address.delete_url) Fetch(address.delete_url, false, 'POST', {}, null, response => {
             if (_.get(response, "addressDelete.status") === true) {
                 const newAddresses = addresses.filter(addr => parseInt(addr.customer_address_id) !== parseInt(address.customer_address_id));
@@ -96,7 +75,7 @@ export default function Addresses(props) {
                 "div",
                 { key: i, className: "border-block" },
                 React.createElement(AddressInfo, { address: a }),
-                a.editing && React.createElement(Address, {
+                a.editing && React.createElement(AddressForm, {
                     address: a,
                     id: "customer-address-form-" + i,
                     onStart: config => onStart(config, a),

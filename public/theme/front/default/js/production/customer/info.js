@@ -1,10 +1,10 @@
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-import { Form } from "../../../../../../../js/production/form/form.js";
-import Area from "../../../../../../../js/production/area.js";
-import Text from "../../../../../../../js/production/form/fields/text.js";
-import Password from "../../../../../../../js/production/form/fields/password.js";
-import { ADD_ALERT } from "../../../../../../../js/dev/event-types.js";
+import { Form } from "../../../../../../js/production/form/form.js";
+import Area from "../../../../../../js/production/area.js";
+import Text from "../../../../../../js/production/form/fields/text.js";
+import Password from "../../../../../../js/production/form/fields/password.js";
+import { ADD_ALERT } from "../../../../../../js/dev/event-types.js";
 
 function EditForm(props) {
     return React.createElement(

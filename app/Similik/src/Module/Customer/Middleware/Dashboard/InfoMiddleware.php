@@ -9,7 +9,6 @@ declare(strict_types=1);
 namespace Similik\Module\Customer\Middleware\Dashboard;
 
 use function Similik\create_mutable_var;
-use function Similik\dispatch_event;
 use function Similik\get_js_file_url;
 use Similik\Middleware\MiddlewareAbstract;
 use Similik\Module\Graphql\Services\GraphqlExecutor;
@@ -39,7 +38,6 @@ class InfoMiddleware extends MiddlewareAbstract
                         get_js_file_url("production/customer/info.js", false),
                         ['action' => $this->getContainer()->get(Router::class)->generateUrl('customer.update', ['id'=>$request->getCustomer()->getData('customer_id')])]
                     );
-                    $response->addState('customer', $result->data['customer']);
                 }
             })->otherwise(function($reason) use($response) {
                 // TODO: Log error to system.log
