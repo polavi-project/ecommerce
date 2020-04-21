@@ -1,5 +1,5 @@
 import Area from "../../../../../../../../js/production/area.js";
-import AddressSummary from "../../../customer/dashboard/address_summary.js";
+import AddressSummary from "../../../customer/address/address_summary.js";
 
 function ShippingAddress({ needSelectAddress, setNeedSelectAddress }) {
     const shippingAddress = ReactRedux.useSelector(state => _.get(state, 'appState.cart.shippingAddress'));

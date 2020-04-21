@@ -1,5 +1,5 @@
 import Area from "../../../../../../../../js/production/area.js";
-import AddressSummary from "../../../customer/dashboard/address_summary.js";
+import AddressSummary from "../../../customer/address/address_summary.js";
 
 function Title() {
     return React.createElement(
