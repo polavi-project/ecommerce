@@ -1,5 +1,4 @@
 import Area from "../../../../../../../js/production/area.js";
-import { OrderInfo } from "./info.js";
 import { Payment } from "./payment.js";
 import { OrderSummary } from "./summary.js";
 
@@ -11,11 +10,6 @@ export default function OrderEdit() {
             id: "order_edit_left",
             className: "col-8",
             coreWidgets: [{
-                component: OrderInfo,
-                props: {},
-                sort_order: 0,
-                id: "order_info"
-            }, {
                 component: Payment,
                 props: {},
                 sort_order: 20,

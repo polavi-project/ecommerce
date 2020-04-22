@@ -10,6 +10,7 @@ namespace Similik\Module\Order\Middleware\Edit;
 
 use function Similik\_mysql;
 use function Similik\get_js_file_url;
+use Similik\Module\Order\Services\OrderLoader;
 use Similik\Services\Helmet;
 use Similik\Services\Http\Response;
 use Similik\Services\Http\Request;
@@ -27,7 +28,7 @@ class InitMiddleware extends MiddlewareAbstract
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
         $id = (int) $request->attributes->get('id');
-        $order = _mysql()->getTable('order')->load($id);
+        $order = $this->getContainer()->get(OrderLoader::class)->load($id);
         if($order === false) {
             $response->addData('success', 0);
             $response->addData('message', 'Requested order does not exist');

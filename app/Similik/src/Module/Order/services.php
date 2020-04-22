@@ -32,6 +32,10 @@ $container[\Similik\Module\Order\Services\Type\OrderCollectionType::class] = fun
     return new \Similik\Module\Order\Services\Type\OrderCollectionType($container);
 };
 
+$container[\Similik\Module\Order\Services\OrderLoader::class] = function() use ($container){
+    return new \Similik\Module\Order\Services\OrderLoader();
+};
+
 $container[\Similik\Module\Order\Services\OrderCollection::class] = function() use ($container){
     return new \Similik\Module\Order\Services\OrderCollection($container);
 };

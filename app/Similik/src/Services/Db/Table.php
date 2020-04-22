@@ -365,7 +365,7 @@ class Table
         else
             $this->where($this->getPrimary(), '=', (int) $id);
 
-        return $this->fetchOneAssoc(['select' => '*', 'limit'=> 1]);
+        return $this->fetchOneAssoc(['limit'=> 1]);
     }
 
     public function loadByField($field, $value)

@@ -87,8 +87,14 @@ class OrderType extends ObjectType
                     'shipping_note' => [
                         'type' => Type::string()
                     ],
+                    'shipping_address_id' => [
+                        'type' => Type::int()
+                    ],
                     'shipping_method' => [
                         'type' => Type::nonNull(Type::string())
+                    ],
+                    'billing_address_id' => [
+                        'type' => Type::int()
                     ],
                     'payment_method' => [
                         'type' => Type::nonNull(Type::string())

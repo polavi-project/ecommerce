@@ -80,7 +80,7 @@ $eventDispatcher->addListener(
                     if($container->get(Request::class)->isAdmin() == false)
                         return null;
                     else
-                        return _mysql()->getTable('order')->load($args['id']);
+                        return $container->get(\Similik\Module\Order\Services\OrderLoader::class)->load($args['id']);
                 }
             ],
             'orderCollection' => [
