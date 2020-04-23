@@ -34,7 +34,7 @@ $router->addAdminRoute('order.offline.pay', 'GET', '/order/pay/offline/{id:\d+}'
 
 $router->addAdminRoute('order.offline.refund', 'GET', '/order/refund/offline/{id:\d+}', [
     \Similik\Module\Order\Middleware\Update\InitPromiseMiddleware::class,
-    \Similik\Module\Order\Middleware\Update\Payment\PayOfflineMiddleware::class
+    \Similik\Module\Order\Middleware\Update\Payment\RefundOfflineMiddleware::class
 ]);
 
 /** @var \Similik\Services\Routing\Router $router */
