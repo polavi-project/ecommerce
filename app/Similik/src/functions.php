@@ -105,7 +105,6 @@ function get_config(string $name, $defaultValue = null, int $languageId = 0)
             $configCache[0][$name] = $config['json'] == 1  ? json_decode($config['value'], true) : $config['value'];
             return $configCache[0][$name];
         } else {
-            $configCache[$languageId][$name] = $defaultValue;
             return $defaultValue;
         }
     }
