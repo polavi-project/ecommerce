@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © Nguyen Huu The <thenguyen.dev@gmail.com>.
+ * Copyright © Nguyen Huu The <the.nguyen@similik.com>.
  * See COPYING.txt for license details.
  */
 
@@ -48,7 +48,7 @@ class PaymentTransactionMiddleware extends MiddlewareAbstract
                         'order_payment_transaction',
                         'order_payment_block',
                         40,
-                        get_js_file_url("production/order/edit/payment.js", true),
+                        get_js_file_url("production/order/edit/payment_transaction.js", true),
                         [
                             'transactions'=> $result->data['paymentTransactions'],
                         ]

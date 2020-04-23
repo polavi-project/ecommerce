@@ -1,39 +1,38 @@
-import A from "../../../../../../../js/production/a.js";
 import { Fetch } from "../../../../../../../js/production/fetch.js";
 
-export default function CodAction({ areaProps, payOfflineUrl, refundOfflineUrl }) {
+export default function CodAction({ areaProps, payOfflineUrl, refundOfflineUrl, orderEditUrl }) {
     const payOffline = e => {
         e.preventDefault();
         Fetch(payOfflineUrl, false, 'GET', {}, null, response => {
-            location.reload();
+            Fetch(orderEditUrl, true);
         });
     };
 
     const refundOffline = e => {
         e.preventDefault();
         Fetch(refundOfflineUrl, false, 'GET', {}, null, response => {
-            location.reload();
+            Fetch(orderEditUrl, true);
         });
     };
     return React.createElement(
-        "td",
+        'td',
         null,
         _.get(areaProps, 'status') == 'pending' && React.createElement(
-            "a",
-            { href: "#", onClick: e => payOffline(e) },
+            'a',
+            { href: '#', onClick: e => payOffline(e) },
             React.createElement(
-                "span",
+                'span',
                 null,
-                "Pay Offline"
+                'Pay Offline'
             )
         ),
         _.get(areaProps, 'status') == 'paid' && React.createElement(
-            "a",
-            { href: "#", onClick: e => refundOffline(e) },
+            'a',
+            { href: '#', onClick: e => refundOffline(e) },
             React.createElement(
-                "span",
+                'span',
                 null,
-                "Refund Offline"
+                'Refund Offline'
             )
         )
     );

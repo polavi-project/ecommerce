@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © Nguyen Huu The <thenguyen.dev@gmail.com>.
+ * Copyright © Nguyen Huu The <the.nguyen@similik.com>.
  * See COPYING.txt for license details.
  */
 
@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace Similik\Module\Customer\Middleware\Dashboard;
 
 
+use function Similik\create_mutable_var;
 use function Similik\generate_url;
 use function Similik\get_config;
 use function Similik\get_js_file_url;
@@ -26,7 +27,7 @@ class AddressMiddleware extends MiddlewareAbstract
         $this->getContainer()
             ->get(GraphqlExecutor::class)
             ->waitToExecute([
-                "query"=>"{
+                "query"=> create_mutable_var("my_address_query", "{
                     customerAddresses (customerId: {$request->getCustomer()->getData('customer_id')}) {
                         customer_address_id
                         full_name
@@ -41,16 +42,16 @@ class AddressMiddleware extends MiddlewareAbstract
                         update_url
                         delete_url
                     }
-                }"
+                }")
             ])
             ->then(function($result) use ($request, $response) {
                 /**@var \GraphQL\Executor\ExecutionResult $result */
                 if(isset($result->data['customerAddresses'])) {
                     $response->addWidget(
-                        'customer_address',
+                        'customer_adsdress',
                         'customer_dashboard_layout',
                         20,
-                        get_js_file_url("production/customer/dashboard/addresses.js", false),
+                        get_js_file_url("production/customer/address/addresses.js", false),
                         [
                             'customer_id' => $request->getCustomer()->getData('customer_id'),
                             'addresses' => $result->data['customerAddresses'],

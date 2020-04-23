@@ -1,4 +1,4 @@
-Copyright © Nguyen Huu The <thenguyen.dev@gmail.com>.
+Copyright © Nguyen Huu The <the.nguyen@similik.com>.
 
 Each source file included in this distribution is licensed under OSL 3.0.
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © Nguyen Huu The <thenguyen.dev@gmail.com>.
+ * Copyright © Nguyen Huu The <the.nguyen@similik.com>.
  * See COPYING.txt for license details.
  */
 
@@ -250,8 +250,11 @@ class Processor extends \PDO
         if($table->getGroupBy())
             $query = $query . ' GROUP BY ' . $table->getGroupBy();
 
-        if($table->getHaving())
-            $query = $query. ' HAVING ' . $table->getHaving();
+        if($table->getHaving()) {
+            $having = str_replace("WHERE", "HAVING", $this->buildWhere($table->getHaving()));
+            $query = $query . ' ' . $having;
+        }
+
         $sortBy = "ORDER BY {$setting['sort_by']}";
         $sortOrder = "{$setting['sort_order']}";
         $limit = $setting['limit'];

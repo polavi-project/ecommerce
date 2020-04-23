@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © Nguyen Huu The <thenguyen.dev@gmail.com>.
+ * Copyright © Nguyen Huu The <the.nguyen@similik.com>.
  * See COPYING.txt for license details.
  */
 
@@ -33,8 +33,9 @@ class CodPaymentMiddleware extends MiddlewareAbstract
             30,
             get_js_file_url("production/cod/order/cod_action.js", true),
             [
+                'orderEditUrl' => generate_url('order.edit', ['id'=>$request->attributes->get('id')]),
                 'payOfflineUrl' => generate_url('order.offline.pay', ['id'=>$request->attributes->get('id')]),
-                'refundOfflineUrl' => generate_url('order.offline.pay', ['id'=>$request->attributes->get('id')])
+                'refundOfflineUrl' => generate_url('order.offline.refund', ['id'=>$request->attributes->get('id')])
             ]
         );
 

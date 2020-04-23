@@ -1,3 +1,5 @@
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 import Area from "../../../../../../../js/production/area.js";
 import { PaymentStatus } from "./payment-status.js";
 
@@ -97,9 +99,7 @@ function Info({ orderId, method, methodName, status, grandTotal }) {
     );
 }
 
-export default function Transaction({ transactions }) {
-    const status = ReactRedux.useSelector(state => _.get(state, 'appState.orderData.payment_status'));
-    const currency = ReactRedux.useSelector(state => _.get(state, 'appState.orderData.currency', 'USD'));
+function Transaction({ transactions, currency }) {
     return React.createElement(
         "div",
         { className: "payment-transactions" },
@@ -241,12 +241,8 @@ export default function Transaction({ transactions }) {
     );
 }
 
-function Payment() {
-    const orderId = ReactRedux.useSelector(state => _.get(state, 'appState.orderData.order_id'));
-    const method = ReactRedux.useSelector(state => _.get(state, 'appState.orderData.payment_method'));
-    const methodName = ReactRedux.useSelector(state => _.get(state, 'appState.orderData.payment_method_name'));
-    const status = ReactRedux.useSelector(state => _.get(state, 'appState.orderData.payment_status'));
-    const grandTotal = ReactRedux.useSelector(state => _.get(state, 'appState.orderData.grand_total'));
+export default function Payment(props) {
+    const grandTotal = new Intl.NumberFormat('en', { style: 'currency', currency: props.currency }).format(props.grandTotal);
     return React.createElement(
         "div",
         { className: "sml-block mt-4" },
@@ -260,20 +256,23 @@ function Payment() {
             { className: "overflow-auto" },
             React.createElement(Area, {
                 id: "order_payment_block",
-                orderId: orderId,
-                method: method,
-                methodName: methodName,
+                orderId: props.orderId,
+                method: props.method,
+                methodName: props.methodName,
                 grandTotal: grandTotal,
-                status: status,
+                status: props.status,
                 coreWidgets: [{
                     'component': Info,
-                    'props': { orderId, method, methodName, status, grandTotal },
+                    'props': _extends({}, props),
                     'sort_order': 10,
                     'id': 'order_payment_fo'
+                }, {
+                    'component': Transaction,
+                    'props': { transactions: props.payment_transactions, currency: props.currency },
+                    'sort_order': 20,
+                    'id': 'order_payment_transaction'
                 }]
             })
         )
     );
 }
-
-export { Payment };
