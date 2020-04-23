@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © Nguyen Huu The <thenguyen.dev@gmail.com>.
+ * Copyright © Nguyen Huu The <the.nguyen@similik.com>.
  * See COPYING.txt for license details.
  */
 
@@ -24,16 +24,16 @@ class RefundOfflineMiddleware extends MiddlewareAbstract
 
             $conn = _mysql();
             $order = $conn->getTable('order')->load($id);
-            if($order['payment_status'] == "paid")
-                throw new \Exception("Customer paid");
-            $conn->getTable('order')->where('order_id', '=', $id)->update(['payment_status'=>'paid']);
+            if($order['payment_status'] != "paid")
+                throw new \Exception("Could not refund. Payment is either pending or refunded");
+            $conn->getTable('order')->where('order_id', '=', $id)->update(['payment_status'=>'refunded']);
 
             $conn->getTable('payment_transaction')->insert([
                 'payment_transaction_order_id' => $id,
                 'transaction_id' => "",
                 'transaction_type' => "offline",
                 'amount' => $order['grand_total'],
-                'payment_action' => "Capture",
+                'payment_action' => "Refund offline",
             ]);
 
             $response->addAlert("order_update", "success", "Order updated")->notNewPage();

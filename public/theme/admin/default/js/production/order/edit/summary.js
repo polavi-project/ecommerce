@@ -1,21 +1,13 @@
 import Area from "../../../../../../../js/production/area.js";
 
-function OrderSummary() {
-    const orderId = ReactRedux.useSelector(state => _.get(state, 'appState.orderData.order_id'));
-    const currency = ReactRedux.useSelector(state => _.get(state, 'appState.orderData.currency'));
-    const coupon = ReactRedux.useSelector(state => _.get(state, 'appState.orderData.coupon'));
-    const discountAmount = ReactRedux.useSelector(state => _.get(state, 'appState.orderData.discount_amount'));
-    const taxAmount = ReactRedux.useSelector(state => _.get(state, 'appState.orderData.tax_amount'));
-    const subTotal = ReactRedux.useSelector(state => _.get(state, 'appState.orderData.sub_total'));
-    const grandTotal = ReactRedux.useSelector(state => _.get(state, 'appState.orderData.grand_total'));
-
-    const _taxAmount = new Intl.NumberFormat('en', { style: 'currency', currency: currency }).format(taxAmount);
-    const _discountAmount = new Intl.NumberFormat('en', { style: 'currency', currency: currency }).format(discountAmount);
-    const _subTotal = new Intl.NumberFormat('en', { style: 'currency', currency: currency }).format(subTotal);
-    const _grandTotal = new Intl.NumberFormat('en', { style: 'currency', currency: currency }).format(grandTotal);
+export default function OrderSummary(props) {
+    const _taxAmount = new Intl.NumberFormat('en', { style: 'currency', currency: props.currency }).format(props.tax_amount);
+    const _discountAmount = new Intl.NumberFormat('en', { style: 'currency', currency: props.currency }).format(props.discount_amount);
+    const _subTotal = new Intl.NumberFormat('en', { style: 'currency', currency: props.currency }).format(props.sub_total);
+    const _grandTotal = new Intl.NumberFormat('en', { style: 'currency', currency: props.currency }).format(props.grand_total);
     return React.createElement(
         'div',
-        { className: 'sml-block' },
+        { className: 'sml-block mt-4' },
         React.createElement(
             'div',
             { className: 'sml-block-title' },
@@ -29,12 +21,12 @@ function OrderSummary() {
                 null,
                 React.createElement(Area, {
                     id: "order_summary_block",
-                    orderId: orderId,
-                    currency: currency,
-                    grandTotal: grandTotal,
-                    coupon: coupon,
-                    discountAmount: discountAmount,
-                    taxAmount: taxAmount,
+                    orderId: props.order_id,
+                    currency: props.currency,
+                    grandTotal: props.grand_total,
+                    coupon: props.coupon,
+                    discountAmount: props.discount_amount,
+                    taxAmount: props.tax_amount,
                     noOuter: true,
                     coreWidgets: [{
                         'component': "tr",
@@ -87,7 +79,7 @@ function OrderSummary() {
                                     'span',
                                     null,
                                     'Discount (',
-                                    coupon,
+                                    props.coupon,
                                     ')'
                                 )
                             ), React.createElement(
@@ -120,7 +112,7 @@ function OrderSummary() {
                                     _grandTotal
                                 )
                             )] },
-                        'sort_order': 20,
+                        'sort_order': 30,
                         'id': 'summary_grand_total'
                     }]
                 })
@@ -128,5 +120,3 @@ function OrderSummary() {
         )
     );
 }
-
-export { OrderSummary };

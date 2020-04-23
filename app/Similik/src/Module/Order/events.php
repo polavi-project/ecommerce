@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © Nguyen Huu The <thenguyen.dev@gmail.com>.
+ * Copyright © Nguyen Huu The <the.nguyen@similik.com>.
  * See COPYING.txt for license details.
  */
 
@@ -11,8 +11,12 @@ declare(strict_types=1);
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
+use Similik\Module\Order\Services\OrderCollection;
+use Similik\Module\Order\Services\Type\OrderCollectionFilterType;
+use Similik\Module\Order\Services\Type\OrderCollectionType;
+use Similik\Module\Order\Services\Type\OrderType;
 use Similik\Services\Di\Container;
-use Similik\Services\Routing\Router;
+use Similik\Services\Http\Request;
 
 $eventDispatcher->addListener(
         "admin_menu",
@@ -63,6 +67,35 @@ $eventDispatcher->addListener(
     function (&$fields) use ($container) {
         /**@var array $fields*/
         $fields += [
+            'order' => [
+                'type' => $container->get(OrderType::class),
+                'description' => "Return an order",
+                'args' => [
+                    'id' =>  Type::nonNull(Type::int())
+                ],
+                'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
+                    // Authentication example
+                    if($container->get(Request::class)->isAdmin() == false)
+                        return null;
+                    else
+                        return $container->get(\Similik\Module\Order\Services\OrderLoader::class)->load($args['id']);
+                }
+            ],
+            'orderCollection' => [
+                'type' => $container->get(OrderCollectionType::class),
+                'description' => "Return list of order and total count",
+                'args' => [
+                    'filter' =>  [
+                        'type' => $container->get(OrderCollectionFilterType::class)
+                    ]
+                ],
+                'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
+                    if($container->get(Request::class)->isAdmin() == false)
+                        return [];
+                    else
+                        return $container->get(OrderCollection::class)->getData($rootValue, $args, $container, $info);
+                }
+            ],
             'saleStatistic' => [
                 'type' => Type::listOf(new ObjectType([
                     'name'=> 'saleStatistic',

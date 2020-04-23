@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © Nguyen Huu The <thenguyen.dev@gmail.com>.
+ * Copyright © Nguyen Huu The <the.nguyen@similik.com>.
  * See COPYING.txt for license details.
  */
 
@@ -46,7 +46,7 @@ class ActivityMiddleware extends MiddlewareAbstract
                     $response->addWidget(
                         'order_activity',
                         'order_edit_right',
-                        30,
+                        40,
                         get_js_file_url("production/order/edit/activity.js", true),
                         [
                             'activities' => $result->data['order_activity']['activities']

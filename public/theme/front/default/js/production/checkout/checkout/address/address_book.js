@@ -2,6 +2,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 import { ADD_ALERT, ADD_APP_STATE } from "../../../../../../../../js/production/event-types.js";
 import { Fetch } from "../../../../../../../../js/production/fetch.js";
+import AddressSummary from "../../../customer/address/address_summary.js";
 
 function Address({ address, cartId, addressType = 'shipping', action, setNeedSelectAddress }) {
     const cart = ReactRedux.useSelector(state => _.get(state, 'appState.cart'));
@@ -51,60 +52,7 @@ function Address({ address, cartId, addressType = 'shipping', action, setNeedSel
         Fetch(action, false, 'POST', formData, null, onComplete, onError);
     };
 
-    return React.createElement(
-        "div",
-        { className: "uk-width-1-2 checkout-shipping-address" },
-        React.createElement(
-            "div",
-            null,
-            React.createElement(
-                "strong",
-                null,
-                address.full_name
-            )
-        ),
-        React.createElement(
-            "div",
-            null,
-            address.address_1
-        ),
-        React.createElement(
-            "div",
-            null,
-            address.address_2
-        ),
-        React.createElement(
-            "div",
-            null,
-            address.city,
-            ", ",
-            address.province,
-            ", ",
-            address.postcode
-        ),
-        React.createElement(
-            "div",
-            null,
-            address.country
-        ),
-        React.createElement(
-            "div",
-            null,
-            React.createElement(
-                "span",
-                null,
-                "Phone"
-            ),
-            ": ",
-            address.telephone
-        ),
-        React.createElement(
-            "a",
-            { href: "#", onClick: e => onClick(e) },
-            React.createElement("span", { "uk-icon": "icon: location; ratio: 1" }),
-            " Use this address"
-        )
-    );
+    return React.createElement(AddressSummary, { address: address });
 }
 
 export default function CheckoutAddressBook({ addresses = [], cartId, addressType = 'shipping', action, areaProps }) {

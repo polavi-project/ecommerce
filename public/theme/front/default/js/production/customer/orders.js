@@ -1,5 +1,5 @@
-import A from "../../../../../../../js/production/a.js";
-import { Fetch } from "../../../../../../../js/production/fetch.js";
+import A from "../../../../../../js/production/a.js";
+import { Fetch } from "../../../../../../js/production/fetch.js";
 
 function OrderInfo(props) {
     return React.createElement(

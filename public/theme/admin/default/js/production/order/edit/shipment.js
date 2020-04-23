@@ -68,14 +68,8 @@ function Actions({ status, startShipUrl, completeShipUrl }) {
     );
 }
 
-export default function Shipment({ startShipUrl, completeShipUrl }) {
-    const orderId = ReactRedux.useSelector(state => _.get(state, 'appState.orderData.order_id'));
-    const method = ReactRedux.useSelector(state => _.get(state, 'appState.orderData.shipping_method'));
-    const methodName = ReactRedux.useSelector(state => _.get(state, 'appState.orderData.shipping_method_name'));
-    const shippingNote = ReactRedux.useSelector(state => _.get(state, 'appState.orderData.shipping_note'));
-    const status = ReactRedux.useSelector(state => _.get(state, 'appState.orderData.shipment_status'));
-    const grandTotal = ReactRedux.useSelector(state => _.get(state, 'appState.orderData.grand_total'));
-    const weight = ReactRedux.useSelector(state => _.get(state, 'appState.orderData.total_weight'));
+export default function Shipment(props) {
+    const grandTotal = new Intl.NumberFormat('en', { style: 'currency', currency: props.currency }).format(props.grand_total);
 
     return React.createElement(
         "div",
@@ -96,13 +90,13 @@ export default function Shipment({ startShipUrl, completeShipUrl }) {
                     null,
                     React.createElement(Area, {
                         id: "order_shipment_block_info_header",
-                        orderId: orderId,
-                        method: method,
-                        shippingNote: shippingNote,
-                        methodName: methodName,
+                        orderId: props.order_id,
+                        method: props.shipping_method,
+                        shippingNote: props.shipping_note,
+                        methodName: props.shipping_method_name,
                         grandTotal: grandTotal,
-                        weight: weight,
-                        status: status,
+                        weight: props.total_weight,
+                        status: props.shipment_status,
                         noOuter: true,
                         coreWidgets: [{
                             'component': "th",
@@ -160,18 +154,18 @@ export default function Shipment({ startShipUrl, completeShipUrl }) {
                     "tr",
                     null,
                     React.createElement(Area, {
-                        id: "order_shipment_info",
-                        orderId: orderId,
-                        method: method,
-                        shippingNote: shippingNote,
-                        methodName: methodName,
+                        id: "order_shipment_info_row",
+                        orderId: props.orderId,
+                        method: props.shipping_method,
+                        shippingNote: props.shipping_note,
+                        methodName: props.shipping_method_name,
                         grandTotal: grandTotal,
-                        weight: weight,
-                        status: status,
+                        weight: props.total_weight,
+                        status: props.shipment_status,
                         noOuter: true,
                         coreWidgets: [{
                             'component': Status,
-                            'props': { status: status },
+                            'props': { status: props.shipment_status },
                             'sort_order': 10,
                             'id': 'order_shipment_status'
                         }, {
@@ -179,23 +173,23 @@ export default function Shipment({ startShipUrl, completeShipUrl }) {
                             'props': { children: React.createElement(
                                     "span",
                                     null,
-                                    methodName
+                                    props.shipping_method_name
                                 ) },
                             'sort_order': 20,
                             'id': 'order_shipment_method'
                         }, {
                             'component': Weight,
-                            'props': { weight: weight },
+                            'props': { weight: props.total_weight },
                             'sort_order': 30,
                             'id': 'order_shipment_weight'
                         }, {
                             'component': Note,
-                            'props': { note: shippingNote },
+                            'props': { note: props.shipping_note },
                             'sort_order': 40,
                             'id': 'order_shipment_note'
                         }, {
                             'component': Actions,
-                            'props': { status: status, startShipUrl, completeShipUrl },
+                            'props': { status: props.shipment_status, startShipUrl: props.startShipUrl, completeShipUrl: props.completeShipUrl },
                             'sort_order': 50,
                             'id': 'order_shipment_action'
                         }]

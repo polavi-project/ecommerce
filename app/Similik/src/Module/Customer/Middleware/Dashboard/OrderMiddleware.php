@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © Nguyen Huu The <thenguyen.dev@gmail.com>.
+ * Copyright © Nguyen Huu The <the.nguyen@similik.com>.
  * See COPYING.txt for license details.
  */
 
@@ -9,10 +9,9 @@ declare(strict_types=1);
 namespace Similik\Module\Customer\Middleware\Dashboard;
 
 
-use function Similik\dispatch_event;
+use function Similik\create_mutable_var;
 use function Similik\get_js_file_url;
 use Similik\Middleware\MiddlewareAbstract;
-use Similik\Module\Graphql\Services\GraphqlExecutor;
 use Similik\Services\Http\Request;
 use Similik\Services\Http\Response;
 
@@ -21,7 +20,7 @@ class OrderMiddleware extends MiddlewareAbstract
 
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
-        $query = "{
+        $query = create_mutable_var("my_orders_query", "{
                     customer (id: {$request->getCustomer()->getData('customer_id')}) {
                         orders {
                             order_number 
@@ -44,15 +43,13 @@ class OrderMiddleware extends MiddlewareAbstract
                             }
                         }
                     }
-                }";
-
-        dispatch_event("filter_customer_get_orders_query", [&$query]);
+                }");
 
         $response->addWidget(
             'orders',
             'customer_dashboard_layout',
             30,
-            get_js_file_url("production/customer/dashboard/orders.js", false),
+            get_js_file_url("production/customer/orders.js", false),
             [
                 'query' => $query
             ]

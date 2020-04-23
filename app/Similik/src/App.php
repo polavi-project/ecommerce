@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © Nguyen Huu The <thenguyen.dev@gmail.com>.
+ * Copyright © Nguyen Huu The <the.nguyen@similik.com>.
  * See COPYING.txt for license details.
  */
 
@@ -15,8 +15,10 @@ use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Similik\Middleware\AdminNavigationMiddleware;
 use Similik\Middleware\CartInitMiddleware;
+use Similik\Middleware\CustomerAuthenticateMiddleware;
 use Similik\Middleware\PromiseWaiterMiddleware;
 use Similik\Middleware\SaveCartMiddleware;
+use Similik\Middleware\UserAuthenticateMiddleware;
 use Similik\Module\Graphql\Services\ExecutionPromise;
 use Similik\Services\Db\Processor;
 use Similik\Services\Di\Container;
@@ -167,7 +169,8 @@ class App
                 0 => ConfigMiddleware::class,
                 10 => SessionMiddleware::class,
                 20 => RoutingMiddleware::class,
-                30 => AuthenticateMiddleware::class,
+                30 => CustomerAuthenticateMiddleware::class,
+                35 => UserAuthenticateMiddleware::class,
                 40 => CartInitMiddleware::class,
                 50 => HandlerMiddleware::class,
                 60 => PromiseWaiterMiddleware::class,

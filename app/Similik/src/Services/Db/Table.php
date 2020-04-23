@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © Nguyen Huu The <thenguyen.dev@gmail.com>.
+ * Copyright © Nguyen Huu The <the.nguyen@similik.com>.
  * See COPYING.txt for license details.
  */
 
@@ -28,7 +28,7 @@ class Table
 
     protected $groupBy;
 
-    protected $having;
+    protected $having = [];
 
     protected $customWhereClause;
 
@@ -272,7 +272,7 @@ class Table
             $column = "`{$this->getTable()}`.{$column}";
         if(is_array($value))
             foreach($value as $key=>$val) {
-                $value['binding' . rand(0, 10000)] = $val;
+                $value['binding' . _unique_number()] = $val;
                 unset($value[$key]);
             }
         $this->where[] = [
@@ -296,7 +296,7 @@ class Table
             $column = "`{$this->getTable()}`.{$column}";
         if(is_array($value))
             foreach($value as $key=>$val) {
-                $value['binding' . rand(0, 10000)] = $val;
+                $value['binding' . _unique_number()] = $val;
                 unset($value[$key]);
             }
         $this->where[] = [
@@ -365,7 +365,7 @@ class Table
         else
             $this->where($this->getPrimary(), '=', (int) $id);
 
-        return $this->fetchOneAssoc(['select' => '*', 'limit'=> 1]);
+        return $this->fetchOneAssoc(['limit'=> 1]);
     }
 
     public function loadByField($field, $value)
@@ -508,13 +508,67 @@ class Table
     }
 
     /**
-     * @param $statement
-     * @return Table
-     * @internal param null $having
+     * @param $column
+     * @param $operator
+     * @param $value
+     * @param bool $startGroup
+     * @param bool $endGroup
+     * @return $this
      */
-    public function having($statement)
+    public function having($column, $operator, $value, $startGroup = false, $endGroup = false)
     {
-        $this->having = $statement;
+        if(strpos($column, '.') === false)
+            $column = "`{$this->getTable()}`.{$column}";
+        if(is_array($value))
+            foreach($value as $key=>$val) {
+                $value['binding' . _unique_number()] = $val;
+                unset($value[$key]);
+            }
+        $this->having[] = [
+            'column'      => $column,
+            'operator'    => $operator,
+            'value'       => $value,
+            'ao'          => 'and',
+            'start_group' => $startGroup,
+            'end_group'   => $endGroup
+        ];
+        $this->setBinding(str_ireplace(["`", "'", "."], ['', '', "_"], $column) . "_0", $operator, $value);
+
+        return $this;
+    }
+
+    /**
+     * @param $column
+     * @param $operator
+     * @param $value
+     * @param bool $startGroup
+     * @param bool $endGroup
+     * @return $this
+     */
+    public function andHaving($column, $operator, $value, $startGroup = false, $endGroup = false)
+    {
+        return $this->having($column, $operator, $value, $startGroup, $endGroup);
+    }
+
+    public function orHaving($column, $operator, $value, $startGroup = false, $endGroup = false)
+    {
+        if(strpos($column, '.') === false)
+            $column = "`{$this->getTable()}`.{$column}";
+        if(is_array($value))
+            foreach($value as $key=>$val) {
+                $value['binding' . _unique_number()] = $val;
+                unset($value[$key]);
+            }
+        $this->having[] = [
+            'column'      => $column,
+            'operator'    => $operator,
+            'value'       => $value,
+            'ao'          => 'or',
+            'start_group' => $startGroup,
+            'end_group'   => $endGroup
+        ];
+        $this->setBinding(str_ireplace(["`", "'", "."], ['', '', "_"], $column) . "_" . (count($this->where) - 1), $operator, $value);
+
         return $this;
     }
 

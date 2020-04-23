@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © Nguyen Huu The <thenguyen.dev@gmail.com>.
+ * Copyright © Nguyen Huu The <the.nguyen@similik.com>.
  * See COPYING.txt for license details.
  */
 
@@ -30,6 +30,10 @@ $container[\Similik\Module\Order\Services\Type\OrderCollectionFilterType::class]
 
 $container[\Similik\Module\Order\Services\Type\OrderCollectionType::class] = function() use ($container){
     return new \Similik\Module\Order\Services\Type\OrderCollectionType($container);
+};
+
+$container[\Similik\Module\Order\Services\OrderLoader::class] = function() use ($container){
+    return new \Similik\Module\Order\Services\OrderLoader();
 };
 
 $container[\Similik\Module\Order\Services\OrderCollection::class] = function() use ($container){

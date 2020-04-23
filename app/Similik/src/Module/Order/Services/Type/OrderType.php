@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © Nguyen Huu The <thenguyen.dev@gmail.com>.
+ * Copyright © Nguyen Huu The <the.nguyen@similik.com>.
  * See COPYING.txt for license details.
  */
 
@@ -15,6 +15,7 @@ use GraphQL\Type\Definition\Type;
 use function Similik\_mysql;
 use function Similik\dispatch_event;
 use Similik\Module\Catalog\Services\Type\Price;
+use Similik\Module\Customer\Services\Type\AddressType;
 use Similik\Services\Di\Container;
 use Similik\Services\Http\Request;
 use Similik\Services\Routing\Router;
@@ -87,11 +88,39 @@ class OrderType extends ObjectType
                     'shipping_note' => [
                         'type' => Type::string()
                     ],
+                    'shipping_address_id' => [
+                        'type' => Type::int()
+                    ],
+                    'shipping_address' => [
+                        'type' => $container->get(AddressType::class),
+                        'resolve' => function($order, $args, Container $container, ResolveInfo $info) {
+                            return _mysql()
+                                ->getTable('order_address')
+                                ->load($order['shipping_address_id']);
+                        }
+                    ],
                     'shipping_method' => [
                         'type' => Type::nonNull(Type::string())
                     ],
+                    'shipping_method_name' => [
+                        'type' => Type::string()
+                    ],
+                    'billing_address_id' => [
+                        'type' => Type::int()
+                    ],
+                    'billing_address' => [
+                        'type' => $container->get(AddressType::class),
+                        'resolve' => function($order, $args, Container $container, ResolveInfo $info) {
+                            return _mysql()
+                                ->getTable('order_address')
+                                ->load($order['billing_address_id']);
+                        }
+                    ],
                     'payment_method' => [
                         'type' => Type::nonNull(Type::string())
+                    ],
+                    'payment_method_name' => [
+                        'type' => Type::string()
                     ],
                     'shipment_status' => [
                         'type' => Type::nonNull(Type::string())
@@ -128,6 +157,15 @@ class OrderType extends ObjectType
                                 $activities->andWhere('customer_notified', '=', 1);
 
                             return $activities->fetchAllAssoc();
+                        }
+                    ],
+                    'payment_transactions' => [
+                        'type' => Type::listOf($container->get(PaymentTransactionType::class)),
+                        'resolve' => function($order, $args, Container $container, ResolveInfo $info) {
+                            return _mysql()
+                                ->getTable('payment_transaction')
+                                ->where('payment_transaction_order_id', '=', $order['order_id'])
+                                ->fetchAllAssoc();
                         }
                     ],
                     'editUrl' => [
