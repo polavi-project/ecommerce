@@ -163,40 +163,36 @@ class CouponHelper
             }
         });
 
-        $this->addDiscountCalculator('by_x_get_y', function(array $coupon, Cart $cart) {
+        $this->addDiscountCalculator('buy_x_get_y', function(array $coupon, Cart $cart) {
             $discountPercent = floatval($coupon['discount_amount']) > 100 ? 100 : floatval($coupon['discount_amount']);
             $configs = json_decode($coupon['buyx_gety'], true);
             if (JSON_ERROR_NONE !== json_last_error())
                 return;
-            foreach ($configs as $row) {
-                $xSku = $row['sku'] ?? null;
-                $xQty = $row['x'] ?? null;
-                $ySku = $row['y'] ?? null;
-                $maxY = $row['max_y'] ?? null;
-                $discount = isset($row['discount']) ? floatval($row['discount']) : 0;
-            }
-
             $items = $cart->getItems();
-            $targetProducts = trim($coupon['target_products']);
-            $targetProducts = empty($targetProducts) ? [] : explode(',', $targetProducts);
-            foreach ($items as $item) {
-                $sku = $item->getData('product_sku');
-                if(in_array($sku, $targetProducts)) {
-                    $discountAmount = $item->getData('final_price') * $item->getData('qty') * $discountPercent / 100;
-                    switch (get_config('sale_discount_calculation_rounding', 0)) {
-                        case 1:
-                            $discountAmount = ceil($discountAmount);
-                            break;
-                        case -1:
-                            $discountAmount = floor($discountAmount);
-                            break;
+            foreach ($configs as $row) {
+                $sku = $row['sku'] ?? null;
+                $buyQty = isset($row['buy_qty']) ? (int) $row['buy_qty'] : null;
+                $getQty = isset($row['get_qty']) ? (int) $row['get_qty'] : null;
+                $maxY = isset($row['max_y']) ? (int) $row['max_y'] : 1000000;
+                $discount = isset($row['discount']) ? floatval($row['discount']) : 0;
+
+                if(!$sku || !$buyQty || !$getQty || $buyQty == null || $getQty == null || $discount < 0 || $discount > 100)
+                    return;
+
+                foreach ($items as $item) {
+                    if($item->getData("product_sku") == trim($sku) && $item->getData("qty") >= $buyQty + $getQty) {
+                        $discountPerUnit = $discount * $item->getData("final_price") / 100;
+                        $discountAbleUnits = floor($item->getData("qty") / $buyQty) * $getQty;
+                        if($discountAbleUnits < $maxY)
+                            $discountAmount = $discountAbleUnits * $discountPerUnit;
+                        else
+                            $discountAmount = $discountPerUnit * $maxY;
+
+                        if(!isset($this->discounts[$item->getData('cart_item_id')]) or $this->discounts[$item->getData('cart_item_id')] != $discountAmount) {
+                            $this->discounts[$item->getData('cart_item_id')] = $discountAmount;
+                            $item->setData('discount_amount', $discountAmount);
+                        }
                     }
-                } else {
-                    $discountAmount = 0;
-                }
-                if(!isset($this->discounts[$item->getData('cart_item_id')]) or $this->discounts[$item->getData('cart_item_id')] != $discountAmount) {
-                    $this->discounts[$item->getData('cart_item_id')] = $discountAmount;
-                    $item->setData('discount_amount', $discountAmount);
                 }
             }
         });

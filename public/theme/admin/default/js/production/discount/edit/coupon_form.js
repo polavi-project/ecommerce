@@ -39,6 +39,7 @@ function StartEnd({ start_date = "", end_date = "" }) {
         )
     );
 }
+
 function GeneralLeft(props) {
     return React.createElement(
         "div",
@@ -137,8 +138,8 @@ function GeneralRight(props) {
                         'value': 'percentage_discount_to_specific_products',
                         'text': 'Percentage discount to specific products'
                     }, {
-                        'value': 'by_x_get_y',
-                        'text': 'By X get Y'
+                        'value': 'buy_x_get_y',
+                        'text': 'Buy X get Y'
                     }],
                     validation_rules: ['notEmpty'],
                     formId: "coupon-edit-form",
@@ -471,13 +472,19 @@ function RequiredProducts({ requiredProducts }) {
     );
 }
 
-function BuyXGetY({ _products }) {
+function BuyXGetY({ _products, discount_type }) {
     const [products, setProducts] = React.useState(_products);
-    const [active, setActive] = React.useState(false);
+    const [active, setActive] = React.useState(() => {
+        if (discount_type === "buy_x_get_y") {
+            return true;
+        } else {
+            return false;
+        }
+    });
 
     React.useEffect(() => {
         let token = PubSub.subscribe(FORM_FIELD_UPDATED, function (message, data) {
-            if (data.name === "discount_type" && data.value === "by_x_get_y") {
+            if (data.name === "discount_type" && data.value === "buy_x_get_y") {
                 setActive(true);
             } else {
                 setActive(false);
@@ -493,8 +500,8 @@ function BuyXGetY({ _products }) {
         e.preventDefault();
         setProducts(products.concat({
             sku: "",
-            x: "",
-            y: "",
+            buy_qty: "",
+            get_qty: "",
             max_y: "",
             discount: 100
         }));
@@ -600,20 +607,20 @@ function BuyXGetY({ _products }) {
                                 "td",
                                 null,
                                 React.createElement(Text, {
-                                    name: `buyx_gety[${i}][x]`,
+                                    name: `buyx_gety[${i}][buy_qty]`,
                                     formId: "coupon-edit-form",
-                                    value: p.x,
-                                    validation_rules: ['notEmpty']
+                                    value: p.buy_qty,
+                                    validation_rules: ['notEmpty', 'number']
                                 })
                             ),
                             React.createElement(
                                 "td",
                                 null,
                                 React.createElement(Text, {
-                                    name: `buyx_gety[${i}][y]`,
+                                    name: `buyx_gety[${i}][get_qty]`,
                                     formId: "coupon-edit-form",
-                                    value: p.y,
-                                    validation_rules: ['notEmpty']
+                                    value: p.get_qty,
+                                    validation_rules: ['notEmpty', 'number']
                                 })
                             ),
                             React.createElement(
@@ -623,7 +630,7 @@ function BuyXGetY({ _products }) {
                                     name: `buyx_gety[${i}][max_y]`,
                                     formId: "coupon-edit-form",
                                     value: p.max_y,
-                                    validation_rules: ['notEmpty']
+                                    validation_rules: ['notEmpty', 'number']
                                 })
                             ),
                             React.createElement(
@@ -845,12 +852,12 @@ export default function CouponForm(props) {
                     id: "coupon-order-condition"
                 }, {
                     component: TargetProduct,
-                    props: { products: props.target_products ? props.target_products : "", "discount_type": props.discount_type },
+                    props: { products: props.target_products ? props.target_products : "", discount_type: props.discount_type },
                     sort_order: 30,
                     id: "coupon-order-target-products"
                 }, {
                     component: BuyXGetY,
-                    props: { _products: buyx_gety },
+                    props: { _products: buyx_gety, discount_type: props.discount_type },
                     sort_order: 30,
                     id: "coupon-order-buyx_gety"
                 }]
