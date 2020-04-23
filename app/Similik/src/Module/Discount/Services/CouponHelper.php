@@ -229,7 +229,7 @@ class CouponHelper
         $this->addValidator('general', function($coupon) {
             if($coupon['status'] == '0')
                 return false;
-            if(floatval($coupon['discount_amount']) <= 0)
+            if(floatval($coupon['discount_amount']) <= 0 && $coupon['discount_type'] !== "buy_x_get_y")
                 return false;
             if (
                 ($coupon['start_date'] and $coupon['start_date'] > date("Y-m-d H:i:s")) ||
