@@ -57,7 +57,7 @@ class ItemsMiddleware extends MiddlewareAbstract
                     $response->addWidget(
                         'order_items',
                         'order_edit_left',
-                        10,
+                        15,
                         get_js_file_url("production/order/edit/items.js", true),
                         [
                             'items'=> $result->data['orderItems']['items']
