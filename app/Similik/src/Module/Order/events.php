@@ -11,12 +11,10 @@ declare(strict_types=1);
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
-use function Similik\_mysql;
 use Similik\Module\Order\Services\OrderCollection;
 use Similik\Module\Order\Services\Type\OrderCollectionFilterType;
 use Similik\Module\Order\Services\Type\OrderCollectionType;
 use Similik\Module\Order\Services\Type\OrderType;
-use Similik\Module\Order\Services\Type\PaymentTransactionType;
 use Similik\Services\Di\Container;
 use Similik\Services\Http\Request;
 
@@ -96,18 +94,6 @@ $eventDispatcher->addListener(
                         return [];
                     else
                         return $container->get(OrderCollection::class)->getData($rootValue, $args, $container, $info);
-                }
-            ],
-            'paymentTransactions' => [
-                'type' => Type::listOf($container->get(PaymentTransactionType::class)),
-                'args' => [
-                    'orderId' =>  Type::nonNull(Type::int())
-                ],
-                'resolve' => function($value, $args, Container $container, ResolveInfo $info) {
-                    return _mysql()
-                        ->getTable('payment_transaction')
-                        ->where('payment_transaction_order_id', '=', $args['orderId'])
-                        ->fetchAllAssoc();
                 }
             ],
             'saleStatistic' => [

@@ -16,7 +16,7 @@ use Similik\Services\Http\Request;
 use Similik\Services\Http\Response;
 use Similik\Middleware\MiddlewareAbstract;
 
-class ShipmentMiddleware extends MiddlewareAbstract
+class PaymentMiddleware extends MiddlewareAbstract
 {
     /**
      * @param Request $request
@@ -30,31 +30,36 @@ class ShipmentMiddleware extends MiddlewareAbstract
         $this->getContainer()
             ->get(GraphqlExecutor::class)
             ->waitToExecute([
-                "query"=> create_mutable_var("order_edit_shipment_query", "{
-                    shipment : order (id: {$request->attributes->get('id')}) {
-                        order_id
+                "query"=> create_mutable_var("order_edit_payment_query", "{
+                    payment : order (id: {$request->attributes->get('id')}) {
+                        orderId: order_id
                         currency
-                        shipment_status
-                        shipping_method
-                        shipping_note
-                        shipping_method_name
-                        total_weight
-                        grand_total
+                        status: payment_status
+                        method: payment_method
+                        methodName: payment_method_name
+                        grandTotal: grand_total
+                        payment_transactions {
+                            id
+                            transaction_id
+                            transaction_type
+                            amount
+                            parent_transaction_id
+                            payment_action
+                            additional_information
+                            created_at
+                        }
                     }
                 }")
             ])
             ->then(function($result) use ($request, $response) {
                 /**@var \GraphQL\Executor\ExecutionResult $result */
-                if(isset($result->data['shipment'])) {
+                if(isset($result->data['payment'])) {
                     $response->addWidget(
-                        'order_shipment',
+                        'order_payment',
                         'order_edit_left',
-                        50,
-                        get_js_file_url("production/order/edit/shipment.js", true),
-                        array_merge($result->data['shipment'], [
-                            'startShipUrl' => generate_url('order.ship.start', ['id'=>$request->attributes->get('id')]),
-                            'completeShipUrl' => generate_url('order.ship.complete', ['id'=>$request->attributes->get('id')])
-                        ])
+                        20,
+                        get_js_file_url("production/order/edit/payment.js", true),
+                        $result->data['payment']
                     );
                 }
             });

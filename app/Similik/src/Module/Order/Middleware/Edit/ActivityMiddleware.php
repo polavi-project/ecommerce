@@ -46,7 +46,7 @@ class ActivityMiddleware extends MiddlewareAbstract
                     $response->addWidget(
                         'order_activity',
                         'order_edit_right',
-                        30,
+                        40,
                         get_js_file_url("production/order/edit/activity.js", true),
                         [
                             'activities' => $result->data['order_activity']['activities']
