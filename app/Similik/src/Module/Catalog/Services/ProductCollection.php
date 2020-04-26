@@ -28,6 +28,8 @@ class ProductCollection extends CollectionBuilder
         $this->container = $container;
 
         $collection = _mysql()->getTable('product')
+            ->addFieldToSelect("product.*")
+            ->addFieldToSelect("product_description.*")
             ->leftJoin('product_description', null, [
                 [
                     'column'      => "product_description.language_id",

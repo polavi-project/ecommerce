@@ -95,6 +95,7 @@ class Router
                 $this->request->attributes->set('_matched_route', $routeInfo[1]);
                 $routedMiddleware = $this->request->isAdmin() ? $this->adminRoutes[$routeInfo[1]][2] : $this->siteRoutes[$routeInfo[1]][2];
                 $this->request->attributes->set('_routed_middleware', $routedMiddleware);
+                $this->request->attributes->set('_route_args', $routeInfo[2]);
                 return 200;
                 break;
             default:
