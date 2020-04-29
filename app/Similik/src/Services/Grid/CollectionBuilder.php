@@ -9,7 +9,6 @@ declare(strict_types=1);
 namespace Similik\Services\Grid;
 
 
-use function Similik\get_default_language_Id;
 use Similik\Services\Db\Table;
 
 class CollectionBuilder
@@ -141,7 +140,7 @@ class CollectionBuilder
     protected function getTotal()
     {
         $collection = clone $this->collection;
-        $row = $collection->addFieldToSelect("COUNT(*)", "total")->addFieldToSelect("COUNT(*)", "total")->fetchAllAssoc();
-        return count($row);
+        $row = $collection->setFieldToSelect("COUNT(*)", "total")->addFieldToSelect("COUNT(*)", "total")->fetchOneAssoc();
+        return $row["total"];
     }
 }

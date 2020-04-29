@@ -83,7 +83,6 @@ class ProductFilterWidgetMiddleware extends MiddlewareAbstract
                                     (int)$widget['sort_order'],
                                     get_js_file_url("production/catalog/widgets/filter.js", false),
                                     [
-                                        "categoryId" => $categoryId,
                                         "title" => $title,
                                         'apiUrl' => generate_url('graphql.api')
                                     ]

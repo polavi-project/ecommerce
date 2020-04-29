@@ -8,9 +8,11 @@ declare(strict_types=1);
 
 namespace Similik\Module\Catalog\Middleware\Category\View;
 
+use function Similik\_mysql;
 use function Similik\create_mutable_var;
 use function Similik\generate_url;
 use function Similik\get_js_file_url;
+use Similik\Module\Catalog\Services\ProductCollection;
 use Similik\Module\Graphql\Services\GraphqlExecutor;
 use Similik\Services\Http\Request;
 use Similik\Services\Http\Response;
@@ -48,17 +50,33 @@ class ProductsMiddleware extends MiddlewareAbstract
                     }
 QUERY
         );
+
+        if(trim($request->query->get("query", "")) !== "")
+            $query = str_replace("<FILTER>", trim($request->query->get("query", "")), $query);
+        else
+            $query = str_replace("<FILTER>", "", $query);
+
+        // Apply category filter in advanced
+        $stm = _mysql()
+            ->getTable('product_category')
+            ->addFieldToSelect("product_id")
+            ->where('category_id', '=', $request->attributes->get('id'));
+        $productIds = [];
+        while ($row = $stm->fetch()) {
+            $productIds[] = $row['product_id'];
+        }
+        $this->getContainer()->get(ProductCollection::class)->getCollection()->where('product.product_id', 'IN', $productIds);
         $promise = $this->getContainer()
             ->get(GraphqlExecutor::class)
             ->waitToExecute([
-                "query"=> str_replace("<FILTER>", "(filter: { category : {operator: \"IN\" value: \"{$request->attributes->get('id')}\"}})", $query)
+                "query"=> $query
             ]);
 
         $promise->then(function($result) use ($request, $response, $query) {
                 /**@var \GraphQL\Executor\ExecutionResult $result */
                 if (isset($result->data['productCollection']['products'])) {
                     $products = $result->data['productCollection']['products'];
-                    $response->addState('productCollectionRootFilter', json_decode($result->data['productCollection']['currentFilter'], true));
+                    $response->addState('productCollectionFilter', json_decode($result->data['productCollection']['currentFilter'], true));
                     $response->addWidget(
                         'category_view_products',
                         'content',
@@ -76,7 +94,7 @@ QUERY
                         ]
                     );
                 }
-            });
+        }, function($reason) { var_dump($reason);});
 
         return $promise;
     }
