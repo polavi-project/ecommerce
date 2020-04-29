@@ -8,22 +8,11 @@ declare(strict_types=1);
 
 namespace Similik\Module\Catalog\Services\Type;
 
-use Doctrine\DBAL\Connection;
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\ResolveInfo;
-use function Similik\_mysql;
 use function Similik\dispatch_event;
-use function Similik\get_base_url;
-use function Similik\get_base_url_scheme_less;
 use Similik\Services\Di\Container;
-use Similik\Module\Catalog\Services\DataLoader;
-use Similik\Services\Db\Processor;
-use Similik\Services\Db\Table;
 use GraphQL\Type\Definition\Type;
-use Similik\Services\Http\Request;
-use Similik\Services\Routing\Router;
-use function Similik\str_replace_last;
-use Symfony\Component\Filesystem\Filesystem;
 
 class ProductTierPriceType extends ObjectType
 {

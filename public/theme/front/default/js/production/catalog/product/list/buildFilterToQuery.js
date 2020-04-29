@@ -4,12 +4,12 @@ const buildFilterToQuery = filters => {
     for (let key in filters) {
         if (filters.hasOwnProperty(key)) {
             let value = filters[key].value;
-            if (filters[key].operator == "IN" && Array.isArray(value)) value = value.join(", ");
-            filterStr += `${key} : {operator : "${filters[key].operator}" value: "${value}"} `;
+            if (filters[key].operator == "IN" && Array.isArray(value)) value = value.join(",");
+            filterStr += `${key}:{operator:"${filters[key].operator}" value:"${value}"}`;
         }
     }
     filterStr = filterStr.trim();
-    if (filterStr) filterStr = `(filter : {${filterStr}})`;
+    if (filterStr) filterStr = `(filter:{${filterStr}})`;
 
     return filterStr;
 };

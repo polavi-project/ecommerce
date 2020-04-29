@@ -144,6 +144,13 @@ class Table
         return $this;
     }
 
+    public function setFieldToSelect(string $field, string $alias = null) : Table
+    {
+        $this->selectFields = [$field => $alias];
+
+        return $this;
+    }
+
     public function getSelectFields()
     {
         return $this->selectFields;

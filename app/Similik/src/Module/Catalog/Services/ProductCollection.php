@@ -48,7 +48,9 @@ class ProductCollection extends CollectionBuilder
         }
         if(!$container->get(Request::class)->isAdmin()) {
             $customerGroupId = $container->get(Request::class)->getCustomer()->isLoggedIn() ? $container->get(Request::class)->getCustomer()->getData('group_id') ?? 1 : 999;
-            $collection->leftJoin('product_price', null, [
+            $collection
+                ->addFieldToSelect("product_price.tier_price")
+                ->leftJoin('product_price', null, [
                 [
                     'column'      => "product_price.qty",
                     'operator'    => "=",
@@ -120,11 +122,11 @@ class ProductCollection extends CollectionBuilder
         if($this->container->get(Request::class)->isAdmin() == false) {
             $collection->andWhere('product.status', '=', 1);
         }
-        dispatch_event('after_init_product_collection', [$collection]);
 
         $this->init($collection);
 
         $this->defaultFilters();
+        dispatch_event('after_init_product_collection', [$collection]);
     }
 
     protected function defaultFilters()
@@ -310,7 +312,7 @@ class ProductCollection extends CollectionBuilder
 
         $collection = clone $this->collection;
         $ids = [];
-        while ($row = $collection->addFieldToSelect("product.product_id")->fetch()) {
+        while ($row = $collection->setFieldToSelect("product.product_id")->fetch()) {
             $ids[] = $row['product_id'];
         }
 
