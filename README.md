@@ -9,15 +9,6 @@ It follows client rendering approach. Json data will be sent from server and all
 
 ### Demo
 [Demo store](https://www.similik.com/demo/)
-#### Product
-* With custom option: [Beef - Salted](https://demo.similik.com/product/ozdeweq)
-* With tier price: [Kolrabi](https://demo.similik.com/product/zmicawc)
-
-#### Coupon
-* Ten percent discount to all order: TENPERCENTALL
-* Ten percent discount with free shipping to all order: TENPERCENTALLFREESHIPPING
-* Ten percent discount if order total is above $100: TENPERCENTABOVE100
-
 
 ### Prerequisites
 
@@ -34,6 +25,13 @@ Please check [here](https://www.similik.com/docs/installation-guide) for more de
 * [Symfony](https://github.com/symfony/symfony/) - Some component from Symfony like HttpFoundation, EventDispatcher
 * [React](https://github.com/facebook/react/) - All of html will be rendered by using ReactJs
 * [Graphql-php](https://github.com/webonyx/graphql-php/) - A great php framework for graphql
+* [Promises](https://github.com/guzzle/promises) - Promises/A+ library for PHP
 
 ## Contributing
-For now, please submit an issue if you found a bug or having any suggestion. You can also use [this feedback page](https://www.similik.com/feedback) to submit your suggestion. Thanks
+Contributions are welcome and appreciated. I am looking for any feedback or suggestion to improve this project. You can:
+* Submit a bug/issue or suggestion
+* Use [this feedback page](https://www.similik.com/feedback) if you have any idea or feedback about this project
+* Submit a PR
+
+## Support / Discussion
+If you are facing any problem or just want to discuss about this project, I invite you to join my [Discord channel here](https://discordapp.com/invite/Spcudm7) 

@@ -68,6 +68,9 @@ $eventDispatcher->addListener(
                 ]
             ],
             'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
+                // Get the root product collection filter
+                $filter = $container->get(Symfony\Component\HttpFoundation\Session\Session::class)->get("productCollectionQuery");
+                $args["filter"] = $args["filter"] ?? $filter;
                 return $container->get(ProductCollection::class)->getProductIdArray($rootValue, $args, $container, $info);
             }
         ];
