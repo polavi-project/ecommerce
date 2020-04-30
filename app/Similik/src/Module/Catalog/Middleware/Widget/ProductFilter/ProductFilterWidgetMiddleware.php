@@ -10,7 +10,6 @@ namespace Similik\Module\Catalog\Middleware\Widget\ProductFilter;
 
 
 use function Similik\array_find;
-use function Similik\generate_url;
 use function Similik\get_js_file_url;
 use Similik\Middleware\MiddlewareAbstract;
 use Similik\Module\Graphql\Services\GraphqlExecutor;
@@ -74,20 +73,16 @@ class ProductFilterWidgetMiddleware extends MiddlewareAbstract
                             return null;
                         }, []);
 
-                        if($response->getState('currentPageType') == 'Category') {
-                            $categoryId = (int)$response->getState('categoryId');
-                            foreach ($areas as $area)
-                                $response->addWidget(
-                                    $widget['cms_widget_id'] . '-product-filter-widget',
-                                    $area,
-                                    (int)$widget['sort_order'],
-                                    get_js_file_url("production/catalog/widgets/filter.js", false),
-                                    [
-                                        "title" => $title,
-                                        'apiUrl' => generate_url('graphql.api')
-                                    ]
-                                );
-                        }
+                        foreach ($areas as $area)
+                            $response->addWidget(
+                                $widget['cms_widget_id'] . '-product-filter-widget',
+                                $area,
+                                (int)$widget['sort_order'],
+                                get_js_file_url("production/catalog/widgets/filter.js", false),
+                                [
+                                    "title" => $title
+                                ]
+                            );
                     }
                 }
             }, function($reason) {var_dump($reason);});

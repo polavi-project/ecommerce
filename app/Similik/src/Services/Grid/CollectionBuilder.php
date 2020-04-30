@@ -141,6 +141,6 @@ class CollectionBuilder
     {
         $collection = clone $this->collection;
         $row = $collection->setFieldToSelect("COUNT(*)", "total")->addFieldToSelect("COUNT(*)", "total")->fetchOneAssoc();
-        return $row["total"];
+        return $row["total"] ?? 0;
     }
 }
