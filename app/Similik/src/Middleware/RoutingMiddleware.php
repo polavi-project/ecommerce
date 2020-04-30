@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 namespace Similik\Middleware;
 
-use function Similik\get_base_url;
+use function Similik\generate_url;
 use Similik\Services\Http\Request;
 use Similik\Services\Http\Response;
 use Similik\Services\Routing\Router;
@@ -25,7 +25,7 @@ class RoutingMiddleware extends MiddlewareAbstract
         else {
             $response->addState("currentRoute", $request->attributes->get("_matched_route"));
             $response->addState("currentRouteArgs", $request->attributes->get("_route_args"));
-            $response->addState("currentUrl", get_base_url() . $request->getUri());
+            $response->addState("currentUrl", generate_url($request->attributes->get("_matched_route"), $request->attributes->get("_route_args")));
         }
 
         return $delegate;
