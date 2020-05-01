@@ -318,4 +318,11 @@ class ProductCollection extends CollectionBuilder
 
         return $ids;
     }
+
+    protected function getTotal()
+    {
+        $collection = clone $this->collection;
+        $rows = $collection->setFieldToSelect("product.product_id")->fetchAllAssoc();
+        return count($rows);
+    }
 }
