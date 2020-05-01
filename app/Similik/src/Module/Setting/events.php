@@ -7,8 +7,8 @@
 declare(strict_types=1);
 
 /** @var \Similik\Services\Event\EventDispatcher $eventDispatcher */
+/** @var \Similik\Services\Di\Container $container */
 
-use Similik\Services\Routing\Router;
 use Symfony\Component\Filesystem\Filesystem;
 
 $eventDispatcher->addListener(
@@ -59,8 +59,10 @@ $eventDispatcher->addListener(
         0
 );
 
-function createConfigCache() {
-    $cacheTemplate = <<< 'EOT'
+function createConfigCache(\Similik\Services\Di\Container $container) {
+    $promise = new GuzzleHttp\Promise\Promise(function() use(&$promise){
+        try {
+            $cacheTemplate = <<< 'EOT'
 <?php
 /**
  * Copyright © Nguyen Huu The <the.nguyen@similik.com>.
@@ -74,22 +76,34 @@ declare(strict_types=1);
 return %s;
 EOT;
 
-    $settingTable = \Similik\_mysql()->getTable('setting');
-    while ($row = $settingTable->fetch(['sort_by'=> 'language_id'])) {
-        if($row['json'] == 1)
-            $configuration[$row['language_id']][$row['name']] = json_decode($row['value'], true);
-        else
-            $configuration[$row['language_id']][$row['name']] = $row['value'];
-    }
-    $file_system = new Filesystem();
-    $cacheContent = sprintf(
-        $cacheTemplate,
-        date('c'),
-        var_export($configuration, true)
-    );
-    $file_system->dumpFile(CACHE_PATH . DS . 'config_cache.php', $cacheContent);
+            $settingTable = \Similik\_mysql()->getTable('setting');
+            while ($row = $settingTable->fetch(['sort_by'=> 'language_id'])) {
+                if($row['json'] == 1)
+                    $configuration[$row['language_id']][$row['name']] = json_decode($row['value'], true);
+                else
+                    $configuration[$row['language_id']][$row['name']] = $row['value'];
+            }
+            $file_system = new Filesystem();
+            $cacheContent = sprintf(
+                $cacheTemplate,
+                date('c'),
+                var_export($configuration, true)
+            );
+            $file_system->dumpFile(CACHE_PATH . DS . 'config_cache.php', $cacheContent);
+            $promise->resolve(true);
+        } catch (Exception $e) {
+            $promise->reject($e);
+        }
+    });
+    $container->get(\Similik\Services\PromiseWaiter::class)->addPromise('saveSettingToCache', $promise);
 }
 
-$eventDispatcher->addListener('after_insert_setting', 'createConfigCache');
-$eventDispatcher->addListener('after_update_setting', 'createConfigCache');
-$eventDispatcher->addListener('after_insert_on_update_setting', 'createConfigCache');
+$eventDispatcher->addListener('after_insert_setting', function() use ($container) {
+    createConfigCache($container);
+});
+$eventDispatcher->addListener('after_update_setting',  function() use ($container) {
+    createConfigCache($container);
+});
+$eventDispatcher->addListener('after_insert_on_update_setting',  function() use ($container) {
+    createConfigCache($container);
+});
