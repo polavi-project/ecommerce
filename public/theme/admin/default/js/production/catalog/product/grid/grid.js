@@ -2,6 +2,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 import Area from "../../../../../../../../js/production/area.js";
 import { Fetch } from "../../../../../../../../js/production/fetch.js";
+import Pagination from "../../../../../../../../js/production/grid/pagination.js";
 
 function IdColumnHeader({ filters, removeFilter, updateFilter, areaProps }) {
     const filterFrom = React.useRef(null);
@@ -445,6 +446,7 @@ function StatusColumnRow({ row }) {
 export default function ProductGrid({ apiUrl, areaProps }) {
     const [products, setProducts] = React.useState([]);
     const [fields, setFields] = React.useState([]);
+    const [total, setTotal] = React.useState(0);
 
     const addField = field => {
         setFields(prevFields => prevFields.concat(field));
@@ -457,6 +459,7 @@ export default function ProductGrid({ apiUrl, areaProps }) {
         Fetch(apiUrl, false, 'POST', formData, null, response => {
             if (_.get(response, 'payload.data.productCollection.products')) {
                 setProducts(_.get(response, 'payload.data.productCollection.products'));
+                setTotal(_.get(response, 'payload.data.productCollection.total'));
             }
         });
     };
@@ -485,6 +488,7 @@ export default function ProductGrid({ apiUrl, areaProps }) {
     return React.createElement(
         "div",
         { className: "product-grid mt-4" },
+        React.createElement(Pagination, { total: total, currentFilters: areaProps.filters, setFilter: areaProps.updateFilter }),
         React.createElement(
             "table",
             { className: "table table-bordered sticky" },
