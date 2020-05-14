@@ -6,7 +6,9 @@ export default function Grid({ id, defaultFilter = [] }) {
     });
 
     const addFilter = (key, operator, value) => {
-        setFilters(prevFilters => prevFilters.concat({ key: key, operator: operator, value: value }));
+        let newFilters = filters.concat({ key: key, operator: operator, value: value });
+        if (key != 'page') newFilters = newFilters.filter((f, index) => f.key !== 'page');
+        setFilters(newFilters);
     };
 
     const updateFilter = (key, operator, value) => {
@@ -15,12 +17,18 @@ export default function Grid({ id, defaultFilter = [] }) {
                 f.operator = operator;
                 f.value = value;
             }
+
+            if (f.key === 'page' && key != 'page') {
+                f.operator = operator;
+                f.value = 1;
+            }
+
             return f;
         }));
     };
 
     const removeFilter = key => {
-        const newFilters = filters.filter((f, index) => f.key !== key);
+        const newFilters = filters.filter((f, index) => f.key !== key && f.key !== 'page');
         setFilters(newFilters);
     };
 

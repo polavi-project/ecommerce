@@ -1,7 +1,6 @@
 export default function Pagination({ total, currentFilters, setFilter }) {
     const limit = _.get(currentFilters.find(e => e.key == 'limit'), 'value', 20);
     const current = _.get(currentFilters.find(e => e.key == 'page'), 'value', 1);
-    const [isOnEdit, setIsOnEdit] = React.useState(false);
     const [inputVal, setInPutVal] = React.useState(current);
 
     React.useEffect(() => {
@@ -15,7 +14,6 @@ export default function Pagination({ total, currentFilters, setFilter }) {
         if (page < 1) page = 1;
         if (page > Math.ceil(total / limit)) page = Math.ceil(total / limit);
         setFilter('page', '=', page);
-        setIsOnEdit(false);
     };
 
     const onPrev = e => {
@@ -46,72 +44,65 @@ export default function Pagination({ total, currentFilters, setFilter }) {
 
     return React.createElement(
         'div',
-        { className: 'products-pagination uk-flex uk-flex-center' },
+        { className: 'grid-pagination-container' },
         React.createElement(
-            'ul',
-            { className: 'uk-pagination' },
-            current > 1 && React.createElement(
-                'li',
-                { className: 'prev' },
-                React.createElement(
-                    'a',
-                    { href: "#", onClick: e => onPrev(e) },
+            'table',
+            { className: 'grid-pagination mb-4' },
+            React.createElement(
+                'tr',
+                null,
+                current > 1 && React.createElement(
+                    'td',
+                    { className: 'prev' },
                     React.createElement(
-                        'span',
-                        null,
-                        'Previous'
+                        'a',
+                        { href: "#", onClick: e => onPrev(e) },
+                        React.createElement('i', { className: 'far fa-caret-square-left' })
                     )
-                )
-            ),
-            React.createElement(
-                'li',
-                { className: 'first' },
-                React.createElement(
-                    'a',
-                    { href: '#', onClick: e => onFirst(e) },
-                    '1'
-                )
-            ),
-            React.createElement(
-                'li',
-                { className: 'current' },
-                isOnEdit === false && React.createElement(
-                    'a',
-                    { className: 'pagination-input-fake uk-input uk-form-small', href: '#', onClick: e => {
-                            e.preventDefault();setIsOnEdit(true);
-                        } },
-                    current
                 ),
-                isOnEdit === true && React.createElement('input', { className: 'uk-input uk-form-small', value: inputVal, onChange: e => setInPutVal(e.target.value), type: 'text', onKeyPress: e => onKeyPress(e) })
-            ),
-            React.createElement(
-                'li',
-                { className: 'last' },
                 React.createElement(
-                    'a',
-                    { href: '#', onClick: e => onLast(e) },
-                    Math.ceil(total / limit)
-                )
-            ),
-            current * limit < total && React.createElement(
-                'li',
-                { className: 'next' },
+                    'td',
+                    { className: 'first' },
+                    React.createElement(
+                        'a',
+                        { href: '#', onClick: e => onFirst(e) },
+                        '1'
+                    )
+                ),
                 React.createElement(
-                    'a',
-                    { href: "#", onClick: e => onNext(e) },
+                    'td',
+                    { className: 'current' },
+                    React.createElement('input', { className: 'form-control', value: inputVal, onChange: e => setInPutVal(e.target.value), type: 'text', onKeyPress: e => onKeyPress(e) })
+                ),
+                React.createElement(
+                    'td',
+                    { className: 'last' },
+                    React.createElement(
+                        'a',
+                        { href: '#', onClick: e => onLast(e) },
+                        Math.ceil(total / limit)
+                    )
+                ),
+                current * limit < total && React.createElement(
+                    'td',
+                    { className: 'next' },
+                    React.createElement(
+                        'a',
+                        { href: "#", onClick: e => onNext(e) },
+                        React.createElement('i', { className: 'far fa-caret-square-right' })
+                    )
+                ),
+                React.createElement(
+                    'td',
+                    { className: 'total' },
                     React.createElement(
                         'span',
                         null,
-                        'Next'
+                        total,
+                        ' records'
                     )
                 )
             )
-        ),
-        React.createElement(
-            'span',
-            null,
-            total,
-            ' records'
         )
     );
 }

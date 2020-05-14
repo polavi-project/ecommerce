@@ -1,7 +1,6 @@
 export default function Pagination({total, currentFilters, setFilter}) {
     const limit = _.get(currentFilters.find((e)=> e.key == 'limit'), 'value', 20);
     const current = _.get(currentFilters.find((e)=> e.key == 'page'), 'value', 1);
-    const [isOnEdit, setIsOnEdit] = React.useState(false);
     const [inputVal, setInPutVal] = React.useState(current);
 
     React.useEffect(() => {
@@ -18,7 +17,6 @@ export default function Pagination({total, currentFilters, setFilter}) {
         if(page > Math.ceil(total/limit))
             page = Math.ceil(total/limit);
         setFilter('page', '=', page);
-        setIsOnEdit(false);
     };
 
     const onPrev = (e) => {
@@ -51,17 +49,18 @@ export default function Pagination({total, currentFilters, setFilter}) {
         setFilter('page', '=', Math.ceil(total/limit));
     };
 
-    return <div className="products-pagination uk-flex uk-flex-center">
-        <ul className="uk-pagination">
-            {current > 1 && <li className="prev"><a href={"#"} onClick={(e) => onPrev(e)}><span>Previous</span></a></li>}
-            <li className="first"><a href="#" onClick={(e) => onFirst(e)}>1</a></li>
-            <li className="current">
-                {isOnEdit === false && <a className="pagination-input-fake uk-input uk-form-small" href="#" onClick={(e) => {e.preventDefault(); setIsOnEdit(true)}}>{current}</a>}
-                {isOnEdit === true && <input className="uk-input uk-form-small" value={inputVal} onChange={(e) => setInPutVal(e.target.value)} type="text" onKeyPress={(e)=> onKeyPress(e)} />}
-            </li>
-            <li className="last"><a href="#" onClick={(e) => onLast(e)}>{Math.ceil(total/limit)}</a></li>
-            {(current * limit) < total && <li className="next"><a href={"#"} onClick={(e) => onNext(e)}><span>Next</span></a></li>}
-        </ul>
-        <span>{total} records</span>
+    return <div className="grid-pagination-container">
+        <table className="grid-pagination mb-4">
+            <tr>
+                {current > 1 && <td className="prev"><a href={"#"} onClick={(e) => onPrev(e)}><i className="far fa-caret-square-left"></i></a></td>}
+                <td className="first"><a href="#" onClick={(e) => onFirst(e)}>1</a></td>
+                <td className="current">
+                    <input className="form-control" value={inputVal} onChange={(e) => setInPutVal(e.target.value)} type="text" onKeyPress={(e)=> onKeyPress(e)} />
+                </td>
+                <td className="last"><a href="#" onClick={(e) => onLast(e)}>{Math.ceil(total/limit)}</a></td>
+                {(current * limit) < total && <td className="next"><a href={"#"} onClick={(e) => onNext(e)}><i className="far fa-caret-square-right"></i></a></td>}
+                <td className="total"><span>{total} records</span></td>
+            </tr>
+        </table>
     </div>
 }
