@@ -1,5 +1,5 @@
 export default function Pagination({ total, currentFilters, setFilter }) {
-    const limit = _.get(currentFilters.find(e => e.key == 'limit'), 'value', 20);
+    const [limit, setLimit] = React.useState(_.get(currentFilters.find(e => e.key == 'limit'), 'value', 20));
     const current = _.get(currentFilters.find(e => e.key == 'page'), 'value', 1);
     const [inputVal, setInPutVal] = React.useState(current);
 
@@ -42,15 +42,48 @@ export default function Pagination({ total, currentFilters, setFilter }) {
         setFilter('page', '=', Math.ceil(total / limit));
     };
 
+    const onChangeLimit = e => {
+        e.preventDefault();
+        let limit = parseInt(e.target.value);
+        if (limit < 1) return;
+        setLimit(limit);
+    };
+
+    const onKeyPressLimit = e => {
+        if (e.which !== 13) return;
+        e.preventDefault();
+        let limit = parseInt(e.target.value);
+        if (limit < 1) return;
+        setFilter('limit', '=', limit);
+    };
+
     return React.createElement(
         'div',
         { className: 'grid-pagination-container' },
         React.createElement(
             'table',
-            { className: 'grid-pagination mb-4' },
+            { className: 'grid-pagination' },
             React.createElement(
                 'tr',
                 null,
+                React.createElement(
+                    'td',
+                    { className: 'current' },
+                    React.createElement(
+                        'div',
+                        { className: 'flex-column-reverse sml-flex' },
+                        React.createElement('input', { className: 'form-control', value: limit, onChange: e => onChangeLimit(e), type: 'text', onKeyPress: e => onKeyPressLimit(e) })
+                    )
+                ),
+                React.createElement(
+                    'td',
+                    { className: 'per-page' },
+                    React.createElement(
+                        'span',
+                        null,
+                        'per page'
+                    )
+                ),
                 current > 1 && React.createElement(
                     'td',
                     { className: 'prev' },

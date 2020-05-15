@@ -76,9 +76,11 @@ table img{max-width: 50px}
 .table.sticky thead th:after{content: ''; height: 2px; background-color: #E1E1E1; position: absolute; bottom: -2px; left: 0; width: 100%}
 .table.sticky thead th:before{content: ''; height: 1px; background-color: #E1E1E1; position: absolute; top: -1px; left: 0; width: 100%}
 table .form-group{margin-bottom: 0px}
+.grid-pagination-container{margin-top: 10px}
 .grid-pagination .fas{font-size: 16px}
 .grid-pagination input{max-width: 45px; text-align: center}
 .grid-pagination td{vertical-align: middle; padding: 0px 8px}
+.grid-pagination-container .per-page{padding-left: 0px}
 
 /******** PRODUCT EDIT *********/
 .product-upload-images{margin-top: 20px}

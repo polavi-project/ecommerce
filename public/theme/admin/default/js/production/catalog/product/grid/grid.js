@@ -488,7 +488,6 @@ export default function ProductGrid({ apiUrl, areaProps }) {
     return React.createElement(
         "div",
         { className: "product-grid mt-4" },
-        React.createElement(Pagination, { total: total, currentFilters: areaProps.filters, setFilter: areaProps.updateFilter }),
         React.createElement(
             "table",
             { className: "table table-bordered sticky" },
@@ -606,6 +605,7 @@ export default function ProductGrid({ apiUrl, areaProps }) {
             "div",
             null,
             "There is no product to display"
-        )
+        ),
+        React.createElement(Pagination, { total: total, currentFilters: areaProps.filters, setFilter: areaProps.updateFilter })
     );
 }
