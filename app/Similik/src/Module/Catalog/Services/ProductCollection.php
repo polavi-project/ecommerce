@@ -271,24 +271,25 @@ class ProductCollection extends CollectionBuilder
     public function getData($rootValue, $args, Container $container, ResolveInfo $info)
     {
         $filters = $args['filter'] ?? [];
-        $filters = $filters + [
-                'page' => [
-                    'operator' => '=',
-                    'value' => 1
-                ],
-                'limit' => [
-                    'operator' => '=',
-                    'value' => get_config('catalog_product_list_limit', 50)
-                ],
-                'sortBy' => [
-                    'operator' => '=',
-                    'value' => get_config('catalog_product_list_sort_by', 'created_at')
-                ],
-                'sortOrder' => [
-                    'operator' => '=',
-                    'value' => get_config('catalog_product_list_sort_order', 'DESC')
-                ]
-            ];
+        if($container->get(Request::class)->isAdmin() == false)
+            $filters = $filters + [
+                    'page' => [
+                        'operator' => '=',
+                        'value' => 1
+                    ],
+                    'limit' => [
+                        'operator' => '=',
+                        'value' => get_config('catalog_product_list_limit', 50)
+                    ],
+                    'sortBy' => [
+                        'operator' => '=',
+                        'value' => get_config('catalog_product_list_sort_by', 'created_at')
+                    ],
+                    'sortOrder' => [
+                        'operator' => '=',
+                        'value' => get_config('catalog_product_list_sort_order', 'DESC')
+                    ]
+                ];
         foreach ($filters as $key => $arg)
             $this->applyFilter($key, $arg);
 
