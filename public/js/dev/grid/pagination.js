@@ -1,11 +1,16 @@
 export default function Pagination({total, currentFilters, setFilter}) {
-    const limit = _.get(currentFilters.find((e)=> e.key == 'limit'), 'value', 20);
+    const currentLimit = _.get(currentFilters.find((e)=> e.key == 'limit'), 'value', 20);
+    const [limit, setLimit] = React.useState(_.get(currentFilters.find((e)=> e.key == 'limit'), 'value', 20));
     const current = _.get(currentFilters.find((e)=> e.key == 'page'), 'value', 1);
     const [inputVal, setInPutVal] = React.useState(current);
 
     React.useEffect(() => {
         setInPutVal(current);
     }, [current]);
+
+    React.useEffect(() => {
+        setLimit(currentLimit);
+    }, [currentLimit]);
 
     const onKeyPress = (e) => {
         if(e.which !== 13)
@@ -49,9 +54,34 @@ export default function Pagination({total, currentFilters, setFilter}) {
         setFilter('page', '=', Math.ceil(total/limit));
     };
 
+    const onChangeLimit = (e) => {
+        e.preventDefault();
+        let limit = parseInt(e.target.value);
+        if(limit < 1)
+            return;
+        setLimit(limit);
+    };
+
+    const onKeyPressLimit = (e) => {
+        if(e.which !== 13)
+            return;
+        e.preventDefault();
+        let limit = parseInt(e.target.value);
+        if(limit < 1)
+            return;
+        setFilter('limit', '=', limit);
+    };
+
     return <div className="grid-pagination-container">
-        <table className="grid-pagination mb-4">
+        <table className="grid-pagination">
             <tr>
+                <td><span>Show</span></td>
+                <td className="limit">
+                    <div className="flex-column-reverse sml-flex">
+                        <input className="form-control" value={limit} onChange={(e) => onChangeLimit(e)} type="text" onKeyPress={(e)=> onKeyPressLimit(e)} />
+                    </div>
+                </td>
+                <td className="per-page"><span>per page</span></td>
                 {current > 1 && <td className="prev"><a href={"#"} onClick={(e) => onPrev(e)}><i className="far fa-caret-square-left"></i></a></td>}
                 <td className="first"><a href="#" onClick={(e) => onFirst(e)}>1</a></td>
                 <td className="current">

@@ -3,6 +3,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 import Area from "../../../../../../../js/production/area.js";
 import A from "../../../../../../../js/production/a.js";
 import { Fetch } from "../../../../../../../js/production/fetch.js";
+import Pagination from "../../../../../../../js/production/grid/pagination.js";
 
 function IdColumnHeader({ areaProps }) {
     React.useEffect(() => {
@@ -354,6 +355,7 @@ function StatusColumnRow({ row }) {
 export default function CustomerGrid({ apiUrl, areaProps, groups = [] }) {
     const [customers, setCustomers] = React.useState([]);
     const [fields, setFields] = React.useState([]);
+    const [total, setTotal] = React.useState(0);
 
     const addField = field => {
         setFields(prevFields => prevFields.concat(field));
@@ -366,6 +368,7 @@ export default function CustomerGrid({ apiUrl, areaProps, groups = [] }) {
         Fetch(apiUrl, false, 'POST', formData, null, response => {
             if (_.get(response, 'payload.data.customerCollection.customers')) {
                 setCustomers(_.get(response, 'payload.data.customerCollection.customers'));
+                setTotal(_.get(response, 'payload.data.customerCollection.total'));
             }
         });
     };
@@ -502,6 +505,7 @@ export default function CustomerGrid({ apiUrl, areaProps, groups = [] }) {
             "div",
             null,
             "There is no customer to display"
-        )
+        ),
+        React.createElement(Pagination, { total: total, currentFilters: areaProps.filters, setFilter: areaProps.updateFilter })
     );
 }

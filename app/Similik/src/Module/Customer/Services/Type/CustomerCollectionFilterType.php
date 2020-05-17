@@ -26,7 +26,11 @@ class CustomerCollectionFilterType extends InputObjectType
                     'email' => $container->get(FilterFieldType::class),
                     'status' => $container->get(FilterFieldType::class),
                     'name' => $container->get(FilterFieldType::class),
-                    'group' => $container->get(FilterFieldType::class)
+                    'group' => $container->get(FilterFieldType::class),
+                    'limit' => $container->get(FilterFieldType::class),
+                    'page' => $container->get(FilterFieldType::class),
+                    'sortBy' => $container->get(FilterFieldType::class),
+                    'sortOrder' => $container->get(FilterFieldType::class)
                 ];
 
                 dispatch_event('filter.customerCollectionFilter.input', [&$fields]);

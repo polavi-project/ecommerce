@@ -64,6 +64,30 @@ class CategoryCollection extends CollectionBuilder
         $this->addFilter('include_in_nav', function($args) use ($isAdmin) {
             $this->collection->andWhere('category.include_in_nav', $args['operator'], (int)$args['value']);
         });
+
+        $this->addFilter('page', function($args) use ($isAdmin) {
+            if($args['operator'] !== "=")
+                return;
+            $this->setPage((int)$args['value']);
+        });
+
+        $this->addFilter('limit', function($args) use ($isAdmin) {
+            if($args['operator'] !== "=")
+                return;
+            $this->setLimit((int)$args['value']);
+        });
+
+        $this->addFilter('sortBy', function($args) use ($isAdmin) {
+            if($args['operator'] !== "=")
+                return;
+            $this->setSortBy($args['value']);
+        });
+
+        $this->addFilter('sortOrder', function($args) use ($isAdmin) {
+            if($args['operator'] !== "=")
+                return;
+            $this->setSortOrder($args['value']);
+        });
     }
 
     public function getData($rootValue, $args, Container $container, ResolveInfo $info)

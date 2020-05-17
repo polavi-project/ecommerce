@@ -33,8 +33,32 @@ class AttributeGroupCollection extends CollectionBuilder
 
     protected function defaultFilters()
     {
-        $this->addFilter('name', function($args) {
+        $this->addFilter('group_name', function($args) {
             $this->collection->andWhere('attribute_group.group_name', $args['operator'], $args['value']);
+        });
+
+        $this->addFilter('page', function($args) {
+            if($args['operator'] !== "=")
+                return;
+            $this->setPage((int)$args['value']);
+        });
+
+        $this->addFilter('limit', function($args) {
+            if($args['operator'] !== "=")
+                return;
+            $this->setLimit((int)$args['value']);
+        });
+
+        $this->addFilter('sortBy', function($args) {
+            if($args['operator'] !== "=")
+                return;
+            $this->setSortBy($args['value']);
+        });
+
+        $this->addFilter('sortOrder', function($args) {
+            if($args['operator'] !== "=")
+                return;
+            $this->setSortOrder($args['value']);
         });
     }
 

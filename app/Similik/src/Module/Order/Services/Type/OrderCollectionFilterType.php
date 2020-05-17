@@ -10,9 +10,7 @@ namespace Similik\Module\Order\Services\Type;
 
 
 use GraphQL\Type\Definition\InputObjectType;
-use function Similik\_mysql;
 use function Similik\dispatch_event;
-use Similik\Module\Catalog\Services\Type\FilterTool\AttributeFilterType;
 use Similik\Module\Graphql\Services\FilterFieldType;
 use Similik\Services\Di\Container;
 
@@ -30,7 +28,11 @@ class OrderCollectionFilterType extends InputObjectType
                     'payment_status' => $container->get(FilterFieldType::class),
                     'shipment_status' => $container->get(FilterFieldType::class),
                     'customer_email' => $container->get(FilterFieldType::class),
-                    'created_at' => $container->get(FilterFieldType::class)
+                    'created_at' => $container->get(FilterFieldType::class),
+                    'limit' => $container->get(FilterFieldType::class),
+                    'page' => $container->get(FilterFieldType::class),
+                    'sortBy' => $container->get(FilterFieldType::class),
+                    'sortOrder' => $container->get(FilterFieldType::class)
                 ];
 
                 dispatch_event('filter.orderCollectionFilter.input', [&$fields]);

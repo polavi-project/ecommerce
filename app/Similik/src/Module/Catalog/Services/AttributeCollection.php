@@ -13,6 +13,7 @@ use GraphQL\Type\Definition\ResolveInfo;
 use function Similik\_mysql;
 use Similik\Services\Di\Container;
 use Similik\Services\Grid\CollectionBuilder;
+use Similik\Services\Http\Request;
 
 class AttributeCollection extends CollectionBuilder
 {
@@ -55,6 +56,30 @@ class AttributeCollection extends CollectionBuilder
 
         $this->addFilter('type', function($args) {
             $this->getCollection()->andWhere('attribute.type', $args['operator'], $args['value']);
+        });
+
+        $this->addFilter('page', function($args) {
+            if($args['operator'] !== "=")
+                return;
+            $this->setPage((int)$args['value']);
+        });
+
+        $this->addFilter('limit', function($args) {
+            if($args['operator'] !== "=")
+                return;
+            $this->setLimit((int)$args['value']);
+        });
+
+        $this->addFilter('sortBy', function($args) {
+            if($args['operator'] !== "=")
+                return;
+            $this->setSortBy($args['value']);
+        });
+
+        $this->addFilter('sortOrder', function($args) {
+            if($args['operator'] !== "=")
+                return;
+            $this->setSortOrder($args['value']);
         });
     }
 
