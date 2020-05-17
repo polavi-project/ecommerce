@@ -70,7 +70,8 @@ export default function Pagination({total, currentFilters, setFilter}) {
     return <div className="grid-pagination-container">
         <table className="grid-pagination">
             <tr>
-                <td className="current">
+                <td><span>Show</span></td>
+                <td className="limit">
                     <div className="flex-column-reverse sml-flex">
                         <input className="form-control" value={limit} onChange={(e) => onChangeLimit(e)} type="text" onKeyPress={(e)=> onKeyPressLimit(e)} />
                     </div>

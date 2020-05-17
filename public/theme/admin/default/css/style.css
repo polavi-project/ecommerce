@@ -80,7 +80,7 @@ table .form-group{margin-bottom: 0px}
 .grid-pagination .fas{font-size: 16px}
 .grid-pagination input{max-width: 45px; text-align: center}
 .grid-pagination td{vertical-align: middle; padding: 0px 8px}
-.grid-pagination-container .per-page{padding-left: 0px}
+.grid-pagination-container .per-page, .grid-pagination-container .limit{padding-left: 0px}
 
 /******** PRODUCT EDIT *********/
 .product-upload-images{margin-top: 20px}

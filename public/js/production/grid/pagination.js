@@ -68,7 +68,16 @@ export default function Pagination({ total, currentFilters, setFilter }) {
                 null,
                 React.createElement(
                     'td',
-                    { className: 'current' },
+                    null,
+                    React.createElement(
+                        'span',
+                        null,
+                        'Show'
+                    )
+                ),
+                React.createElement(
+                    'td',
+                    { className: 'limit' },
                     React.createElement(
                         'div',
                         { className: 'flex-column-reverse sml-flex' },
