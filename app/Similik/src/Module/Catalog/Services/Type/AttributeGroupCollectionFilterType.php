@@ -25,7 +25,11 @@ class AttributeGroupCollectionFilterType extends InputObjectType
             'fields' => function() use($container) {
                 $fields = [
                     'id' => $container->get(FilterFieldType::class),
-                    'name' => $container->get(FilterFieldType::class)
+                    'group_name' => $container->get(FilterFieldType::class),
+                    'limit' => $container->get(FilterFieldType::class),
+                    'page' => $container->get(FilterFieldType::class),
+                    'sortBy' => $container->get(FilterFieldType::class),
+                    'sortOrder' => $container->get(FilterFieldType::class)
                 ];
 
                 dispatch_event('filter.attributeGroupCollectionFilter.input', [&$fields]);

@@ -1,4 +1,5 @@
 export default function Pagination({total, currentFilters, setFilter}) {
+    const currentLimit = _.get(currentFilters.find((e)=> e.key == 'limit'), 'value', 20);
     const [limit, setLimit] = React.useState(_.get(currentFilters.find((e)=> e.key == 'limit'), 'value', 20));
     const current = _.get(currentFilters.find((e)=> e.key == 'page'), 'value', 1);
     const [inputVal, setInPutVal] = React.useState(current);
@@ -6,6 +7,10 @@ export default function Pagination({total, currentFilters, setFilter}) {
     React.useEffect(() => {
         setInPutVal(current);
     }, [current]);
+
+    React.useEffect(() => {
+        setLimit(currentLimit);
+    }, [currentLimit]);
 
     const onKeyPress = (e) => {
         if(e.which !== 13)

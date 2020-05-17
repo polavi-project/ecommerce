@@ -610,7 +610,7 @@ export default function AttributeGrid({ apiUrl, areaProps }) {
 
     return React.createElement(
         "div",
-        { className: "category-grid mt-4" },
+        { className: "attribute-grid mt-4" },
         React.createElement(
             "table",
             { className: "table table-bordered sticky" },
