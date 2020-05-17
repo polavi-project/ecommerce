@@ -5,6 +5,7 @@ import A from "../../../../../../../js/production/a.js";
 import { PaymentStatus } from "../edit/payment-status.js";
 import { ShipmentStatus } from "../edit/shipment-status.js";
 import { Fetch } from "../../../../../../../js/production/fetch.js";
+import Pagination from "../../../../../../../js/production/grid/pagination.js";
 
 function IdColumnHeader({ areaProps, filters, updateFilter }) {
     const filterFrom = React.useRef(null);
@@ -460,6 +461,7 @@ function ActionColumnRow({ row }) {
 export default function OrderGrid({ apiUrl, areaProps }) {
     const [orders, setOrders] = React.useState([]);
     const [fields, setFields] = React.useState([]);
+    const [total, setTotal] = React.useState(0);
 
     const addField = field => {
         setFields(prevFields => prevFields.concat(field));
@@ -472,6 +474,7 @@ export default function OrderGrid({ apiUrl, areaProps }) {
         Fetch(apiUrl, false, 'POST', formData, null, response => {
             if (_.get(response, 'payload.data.orderCollection.orders')) {
                 setOrders(_.get(response, 'payload.data.orderCollection.orders'));
+                setTotal(_.get(response, 'payload.data.orderCollection.total'));
             }
         });
     };
@@ -617,6 +620,7 @@ export default function OrderGrid({ apiUrl, areaProps }) {
             "div",
             null,
             "There is no order to display"
-        )
+        ),
+        React.createElement(Pagination, { total: total, currentFilters: areaProps.filters, setFilter: areaProps.updateFilter })
     );
 }
