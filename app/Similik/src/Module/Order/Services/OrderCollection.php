@@ -107,6 +107,30 @@ class OrderCollection extends CollectionBuilder
                 $this->getCollection()->andWhere('order.created_at', $args['operator'], $args['value']);
             }
         });
+
+        $this->addFilter('page', function($args) use ($isAdmin) {
+            if($args['operator'] !== "=")
+                return;
+            $this->setPage((int)$args['value']);
+        });
+
+        $this->addFilter('limit', function($args) use ($isAdmin) {
+            if($args['operator'] !== "=")
+                return;
+            $this->setLimit((int)$args['value']);
+        });
+
+        $this->addFilter('sortBy', function($args) use ($isAdmin) {
+            if($args['operator'] !== "=")
+                return;
+            $this->setSortBy($args['value']);
+        });
+
+        $this->addFilter('sortOrder', function($args) use ($isAdmin) {
+            if($args['operator'] !== "=")
+                return;
+            $this->setSortOrder($args['value']);
+        });
     }
 
     public function getData($rootValue, $args, Container $container, ResolveInfo $info)

@@ -262,7 +262,7 @@ class Processor extends \PDO
             $limit = '';
         else {
             $offset = (int)$setting['page'] > 1 ? ((int)$setting['page']-1) * $limit : 0;
-            $limit = (int)$limit == 1 ? "LIMIT 1" : "LIMIT {$offset},{$limit}";
+            $limit = ((int)$limit == 1 && $offset == 0) ? "LIMIT 1" : "LIMIT {$offset},{$limit}";
         }
         $noSortByQuery = $query . "ORDER BY `{$table->getTable()}`.{$table->getPrimary()} ASC " . " {$limit}";
         $query = $query . " {$sortBy} {$sortOrder} {$limit}";

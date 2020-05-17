@@ -3,6 +3,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 import Area from "../../../../../../../../js/production/area.js";
 import A from "../../../../../../../../js/production/a.js";
 import { Fetch } from "../../../../../../../../js/production/fetch.js";
+import Pagination from "../../../../../../../../js/production/grid/pagination.js";
 
 function IdColumnHeader({ areaProps, filters, updateFilter }) {
     React.useEffect(() => {
@@ -318,6 +319,7 @@ function ShowNavColumnRow({ row }) {
 export default function CategoryGrid({ apiUrl, areaProps }) {
     const [categories, setCategories] = React.useState([]);
     const [fields, setFields] = React.useState([]);
+    const [total, setTotal] = React.useState(0);
 
     const addField = field => {
         setFields(prevFields => prevFields.concat(field));
@@ -330,6 +332,7 @@ export default function CategoryGrid({ apiUrl, areaProps }) {
         Fetch(apiUrl, false, 'POST', formData, null, response => {
             if (_.get(response, 'payload.data.categoryCollection.categories')) {
                 setCategories(_.get(response, 'payload.data.categoryCollection.categories'));
+                setTotal(_.get(response, 'payload.data.categoryCollection.total'));
             }
         });
     };
@@ -455,6 +458,7 @@ export default function CategoryGrid({ apiUrl, areaProps }) {
             "div",
             null,
             "There is no category to display"
-        )
+        ),
+        React.createElement(Pagination, { total: total, currentFilters: areaProps.filters, setFilter: areaProps.updateFilter })
     );
 }

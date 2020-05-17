@@ -1,105 +1,152 @@
-import { PAGINATION_UPDATED } from "./../event-types.js";
-
-export default function Pagination({}) {
-    const [limit, setLimit] = React.useState(props.limit);
-    const [currentPage, setCurrentPage] = React.useState(props.currentPage);
-    const [ready, setReady] = React.useState(false);
-
-    const getTotalPage = () => {
-        if (props.total % limit > 0) return Math.floor(props.total / limit) + 1;
-        return props.total / limit;
-    };
-
-    const changeCurrentPage = page => {
-        if (isNaN(page) || page < 1 || page > getTotalPage()) return false;
-        setCurrentPage(page);
-        setReady(true);
-    };
+export default function Pagination({ total, currentFilters, setFilter }) {
+    const currentLimit = _.get(currentFilters.find(e => e.key == 'limit'), 'value', 20);
+    const [limit, setLimit] = React.useState(_.get(currentFilters.find(e => e.key == 'limit'), 'value', 20));
+    const current = _.get(currentFilters.find(e => e.key == 'page'), 'value', 1);
+    const [inputVal, setInPutVal] = React.useState(current);
 
     React.useEffect(() => {
-        if (ready === true) {
-            PubSub.publishSync(PAGINATION_UPDATED, { limit, currentPage, gridId: props.gridId });
-            setReady(false);
-        }
-    });
+        setInPutVal(current);
+    }, [current]);
+
+    React.useEffect(() => {
+        setLimit(currentLimit);
+    }, [currentLimit]);
+
+    const onKeyPress = e => {
+        if (e.which !== 13) return;
+        e.preventDefault();
+        let page = parseInt(e.target.value);
+        if (page < 1) page = 1;
+        if (page > Math.ceil(total / limit)) page = Math.ceil(total / limit);
+        setFilter('page', '=', page);
+    };
+
+    const onPrev = e => {
+        e.preventDefault();
+        let prev = current - 1;
+        if (current === 1) return;
+        setFilter('page', '=', prev);
+    };
+
+    const onNext = e => {
+        e.preventDefault();
+        let next = current + 1;
+        if (current * limit >= total) return;
+        setFilter('page', '=', next);
+    };
+
+    const onFirst = e => {
+        e.preventDefault();
+        if (current === 1) return;
+        setFilter('page', '=', 1);
+    };
+
+    const onLast = e => {
+        e.preventDefault();
+        if (current === Math.ceil(total / limit)) return;
+        setFilter('page', '=', Math.ceil(total / limit));
+    };
+
+    const onChangeLimit = e => {
+        e.preventDefault();
+        let limit = parseInt(e.target.value);
+        if (limit < 1) return;
+        setLimit(limit);
+    };
+
+    const onKeyPressLimit = e => {
+        if (e.which !== 13) return;
+        e.preventDefault();
+        let limit = parseInt(e.target.value);
+        if (limit < 1) return;
+        setFilter('limit', '=', limit);
+    };
 
     return React.createElement(
-        "div",
-        { className: "pagination" },
+        'div',
+        { className: 'grid-pagination-container' },
         React.createElement(
-            "div",
-            { className: "uk-inline" },
-            React.createElement("a", { className: "uk-form-icon uk-form-icon-flip",
-                href: "javascript:void(0)",
-                "uk-icon": "icon: refresh",
-                onClick: () => setReady(true)
-            }),
-            React.createElement("input", { className: "uk-input uk-form-small",
-                id: "pagination-limit",
-                type: "text",
-                name: "limit",
-                value: limit,
-                onKeyPress: e => {
-                    if (e.key === 'Enter') setReady(true);
-                },
-                onChange: e => setLimit(e.target.value) })
-        ),
-        React.createElement(
-            "div",
-            { className: "uk-inline" },
+            'table',
+            { className: 'grid-pagination' },
             React.createElement(
-                "table",
+                'tr',
                 null,
                 React.createElement(
-                    "tbody",
+                    'td',
                     null,
                     React.createElement(
-                        "tr",
+                        'span',
                         null,
-                        React.createElement(
-                            "td",
-                            null,
-                            React.createElement("a", { href: "javascript:void(0)",
-                                "uk-icon": "icon: chevron-left",
-                                onClick: () => changeCurrentPage(parseInt(currentPage) - 1)
-                            })
-                        ),
-                        React.createElement(
-                            "td",
-                            null,
-                            React.createElement(
-                                "div",
-                                { className: "uk-inline" },
-                                React.createElement(
-                                    "span",
-                                    { className: "uk-form-icon uk-form-icon-flip"
-                                    },
-                                    React.createElement(
-                                        "span",
-                                        null,
-                                        "of ",
-                                        getTotalPage()
-                                    )
-                                ),
-                                React.createElement("input", { className: "uk-input uk-form-small",
-                                    id: "pagination-current-page",
-                                    type: "text",
-                                    name: "current_page",
-                                    value: currentPage,
-                                    onKeyPress: e => {
-                                        if (e.key === 'Enter') setReady(true);
-                                    },
-                                    onChange: e => changeCurrentPage(e.target.value) })
-                            )
-                        ),
-                        React.createElement(
-                            "td",
-                            null,
-                            React.createElement("a", { href: "javascript:void(0)",
-                                "uk-icon": "icon: chevron-right",
-                                onClick: () => changeCurrentPage(parseInt(currentPage) + 1)
-                            })
-                        )
+                        'Show'
+                    )
+                ),
+                React.createElement(
+                    'td',
+                    { className: 'limit' },
+                    React.createElement(
+                        'div',
+                        { className: 'flex-column-reverse sml-flex' },
+                        React.createElement('input', { className: 'form-control', value: limit, onChange: e => onChangeLimit(e), type: 'text', onKeyPress: e => onKeyPressLimit(e) })
+                    )
+                ),
+                React.createElement(
+                    'td',
+                    { className: 'per-page' },
+                    React.createElement(
+                        'span',
+                        null,
+                        'per page'
+                    )
+                ),
+                current > 1 && React.createElement(
+                    'td',
+                    { className: 'prev' },
+                    React.createElement(
+                        'a',
+                        { href: "#", onClick: e => onPrev(e) },
+                        React.createElement('i', { className: 'far fa-caret-square-left' })
+                    )
+                ),
+                React.createElement(
+                    'td',
+                    { className: 'first' },
+                    React.createElement(
+                        'a',
+                        { href: '#', onClick: e => onFirst(e) },
+                        '1'
+                    )
+                ),
+                React.createElement(
+                    'td',
+                    { className: 'current' },
+                    React.createElement('input', { className: 'form-control', value: inputVal, onChange: e => setInPutVal(e.target.value), type: 'text', onKeyPress: e => onKeyPress(e) })
+                ),
+                React.createElement(
+                    'td',
+                    { className: 'last' },
+                    React.createElement(
+                        'a',
+                        { href: '#', onClick: e => onLast(e) },
+                        Math.ceil(total / limit)
+                    )
+                ),
+                current * limit < total && React.createElement(
+                    'td',
+                    { className: 'next' },
+                    React.createElement(
+                        'a',
+                        { href: "#", onClick: e => onNext(e) },
+                        React.createElement('i', { className: 'far fa-caret-square-right' })
+                    )
+                ),
+                React.createElement(
+                    'td',
+                    { className: 'total' },
+                    React.createElement(
+                        'span',
+                        null,
+                        total,
+                        ' records'
                     )
                 )
             )

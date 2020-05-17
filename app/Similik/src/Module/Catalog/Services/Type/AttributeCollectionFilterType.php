@@ -10,10 +10,7 @@ namespace Similik\Module\Catalog\Services\Type;
 
 
 use GraphQL\Type\Definition\InputObjectType;
-use function Similik\_mysql;
 use function Similik\create_mutable_var;
-use function Similik\dispatch_event;
-use Similik\Module\Catalog\Services\Type\FilterTool\AttributeFilterType;
 use Similik\Module\Graphql\Services\FilterFieldType;
 use Similik\Services\Di\Container;
 
@@ -32,6 +29,10 @@ class AttributeCollectionFilterType extends InputObjectType
                     'is_required' => $container->get(FilterFieldType::class),
                     'display_on_frontend' => $container->get(FilterFieldType::class),
                     'is_filterable' => $container->get(FilterFieldType::class),
+                    'limit' => $container->get(FilterFieldType::class),
+                    'page' => $container->get(FilterFieldType::class),
+                    'sortBy' => $container->get(FilterFieldType::class),
+                    'sortOrder' => $container->get(FilterFieldType::class)
                 ]);
             }
         ];

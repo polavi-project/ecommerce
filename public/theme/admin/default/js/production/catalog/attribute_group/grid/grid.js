@@ -1,6 +1,9 @@
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 import Area from "../../../../../../../../js/production/area.js";
 import A from "../../../../../../../../js/production/a.js";
 import { Fetch } from "../../../../../../../../js/production/fetch.js";
+import Pagination from "../../../../../../../../js/production/grid/pagination.js";
 
 function IdColumnHeader({ areaProps }) {
     React.useEffect(() => {
@@ -38,12 +41,22 @@ function IdColumnRow({ row }) {
     );
 }
 
-function NameColumnHeader({ areaProps }) {
+function NameColumnHeader({ areaProps, filters, updateFilter }) {
     const filterInput = React.useRef(null);
 
     React.useEffect(() => {
         areaProps.addField('group_name');
     }, []);
+
+    const onKeyPress = e => {
+        if (e.key === 'Enter') {
+            if (e.target.value == "") removeFilter("group_name");else updateFilter("group_name", "LIKE", `%${e.target.value}%`);
+        }
+    };
+
+    React.useEffect(() => {
+        filterInput.current.value = filters.findIndex(e => e.key === 'group_name') === -1 ? "" : filterInput.current.value;
+    });
 
     return React.createElement(
         "th",
@@ -66,9 +79,7 @@ function NameColumnHeader({ areaProps }) {
                 React.createElement("input", {
                     type: "text",
                     ref: filterInput,
-                    onKeyPress: e => {
-                        if (e.key === 'Enter') areaProps.addFilter("group_name", "LIKE", `%${e.target.value}%`);
-                    },
+                    onKeyPress: e => onKeyPress(e),
                     placeholder: "Group name",
                     className: "form-control"
                 })
@@ -94,6 +105,10 @@ function ActionColumnHeader({ areaProps }) {
         areaProps.addField('editUrl');
         areaProps.addField('deleteUrl');
     }, []);
+
+    const onClick = () => {
+        areaProps.cleanFilter();
+    };
 
     return React.createElement(
         "th",
@@ -148,32 +163,11 @@ function ActionColumnRow({ row }) {
     );
 }
 
-export default function AttributeGrid({ apiUrl }) {
+export default function AttributeGroupGrid({ apiUrl, areaProps }) {
     const [groups, setGroups] = React.useState([]);
-    const [filters, setFilters] = React.useState([]);
     const [fields, setFields] = React.useState([]);
+    const [total, setTotal] = React.useState(0);
 
-    const addFilter = (key, operator, value) => {
-        let flag = 0;
-        filters.forEach((f, i) => {
-            if (f.key === key && !value) flag = 1; // Remove
-            if (f.key === key && value) flag = 2; // Update
-        });
-        if (flag === 0) setFilters(prevFilters => prevFilters.concat({ key: key, operator: operator, value: value }));else if (flag === 1) {
-            const setFilters = prevFilters.filter((f, index) => f.key !== key);
-            setFilters(newFilters);
-        } else setFilters(prevFilters => prevFilters.map((f, i) => {
-            if (f.key === key) {
-                f.operator = operator;
-                f.value = value;
-            }
-            return f;
-        }));
-    };
-
-    const cleanFilter = () => {
-        setFilters([]);
-    };
     const addField = field => {
         setFields(prevFields => prevFields.concat(field));
     };
@@ -181,26 +175,19 @@ export default function AttributeGrid({ apiUrl }) {
     const applyFilter = () => {
         let formData = new FormData();
         formData.append('query', buildQuery());
-        axios({
-            method: 'post',
-            url: apiUrl,
-            headers: { 'content-type': 'multipart/form-data' },
-            data: formData
-        }).then(function (response) {
-            if (response.headers['content-type'] !== "application/json") throw new Error('Something wrong, please try again');
-            if (_.get(response, 'data.payload.data.attributeGroupCollection.groups')) {
-                setGroups(_.get(response, 'data.payload.data.attributeGroupCollection.groups'));
+
+        Fetch(apiUrl, false, 'POST', formData, null, response => {
+            if (_.get(response, 'payload.data.attributeGroupCollection.groups')) {
+                setGroups(_.get(response, 'payload.data.attributeGroupCollection.groups'));
+                setTotal(_.get(response, 'payload.data.attributeGroupCollection.total'));
             }
-        }).catch(function (error) {}).finally(function () {
-            // e.target.value = null;
-            // setUploading(false);
         });
     };
 
     const buildQuery = () => {
         let filterStr = "";
-        filters.forEach((f, i) => {
-            filterStr += `${f.key} : {operator : ${f.operator} value: "${f.value}"} `;
+        areaProps.filters.forEach((f, i) => {
+            filterStr += `${f.key} : {operator : "${f.operator}" value: "${f.value}"} `;
         });
         filterStr = filterStr.trim();
         if (filterStr) filterStr = `(filter : {${filterStr}})`;
@@ -216,7 +203,7 @@ export default function AttributeGrid({ apiUrl }) {
     React.useEffect(() => {
         if (fields.length === 0) return;
         applyFilter();
-    }, [fields, filters]);
+    }, [fields, areaProps.filters]);
 
     return React.createElement(
         "div",
@@ -233,24 +220,27 @@ export default function AttributeGrid({ apiUrl }) {
                     React.createElement(Area, {
                         className: "",
                         id: "attribute_group_grid_header",
-                        addFilter: addFilter,
-                        cleanFilter: cleanFilter,
+                        filters: areaProps.filters,
+                        addFilter: areaProps.addFilter,
+                        updateFilter: areaProps.updateFilter,
+                        removeFilter: areaProps.removeFilter,
+                        cleanFilter: areaProps.cleanFilter,
                         addField: addField,
                         applyFilter: applyFilter,
                         noOuter: true,
                         coreWidgets: [{
                             component: IdColumnHeader,
-                            props: { addFilter, cleanFilter, addField, applyFilter },
+                            props: _extends({}, areaProps, { addField, applyFilter }),
                             sort_order: 10,
                             id: "id"
                         }, {
                             component: NameColumnHeader,
-                            props: {},
+                            props: _extends({}, areaProps, { addField, applyFilter }),
                             sort_order: 20,
                             id: "name"
                         }, {
                             component: ActionColumnHeader,
-                            props: {},
+                            props: _extends({}, areaProps, { addField, applyFilter }),
                             sort_order: 30,
                             id: "action"
                         }]
@@ -295,6 +285,7 @@ export default function AttributeGrid({ apiUrl }) {
             "div",
             null,
             "There is no group to display"
-        )
+        ),
+        React.createElement(Pagination, { total: total, currentFilters: areaProps.filters, setFilter: areaProps.updateFilter })
     );
 }

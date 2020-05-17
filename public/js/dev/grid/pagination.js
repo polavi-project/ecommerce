@@ -1,77 +1,96 @@
-import {PAGINATION_UPDATED} from "./../event-types.js"
-
-export default function Pagination({}) {
-    const [limit, setLimit] = React.useState(props.limit);
-    const [currentPage, setCurrentPage] = React.useState(props.currentPage);
-    const [ready, setReady] = React.useState(false);
-
-    const getTotalPage = () => {
-        if(props.total % limit > 0)
-            return Math.floor(props.total / limit) + 1;
-        return props.total / limit;
-    };
-
-    const changeCurrentPage = (page)=> {
-        if(isNaN(page) || page < 1 || page > getTotalPage())
-            return false;
-        setCurrentPage(page);
-        setReady(true);
-    };
+export default function Pagination({total, currentFilters, setFilter}) {
+    const currentLimit = _.get(currentFilters.find((e)=> e.key == 'limit'), 'value', 20);
+    const [limit, setLimit] = React.useState(_.get(currentFilters.find((e)=> e.key == 'limit'), 'value', 20));
+    const current = _.get(currentFilters.find((e)=> e.key == 'page'), 'value', 1);
+    const [inputVal, setInPutVal] = React.useState(current);
 
     React.useEffect(() => {
-        if(ready === true) {
-            PubSub.publishSync(PAGINATION_UPDATED, {limit, currentPage, gridId: props.gridId});
-            setReady(false);
-        }
-    });
+        setInPutVal(current);
+    }, [current]);
 
-    return <div className="pagination">
-        <div className="uk-inline">
-            <a className="uk-form-icon uk-form-icon-flip"
-               href="javascript:void(0)"
-               uk-icon="icon: refresh"
-               onClick={()=> setReady(true)}
-            ></a>
-            <input className="uk-input uk-form-small"
-                   id="pagination-limit"
-                   type="text"
-                   name="limit"
-                   value={limit}
-                   onKeyPress={(e)=>{ if(e.key === 'Enter') setReady(true)}}
-                   onChange={(e)=> setLimit(e.target.value)}/>
-        </div>
-        <div className="uk-inline">
-            <table>
-                <tbody>
-                    <tr>
-                        <td>
-                            <a href="javascript:void(0)"
-                               uk-icon="icon: chevron-left"
-                               onClick={()=>changeCurrentPage(parseInt(currentPage) - 1)}
-                            ></a>
-                        </td>
-                        <td>
-                            <div className="uk-inline">
-                                <span className="uk-form-icon uk-form-icon-flip"
-                                ><span>of {getTotalPage()}</span></span>
-                                <input className="uk-input uk-form-small"
-                                       id="pagination-current-page"
-                                       type="text"
-                                       name="current_page"
-                                       value={currentPage}
-                                       onKeyPress={(e)=>{ if(e.key === 'Enter') setReady(true)}}
-                                       onChange={(e)=> changeCurrentPage(e.target.value)}/>
-                            </div>
-                        </td>
-                        <td>
-                            <a href="javascript:void(0)"
-                               uk-icon="icon: chevron-right"
-                               onClick={()=>changeCurrentPage(parseInt(currentPage) + 1)}
-                            ></a>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+    React.useEffect(() => {
+        setLimit(currentLimit);
+    }, [currentLimit]);
+
+    const onKeyPress = (e) => {
+        if(e.which !== 13)
+            return;
+        e.preventDefault();
+        let page = parseInt(e.target.value);
+        if(page < 1)
+            page = 1;
+        if(page > Math.ceil(total/limit))
+            page = Math.ceil(total/limit);
+        setFilter('page', '=', page);
+    };
+
+    const onPrev = (e) => {
+        e.preventDefault();
+        let prev = current - 1;
+        if(current === 1)
+            return;
+        setFilter('page', '=', prev);
+    };
+
+    const onNext = (e) => {
+        e.preventDefault();
+        let next = current + 1;
+        if(current * limit >= total)
+            return;
+        setFilter('page', '=', next);
+    };
+
+    const onFirst = (e) => {
+        e.preventDefault();
+        if(current === 1)
+            return;
+        setFilter('page', '=', 1);
+    };
+
+    const onLast = (e) => {
+        e.preventDefault();
+        if(current === Math.ceil(total/limit))
+            return;
+        setFilter('page', '=', Math.ceil(total/limit));
+    };
+
+    const onChangeLimit = (e) => {
+        e.preventDefault();
+        let limit = parseInt(e.target.value);
+        if(limit < 1)
+            return;
+        setLimit(limit);
+    };
+
+    const onKeyPressLimit = (e) => {
+        if(e.which !== 13)
+            return;
+        e.preventDefault();
+        let limit = parseInt(e.target.value);
+        if(limit < 1)
+            return;
+        setFilter('limit', '=', limit);
+    };
+
+    return <div className="grid-pagination-container">
+        <table className="grid-pagination">
+            <tr>
+                <td><span>Show</span></td>
+                <td className="limit">
+                    <div className="flex-column-reverse sml-flex">
+                        <input className="form-control" value={limit} onChange={(e) => onChangeLimit(e)} type="text" onKeyPress={(e)=> onKeyPressLimit(e)} />
+                    </div>
+                </td>
+                <td className="per-page"><span>per page</span></td>
+                {current > 1 && <td className="prev"><a href={"#"} onClick={(e) => onPrev(e)}><i className="far fa-caret-square-left"></i></a></td>}
+                <td className="first"><a href="#" onClick={(e) => onFirst(e)}>1</a></td>
+                <td className="current">
+                    <input className="form-control" value={inputVal} onChange={(e) => setInPutVal(e.target.value)} type="text" onKeyPress={(e)=> onKeyPress(e)} />
+                </td>
+                <td className="last"><a href="#" onClick={(e) => onLast(e)}>{Math.ceil(total/limit)}</a></td>
+                {(current * limit) < total && <td className="next"><a href={"#"} onClick={(e) => onNext(e)}><i className="far fa-caret-square-right"></i></a></td>}
+                <td className="total"><span>{total} records</span></td>
+            </tr>
+        </table>
     </div>
 }
