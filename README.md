@@ -5,7 +5,7 @@ A Simple eCommerce platform using PHP, Mysql and ReactJs.
 ## Getting Started
 
 Similik is a simple eCommerce platform. Similik uses PHP and Mysql as backend languages and ReactJS as frontend language.
-#### Middleware system
+### Middleware system
 ```php
 declare(strict_types=1);
 
@@ -36,7 +36,7 @@ class RoutingMiddleware extends MiddlewareAbstract
 }
 ```
 
-#### Client rendering approach with es6 module dynamic import.
+### Client rendering approach with es6 module dynamic import.
 ```php
 $response->addWidget(
     'category_edit_general',
@@ -50,7 +50,7 @@ $response->addWidget(
 );
 ```
 
-#### ReactJs template with Area and Widget
+### ReactJs template with Area and Widget
 ```php
 $response->addWidget(
     'admin_content',
@@ -72,7 +72,7 @@ $response->addWidget(
 );
 ```
 
-#### Loading data with Graphql and Promise
+### Loading data with Graphql and Promise
 ```php
 $this->getContainer()
     ->get(GraphqlExecutor::class)
