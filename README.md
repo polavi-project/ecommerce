@@ -5,8 +5,95 @@ A Simple eCommerce platform using PHP, Mysql and ReactJs.
 ## Getting Started
 
 Similik is a simple eCommerce platform. Similik uses PHP and Mysql as backend languages and ReactJS as frontend language.
-It follows client rendering approach. Json data will be sent from server and all html will be rendered by using ReactJs. 
+#### Middleware system
+```php
+declare(strict_types=1);
 
+namespace Similik\Middleware;
+
+use function Similik\generate_url;
+use Similik\Services\Http\Request;
+use Similik\Services\Http\Response;
+use Similik\Services\Routing\Router;
+
+class RoutingMiddleware extends MiddlewareAbstract
+{
+    public function __invoke(Request $request, Response $response, $delegate = null)
+    {
+        $code = $this->getContainer()->get(Router::class)->dispatch();
+        if($code == 404)
+            $response->setStatusCode(404);
+        else if($code == 405)
+            $response->setContent('Method Not Allowed')->setStatusCode(405);
+        else {
+            $response->addState("currentRoute", $request->attributes->get("_matched_route"));
+            $response->addState("currentRouteArgs", $request->attributes->get("_route_args"));
+            $response->addState("currentUrl", generate_url($request->attributes->get("_matched_route"), $request->attributes->get("_route_args")));
+        }
+
+        return $delegate;
+    }
+}
+```
+
+#### Client rendering approach with es6 module dynamic import.
+```php
+$response->addWidget(
+    'category_edit_general',
+    'admin_category_edit_inner_left',
+    10,
+    get_js_file_url("production/catalog/category/edit/general.js", true),
+    [
+        "id"=>"category_edit_general", 
+        "data" => $result->data['generalInfo']
+    ]
+);
+```
+
+#### ReactJs template with Area and Widget
+```php
+$response->addWidget(
+    'admin_content',
+    'container',
+    20,
+    get_js_file_url("production/area.js", true),
+    [
+        "id"=> "content_wrapper",
+        "className"=> "content-wrapper"
+    ]
+);
+
+// Adding a widget to Area
+$response->addWidget(
+    'admin_footer',
+    'content_wrapper',
+    20,
+    get_js_file_url("production/cms/footer.js", true)
+);
+```
+
+#### Loading data with Graphql and Promise
+```php
+$this->getContainer()
+    ->get(GraphqlExecutor::class)
+    ->waitToExecute([
+        "query"=>"{generalInfo: category(id: {$request->get('id')} language:{$request->get('language', get_default_language_Id())}){name status description include_in_nav position}}"
+    ])
+    ->then(function($result) use ($response) {
+        /**@var \GraphQL\Executor\ExecutionResult $result */
+        if(isset($result->data['generalInfo'])) {
+            $response->addWidget(
+            'category_edit_general',
+            'admin_category_edit_inner_left',
+            10,
+            get_js_file_url("production/catalog/category/edit/general.js", true),
+            [
+                "id"=>"category_edit_general", 
+                "data" => $result->data['generalInfo']]
+            );
+        }
+    });
+```
 ### Demo
 [Demo store](https://www.similik.com/demo/)
 
