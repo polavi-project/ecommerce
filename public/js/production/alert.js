@@ -1,8 +1,9 @@
-import { REMOVE_ALERT } from "../production/event-types.js";
+import { REMOVE_ALERT } from "./event-types.js";
 
 function Alert({ alert }) {
     const dispatch = ReactRedux.useDispatch();
     const [className, setClassName] = React.useState("fadeInDownBig");
+
     React.useEffect(() => {
         const timer = setTimeout(() => {
             setClassName("fadeOutUp");
@@ -27,7 +28,7 @@ function Alert({ alert }) {
             "div",
             { onAnimationEnd: e => {
                     if (className == "fadeOutUp") remove(e);
-                }, className: className + " " + "alert alert-danger animated slow sml-flex-space-between", role: "alert" },
+                }, className: className + " " + "alert alert-danger animated fast sml-flex-space-between", role: "alert" },
             React.createElement(
                 "span",
                 null,
@@ -43,7 +44,7 @@ function Alert({ alert }) {
             "div",
             { onAnimationEnd: e => {
                     if (className == "fadeOutUp") remove(e);
-                }, className: className + " " + "alert alert-warning animated slow sml-flex-space-between", role: "alert" },
+                }, className: className + " " + "alert alert-warning animated fast sml-flex-space-between", role: "alert" },
             React.createElement(
                 "span",
                 null,
@@ -59,7 +60,7 @@ function Alert({ alert }) {
             "div",
             { onAnimationEnd: e => {
                     if (className == "fadeOutUp") remove(e);
-                }, className: className + " " + "alert alert-success animated slow sml-flex-space-between", role: "alert" },
+                }, className: className + " " + "alert alert-success animated fast sml-flex-space-between", role: "alert" },
             React.createElement(
                 "span",
                 null,
@@ -75,7 +76,7 @@ function Alert({ alert }) {
             "div",
             { onAnimationEnd: e => {
                     if (className == "fadeOutUp") remove(e);
-                }, className: className + " " + "alert alert-primary slow animated sml-flex-space-between", role: "alert" },
+                }, className: className + " " + "alert alert-primary fast animated sml-flex-space-between", role: "alert" },
             React.createElement(
                 "span",
                 null,
@@ -89,6 +90,7 @@ function Alert({ alert }) {
         )
     );
 }
+
 export default function Alerts() {
     const alerts = ReactRedux.useSelector(state => state.alerts);
 

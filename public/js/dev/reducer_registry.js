@@ -1,8 +1,13 @@
-import {ADD_ALERT, REQUEST_END, ADD_APP_STATE, REMOVE_ALERT} from "./event-types.js"
+import {ADD_ALERT, REQUEST_END, ADD_APP_STATE, REMOVE_ALERT, SET_ALERT} from "./event-types.js"
 
 let _emitChange = null;
 let reducers = {
     alerts: (state = [], action) => {
+        if (action.type === SET_ALERT) {
+            if (action.payload.alerts !== undefined) {
+                return action.payload.alerts.map((a) => {a['key'] = Math.random().toString(36).substr(2, 9); return a;});
+            }
+        }
         if (action.type === ADD_ALERT) {
             if (action.payload.alerts !== undefined) {
                 return state.concat(action.payload.alerts.map((a) => {a['key'] = Math.random().toString(36).substr(2, 9); return a;}));
