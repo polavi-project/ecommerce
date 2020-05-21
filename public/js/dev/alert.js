@@ -1,8 +1,9 @@
-import {REMOVE_ALERT} from "../production/event-types.js";
+import {REMOVE_ALERT} from "./event-types.js";
 
 function Alert({alert}) {
     const dispatch = ReactRedux.useDispatch();
     const [className, setClassName] = React.useState("fadeInDownBig");
+
     React.useEffect(() => {
         const timer = setTimeout(() => {
             setClassName("fadeOutUp");
@@ -21,24 +22,25 @@ function Alert({alert}) {
     };
 
     return <React.Fragment>
-        { alert.type == "error" && <div onAnimationEnd={(e)=> { if(className == "fadeOutUp") remove(e);}} className={className + " " + "alert alert-danger animated slow sml-flex-space-between"} role="alert">
+        { (alert.type == "error") && <div onAnimationEnd={(e)=> { if(className == "fadeOutUp") remove(e);}} className={className + " " + "alert alert-danger animated fast sml-flex-space-between"} role="alert">
             <span>{alert.message}</span>
             <a href="#" onClick={(e)=> close(e, alert)}>x</a>
         </div>}
-        { alert.type == "warning" && <div onAnimationEnd={(e)=> { if(className == "fadeOutUp") remove(e);}} className={className + " " + "alert alert-warning animated slow sml-flex-space-between"} role="alert">
+        { (alert.type == "warning") && <div onAnimationEnd={(e)=> { if(className == "fadeOutUp") remove(e); }} className={className + " " + "alert alert-warning animated fast sml-flex-space-between"} role="alert">
             <span>{alert.message}</span>
             <a href="#" onClick={(e)=> close(e, alert)}>x</a>
         </div>}
-        { alert.type == "success" && <div onAnimationEnd={(e)=> { if(className == "fadeOutUp") remove(e);}} className={className + " " + "alert alert-success animated slow sml-flex-space-between"} role="alert">
+        { (alert.type == "success") && <div onAnimationEnd={(e)=> { if(className == "fadeOutUp") remove(e); }} className={className + " " + "alert alert-success animated fast sml-flex-space-between"} role="alert">
             <span>{alert.message}</span>
             <a href="#" onClick={(e)=> close(e, alert)}>x</a>
         </div>}
-        { (alert.type != "error" && alert.type != "success" && alert.type != "warning") && <div onAnimationEnd={(e)=> { if(className == "fadeOutUp") remove(e);}} className={className + " " + "alert alert-primary slow animated sml-flex-space-between"} role="alert">
+        { (alert.type != "error" && alert.type != "success" && alert.type != "warning") && <div onAnimationEnd={(e)=> { if(className == "fadeOutUp") remove(e); }} className={className + " " + "alert alert-primary fast animated sml-flex-space-between"} role="alert">
             <span>{alert.message}</span>
             <a href="#" onClick={(e)=> close(e, alert)}>x</a>
         </div>}
     </React.Fragment>
 }
+
 export default function Alerts() {
     const alerts = ReactRedux.useSelector(state => state.alerts);
 

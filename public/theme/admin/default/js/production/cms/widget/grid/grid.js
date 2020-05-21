@@ -3,6 +3,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 import Area from "../../../../../../../../js/production/area.js";
 import A from "../../../../../../../../js/production/a.js";
 import { Fetch } from "../../../../../../../../js/production/fetch.js";
+import Pagination from "../../../../../../../../js/production/grid/pagination.js";
 
 function IdColumnHeader({ areaProps }) {
     React.useEffect(() => {
@@ -309,6 +310,7 @@ function ActionColumnRow({ row }) {
 export default function WidgetGrid({ apiUrl, types, areaProps }) {
     const [widgets, setWidgets] = React.useState([]);
     const [fields, setFields] = React.useState([]);
+    const [total, setTotal] = React.useState(0);
 
     const addField = field => {
         setFields(prevFields => prevFields.concat(field));
@@ -321,6 +323,7 @@ export default function WidgetGrid({ apiUrl, types, areaProps }) {
         Fetch(apiUrl, false, 'POST', formData, null, response => {
             if (_.get(response, 'payload.data.widgetCollection.widgets')) {
                 setWidgets(_.get(response, 'payload.data.widgetCollection.widgets'));
+                setTotal(_.get(response, 'payload.data.widgetCollection.total'));
             }
         });
     };
@@ -446,6 +449,7 @@ export default function WidgetGrid({ apiUrl, types, areaProps }) {
             "div",
             null,
             "There is no widget to display"
-        )
+        ),
+        React.createElement(Pagination, { total: total, currentFilters: areaProps.filters, setFilter: areaProps.updateFilter })
     );
 }

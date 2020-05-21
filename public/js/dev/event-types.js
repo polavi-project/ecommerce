@@ -9,6 +9,7 @@ export const REQUEST_START = "REQUEST_START";
 export const REQUEST_END = "REQUEST_END";
 export const PAGINATION_UPDATED = "PAGINATION_UPDATED";
 export const FORM_LANGUAGE_CHANGED = "FORM_LANGUAGE_CHANGED";
+export const SET_ALERT = "SET_ALERT";
 export const ADD_ALERT = "ADD_ALERT";
 export const REMOVE_ALERT = "REMOVE_ALERT";
 export const ADD_APP_STATE = "ADD_APP_STATE";
