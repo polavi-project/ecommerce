@@ -1,4 +1,4 @@
-import {REQUEST_START, REQUEST_END, ADD_ALERT} from "./event-types.js"
+import {REQUEST_START, REQUEST_END, ADD_ALERT, SET_ALERT} from "./event-types.js"
 import {store} from "./redux_store.js"
 
 const Fetch = (url, pushState = false, method = "GET", data = {}, onStart = null, onComplete = null, onError = null, onFinally=null) => {
@@ -6,7 +6,7 @@ const Fetch = (url, pushState = false, method = "GET", data = {}, onStart = null
         url = new URL(url);
     url.searchParams.set('ajax', 1);
 
-    PubSub.publishSync(REQUEST_START, {url, method, data});
+    PubSub.publishSync(REQUEST_START, {url, method, data, pushState});
     store.dispatch({'type': REQUEST_START, 'payload': {data: {url, method, data}}});
     let config = {};
     if(method === "GET")
@@ -39,7 +39,10 @@ const Fetch = (url, pushState = false, method = "GET", data = {}, onStart = null
         })
         .then(
             response => {
-                store.dispatch({'type': ADD_ALERT, 'payload': {alerts: _.get(response, 'alerts', [])}});
+                if(pushState === true)
+                    store.dispatch({'type': SET_ALERT, 'payload': {alerts: _.get(response, 'alerts', [])}});
+                else
+                    store.dispatch({'type': ADD_ALERT, 'payload': {alerts: _.get(response, 'alerts', [])}});
                 if(response.redirectUrl !== undefined) {
                     Fetch(response.redirectUrl, true);
                     return true;

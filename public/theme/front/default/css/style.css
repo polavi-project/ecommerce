@@ -205,5 +205,5 @@ ul{margin: 10px 0 !important;}
         transform: translate3d(30%, 0, 0); } }
 
 /* NOTIFICATION */
-.notification{position: absolute; top: 30px; z-index: 1001; left: 0; width: 100%; display: flex; flex-flow: column; justify-content: center}
+.notification{position: fixed; top: 30px; z-index: 1001; left: 0; width: 100%; display: flex; flex-flow: column; justify-content: center}
 .notification .alert{width: 450px; margin: 10px auto}
