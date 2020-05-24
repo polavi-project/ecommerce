@@ -26,7 +26,11 @@ class CouponCollectionFilterType extends InputObjectType
                     'coupon' => $container->get(FilterFieldType::class),
                     'description' => $container->get(FilterFieldType::class),
                     'free_shipping' => $container->get(FilterFieldType::class),
-                    'status' => $container->get(FilterFieldType::class)
+                    'status' => $container->get(FilterFieldType::class),
+                    'limit' => $container->get(FilterFieldType::class),
+                    'page' => $container->get(FilterFieldType::class),
+                    'sortBy' => $container->get(FilterFieldType::class),
+                    'sortOrder' => $container->get(FilterFieldType::class)
                 ];
 
                 dispatch_event('filter.couponCollectionFilter.input', [&$fields]);
