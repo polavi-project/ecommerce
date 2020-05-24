@@ -33,10 +33,10 @@ class AddProductMiddleware extends MiddlewareAbstract
             $response->addAlert('cart_add_success', 'success', "{$item->getData('product_name')} was added to shopping cart successfully")->notNewPage();
         });
 
-        $promise->otherwise(function($item) use ($response) {
+        $promise->otherwise(function($item) use ($request, $response) {
             $errors = $item->getError();
             if(count($errors) == 1 and isset($errors['product_custom_options'])) {
-                $response->addAlert('cart_add_error', 'error', $errors['product_custom_options']);
+                $request->getSession()->getFlashBag()->set('error', $errors['product_custom_options']);
                 $response->redirect($item->getData('product_url'));
             } else
                 foreach ($errors as $field => $message) {

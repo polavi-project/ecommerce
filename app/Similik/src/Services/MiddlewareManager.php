@@ -134,7 +134,7 @@ class MiddlewareManager
                         dispatch_event("route_middleware_ended", []);
                 };
             $m[] = function (Request $request, Response $response, $delegate = null) use ($callable, $next) {
-                if($delegate instanceof Response) {
+                if($delegate instanceof Response || $response->findData("redirectUrl")) {
                     $response->send($this->container->get(Request::class)->isAjax(), $response->getStatusCode());
                     exit();
                 } else {
