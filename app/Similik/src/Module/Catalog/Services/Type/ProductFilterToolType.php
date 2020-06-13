@@ -41,58 +41,10 @@ class ProductFilterToolType extends ObjectType
                                 $customerGroupId = 999;
                             $conn = _mysql();
                             $priceData = $conn->getTable('product')
-                                ->addFieldToSelect("product_price.tier_price")
-                                ->leftJoin('product_price', null, [
+                                ->setFieldToSelect("LEAST(product.`price`, IF(ppone.`tier_price` IS NULL, 1000000000, ppone.`tier_price`) , IF(pptwo.`tier_price` IS NULL, 1000000000, pptwo.`tier_price`))", "sale_price")
+                                ->leftJoin('product_price', 'ppone', [
                                     [
-                                        'column'      => "product_price.customer_group_id",
-                                        'operator'    => "=",
-                                        'value'       => $customerGroupId,
-                                        'ao'          => 'and',
-                                        'start_group' => '(',
-                                        'end_group'   => null
-                                    ],
-                                    [
-                                        'column'      => "product_price.customer_group_id",
-                                        'operator'    => "=",
-                                        'value'       => 1000,
-                                        'ao'          => 'or',
-                                        'start_group' => null,
-                                        'end_group'   => ')'
-                                    ],
-                                    [
-                                        'column'      => "product_price.active_from",
-                                        'operator'    => "IS",
-                                        'value'       => null,
-                                        'ao'          => 'and',
-                                        'start_group' => '((',
-                                        'end_group'   => null
-                                    ],
-                                    [
-                                        'column'      => "product_price.active_from",
-                                        'operator'    => "<=",
-                                        'value'       => date("Y-m-d H:i:s"),
-                                        'ao'          => 'or',
-                                        'start_group' => null,
-                                        'end_group'   => ')'
-                                    ],
-                                    [
-                                        'column'      => "product_price.active_to",
-                                        'operator'    => "IS",
-                                        'value'       => null,
-                                        'ao'          => 'and',
-                                        'start_group' => '(',
-                                        'end_group'   => null
-                                    ],
-                                    [
-                                        'column'      => "product_price.active_to",
-                                        'operator'    => ">=",
-                                        'value'       => date("Y-m-d H:i:s"),
-                                        'ao'          => 'or',
-                                        'start_group' => null,
-                                        'end_group'   => '))'
-                                    ],
-                                    [
-                                        'column'      => "product_price.qty",
+                                        'column'      => "ppone.qty",
                                         'operator'    => "=",
                                         'value'       => 1,
                                         'ao'          => 'and',
@@ -100,21 +52,118 @@ class ProductFilterToolType extends ObjectType
                                         'end_group'   => null
                                     ],
                                     [
-                                        'column'      => "product_price.tier_price",
+                                        'column'      => "ppone.tier_price",
                                         'operator'    => "<=",
                                         'value'       => "product.price",
                                         'isValueAColumn' => true,
                                         'ao'          => 'and',
                                         'start_group' => null,
                                         'end_group'   => null
+                                    ],
+                                    [
+                                        'column'      => "ppone.customer_group_id",
+                                        'operator'    => "=",
+                                        'value'       => $customerGroupId,
+                                        'ao'          => 'and',
+                                        'start_group' => null,
+                                        'end_group'   => null
+                                    ],
+                                    [
+                                        'column'      => "ppone.active_from",
+                                        'operator'    => "IS",
+                                        'value'       => null,
+                                        'ao'          => 'and',
+                                        'start_group' => '((',
+                                        'end_group'   => null
+                                    ],
+                                    [
+                                        'column'      => "ppone.active_from",
+                                        'operator'    => "<=",
+                                        'value'       => date("Y-m-d H:i:s"),
+                                        'ao'          => 'or',
+                                        'start_group' => null,
+                                        'end_group'   => ')'
+                                    ],
+                                    [
+                                        'column'      => "ppone.active_to",
+                                        'operator'    => "IS",
+                                        'value'       => null,
+                                        'ao'          => 'and',
+                                        'start_group' => '(',
+                                        'end_group'   => null
+                                    ],
+                                    [
+                                        'column'      => "ppone.active_to",
+                                        'operator'    => ">=",
+                                        'value'       => date("Y-m-d H:i:s"),
+                                        'ao'          => 'or',
+                                        'start_group' => null,
+                                        'end_group'   => '))'
+                                    ]
+                                ])->leftJoin('product_price', 'pptwo', [
+                                    [
+                                        'column'      => "pptwo.qty",
+                                        'operator'    => "=",
+                                        'value'       => 1,
+                                        'ao'          => 'and',
+                                        'start_group' => null,
+                                        'end_group'   => null
+                                    ],
+                                    [
+                                        'column'      => "pptwo.tier_price",
+                                        'operator'    => "<=",
+                                        'value'       => "product.price",
+                                        'isValueAColumn' => true,
+                                        'ao'          => 'and',
+                                        'start_group' => null,
+                                        'end_group'   => null
+                                    ],
+                                    [
+                                        'column'      => "pptwo.customer_group_id",
+                                        'operator'    => "=",
+                                        'value'       => 1000,
+                                        'ao'          => 'and',
+                                        'start_group' => null,
+                                        'end_group'   => null
+                                    ],
+                                    [
+                                        'column'      => "pptwo.active_from",
+                                        'operator'    => "IS",
+                                        'value'       => null,
+                                        'ao'          => 'and',
+                                        'start_group' => '((',
+                                        'end_group'   => null
+                                    ],
+                                    [
+                                        'column'      => "pptwo.active_from",
+                                        'operator'    => "<=",
+                                        'value'       => date("Y-m-d H:i:s"),
+                                        'ao'          => 'or',
+                                        'start_group' => null,
+                                        'end_group'   => ')'
+                                    ],
+                                    [
+                                        'column'      => "pptwo.active_to",
+                                        'operator'    => "IS",
+                                        'value'       => null,
+                                        'ao'          => 'and',
+                                        'start_group' => '(',
+                                        'end_group'   => null
+                                    ],
+                                    [
+                                        'column'      => "pptwo.active_to",
+                                        'operator'    => ">=",
+                                        'value'       => date("Y-m-d H:i:s"),
+                                        'ao'          => 'or',
+                                        'start_group' => null,
+                                        'end_group'   => '))'
                                     ]
                                 ])
                                 ->where('product_id', 'IN', $value)
-                                ->groupBy("product.product_id")
-                                ->fetchAllAssoc(['sort_by'=> 'product_price.tier_price']);
+                                ->fetchAllAssoc(['sort_by'=> 'sale_price']);
 
-                            $max = $priceData[0]['tier_price'];
-                            $min = end($priceData)['tier_price'];
+                            $max = $priceData[0]['sale_price'];
+                            $min = end($priceData)['sale_price'];
 
                             return [
                                 'minPrice' => $min,

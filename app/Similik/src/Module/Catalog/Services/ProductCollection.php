@@ -49,7 +49,7 @@ class ProductCollection extends CollectionBuilder
         if(!$container->get(Request::class)->isAdmin()) {
             $customerGroupId = $container->get(Request::class)->getCustomer()->isLoggedIn() ? $container->get(Request::class)->getCustomer()->getData('group_id') ?? 1 : 999;
             $collection
-                ->addFieldToSelect("LEAST(product.`price`, IF(ppone.`tier_price` IS NULL, 1000000000, ppone.`tier_price`) , IF(pptwo.`tier_price` IS NULL, 1000000000, pptwo.`tier_price`))", "tier_price")
+                ->addFieldToSelect("LEAST(product.`price`, IF(ppone.`tier_price` IS NULL, 1000000000, ppone.`tier_price`) , IF(pptwo.`tier_price` IS NULL, 1000000000, pptwo.`tier_price`))", "sale_price")
                 ->leftJoin('product_price', 'ppone', [
                 [
                     'column'      => "ppone.qty",
@@ -215,11 +215,11 @@ class ProductCollection extends CollectionBuilder
                     $arr = explode("AND", $args['value']);
                     $from = (float) trim($arr[0]);
                     $to = isset($arr[1]) ? (float) trim($arr[1]) : null;
-                    $this->getCollection()->andWhere('product_price.tier_price', '>=', $from);
+                    $this->getCollection()->andWhere('sale_price', '>=', $from);
                     if($to)
-                        $this->getCollection()->andWhere('product_price.tier_price', '<=', $to);
+                        $this->getCollection()->andWhere('sale_price', '<=', $to);
                 } else {
-                    $this->getCollection()->andWhere('product_price.tier_price', $args['operator'], $args['value']);
+                    $this->getCollection()->andWhere('sale_price', $args['operator'], $args['value']);
                 }
             }
         });
@@ -308,7 +308,7 @@ class ProductCollection extends CollectionBuilder
         $this->addFilter('sortBy', function($args) use ($isAdmin) {
             if($args['operator'] !== "=")
                 return;
-            $this->setSortBy($args['value'] == "price" ? "tier_price" : $args['value']);
+            $this->setSortBy($args['value'] == "price" ? "sale_price" : $args['value']);
         });
 
         $this->addFilter('sortOrder', function($args) use ($isAdmin) {

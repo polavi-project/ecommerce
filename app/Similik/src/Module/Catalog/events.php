@@ -233,12 +233,12 @@ $eventDispatcher->addListener('before_delete_attribute_group', function($rows) {
 $eventDispatcher->addListener(
     'filter.mutation.type',
     function (&$fields, Container $container) {
-        $fields['unlinkProductFromVariantGroup'] = [
+        $fields['unlinkVariant'] = [
             'args' => [
                 'productId' => Type::nonNull(Type::int())
             ],
             'type' => new ObjectType([
-                'name'=> 'unlinkProductFromVariantGroupOutPut',
+                'name'=> 'unlinkVariantOutPut',
                 'fields' => [
                     'status' => Type::nonNull(Type::boolean()),
                     'message'=> Type::string(),
@@ -254,10 +254,10 @@ $eventDispatcher->addListener(
                 $product = $conn->getTable("product")->load($args['productId']);
 
                 if(!$product)
-                    return ['status'=> false, 'message' => 'Product does not exist'];
+                    return ['status'=> true, 'message' => 'Product does not exist'];
 
                 $conn->getTable("product")->where("product_id", "=", $args["productId"])->update(["variant_group_id"=> null]);
-                return ['status'=> false, 'productId' => $args["productId"]];
+                return ['status'=> true, 'productId' => $args["productId"]];
             }
         ];
     },

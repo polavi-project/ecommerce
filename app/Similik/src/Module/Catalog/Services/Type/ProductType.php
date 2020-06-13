@@ -47,8 +47,8 @@ class ProductType extends ObjectType
                     'salePrice' => [
                         'type' => Type::nonNull(Type::float()),
                         'resolve' => function($product, $args, Container $container, ResolveInfo $info) {
-                            if(isset($product['tier_price']))
-                                return $product['tier_price'];
+                            if(isset($product['sale_price']))
+                                return $product['sale_price'];
                             return $product['price'];
                         }
                     ],
