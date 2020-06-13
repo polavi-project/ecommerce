@@ -31,6 +31,9 @@ class ProductAttributeIndex extends ObjectType
                     'attribute_id' => [
                         'type' => Type::nonNull(Type::int())
                     ],
+                    'attribute_code' => [
+                        'type' => Type::nonNull(Type::string())
+                    ],
                     'attribute_name' => [
                         'type' => Type::string()
                     ],

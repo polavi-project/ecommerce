@@ -12,6 +12,8 @@ use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\ResolveInfo;
 use function Similik\_mysql;
 use function Similik\dispatch_event;
+use function Similik\get_current_language_id;
+use Similik\Module\Catalog\Services\ProductCollection;
 use Similik\Services\Di\Container;
 use Similik\Services\Db\Processor;
 use Similik\Services\Db\Table;
@@ -32,6 +34,12 @@ class ProductType extends ObjectType
                     ],
                     'sku' => [
                         'type' => Type::nonNull(Type::string())
+                    ],
+                    'variant_group_id' => [
+                        'type' => Type::int()
+                    ],
+                    'visibility' => [
+                        'type' => Type::int()
                     ],
                     'price' => [
                         'type' => Type::nonNull(Type::float())
@@ -167,6 +175,31 @@ class ProductType extends ObjectType
                                 ->getTable('product_custom_option')
                                 ->where('product_custom_option_product_id', '=', $product['product_id'])
                                 ->fetchAllAssoc();
+                        }
+                    ],
+                    'attributes' => [
+                        'type' => Type::listOf($container->get(ProductAttributeIndex::class)),
+                        'description' => 'List of attribute and value',
+                        'resolve' => function($product, $args, Container $container, ResolveInfo $info) {
+                            return _mysql()->getTable('product_attribute_value_index')
+                                ->leftJoin('attribute')
+                                ->where('product_id', '=', $product['product_id'])
+                                ->andWhere('language_id', '=', $product['language_id'] ?? get_current_language_id(), '(')
+                                ->orWhere('language_id', '=', '0', false, ')')->fetchAllAssoc();
+                        }
+                    ],
+                    'variants' => [
+                        'type' => Type::listOf($this),
+                        'description' => 'List of custom option',
+                        'resolve' => function($product, $args, Container $container, ResolveInfo $info) {
+                            $conn = _mysql();
+                            $group = $conn->getTable("variant_group")->load($product["variant_group_id"]);
+                            if(!$group)
+                                return [];
+
+                            $productCollection = new ProductCollection($container);
+                            $productCollection->getCollection()->where("variant_group_id", "=", $group["variant_group_id"]);
+                            return $productCollection->getCollection()->fetchAllAssoc();
                         }
                     ],
                     'created_at' => [

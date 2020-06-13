@@ -23,18 +23,20 @@ class CreateMiddleware extends MiddlewareAbstract
      * @param array $data
      * @return mixed
      */
-    public function __invoke(Request $request, Response $response, $data = [])
+    public function __invoke(Request $request, Response $response, $delegate = null)
     {
+        $data = $request->request->all();
         try {
             if($request->get('id', null) != null)
-                return $data;
-            $this->getContainer()->get(ProductMutator::class)->createProduct($data);
+                return null;
+            $id = $this->getContainer()->get(ProductMutator::class)->createProduct($data);
             $this->getContainer()->get(Session::class)->getFlashBag()->add('success', 'Product has been saved');
             $response->redirect($this->getContainer()->get(Router::class)->generateUrl('product.grid'));
+
+            return $id;
         } catch(\Exception $e) {
             $response->addAlert('product_add_error', 'error', $e->getMessage())->notNewPage();
+            return $response;
         }
-
-        return $response;
     }
 }

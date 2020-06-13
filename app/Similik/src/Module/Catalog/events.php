@@ -12,12 +12,12 @@ use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
 use function Similik\_mysql;
+use function Similik\get_current_language_id;
 use function Similik\get_default_language_Id;
 use Similik\Module\Catalog\Services\ProductCollection;
 use Similik\Module\Catalog\Services\Type\ProductCollectionFilterType;
 use Similik\Services\Di\Container;
 use Similik\Services\Http\Request;
-use Similik\Services\Routing\Router;
 
 $eventDispatcher->addListener(
     'widget_types',
@@ -142,6 +142,27 @@ $eventDispatcher->addListener(
                 return $query->fetchAllAssoc(['sort_by'=>'qty', 'sort_order'=>'ASC']);
             }
         ];
+
+        $fields['getPotentialVariants'] = [
+            'type' => new ObjectType([
+                'name'=> 'potentialVariants',
+                'fields' => [
+                    'productId'=> Type::nonNull(Type::int()),
+                    'productName'=> Type::string(),
+                    'qty' => Type::nonNull(Type::int()),
+                    'price' => Type::nonNull(Type::float()),
+                    'thumbnail' => Type::string()
+                ]
+            ]),
+            'description' => "Return a list of potential variants",
+            'args' => [
+                'attributeGroupId' =>  Type::nonNull(Type::int()),
+                'attributes' =>  Type::listOf(Type::int())
+            ],
+            'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
+
+            }
+        ];
     },
     5
 );
@@ -208,3 +229,37 @@ $eventDispatcher->addListener('before_delete_attribute_group', function($rows) {
            throw new Exception("Can not delete 'Default' attribute group");
    }
 });
+
+$eventDispatcher->addListener(
+    'filter.mutation.type',
+    function (&$fields, Container $container) {
+        $fields['unlinkProductFromVariantGroup'] = [
+            'args' => [
+                'productId' => Type::nonNull(Type::int())
+            ],
+            'type' => new ObjectType([
+                'name'=> 'unlinkProductFromVariantGroupOutPut',
+                'fields' => [
+                    'status' => Type::nonNull(Type::boolean()),
+                    'message'=> Type::string(),
+                    'productId' => Type::int()
+                ]
+            ]),
+            'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
+                $conn = _mysql();
+                if(
+                    $container->get(Request::class)->isAdmin() == false
+                )
+                    return ['status'=> false, 'message' => 'Permission denied'];
+                $product = $conn->getTable("product")->load($args['productId']);
+
+                if(!$product)
+                    return ['status'=> false, 'message' => 'Product does not exist'];
+
+                $conn->getTable("product")->where("product_id", "=", $args["productId"])->update(["variant_group_id"=> null]);
+                return ['status'=> false, 'productId' => $args["productId"]];
+            }
+        ];
+    },
+    5
+);

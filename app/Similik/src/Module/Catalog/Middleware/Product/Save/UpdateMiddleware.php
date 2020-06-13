@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Similik\Module\Catalog\Middleware\Product\Save;
 
+use function Similik\_mysql;
 use function Similik\get_default_language_Id;
 use Similik\Module\Catalog\Services\ProductMutator;
 use Similik\Services\Http\Request;
@@ -24,22 +25,24 @@ class UpdateMiddleware extends MiddlewareAbstract
      * @param array|null $data
      * @return mixed
      */
-    public function __invoke(Request $request, Response $response, array $data = null)
+    public function __invoke(Request $request, Response $response, $delegate = null)
     {
+        $data = $request->request->all();
         try {
-            if($request->get('id', null) == null)
+            if($request->attributes->get('id', null) == null)
                 return $data;
-            $this->getContainer()
+            $id = $this->getContainer()
                 ->get(ProductMutator::class)
                 ->updateProduct(
-                    (int) $request->get('id', null),
+                    (int) $request->attributes->get('id', null),
                     (int) $request->query->get('language', get_default_language_Id()),
                     $data
                 );
+
             $this->getContainer()->get(Session::class)->getFlashBag()->add('success', 'Product has been saved');
             $response->redirect($this->getContainer()->get(Router::class)->generateUrl('product.grid'));
 
-            return $response;
+            return $id;
         } catch(\Exception $e) {
             $response->addAlert('product_add_error', 'error', $e->getMessage())->notNewPage();
 

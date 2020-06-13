@@ -9,8 +9,6 @@ declare(strict_types=1);
 namespace Similik\Module\Catalog\Services;
 
 
-use Imagine\Image\Box;
-use Imagine\Imagick\Imagine;
 use function Similik\get_config;
 use function Similik\get_default_language_Id;
 use function Similik\resize_image;
@@ -22,9 +20,12 @@ class ProductMutator
     /**@var Processor $this->processor*/
     private $processor;
 
-    public function __construct()
+    public function __construct(Processor $processor = null)
     {
-        $this->processor = new Processor();
+        if($processor == null)
+            $this->processor = new Processor();
+        else
+            $this->processor = $processor;
     }
 
     public function createProduct(array $data)
@@ -59,6 +60,8 @@ class ProductMutator
             // Save Images
             $this->saveImages($productId, $data['main_image'] ?? null, $data['images'] ?? []);
             $this->processor->commit();
+
+            return $productId;
         } catch (\Exception $e) {
             $this->processor->rollback();
             throw $e;
@@ -106,15 +109,12 @@ class ProductMutator
             // Save Images
             $this->saveImages($id, $data['main_image'] ?? null, $data['images'] ?? []);
             $this->processor->commit();
+
+            return $id;
         } catch (\Exception $e) {
             $this->processor->rollback();
             throw $e;
         }
-    }
-
-    public function deleteProduct(int $id)
-    {
-
     }
 
     protected function saveOptions(int $productId, array $options)

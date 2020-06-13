@@ -26,7 +26,7 @@ class SeoMiddleware extends MiddlewareAbstract
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
         if($response->hasWidget('product_edit_seo'))
-            return null;
+            return $delegate;
 
 //        // Loading data by using GraphQL
         if($request->attributes->get('_matched_route') == 'product.edit')

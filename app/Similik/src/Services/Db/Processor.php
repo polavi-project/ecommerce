@@ -327,7 +327,7 @@ class Processor extends \PDO
             $stmt = $this->prepare($query);
             $stmt->execute($binding);
             $rowCount = $stmt->rowCount();
-            dispatch_event("after_insert_{$table->getTable()}", [$data, $rowCount]);
+            dispatch_event("after_insert_{$table->getTable()}", [$data, $rowCount, $this]);
             return $rowCount;
         } catch (\Exception $e) {
             $this->commit = false;
@@ -366,7 +366,7 @@ class Processor extends \PDO
             $binding[':'.$column['Field']] = isset($data[$column['Field']]) ? $data[$column['Field']] : NULL;
         }
         if($prepare == '')
-            throw new \RuntimeException(__('You are trying to update no column'));
+            throw new \RuntimeException('You are trying to update no column');
         $prepare = trim($prepare, ',');
         $whereClause = $this->buildWhere($table->getWhere(), $binding);
         $query = "UPDATE `" . DB_PREFIX . $table->getTable() . "` SET " . $prepare . " {$whereClause}";
@@ -374,7 +374,7 @@ class Processor extends \PDO
             $stmt = $this->prepare($query);
             $stmt->execute($binding);
             $rowCount = $stmt->rowCount();
-            dispatch_event("after_update_{$table->getTable()}", [$data, $rowCount]);
+            dispatch_event("after_update_{$table->getTable()}", [$data, $rowCount, $this]);
             return $rowCount;
         } catch (\Exception $e) {
             $this->commit = false;
@@ -422,7 +422,8 @@ class Processor extends \PDO
         try {
             $stmt = $this->prepare($query);
             $stmt->execute($binding);
-            dispatch_event("after_insert_on_update_{$table->getTable()}", [$data]);
+            $rowCount = $stmt->rowCount();
+            dispatch_event("after_insert_on_update_{$table->getTable()}", [$data, $rowCount, $this]);
             return $stmt->rowCount();
         } catch (\PDOException $e) {
             $this->commit = false;
@@ -446,7 +447,7 @@ class Processor extends \PDO
         try {
             $stmt = $this->prepare($query);
             $stmt->execute($binding);
-            dispatch_event("after_delete_{$table->getTable()}", [$affectedRows]);
+            dispatch_event("after_delete_{$table->getTable()}", [$affectedRows, $this]);
         } catch (\PDOException $e) {
             $this->commit = false;
             throw $e;
@@ -470,8 +471,6 @@ class Processor extends \PDO
             $setting['sort_order'] = (in_array(strtoupper($setting['sort_order']), ['ASC', 'DESC'])) ? strtoupper($setting['sort_order']) : 'ASC';
 
         $setting = array_merge($defaultSetting, $setting);
-        if (strpos($setting['sort_by'], '.') == false)
-            $setting['sort_by'] = "`{$table->getTable()}`." . $setting['sort_by'];
 
         return $setting;
     }

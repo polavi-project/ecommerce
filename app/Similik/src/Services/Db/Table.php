@@ -243,8 +243,8 @@ class Table
     {
         // reset where
         //$this->where = [];
-        if(strpos($column, '.') === false)
-            $column = "`{$this->getTable()}`.{$column}";
+//        if(strpos($column, '.') === false)
+//            $column = "`{$this->getTable()}`.{$column}";
         if(is_array($value))
             foreach($value as $key=>$val) {
                 $value['binding' . _unique_number()] = $val;
@@ -524,8 +524,8 @@ class Table
      */
     public function having($column, $operator, $value, $startGroup = false, $endGroup = false)
     {
-        if(strpos($column, '.') === false)
-            $column = "`{$this->getTable()}`.{$column}";
+//        if(strpos($column, '.') === false)
+//            $column = "`{$this->getTable()}`.{$column}";
         if(is_array($value))
             foreach($value as $key=>$val) {
                 $value['binding' . _unique_number()] = $val;
