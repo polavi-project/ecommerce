@@ -27,8 +27,13 @@ class SaveVariantMiddleware extends MiddlewareAbstract
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
         $productId = $this->getDelegate(CreateMiddleware::class, $this->getDelegate(UpdateMiddleware::class, null));
-
-        if($request->request->get('variant_group', null) == null || $productId == null) {
+        $variantG = $request->request->get('variant_group', null);
+        if(
+            $variantG == null
+            || $productId == null
+            || !isset($variantG["variants"])
+            || !$variantG["variants"]
+        ) {
             return $delegate;
         }
 
@@ -71,7 +76,6 @@ class SaveVariantMiddleware extends MiddlewareAbstract
                 throw new \Exception("Variant attribute is either not existed or not a dropdown type");
 
             $variantGroupData = [
-                "variant_group_name" => $variantGroup["variant_group_name"],
                 "attribute_group_id" => $product["group_id"]
             ];
 
@@ -134,12 +138,15 @@ class SaveVariantMiddleware extends MiddlewareAbstract
                     $productData['status'] = $variant['status'];
                     $productData['price'] = $variant['price'];
                     $productData['qty'] = $variant['qty'];
-                    $productData['seo_key'] = $productData['seo_key'] . "-" . $variant['sku'];
+                    $productData['seo_key'] = $productData['seo_key'] . "-" . str_replace(" ", "-", $variant['sku']);
                     $productData = create_mutable_var("variant_data_before_create", $productData, [$product, $variantGroup]);
                     $productMutator = new ProductMutator($conn);
                     $pId = $productMutator->createProduct($productData);
                 } else {
                     $pId = $p["product_id"];
+                    if($p["group_id"] != $product["group_id"])
+                        throw new \Exception("{$p["sku"]} is not valid variant");
+
                     $updateData = create_mutable_var("variant_data_before_update", [
                         "variant_group_id" => $groupId,
                         "visibility" => $variant['visibility'] ?? 0,

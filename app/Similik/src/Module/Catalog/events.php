@@ -143,24 +143,45 @@ $eventDispatcher->addListener(
             }
         ];
 
-        $fields['getPotentialVariants'] = [
-            'type' => new ObjectType([
-                'name'=> 'potentialVariants',
-                'fields' => [
-                    'productId'=> Type::nonNull(Type::int()),
-                    'productName'=> Type::string(),
-                    'qty' => Type::nonNull(Type::int()),
-                    'price' => Type::nonNull(Type::float()),
-                    'thumbnail' => Type::string()
-                ]
-            ]),
+        $fields['potentialVariants'] = [
+            'type' => Type::listOf($container->get(\Similik\Module\Catalog\Services\Type\ProductType::class)),
             'description' => "Return a list of potential variants",
             'args' => [
                 'attributeGroupId' =>  Type::nonNull(Type::int()),
-                'attributes' =>  Type::listOf(Type::int())
+                'name' => Type::string()
             ],
             'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
-
+                if(!$args['name'])
+                    return _mysql()->getTable("product")
+                        ->leftJoin('product_description', null, [
+                            [
+                                "column"      => "product_description.language_id",
+                                "operator"    => "=",
+                                "value"       => get_current_language_id(),
+                                "ao"          => 'and',
+                                "start_group" => null,
+                                "end_group"   => null
+                            ]
+                        ])
+                        ->where("product.group_id", "=", $args["attributeGroupId"])
+                        ->andWhere("product.variant_group_id", "IS", null)
+                        ->fetchAssoc(["limit" => 100]);
+                else
+                    return _mysql()->getTable("product")
+                        ->leftJoin('product_description', null, [
+                            [
+                                "column"      => "product_description.language_id",
+                                "operator"    => "=",
+                                "value"       => get_current_language_id(),
+                                "ao"          => 'and',
+                                "start_group" => null,
+                                "end_group"   => null
+                            ]
+                        ])
+                        ->where("product.group_id", "=", $args["attributeGroupId"])
+                        ->andWhere("product.variant_group_id", "IS", null)
+                        ->andWhere("product_description.name", "LIKE", "%{$args["name"]}%")
+                        ->fetchAssoc(["limit" => 100]);
             }
         ];
     },
@@ -256,7 +277,7 @@ $eventDispatcher->addListener(
                 if(!$product)
                     return ['status'=> true, 'message' => 'Product does not exist'];
 
-                $conn->getTable("product")->where("product_id", "=", $args["productId"])->update(["variant_group_id"=> null]);
+                $conn->getTable("product")->where("product_id", "=", $args["productId"])->update(["variant_group_id"=> null, "visibility" => null]);
                 return ['status'=> true, 'productId' => $args["productId"]];
             }
         ];

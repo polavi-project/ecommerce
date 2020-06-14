@@ -67,14 +67,27 @@ function Thumbnail({ variant }) {
     );
 }
 
-function Variant({ attributes, variant, removeVariant, updateVariant, uploadApi }) {
+function Variant({ attributes, variant, removeVariant, updateVariant }) {
+    const graphqlApi = ReactRedux.useSelector(state => _.get(state, 'appState.graphqlApi'));
+
+    const onUnlink = e => {
+        e.preventDefault();
+        let formData = new FormData();
+        formData.append('query', `mutation UnlinkVariant { unlinkVariant (productId: ${variant.variant_product_id}) {status}}`);
+
+        Fetch(graphqlApi, false, "POST", formData, null, response => {
+            if (_.get(response, 'payload.data.unlinkVariant.status') === true) {
+                removeVariant(variant);
+            }
+        });
+    };
     return React.createElement(
         "tr",
         { className: variant.duplicate === true ? "duplicated" : "" },
         React.createElement(
             "td",
             { className: "variant-image" },
-            React.createElement(Thumbnail, { variant: variant, uploadApi: uploadApi })
+            React.createElement(Thumbnail, { variant: variant })
         ),
         attributes.map((a, i) => {
             return React.createElement(
@@ -123,7 +136,14 @@ function Variant({ attributes, variant, removeVariant, updateVariant, uploadApi 
         React.createElement(
             "td",
             null,
-            React.createElement(Text, {
+            variant.editUrl && React.createElement(Text, {
+                name: `variant_group[variants][${variant.variant_product_id}][sku]`,
+                formId: "product-edit-form",
+                validation_rules: ['notEmpty'],
+                value: variant.sku,
+                readOnly: true
+            }),
+            !variant.editUrl && React.createElement(Text, {
                 name: `variant_group[variants][${variant.variant_product_id}][sku]`,
                 formId: "product-edit-form",
                 validation_rules: ['notEmpty'],
@@ -179,11 +199,24 @@ function Variant({ attributes, variant, removeVariant, updateVariant, uploadApi 
             "td",
             null,
             variant.current !== true && React.createElement(
-                "a",
-                { href: "#", onClick: e => {
-                        e.preventDefault();removeVariant(variant.variant_product_id);
-                    } },
-                "Unlink"
+                "div",
+                null,
+                React.createElement(
+                    "a",
+                    { href: "#", className: "text-danger", onClick: e => {
+                            e.preventDefault();onUnlink(e);
+                        } },
+                    "Unlink"
+                )
+            ),
+            React.createElement(
+                "div",
+                null,
+                variant.editUrl && variant.current !== true && React.createElement(
+                    "a",
+                    { href: variant.editUrl, target: "_blank" },
+                    "Edit"
+                )
             )
         )
     );
@@ -191,10 +224,29 @@ function Variant({ attributes, variant, removeVariant, updateVariant, uploadApi 
 
 function Variants(props) {
     const [variants, setVariants] = React.useState(props.variants ? props.variants : []);
+    const [potentialVariants, setPotentialVariants] = React.useState([]);
     const attributeGroup = ReactRedux.useSelector(state => _.get(state, 'appState.attributeGroup'));
     const currentSku = ReactRedux.useSelector(state => _.get(state, 'appState.currentSku'));
     const currentQty = ReactRedux.useSelector(state => _.get(state, 'appState.currentQty'));
     const currentPrice = ReactRedux.useSelector(state => _.get(state, 'appState.currentPrice'));
+    const graphqlApi = ReactRedux.useSelector(state => _.get(state, 'appState.graphqlApi'));
+    const [typeTimeout, setTypeTimeout] = React.useState(null);
+    const searchInput = React.useRef();
+
+    const search = e => {
+        e.persist();
+        if (typeTimeout) clearTimeout(typeTimeout);
+        setTypeTimeout(setTimeout(() => {
+            let formData = new FormData();
+            formData.append('query', `{potentialVariants (attributeGroupId : ${attributeGroup.attribute_group_id} name: "${e.target.value}") { name image { url: image path} sku qty price status attributes { attribute_id attribute_code option_id value_text: attribute_value_text} editUrl }}`);
+
+            Fetch(graphqlApi, false, "POST", formData, null, response => {
+                if (_.get(response, 'payload.success') === true) {
+                    setPotentialVariants(_.get(response, 'payload.data.potentialVariants'));
+                }
+            });
+        }, 1500));
+    };
 
     const validate = (formId, errors) => {
         setVariants(variants.map(v => {
@@ -269,9 +321,9 @@ function Variants(props) {
         }));
     }, [currentQty]);
 
-    const addVariant = e => {
+    const addVariant = (e, variant = null) => {
         e.preventDefault();
-        setVariants(variants.concat({
+        if (variant === null) setVariants(variants.concat({
             variant_product_id: Date.now(),
             attributes: [],
             image: {},
@@ -281,11 +333,11 @@ function Variants(props) {
             status: 1,
             visibility: 0,
             isNew: true
-        }));
+        }));else setVariants(variants.concat(variant));
     };
 
-    const removeVariant = id => {
-        setVariants(variants.filters(v => parseInt(v.variant_product_id) !== parseInt(id)));
+    const removeVariant = variant => {
+        setVariants(variants.filter(v => parseInt(v.variant_product_id) !== parseInt(variant.variant_product_id)));
     };
 
     const updateVariant = (id, value) => {
@@ -299,20 +351,12 @@ function Variants(props) {
         "div",
         null,
         React.createElement("input", { type: "hidden", value: props.variant_group_id, name: "variant_group[variant_group_id]" }),
-        React.createElement("input", { type: "hidden", value: props.variant_group_name, name: "variant_group[variant_group_name]" }),
         props.attributes.map(a => {
             return React.createElement("input", { type: "hidden", value: a.attribute_id, name: "variant_group[variant_group_attributes][]" });
         }),
         React.createElement(
             "div",
-            null,
-            "Group name: ",
-            props.variant_group_name
-        ),
-        React.createElement(
-            "div",
             { className: "mb-4" },
-            "Group attributes: ",
             props.attributes.map(a => React.createElement(
                 "span",
                 { className: "badge badge-primary" },
@@ -416,22 +460,112 @@ function Variants(props) {
             )
         ),
         React.createElement(
-            "a",
-            { href: "#", onClick: e => addVariant(e) },
-            React.createElement("i", { className: "fas fa-plus" }),
+            "div",
+            { className: "sml-flex-space-between" },
             React.createElement(
-                "span",
-                { className: "pl-1" },
-                "Add variant"
+                "div",
+                null,
+                React.createElement(
+                    "a",
+                    { href: "#", onClick: e => addVariant(e) },
+                    React.createElement("i", { className: "fas fa-plus" }),
+                    React.createElement(
+                        "span",
+                        { className: "pl-1" },
+                        "Add a new variant"
+                    )
+                )
+            ),
+            React.createElement(
+                "div",
+                null,
+                React.createElement(
+                    "div",
+                    { className: "autocomplete-search" },
+                    React.createElement("input", { ref: searchInput, type: "text", className: "form-control search-input", placeholder: "Search for variant", onChange: e => search(e) }),
+                    React.createElement(
+                        "a",
+                        { className: "search-clear", href: "#", onClick: e => {
+                                e.preventDefault();setPotentialVariants([]);searchInput.current.value = null;
+                            } },
+                        React.createElement("i", { className: "fas fa-times" })
+                    ),
+                    potentialVariants.length > 0 && React.createElement(
+                        "div",
+                        { className: "search-result" },
+                        React.createElement(
+                            "table",
+                            { className: "table table-bordered" },
+                            potentialVariants.map(v => {
+                                return React.createElement(
+                                    "tr",
+                                    null,
+                                    React.createElement(
+                                        "td",
+                                        null,
+                                        v.image.url && React.createElement("img", { src: v.image.url })
+                                    ),
+                                    React.createElement(
+                                        "td",
+                                        null,
+                                        React.createElement(
+                                            "span",
+                                            null,
+                                            v.name
+                                        )
+                                    ),
+                                    React.createElement(
+                                        "td",
+                                        null,
+                                        React.createElement(
+                                            "span",
+                                            null,
+                                            v.sku
+                                        )
+                                    ),
+                                    React.createElement(
+                                        "td",
+                                        null,
+                                        React.createElement(
+                                            "span",
+                                            null,
+                                            v.price
+                                        )
+                                    ),
+                                    React.createElement(
+                                        "td",
+                                        null,
+                                        React.createElement(
+                                            "a",
+                                            { href: "#", onClick: e => {
+                                                    addVariant(e, {
+                                                        variant_product_id: Date.now(),
+                                                        attributes: v.attributes.filter(a => props.attributes.find(e => e.attribute_code === a.attribute_code) !== undefined),
+                                                        image: v.image,
+                                                        sku: v.sku,
+                                                        price: v.price,
+                                                        qty: v.qty,
+                                                        status: v.status,
+                                                        visibility: 0,
+                                                        editUrl: v.editUrl
+                                                    });
+                                                } },
+                                            React.createElement("i", { className: "fas fa-plus" })
+                                        )
+                                    )
+                                );
+                            })
+                        )
+                    )
+                )
             )
         )
     );
 }
 
-function CreateVariantGroup(props) {
+function CreateVariantGroup() {
     const attributeGroup = ReactRedux.useSelector(state => _.get(state, 'appState.attributeGroup'));
     const [attributes, setAttributes] = React.useState([]);
-    const [name, setName] = React.useState(null);
     const [creating, setCreating] = React.useState(false);
 
     const onCreate = e => {
@@ -439,7 +573,7 @@ function CreateVariantGroup(props) {
         setCreating(true);
     };
 
-    const variableAttributes = attributeGroup.attributes.filter(a => a.type === "select");
+    const variableAttributes = attributeGroup === undefined ? [] : attributeGroup.attributes.filter(a => a.type === "select");
     return React.createElement(
         "div",
         null,
@@ -456,22 +590,11 @@ function CreateVariantGroup(props) {
                 visibility: 1,
                 current: true
             }],
-            name: name,
             attributes: attributeGroup.attributes.filter(a => attributes.includes(a.attribute_id) || attributes.includes(parseInt(a.attribute_id)))
         }),
         creating === false && React.createElement(
             "div",
             null,
-            React.createElement(Text, {
-                name: 'variant_group_name',
-                label: "Variant group name",
-                formId: "product-edit-form",
-                value: "",
-                validation_rules: ['notEmpty'],
-                handler: e => {
-                    setName(e.target.value);
-                }
-            }),
             variableAttributes.length > 0 && React.createElement(
                 "div",
                 null,
@@ -505,49 +628,8 @@ function CreateVariantGroup(props) {
                 "div",
                 { className: "alert alert-danger", role: "alert" },
                 "There is no \"Select\" attribute available in ",
-                attributeGroup.group_name
-            )
-        )
-    );
-}
-
-function New() {
-    const [action, setAction] = React.useState(undefined);
-    return React.createElement(
-        "div",
-        null,
-        action === undefined && React.createElement(
-            "div",
-            null,
-            React.createElement(
-                "a",
-                { className: "", href: "javascript:void(0);", onClick: () => setAction("create") },
-                "Create a variant group"
-            ),
-            React.createElement(
-                "a",
-                { className: "", href: "javascript:void(0);", onClick: () => createVariantGroup("assign") },
-                "Assign to existed group"
-            )
-        ),
-        action === "create" && React.createElement(
-            "div",
-            null,
-            React.createElement(CreateVariantGroup, null),
-            React.createElement(
-                "button",
-                { className: "btn-danger btn" },
-                "Cancel"
-            )
-        ),
-        action === "assign" && React.createElement(
-            "div",
-            null,
-            "assign group here",
-            React.createElement(
-                "button",
-                { className: "btn-danger btn" },
-                "Cancel"
+                attributeGroup == undefined ? "" : attributeGroup.group_name,
+                " product type."
             )
         )
     );
@@ -559,7 +641,45 @@ function Edit(props) {
         attributes: attributeGroup.attributes.filter(a => props.attributes.includes(a.attribute_id) || props.attributes.includes(parseInt(a.attribute_id)))
     }));
 }
+
+function New() {
+    const [action, setAction] = React.useState(undefined);
+    return React.createElement(
+        "div",
+        null,
+        action === undefined && React.createElement(
+            "div",
+            null,
+            React.createElement(
+                "div",
+                { className: "text-center" },
+                React.createElement(
+                    "div",
+                    { className: "mb-4" },
+                    "This product has some variants like color or size?"
+                ),
+                React.createElement(
+                    "a",
+                    { className: "btn btn-primary", href: "javascript:void(0);", onClick: () => setAction("create") },
+                    "Create a variant group"
+                )
+            )
+        ),
+        action === "create" && React.createElement(
+            "div",
+            null,
+            React.createElement(CreateVariantGroup, null),
+            React.createElement(
+                "button",
+                { className: "btn-danger btn" },
+                "Cancel"
+            )
+        )
+    );
+}
+
 export default function VariantGroup(props) {
+    const [id, setId] = React.useState(props.variant_group_id);
     return React.createElement(
         "div",
         { className: "sml-block mt-4 variants-block" },
@@ -573,6 +693,6 @@ export default function VariantGroup(props) {
             )
         ),
         !props.variant_group_id && React.createElement(New, null),
-        props.variant_group_id && React.createElement(Edit, props)
+        id && React.createElement(Edit, props)
     );
 }

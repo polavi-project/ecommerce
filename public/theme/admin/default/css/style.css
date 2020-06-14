@@ -91,6 +91,9 @@ table .form-group{margin-bottom: 0px}
 .child-align-middle:after{content: '';display: inline-block; height: 100%; vertical-align: middle; width: 0; }
 .form-head a{vertical-align: middle; display: inline-block;}
 .variants-block tr.duplicated select{border-color: var(--danger)}
+.autocomplete-search{position: relative}
+.autocomplete-search .search-clear{position: absolute; top: 6px; right: 10px}
+.autocomplete-search .search-result{margin-top: 1px; height: 300px; overflow-y: scroll}
 
 /********* DASHBOARD *********/
 .sale-statistic-header a{color: #fff}

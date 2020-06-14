@@ -55,6 +55,7 @@ class VariantMiddleware extends MiddlewareAbstract
                                 option_id
                                 value_text : attribute_value_text
                             }
+                            editUrl
                         }
                     }}"
                 ])->then(function($result) use (&$fields, $response) {
@@ -78,7 +79,6 @@ class VariantMiddleware extends MiddlewareAbstract
                                 [
                                     "id" => "product_edit_variant",
                                     "variant_group_id" => $group["variant_group_id"],
-                                    "variant_group_name" => $group["variant_group_name"],
                                     "attributes" => array_map(function ($a) { return $a["attribute_id"];}, $attributes),
                                     "variants" => array_map(function($v) use($result) {
                                         if($v["sku"] == $result->data["variants"]["sku"])
