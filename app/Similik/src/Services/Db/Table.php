@@ -258,7 +258,7 @@ class Table
             'start_group' => $startGroup,
             'end_group'   => $endGroup
         ];
-        $this->setBinding(str_ireplace(["`", "'", "."], ['', '', "_"], $column) . "_0", $operator, $value);
+        $this->setBinding(str_ireplace(["`", "'", "."], ['', '', "_"], $column) . "_" . (count($this->where) - 1), $operator, $value);
         if($column == "`{$this->getTable()}`." . $this->primary && trim($operator) == '=')
             $this->targetRow = (int) $value;
 
