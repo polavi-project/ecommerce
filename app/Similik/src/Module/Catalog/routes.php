@@ -140,6 +140,8 @@ $router->addSiteRoute('category.view.pretty', 'GET', '/catalog/{slug}', $categor
 
 $productViewMiddleware = [
     \Similik\Module\Catalog\Middleware\Product\View\InitMiddleware::class,
+    \Similik\Module\Catalog\Middleware\Product\View\VariantMiddleware::class,
+    \Similik\Module\Catalog\Middleware\Product\View\VariantDetectMiddleware::class,
     \Similik\Module\Catalog\Middleware\Product\View\LayoutMiddleware::class,
     \Similik\Module\Catalog\Middleware\Product\View\PriceMiddleware::class,
     \Similik\Module\Catalog\Middleware\Product\View\GeneralInfoMiddleware::class,
