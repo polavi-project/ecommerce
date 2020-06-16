@@ -10,9 +10,34 @@ function getOptions(attributeCode, variants) {
     return options;
 }
 
+function isSelected(attributeCode, optionId, currentFilters = {}) {
+    return currentFilters[attributeCode] !== undefined && parseInt(currentFilters[attributeCode]) === parseInt(optionId);
+}
+
+function isAvailable(attributeCode, optionId, variants, currentFilters = {}) {
+    let availableVars = [];
+    if (Object.keys(currentFilters).length === 0) availableVars = variants;else variants.forEach(v => {
+        let vAttrs = v.attributes;
+        let flag = true;
+        for (let attr of Object.keys(currentFilters)) {
+            let option = vAttrs.find(a => a.attribute_code === attr);
+            if (attr !== attributeCode && parseInt(option.option_id) !== parseInt(currentFilters[attr])) flag = false;
+        }
+        if (flag === true) availableVars.push(v);
+    });
+    console.log(availableVars, attributeCode);
+    return availableVars.find(a => {
+        return a.attributes.find(at => {
+            return at.attribute_code === attributeCode && parseInt(at.option_id) === parseInt(optionId);
+        }) !== undefined;
+    });
+}
+
 export default function Variants({ attributes, variants }) {
+    console.log(variants);
     const variantFilters = ReactRedux.useSelector(state => _.get(state, 'appState.variantFilters', {}));
     const currentProductUrl = ReactRedux.useSelector(state => _.get(state, 'appState.currentUrl'));
+
     const onSelect = (e, attribute_code, option_id) => {
         e.preventDefault();
         let url = new URL(currentProductUrl);
@@ -29,7 +54,7 @@ export default function Variants({ attributes, variants }) {
 
     return React.createElement(
         'div',
-        null,
+        { className: 'variant variant-container' },
         attributes.map(a => {
             let options = getOptions(a.attribute_code, variants);
             return React.createElement(
@@ -42,19 +67,25 @@ export default function Variants({ attributes, variants }) {
                 ),
                 React.createElement(
                     'ul',
-                    null,
+                    { className: 'variant-option-list' },
                     options.map(o => {
-                        return React.createElement(
+                        let className = "";
+                        if (isSelected(a.attribute_code, o.option_id, variantFilters)) className = "selected";
+                        if (isAvailable(a.attribute_code, o.option_id, variants, variantFilters)) return React.createElement(
                             'li',
-                            null,
+                            { className: className },
                             React.createElement(
                                 'a',
                                 { href: "#", onClick: e => onSelect(e, a.attribute_code, o.option_id) },
-                                React.createElement(
-                                    'span',
-                                    null,
-                                    o.value_text
-                                )
+                                o.value_text
+                            )
+                        );else return React.createElement(
+                            'li',
+                            { className: className },
+                            React.createElement(
+                                'span',
+                                { className: 'un-available' },
+                                o.value_text
                             )
                         );
                     })

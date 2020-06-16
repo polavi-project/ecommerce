@@ -207,3 +207,11 @@ ul{margin: 10px 0 !important;}
 /* NOTIFICATION */
 .notification{position: fixed; top: 30px; z-index: 1001; left: 0; width: 100%; display: flex; flex-flow: column; justify-content: center}
 .notification .alert{width: 450px; margin: 10px auto}
+
+/* PRODUCT SINGLE*/
+.variant-container{margin-top: 20px}
+.variant-option-list{display: flex; padding-left: 0}
+.variant-option-list li{list-style: none; border: 1px solid #E1E1E1; padding: 5px; margin-right: 5px}
+.variant-option-list li.selected{background: #058C8C}
+.variant-option-list li.selected a{color: #000}
+.variant-option-list li span.un-available{background: #E1E1E1}

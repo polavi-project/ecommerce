@@ -51,7 +51,10 @@ class VariantDetectMiddleware extends MiddlewareAbstract
         foreach ($queries as $key=>$value) {
             $a = array_find($attributes, function($a) use($key) { return $a["attribute_code"] == $key ? $a : null;});
             if($a && is_numeric($value)) {
-                $selectedOptions[$a["attribute_id"]] = $value;
+                $selectedOptions[] = [
+                    "attribute_id" => $a["attribute_id"],
+                    "option_id" => $value
+                ];
                 $selectedOptionsCode[$key] = $value;
             }
         }
@@ -61,39 +64,56 @@ class VariantDetectMiddleware extends MiddlewareAbstract
                 return $delegate;
             else {
                 $p = $conn->getTable("product")
-                    ->setFieldToSelect("product.product_id")
                     ->where("variant_group_id", "=", $product["variant_group_id"])
                     ->andWhere("status", "=", 1)
                     ->fetchOneAssoc(["sort_by" => "product.price", "sort_order"=> "ASC"]);
 
                 $request->attributes->set("id", $p["product_id"]);
 
+                $response->addState('product', [
+                    'id' => $p['product_id'],
+                    'regularPrice' => $p['price'],
+                    'sku' => $p['sku'],
+                    'weight' => $p['weight'],
+                    'isInStock' => $p['manage_stock'] == 0 || ($p['qty'] > 0 && $p['stock_availability'] == 1)
+                ]);
+
                 return $delegate;
             }
         } else {
             $tmp = $conn->getTable("product")
-                ->setFieldToSelect("product.product_id")
-                ->leftJoin('product_attribute_value_index', null, [
+                ->addFieldToSelect("product.*")
+                ->where("variant_group_id", "=", $product["variant_group_id"])
+                ->andWhere("status", "=", 1);
+            foreach ($selectedOptions as $key=>$val) {
+                $tmp->leftJoin('product_attribute_value_index', "product_attribute_value_index".$key, [
                     [
-                        "column"      => "product_attribute_value_index.language_id",
+                        "column"      => "product_attribute_value_index{$key}.language_id",
                         "operator"    => "=",
                         "value"       => 0,
                         "ao"          => 'and',
                         "start_group" => null,
                         "end_group"   => null
                     ]
-                ])
-                ->where("variant_group_id", "=", $product["variant_group_id"])
-                ->andWhere("status", "=", 1);
-            foreach ($selectedOptions as $key=>$val)
-                $tmp->andWhere("product_attribute_value_index.attribute_id", "=", $key)
-                    ->andWhere("product_attribute_value_index.option_id", "=", $val);
+                ]);
+                $tmp->andWhere("product_attribute_value_index{$key}.attribute_id", "=", $val["attribute_id"])
+                    ->andWhere("product_attribute_value_index{$key}.option_id", "=", $val["option_id"]);
+            }
 
             $p = $tmp->fetchOneAssoc();
             if(!$p) {
                 return $delegate;
             } else {
                 $request->attributes->set("id", $p["product_id"]);
+
+                $response->addState('product', [
+                    'id' => $p['product_id'],
+                    'regularPrice' => $p['price'],
+                    'sku' => $p['sku'],
+                    'weight' => $p['weight'],
+                    'isInStock' => $p['manage_stock'] == 0 || ($p['qty'] > 0 && $p['stock_availability'] == 1)
+                ]);
+
                 $response->addState("variantFilters", $selectedOptionsCode);
                 return $delegate;
             }
