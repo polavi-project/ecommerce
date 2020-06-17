@@ -1,4 +1,5 @@
 import { Fetch } from "../../../../../../../../js/production/fetch.js";
+import { FORM_VALIDATED } from "../../../../../../../../js/production/event-types.js";
 
 function getOptions(attributeCode, variants) {
     let options = [];
@@ -34,9 +35,32 @@ function isAvailable(attributeCode, optionId, variants, currentFilters = {}) {
 }
 
 export default function Variants({ attributes, variants }) {
-    console.log(variants);
+    const [error, setError] = React.useState(null);
     const variantFilters = ReactRedux.useSelector(state => _.get(state, 'appState.variantFilters', {}));
     const currentProductUrl = ReactRedux.useSelector(state => _.get(state, 'appState.currentUrl'));
+
+    const validate = (formId, errors) => {
+        if (formId !== "product-form") return true;
+
+        let flag = true;
+        attributes.forEach(a => {
+            if (variantFilters[a.attribute_code] === undefined) flag = false;
+        });
+        if (flag === false) {
+            errors["variants"] = "Missing variant";
+            setError("Please select variant option");
+        }
+    };
+
+    React.useEffect(() => {
+        let token = PubSub.subscribe(FORM_VALIDATED, function (message, data) {
+            validate(data.formId, data.errors);
+        });
+
+        return function cleanup() {
+            PubSub.unsubscribe(token);
+        };
+    }, []);
 
     const onSelect = (e, attribute_code, option_id) => {
         e.preventDefault();
@@ -53,44 +77,49 @@ export default function Variants({ attributes, variants }) {
     };
 
     return React.createElement(
-        'div',
-        { className: 'variant variant-container' },
+        "div",
+        { className: "variant variant-container" },
         attributes.map(a => {
             let options = getOptions(a.attribute_code, variants);
             return React.createElement(
-                'div',
+                "div",
                 null,
                 React.createElement(
-                    'div',
+                    "div",
                     null,
                     a.attribute_name
                 ),
                 React.createElement(
-                    'ul',
-                    { className: 'variant-option-list' },
+                    "ul",
+                    { className: "variant-option-list" },
                     options.map(o => {
                         let className = "";
                         if (isSelected(a.attribute_code, o.option_id, variantFilters)) className = "selected";
                         if (isAvailable(a.attribute_code, o.option_id, variants, variantFilters)) return React.createElement(
-                            'li',
+                            "li",
                             { className: className },
                             React.createElement(
-                                'a',
+                                "a",
                                 { href: "#", onClick: e => onSelect(e, a.attribute_code, o.option_id) },
                                 o.value_text
                             )
                         );else return React.createElement(
-                            'li',
-                            { className: className },
+                            "li",
+                            { className: "un-available" },
                             React.createElement(
-                                'span',
-                                { className: 'un-available' },
+                                "span",
+                                null,
                                 o.value_text
                             )
                         );
                     })
                 )
             );
-        })
+        }),
+        error && React.createElement(
+            "div",
+            { className: "variant-validate error text-danger" },
+            error
+        )
     );
 }
