@@ -72,6 +72,9 @@ class CartItemType extends ObjectType
                     'product_custom_options' => [
                         'type' => Type::listOf($container->get(ItemCustomOptionType::class))
                     ],
+                    'variant_options' => [
+                        'type' => Type::listOf($container->get(ItemVariantOptionType::class))
+                    ],
                     'total' => [
                         'type' => Type::nonNull($container->get(Price::class))
                     ],

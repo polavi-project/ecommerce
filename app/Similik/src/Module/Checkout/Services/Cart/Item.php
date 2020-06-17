@@ -140,7 +140,7 @@ class Item
                     }
 
                     if(($this->dataSource['product']['qty'] - $addedQty < $item->getDataSource()['qty'] || $item->getDataSource()['product']['stock_availability'] == 0) && $this->dataSource['product']['manage_stock'] == 1)  {
-                        $item->setError("qty", "Not enough stockkkkk");
+                        $item->setError("qty", "Not enough stock");
                         return null;
                     }
                     return $item->getDataSource()['qty'] ?? $item->getData('qty');
@@ -220,6 +220,42 @@ class Item
 
                     return $validatedOptions;
                 }
+            ],
+            'variant_group_id' => [
+                'resolver' => function(Item $item) {
+                    return $item->getDataSource()['product']['variant_group_id'] ?? null;
+                },
+                'dependencies' => ['product_id']
+            ],
+            'variant_options' => [
+                'resolver' => function(Item $item) {
+                    if(!$item->getData("variant_group_id"))
+                        return null;
+                    $conn = _mysql();
+                    $group = $conn->getTable("variant_group")->load($item->getData("variant_group_id"));
+                    $attrIds = array_filter([
+                        $group["attribute_one"],
+                        $group["attribute_two"],
+                        $group["attribute_three"],
+                        $group["attribute_four"],
+                        $group["attribute_five"],
+                    ], function($a) {
+                        return $a != null;
+                    });
+
+                    return $conn->getTable("product_attribute_value_index")
+                        ->addFieldToSelect("product_attribute_value_index.attribute_id")
+                        ->addFieldToSelect("product_attribute_value_index.option_id")
+                        ->addFieldToSelect("product_attribute_value_index.attribute_value_text", "option_name")
+                        ->addFieldToSelect("attribute.attribute_name")
+                        ->addFieldToSelect("attribute.attribute_code")
+                        ->leftJoin("attribute")
+                        ->where("product_attribute_value_index.product_id", "=", $item->getData("product_id"))
+                        ->andWhere("product_attribute_value_index.language_id", "=", 0)
+                        ->andWhere("product_attribute_value_index.attribute_id", "IN", $attrIds)
+                        ->fetchAllAssoc();
+                },
+                'dependencies' => ['product_id', 'variant_group_id']
             ],
             'total' => [
                 'resolver' => function(Item $item) {
