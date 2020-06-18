@@ -420,9 +420,9 @@ class ProductCollection extends CollectionBuilder
     }
 }
 
-// Create variant_group table
-// Update product table, add variant_group_id, visibility attribute
-// Update trigger after remove attribute from group
-// Update trigger after insert or update product
-// Update order item and cart item: change column variant_specification name and add variant_group_id
+// Create variant_group table : Done
+// Update product table, add variant_group_id, visibility attribute : Done
+// Update trigger after remove attribute from group: Done
+// Update trigger after insert or update product: Done
+// Update order item and cart item: change column variant_specification name and add variant_group_id : Done
 //

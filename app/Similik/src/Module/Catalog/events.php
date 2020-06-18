@@ -284,3 +284,42 @@ $eventDispatcher->addListener(
     },
     5
 );
+
+// Remove product from variant group if attribute option was deleted
+$productIds = [];
+$eventDispatcher->addListener('before_delete_attribute_option',  function($affectedRows) use ($container, &$productIds) {
+    foreach ($affectedRows as $row) {
+        $stm = _mysql()
+                ->getTable('product_attribute_value_index')
+                ->addFieldToSelect("product_id")
+                ->where('attribute_id', '=', $row["attribute_id"])
+                ->andWhere('option_id', '=', $row["attribute_option_id"]);
+        $productIds = [];
+        while ($row = $stm->fetch()) {
+            $productIds[] = $row['product_id'];
+        }
+    }
+});
+
+$eventDispatcher->addListener('after_delete_attribute_option',  function($affectedRows, \Similik\Services\Db\Processor $processor) use ($container, &$productIds) {
+    foreach ($affectedRows as $row) {
+        $groupIds = [];
+        $stm = $processor->getTable("variant_group")
+            ->where("attribute_one", "=", $row["attribute_id"])
+            ->orWhere("attribute_two", "=", $row["attribute_id"])
+            ->orWhere("attribute_three", "=", $row["attribute_id"])
+            ->orWhere("attribute_four", "=", $row["attribute_id"])
+            ->orWhere("attribute_five", "=", $row["attribute_id"]);
+        while ($row = $stm->fetch()) {
+            $groupIds[] = $row['variant_group_id'];
+        }
+        if(!$groupIds || !$productIds)
+            return true;
+        $processor->getTable("product")
+            ->where("variant_group_id", "IN", $groupIds)
+            ->andWhere("product_id", "IN", $productIds)
+            ->update(["variant_group_id" => null]);
+
+        return true;
+    }
+});

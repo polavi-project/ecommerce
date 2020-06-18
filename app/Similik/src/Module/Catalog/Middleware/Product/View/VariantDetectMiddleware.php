@@ -60,9 +60,11 @@ class VariantDetectMiddleware extends MiddlewareAbstract
         }
 
         if(!$selectedOptions) {
-            if($product["status"] == 1)
+            if($product["status"] == 1) {
+                // Reset the variant filter
+                $response->addState("variantFilters", []);
                 return $delegate;
-            else {
+            } else {
                 $p = $conn->getTable("product")
                     ->where("variant_group_id", "=", $product["variant_group_id"])
                     ->andWhere("status", "=", 1)
@@ -77,7 +79,8 @@ class VariantDetectMiddleware extends MiddlewareAbstract
                     'weight' => $p['weight'],
                     'isInStock' => $p['manage_stock'] == 0 || ($p['qty'] > 0 && $p['stock_availability'] == 1)
                 ]);
-
+                // Reset the variant filter
+                $response->addState("variantFilters", []);
                 return $delegate;
             }
         } else {

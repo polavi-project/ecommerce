@@ -73,7 +73,7 @@ function ItemOptions({ options = [] }) {
 }
 
 function ItemVariantOptions({ options = [] }) {
-    if (options.length === 0) return null;
+    if (!options || options.length === 0) return null;
 
     return React.createElement(
         "div",
