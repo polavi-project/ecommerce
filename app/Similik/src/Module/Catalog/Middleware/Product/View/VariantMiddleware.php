@@ -94,8 +94,8 @@ class VariantMiddleware extends MiddlewareAbstract
                     $attributes = $conn->getTable("attribute")->where("attribute_id", "IN", $attrIds)->fetchAllAssoc();
                     $response->addWidget(
                         'product_view_variants',
-                        'product_page_middle_right',
-                        20,
+                        'product_single_page_form',
+                        5,
                         get_js_file_url("production/catalog/product/view/variants.js", false),
                         [
                             "variants" => $result->data["variants"]["variants"],

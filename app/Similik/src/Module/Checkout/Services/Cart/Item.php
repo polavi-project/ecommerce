@@ -14,6 +14,7 @@ use GuzzleHttp\Promise\Promise;
 use GuzzleHttp\Promise\RejectedPromise;
 use MJS\TopSort\Implementations\ArraySort;
 use function Similik\_mysql;
+use function Similik\array_find;
 use function Similik\dispatch_event;
 use function Similik\get_base_url_scheme_less;
 use function Similik\get_current_language_id;
@@ -231,6 +232,10 @@ class Item
                 'resolver' => function(Item $item) {
                     if(!$item->getData("variant_group_id"))
                         return null;
+                    $selectedOptions = $item->dataSource['variant_options'] ?? [];
+                    if(is_string($selectedOptions)) { // this item is loaded from cart_item table
+                        $selectedOptions = json_decode($selectedOptions, true);
+                    }
                     $conn = _mysql();
                     $group = $conn->getTable("variant_group")->load($item->getData("variant_group_id"));
                     $attrIds = array_filter([
@@ -242,7 +247,40 @@ class Item
                     ], function($a) {
                         return $a != null;
                     });
+                    foreach ($attrIds as $id) {
+                        if(!array_find($selectedOptions, function($a) use($id) {
+                            if(isset($a["attribute_id"]) && $a["attribute_id"] == $id)
+                                return $id;
+                            return false;
+                        })) {
+                            $item->setError("variant_options", "You need to select some required option to purchase this product");
+                            return null;
+                        }
+                    }
+                    $tmp = $conn->getTable("product")
+                        ->addFieldToSelect("product.product_id")
+                        ->where("variant_group_id", "=", $item->getData("variant_group_id"))
+                        ->andWhere("status", "=", 1);
+                    foreach ($selectedOptions as $key=>$val) {
+                        $tmp->leftJoin('product_attribute_value_index', "product_attribute_value_index".$key, [
+                            [
+                                "column"      => "product_attribute_value_index{$key}.language_id",
+                                "operator"    => "=",
+                                "value"       => 0,
+                                "ao"          => 'and',
+                                "start_group" => null,
+                                "end_group"   => null
+                            ]
+                        ]);
+                        $tmp->andWhere("product_attribute_value_index{$key}.attribute_id", "=", $val["attribute_id"])
+                            ->andWhere("product_attribute_value_index{$key}.option_id", "=", $val["option_id"]);
+                    }
 
+                    $p = $tmp->fetchOneAssoc();
+                    if(!$p || $p["product_id"] != $item->getData("product_id")) {
+                        $item->setError("product_custom_options", "You need to select some required option to purchase this product");
+                        return null;
+                    }
                     return $conn->getTable("product_attribute_value_index")
                         ->addFieldToSelect("product_attribute_value_index.attribute_id")
                         ->addFieldToSelect("product_attribute_value_index.option_id")

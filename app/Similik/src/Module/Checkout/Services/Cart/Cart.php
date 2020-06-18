@@ -277,9 +277,9 @@ class Cart
         $flag = false;
         foreach ($items as $id=>$i) {
             if($i->getData('product_sku') == $item->getData('product_sku') && $i->getData('product_custom_options') == $item->getData('product_custom_options')) {
-                $i->setData('qty', $i->getData('qty') + $item->getData('qty'));
-                $items[$id] = $i;
-                $item = $i;
+                $item->setData('qty', $i->getData('qty') + $item->getData('qty'));
+                unset($items[$id]);
+                $items[$item->getId()] = $item;
                 $flag = true;
                 break;
             }

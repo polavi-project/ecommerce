@@ -35,8 +35,8 @@ class AddProductMiddleware extends MiddlewareAbstract
 
         $promise->otherwise(function($item) use ($request, $response) {
             $errors = $item->getError();
-            if(count($errors) == 1 and isset($errors['product_custom_options'])) {
-                $request->getSession()->getFlashBag()->set('error', $errors['product_custom_options']);
+            if(count($errors) == 1 and (isset($errors['product_custom_options']) || isset($errors['variant_options']))) {
+                $request->getSession()->getFlashBag()->set('error', $errors['product_custom_options'] ?? $errors['variant_options']);
                 $response->redirect($item->getData('product_url'));
             } else
                 foreach ($errors as $field => $message) {

@@ -26,7 +26,6 @@ function isAvailable(attributeCode, optionId, variants, currentFilters = {}) {
         }
         if (flag === true) availableVars.push(v);
     });
-    console.log(availableVars, attributeCode);
     return availableVars.find(a => {
         return a.attributes.find(at => {
             return at.attribute_code === attributeCode && parseInt(at.option_id) === parseInt(optionId);
@@ -79,11 +78,13 @@ export default function Variants({ attributes, variants }) {
     return React.createElement(
         "div",
         { className: "variant variant-container" },
-        attributes.map(a => {
+        attributes.map((a, i) => {
             let options = getOptions(a.attribute_code, variants);
             return React.createElement(
                 "div",
                 null,
+                React.createElement("input", { name: `variant_options[${i}][attribute_id]`, type: "hidden", value: a.attribute_id }),
+                React.createElement("input", { name: `variant_options[${i}][option_id]`, type: "hidden", value: variantFilters[a.attribute_code] ? variantFilters[a.attribute_code] : "" }),
                 React.createElement(
                     "div",
                     null,
