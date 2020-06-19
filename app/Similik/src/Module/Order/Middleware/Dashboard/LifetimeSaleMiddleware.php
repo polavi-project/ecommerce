@@ -46,8 +46,8 @@ class LifetimeSaleMiddleware extends MiddlewareAbstract
             [
                 'orders' => count($orders),
                 'total' => $total,
-                'completed_percentage' => ceil($completed/count($orders)*100),
-                'cancelled_percentage' => ceil($cancelled/count($orders)*100)
+                'completed_percentage' => count($orders) == 0 ? 0 : ceil($completed/count($orders)*100),
+                'cancelled_percentage' => count($orders) == 0 ? 0 : ceil($cancelled/count($orders)*100)
             ]
         );
     }
