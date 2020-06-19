@@ -6,7 +6,8 @@
 
 declare(strict_types=1);
 
-namespace Similik\Module\Catalog\Services\Type;
+namespace Similik\Module\Checkout\Services\Type;
+
 
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\ResolveInfo;
@@ -14,41 +15,32 @@ use GraphQL\Type\Definition\Type;
 use function Similik\dispatch_event;
 use Similik\Services\Di\Container;
 
-class ProductAttributeIndex extends ObjectType
+class ItemVariantOptionType extends ObjectType
 {
     public function __construct(Container $container)
     {
         $config = [
-            'name' => 'ProductAttributeIndex',
+            'name' => 'CartItemVariantOption',
             'fields' => function() use ($container) {
                 $fields = [
-                    'product_attribute_value_index_id' => [
-                        'type' => Type::nonNull(Type::id())
-                    ],
-                    'product_id' => [
-                        'type' => Type::nonNull(Type::int())
-                    ],
                     'attribute_id' => [
-                        'type' => Type::nonNull(Type::int())
-                    ],
-                    'attribute_code' => [
-                        'type' => Type::nonNull(Type::string())
+                        'type' => Type::nonNull(Type::id())
                     ],
                     'attribute_name' => [
                         'type' => Type::string()
                     ],
+                    'attribute_code' => [
+                        'type' => Type::nonNull(Type::string())
+                    ],
                     'option_id' => [
-                        'type' => Type::int()
+                        'type' => Type::nonNull(Type::id())
                     ],
-                    'attribute_value_text' => [
-                        'type' => Type::string()
-                    ],
-                    'language_id' => [
-                        'type' => Type::nonNull(Type::int())
+                    'option_name' => [
+                        'type' => Type::nonNull(Type::id())
                     ]
                 ];
 
-                dispatch_event('filter.productAttributeIndex.type', [&$fields]);
+                dispatch_event('filter.cartItemVariantOption.type', [&$fields]);
 
                 return $fields;
             },

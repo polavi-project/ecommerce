@@ -6,7 +6,7 @@ import { FORM_FIELD_CREATED, FORM_VALIDATED, FORM_FIELD_REMOVED, FORM_LANGUAGE_C
 export default function Checkbox(props) {
     const [isChecked, setChecked] = React.useState(props.isChecked);
     const [error, setError] = React.useState(undefined);
-    const [isDisabled, setIsDisabled] = React.useState(false);
+    const [isDisabled, setIsDisabled] = React.useState(props.disabled);
 
     React.useEffect(() => {
         PubSub.publishSync(FORM_FIELD_CREATED, _extends({}, props));

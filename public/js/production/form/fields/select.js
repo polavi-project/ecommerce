@@ -4,9 +4,17 @@ import { Error } from "./error.js";
 import { FORM_FIELD_CREATED, FORM_VALIDATED, FORM_FIELD_REMOVED, FORM_LANGUAGE_CHANGED } from "./../../event-types.js";
 
 export default function Select(props) {
-    const [value, setValue] = React.useState(props.value !== undefined ? props.value : '');
+    const [value, setValue] = React.useState("");
     const [error, setError] = React.useState(undefined);
     const [isDisabled, setIsDisabled] = React.useState(false);
+
+    React.useEffect(() => {
+        setValue(props.value ? props.value : "");
+    }, [props.value]);
+
+    React.useEffect(() => {
+        setIsDisabled(props.disabled ? props.disabled : false);
+    }, [props.disabled]);
 
     React.useEffect(() => {
         PubSub.publishSync(FORM_FIELD_CREATED, _extends({}, props));

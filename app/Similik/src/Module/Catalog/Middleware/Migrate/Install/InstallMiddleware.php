@@ -120,6 +120,8 @@ class InstallMiddleware extends MiddlewareAbstract
             $this->processor->executeQuery("CREATE TABLE `product` (
               `product_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
               `group_id` int(10) unsigned DEFAULT NULL,
+              `variant_group_id` int(10) unsigned DEFAULT NULL,
+              `visibility` smallint(2) DEFAULT NULL,
               `image` varchar(255) DEFAULT NULL,
               `sku` varchar(255) NOT NULL,
               `price` decimal(12,4) NOT NULL,
@@ -134,7 +136,8 @@ class InstallMiddleware extends MiddlewareAbstract
               PRIMARY KEY (`product_id`),
               UNIQUE KEY `UNIQUE_SKU` (`sku`),
               KEY `FK_PRODUCT_ATTRIBUTE_GROUP` (`group_id`),
-              CONSTRAINT `FK_PRODUCT_ATTRIBUTE_GROUP` FOREIGN KEY (`group_id`) REFERENCES `attribute_group` (`attribute_group_id`) ON DELETE SET NULL
+              CONSTRAINT `FK_PRODUCT_ATTRIBUTE_GROUP` FOREIGN KEY (`group_id`) REFERENCES `attribute_group` (`attribute_group_id`) ON DELETE SET NULL,
+              CONSTRAINT `FK_PRODUCT_VARIANT_GROUP` FOREIGN KEY (`variant_group_id`) REFERENCES `variant_group` (`variant_group_id`) ON DELETE SET NULL
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Product'");
 
             //Create product_description table
@@ -239,6 +242,30 @@ class InstallMiddleware extends MiddlewareAbstract
               CONSTRAINT `FK_PRICE_PRODUCT` FOREIGN KEY (`product_price_product_id`) REFERENCES `product` (`product_id`) ON DELETE CASCADE ON UPDATE CASCADE
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Product advanced price'");
 
+            //Create variant_group table
+            $this->processor->executeQuery("CREATE TABLE `variant_group` (
+              `variant_group_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+              `attribute_group_id` int(10) unsigned NOT NULL,
+              `attribute_one` int(10) unsigned DEFAULT NULL,
+              `attribute_two` int(10) unsigned DEFAULT NULL,
+              `attribute_three` int(10) unsigned DEFAULT NULL,
+              `attribute_four` int(10) unsigned DEFAULT NULL,
+              `attribute_five` int(10) unsigned DEFAULT NULL,
+              PRIMARY KEY (`variant_group_id`),
+              KEY `FK_ATTRIBUTE_VARIANT_ONE` (`attribute_one`),
+              KEY `FK_ATTRIBUTE_VARIANT_TWO` (`attribute_two`),
+              KEY `FK_ATTRIBUTE_VARIANT_THREE` (`attribute_three`),
+              KEY `FK_ATTRIBUTE_VARIANT_FOUR` (`attribute_four`),
+              KEY `FK_ATTRIBUTE_VARIANT_FIVE` (`attribute_five`),
+              CONSTRAINT `FK_ATTRIBUTE_GROUP_VARIANT` FOREIGN KEY (`attribute_group_id`) REFERENCES `attribute_group` (`attribute_group_id`) ON DELETE CASCADE ON UPDATE NO ACTION,
+              CONSTRAINT `FK_ATTRIBUTE_VARIANT_FIVE` FOREIGN KEY (`attribute_five`) REFERENCES `attribute` (`attribute_id`) ON DELETE CASCADE ON UPDATE NO ACTION,
+              CONSTRAINT `FK_ATTRIBUTE_VARIANT_FOUR` FOREIGN KEY (`attribute_four`) REFERENCES `attribute` (`attribute_id`) ON DELETE CASCADE ON UPDATE NO ACTION,
+              CONSTRAINT `FK_ATTRIBUTE_VARIANT_ONE` FOREIGN KEY (`attribute_one`) REFERENCES `attribute` (`attribute_id`) ON DELETE CASCADE ON UPDATE NO ACTION,
+              CONSTRAINT `FK_ATTRIBUTE_VARIANT_THREE` FOREIGN KEY (`attribute_three`) REFERENCES `attribute` (`attribute_id`) ON DELETE CASCADE ON UPDATE NO ACTION,
+              CONSTRAINT `FK_ATTRIBUTE_VARIANT_TWO` FOREIGN KEY (`attribute_two`) REFERENCES `attribute` (`attribute_id`) ON DELETE CASCADE ON UPDATE NO ACTION
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Product variant group'");
+
+
             ////////////////// CREATE SOME TRIGGERS /////////////////////
             // Create TRIGGER_AFTER_INSERT_PRODUCT trigger
             $this->processor->executeQuery(
@@ -271,6 +298,13 @@ class InstallMiddleware extends MiddlewareAbstract
                         WHERE `product_attribute_value_index`.option_id = NEW.attribute_option_id AND `product_attribute_value_index`.attribute_id = NEW.attribute_id;
                 "
             );
+            //Create TRIGGER_AFTER_INSERT_PRODUCT trigger
+            $this->processor->executeQuery(
+                "TRIGGER `TRIGGER_AFTER_INSERT_PRODUCT` AFTER INSERT ON `product`
+                    FOR EACH ROW BEGIN
+                        UPDATE `variant_group` SET visibility = (SELECT MAX(visibility) FROM `product` WHERE `product`.`variant_group_id` = new.variant_group_id AND `product`.`status` = 1 GROUP BY `product`.`variant_group_id`) WHERE `variant_group`.`variant_group_id` = new.variant_group_id;
+                    END;"
+            );
 
             //Create TRIGGER_PRODUCT_AFTER_UPDATE trigger
             $this->processor->executeQuery(
@@ -280,6 +314,8 @@ class InstallMiddleware extends MiddlewareAbstract
                         DELETE FROM `product_attribute_value_index`
                         WHERE `product_attribute_value_index`.`product_id` = New.product_id 
                         AND `product_attribute_value_index`.`attribute_id` NOT IN (SELECT `attribute_group_link`.`attribute_id` FROM `attribute_group_link` WHERE `attribute_group_link`.`group_id` = NEW.group_id);
+                        UPDATE `variant_group` SET visibility = (SELECT MAX(visibility) FROM `product` WHERE `product`.`variant_group_id` = NEW.variant_group_id AND `product`.`status` = 1 GROUP BY `product`.`variant_group_id`) WHERE `variant_group`.`variant_group_id` = NEW.variant_group_id;
+                        UPDATE `variant_group` SET visibility = (SELECT MAX(visibility) FROM `product` WHERE `product`.`variant_group_id` = OLD.variant_group_id AND `product`.`status` = 1 GROUP BY `product`.`variant_group_id`) WHERE `variant_group`.`variant_group_id` = OLD.variant_group_id;
                     END;"
             );
 
@@ -288,6 +324,7 @@ class InstallMiddleware extends MiddlewareAbstract
                 "CREATE TRIGGER `TRIGGER_REMOVE_ATTRIBUTE_FROM_GROUP` AFTER DELETE ON `attribute_group_link` 
                     FOR EACH ROW BEGIN
                         DELETE FROM `product_attribute_value_index` WHERE product_attribute_value_index.attribute_id = OLD.attribute_id AND product_attribute_value_index.product_id IN (SELECT product.product_id FROM product WHERE product.group_id = OLD.group_id);
+                        DELETE FROM `variant_group` WHERE `variant_group`.`attribute_group_id` = OLD.group_id AND (`variant_group`.`attribute_one` = OLD.attribute_id OR `variant_group`.`attribute_two` = OLD.attribute_id OR `variant_group`.`attribute_three` = OLD.attribute_id OR `variant_group`.`attribute_four` = OLD.attribute_id OR `variant_group`.`attribute_five` = OLD.attribute_id);
                     END;"
             );
             $this->processor->commit();

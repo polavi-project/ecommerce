@@ -43,6 +43,13 @@ class ItemsMiddleware extends MiddlewareAbstract
                                     extra_price
                                 }
                             }
+                            variant_options {
+                                attribute_id
+                                attribute_name
+                                attribute_code
+                                option_id
+                                option_name
+                            }
                             thumbnail: product_thumbnail
                             productUrl
                             qty

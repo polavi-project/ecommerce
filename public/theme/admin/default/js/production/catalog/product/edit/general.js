@@ -1,13 +1,12 @@
 import Area from "../../../../../../../../js/production/area.js";
 import Text from "../../../../../../../../js/production/form/fields/text.js";
 import TextArea from "../../../../../../../../js/production/form/fields/textarea.js";
-import Select from "../../../../../../../../js/production/form/fields/select.js";
 import Tinycme from "../../../../../../../../js/production/form/fields/tinycme.js";
-import Radio from "../../../../../../../../js/production/form/fields/radio.js";
-import Checkbox from "../../../../../../../../js/production/form/fields/checkbox.js";
 import Switch from "../../../../../../../../js/production/form/fields/switch.js";
+import { ADD_APP_STATE } from "../../../../../../../../js/production/event-types.js";
 
 export default function General({ data }) {
+    const dispatch = ReactRedux.useDispatch();
     const [fields] = React.useState(() => {
         return [{
             component: Text,
@@ -16,7 +15,17 @@ export default function General({ data }) {
             id: "name"
         }, {
             component: Text,
-            props: { id: 'sku', formId: "product-edit-form", name: "sku", label: "SKU", validation_rules: ["notEmpty"], isTranslateAble: false },
+            props: {
+                id: 'sku',
+                formId: "product-edit-form",
+                name: "sku",
+                label: "SKU",
+                validation_rules: ["notEmpty"],
+                isTranslateAble: false,
+                handler: e => {
+                    dispatch({ 'type': ADD_APP_STATE, 'payload': { appState: { currentSku: e.target.value } } });
+                }
+            },
             sort_order: 20,
             id: "sku"
         }, {
@@ -31,7 +40,17 @@ export default function General({ data }) {
             id: "weight"
         }, {
             component: Text,
-            props: { id: 'price', formId: "product-edit-form", name: "price", label: "Price", validation_rules: ["notEmpty"], isTranslateAble: false },
+            props: {
+                id: 'price',
+                formId: "product-edit-form",
+                name: "price",
+                label: "Price",
+                validation_rules: ["notEmpty"],
+                isTranslateAble: false,
+                handler: e => {
+                    dispatch({ 'type': ADD_APP_STATE, 'payload': { appState: { currentPrice: e.target.value } } });
+                }
+            },
             sort_order: 50,
             id: "price"
         }, {

@@ -37,7 +37,7 @@ class GeneralInfoMiddleware extends MiddlewareAbstract
             ->get(GraphqlExecutor::class)
             ->waitToExecute([
                 "query"=>"{
-                    product_view_general_info: product(id: {$request->get('id')} language:{$request->get('language', get_default_language_Id())})
+                    product_view_general_info: product(id: {$request->attributes->get('id')} language:{$request->get('language', get_default_language_Id())})
                     {
                         name
                         price

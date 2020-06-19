@@ -8,7 +8,7 @@ function Form(props) {
     const validationRules = React.useRef({});
     const [token1, setToken1] = React.useState(() => {
         let token = PubSub.subscribe(FORM_FIELD_CREATED, function (message, data) {
-            if (data.name === undefined || data.validation_rules === undefined || data.formId !== props.id) return;
+            if (data.name === undefined || data.validation_rules === undefined || data.disabled === true || data.formId !== props.id) return;
             let rules = validationRules.current;
             rules[data.name] = data.validation_rules;
             validationRules.current = rules;
@@ -18,7 +18,7 @@ function Form(props) {
     });
     const [token2, setToken2] = React.useState(() => {
         let token = PubSub.subscribe(FORM_FIELD_REMOVED, function (message, data) {
-            if (data.name === undefined || data.validation_rules === undefined || data.formId !== props.id) return;
+            if (data.name === undefined || data.validation_rules === undefined || data.disabled === true || data.formId !== props.id) return;
             delete validationRules.current[data.name];
         });
 

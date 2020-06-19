@@ -37,7 +37,7 @@ class DescriptionMiddleware extends MiddlewareAbstract
             ->get(GraphqlExecutor::class)
             ->waitToExecute([
                 "query"=>"{
-                    description: product(id: {$request->get('id')} language:{$request->get('language', get_default_language_Id())})
+                    description: product(id: {$request->attributes->get('id')} language:{$request->get('language', get_default_language_Id())})
                     {
                         description
                     }

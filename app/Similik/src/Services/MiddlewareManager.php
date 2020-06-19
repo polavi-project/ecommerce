@@ -27,6 +27,8 @@ class MiddlewareManager
 
     private $middlewareLocked = false;
 
+    private static $delegates = [];
+
     public function __construct(Container $container, array $middleware = [])
     {
         $this->container = $container;
@@ -134,13 +136,14 @@ class MiddlewareManager
                         dispatch_event("route_middleware_ended", []);
                 };
             $m[] = function (Request $request, Response $response, $delegate = null) use ($callable, $next) {
-                if($delegate instanceof Response || $response->findData("redirectUrl")) {
+                if($delegate instanceof Response) {
                     $response->send($this->container->get(Request::class)->isAjax(), $response->getStatusCode());
                     exit();
                 } else {
                     if(!in_array(get_class($callable), $this->removedMiddleware)) {
                         dispatch_event('before_execute_' . strtolower(str_replace('\\', '_', get_class($callable))), [$this->container]);
                         $delegate = call_user_func($callable, $request, $response, $delegate);
+                        self::$delegates[get_class($callable)] = $delegate;
                     }
                     call_user_func($next, $request, $response, $delegate);
                 }
@@ -151,5 +154,15 @@ class MiddlewareManager
         $startPoint = end($m);
 
         return call_user_func($startPoint, $this->container[Request::class], $this->container[Response::class]);
+    }
+
+    public static function getDelegate($className, $defaultValue = null)
+    {
+        return self::$delegates[$className] ?? $defaultValue;
+    }
+
+    public static function hasDelegate($className)
+    {
+        return isset(self::$delegates[$className]);
     }
 }

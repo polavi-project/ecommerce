@@ -243,8 +243,8 @@ class Table
     {
         // reset where
         //$this->where = [];
-        if(strpos($column, '.') === false)
-            $column = "`{$this->getTable()}`.{$column}";
+//        if(strpos($column, '.') === false)
+//            $column = "`{$this->getTable()}`.{$column}";
         if(is_array($value))
             foreach($value as $key=>$val) {
                 $value['binding' . _unique_number()] = $val;
@@ -258,7 +258,7 @@ class Table
             'start_group' => $startGroup,
             'end_group'   => $endGroup
         ];
-        $this->setBinding(str_ireplace(["`", "'", "."], ['', '', "_"], $column) . "_0", $operator, $value);
+        $this->setBinding(str_ireplace(["`", "'", "."], ['', '', "_"], $column) . "_" . (count($this->where) - 1), $operator, $value);
         if($column == "`{$this->getTable()}`." . $this->primary && trim($operator) == '=')
             $this->targetRow = (int) $value;
 
@@ -524,8 +524,8 @@ class Table
      */
     public function having($column, $operator, $value, $startGroup = false, $endGroup = false)
     {
-        if(strpos($column, '.') === false)
-            $column = "`{$this->getTable()}`.{$column}";
+//        if(strpos($column, '.') === false)
+//            $column = "`{$this->getTable()}`.{$column}";
         if(is_array($value))
             foreach($value as $key=>$val) {
                 $value['binding' . _unique_number()] = $val;

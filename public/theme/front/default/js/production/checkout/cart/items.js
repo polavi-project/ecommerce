@@ -72,6 +72,44 @@ function ItemOptions({ options = [] }) {
     );
 }
 
+function ItemVariantOptions({ options = [] }) {
+    if (!options || options.length === 0) return null;
+
+    return React.createElement(
+        "div",
+        { className: "cart-item-variant-options" },
+        React.createElement(
+            "ul",
+            { className: "uk-list" },
+            options.map((o, i) => {
+                return React.createElement(
+                    "li",
+                    { key: i },
+                    React.createElement(
+                        "span",
+                        { className: "attribute-name" },
+                        React.createElement(
+                            "strong",
+                            null,
+                            o.attribute_name,
+                            " : "
+                        )
+                    ),
+                    React.createElement(
+                        "span",
+                        null,
+                        React.createElement(
+                            "i",
+                            { className: "value-text" },
+                            o.option_name
+                        )
+                    )
+                );
+            })
+        )
+    );
+}
+
 function Items({ items }) {
     const baseUrl = ReactRedux.useSelector(state => _.get(state, 'appState.baseUrl'));
     const currency = ReactRedux.useSelector(state => _.get(state, 'appState.currency', 'USD'));
@@ -164,7 +202,8 @@ function Items({ items }) {
                                     { className: "text-danger", key: i },
                                     e.message
                                 )),
-                                React.createElement(ItemOptions, { options: item.options })
+                                React.createElement(ItemOptions, { options: item.options }),
+                                React.createElement(ItemVariantOptions, { options: item.variant_options })
                             )
                         ),
                         React.createElement(

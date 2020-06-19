@@ -64,6 +64,7 @@ class GeneralInfoMiddleware extends MiddlewareAbstract
                             short_description
                             description
                             sku
+                            qty
                             weight
                             status
                         }
@@ -78,6 +79,9 @@ class GeneralInfoMiddleware extends MiddlewareAbstract
                             get_js_file_url("production/catalog/product/edit/general.js", true),
                             ["id"=>"product_edit_general", "data" => $result->data['general_info']]
                         );
+                        $response->addState("currentSku", $result->data['general_info']['sku']);
+                        $response->addState("currentQty", $result->data['general_info']['qty']);
+                        $response->addState("currentPrice", $result->data['general_info']['price']);
                     }
                 });
         else

@@ -10,7 +10,6 @@ namespace Similik\Module\Catalog\Middleware\Product\View;
 
 use function Similik\_mysql;
 use function Similik\get_default_language_Id;
-use Similik\Services\Helmet;
 use Similik\Services\Http\Request;
 use Similik\Services\Http\Response;
 use Similik\Middleware\MiddlewareAbstract;
@@ -36,12 +35,10 @@ class InitMiddleware extends MiddlewareAbstract
             if($des)
                 $product = $conn->getTable('product')
                     ->where('product_id', '=', $des['product_description_product_id'])
-                    ->andWhere('status', '=', 1)
                     ->fetchOneAssoc();
         } else
             $product = $conn->getTable('product')
                 ->where('product_id', '=', $request->attributes->get('id'))
-                ->andWhere('status', '=', 1)
                 ->fetchOneAssoc();
 
         if(!$product) {

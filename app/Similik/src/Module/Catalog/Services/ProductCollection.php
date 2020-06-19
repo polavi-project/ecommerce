@@ -32,12 +32,12 @@ class ProductCollection extends CollectionBuilder
             ->addFieldToSelect("product_description.*")
             ->leftJoin('product_description', null, [
                 [
-                    'column'      => "product_description.language_id",
-                    'operator'    => "=",
-                    'value'       => get_current_language_id(),
-                    'ao'          => 'and',
-                    'start_group' => null,
-                    'end_group'   => null
+                    "column"      => "product_description.language_id",
+                    "operator"    => "=",
+                    "value"       => get_current_language_id(),
+                    "ao"          => 'and',
+                    "start_group" => null,
+                    "end_group"   => null
                 ]
             ]);
 
@@ -49,10 +49,10 @@ class ProductCollection extends CollectionBuilder
         if(!$container->get(Request::class)->isAdmin()) {
             $customerGroupId = $container->get(Request::class)->getCustomer()->isLoggedIn() ? $container->get(Request::class)->getCustomer()->getData('group_id') ?? 1 : 999;
             $collection
-                ->addFieldToSelect("product_price.tier_price")
-                ->leftJoin('product_price', null, [
+                ->addFieldToSelect("LEAST(product.`price`, IF(ppone.`tier_price` IS NULL, 1000000000, ppone.`tier_price`) , IF(pptwo.`tier_price` IS NULL, 1000000000, pptwo.`tier_price`))", "sale_price")
+                ->leftJoin('product_price', 'ppone', [
                 [
-                    'column'      => "product_price.qty",
+                    'column'      => "ppone.qty",
                     'operator'    => "=",
                     'value'       => 1,
                     'ao'          => 'and',
@@ -60,7 +60,7 @@ class ProductCollection extends CollectionBuilder
                     'end_group'   => null
                 ],
                 [
-                    'column'      => "product_price.tier_price",
+                    'column'      => "ppone.tier_price",
                     'operator'    => "<=",
                     'value'       => "product.price",
                     'isValueAColumn' => true,
@@ -69,23 +69,15 @@ class ProductCollection extends CollectionBuilder
                     'end_group'   => null
                 ],
                 [
-                    'column'      => "product_price.customer_group_id",
+                    'column'      => "ppone.customer_group_id",
                     'operator'    => "=",
                     'value'       => $customerGroupId,
                     'ao'          => 'and',
-                    'start_group' => "(",
+                    'start_group' => null,
                     'end_group'   => null
                 ],
                 [
-                    'column'      => "product_price.customer_group_id",
-                    'operator'    => "=",
-                    'value'       => 1000,
-                    'ao'          => 'or',
-                    'start_group' => null,
-                    'end_group'   => ")"
-                ],
-                [
-                    'column'      => "product_price.active_from",
+                    'column'      => "ppone.active_from",
                     'operator'    => "IS",
                     'value'       => null,
                     'ao'          => 'and',
@@ -93,7 +85,7 @@ class ProductCollection extends CollectionBuilder
                     'end_group'   => null
                 ],
                 [
-                    'column'      => "product_price.active_from",
+                    'column'      => "ppone.active_from",
                     'operator'    => "<=",
                     'value'       => date("Y-m-d H:i:s"),
                     'ao'          => 'or',
@@ -101,7 +93,7 @@ class ProductCollection extends CollectionBuilder
                     'end_group'   => ')'
                 ],
                 [
-                    'column'      => "product_price.active_to",
+                    'column'      => "ppone.active_to",
                     'operator'    => "IS",
                     'value'       => null,
                     'ao'          => 'and',
@@ -109,14 +101,72 @@ class ProductCollection extends CollectionBuilder
                     'end_group'   => null
                 ],
                 [
-                    'column'      => "product_price.active_to",
+                    'column'      => "ppone.active_to",
                     'operator'    => ">=",
                     'value'       => date("Y-m-d H:i:s"),
                     'ao'          => 'or',
                     'start_group' => null,
                     'end_group'   => '))'
                 ]
-            ])->groupBy("product.product_id");
+            ])->leftJoin('product_price', 'pptwo', [
+                    [
+                        'column'      => "pptwo.qty",
+                        'operator'    => "=",
+                        'value'       => 1,
+                        'ao'          => 'and',
+                        'start_group' => null,
+                        'end_group'   => null
+                    ],
+                    [
+                        'column'      => "pptwo.tier_price",
+                        'operator'    => "<=",
+                        'value'       => "product.price",
+                        'isValueAColumn' => true,
+                        'ao'          => 'and',
+                        'start_group' => null,
+                        'end_group'   => null
+                    ],
+                    [
+                        'column'      => "pptwo.customer_group_id",
+                        'operator'    => "=",
+                        'value'       => 1000,
+                        'ao'          => 'and',
+                        'start_group' => null,
+                        'end_group'   => null
+                    ],
+                    [
+                        'column'      => "pptwo.active_from",
+                        'operator'    => "IS",
+                        'value'       => null,
+                        'ao'          => 'and',
+                        'start_group' => '((',
+                        'end_group'   => null
+                    ],
+                    [
+                        'column'      => "pptwo.active_from",
+                        'operator'    => "<=",
+                        'value'       => date("Y-m-d H:i:s"),
+                        'ao'          => 'or',
+                        'start_group' => null,
+                        'end_group'   => ')'
+                    ],
+                    [
+                        'column'      => "pptwo.active_to",
+                        'operator'    => "IS",
+                        'value'       => null,
+                        'ao'          => 'and',
+                        'start_group' => '(',
+                        'end_group'   => null
+                    ],
+                    [
+                        'column'      => "pptwo.active_to",
+                        'operator'    => ">=",
+                        'value'       => date("Y-m-d H:i:s"),
+                        'ao'          => 'or',
+                        'start_group' => null,
+                        'end_group'   => '))'
+                    ]
+                ]);
         }
 
         if($this->container->get(Request::class)->isAdmin() == false) {
@@ -165,11 +215,11 @@ class ProductCollection extends CollectionBuilder
                     $arr = explode("AND", $args['value']);
                     $from = (float) trim($arr[0]);
                     $to = isset($arr[1]) ? (float) trim($arr[1]) : null;
-                    $this->getCollection()->andWhere('product_price.tier_price', '>=', $from);
+                    $this->getCollection()->andWhere('sale_price', '>=', $from);
                     if($to)
-                        $this->getCollection()->andWhere('product_price.tier_price', '<=', $to);
+                        $this->getCollection()->andWhere('sale_price', '<=', $to);
                 } else {
-                    $this->getCollection()->andWhere('product_price.tier_price', $args['operator'], $args['value']);
+                    $this->getCollection()->andWhere('sale_price', $args['operator'], $args['value']);
                 }
             }
         });
@@ -258,7 +308,7 @@ class ProductCollection extends CollectionBuilder
         $this->addFilter('sortBy', function($args) use ($isAdmin) {
             if($args['operator'] !== "=")
                 return;
-            $this->setSortBy($args['value']);
+            $this->setSortBy($args['value'] == "price" ? "sale_price" : $args['value']);
         });
 
         $this->addFilter('sortOrder', function($args) use ($isAdmin) {
@@ -283,7 +333,7 @@ class ProductCollection extends CollectionBuilder
                     ],
                     'sortBy' => [
                         'operator' => '=',
-                        'value' => get_config('catalog_product_list_sort_by', 'created_at')
+                        'value' => get_config('catalog_product_list_sort_by', 'product.created_at')
                     ],
                     'sortOrder' => [
                         'operator' => '=',
@@ -298,6 +348,48 @@ class ProductCollection extends CollectionBuilder
                 'total' => $this->getTotal(),
                 'currentFilter' => json_encode($filters, JSON_NUMERIC_CHECK)
             ];
+    }
+
+    public function load()
+    {
+        $setting = [
+            'page'=> $this->page ?? 1,
+            'limit'=> $this->limit ?? 20,
+            'sort_by'=> $this->sortBy,
+            'sort_order'=> $this->sortOrder
+        ];
+
+        // Visibility (For variant purpose)
+        if(!$this->container->get(Request::class)->isAdmin()) {
+            $visibleGroups = _mysql()->getTable("variant_group")->addFieldToSelect("variant_group_id")->where("visibility", "=", 1)->fetchAllAssoc();
+            $groups = [];
+            foreach ($visibleGroups as $group) {
+                $groups[] = $group['variant_group_id'];
+            }
+            $copyCollection = clone $this->getCollection();
+            $unvisibleIds = $copyCollection
+                ->setFieldToSelect("product.product_id")
+                ->addFieldToSelect("product.variant_group_id")
+                ->addFieldToSelect("SUM(product.visibility)", "sumv")
+                ->andWhere("product.variant_group_id", "IN", $groups)
+                ->groupBy("product.variant_group_id")
+                ->having("sumv", "=", 0)
+                ->fetchAssoc($setting);
+            $ids = [];
+            foreach ($unvisibleIds as $id) {
+                $ids[] = $id['product_id'];
+            }
+            if($ids)
+                $this->getCollection()
+                    ->andWhere("product.visibility", "<>", 0, "((", null)
+                    ->orWhere("product.visibility", "IS", null, null, ")")
+                    ->orWhere("product.product_id", "IN", $ids, null, ")");
+            else
+                $this->getCollection()
+                    ->andWhere("product.visibility", "<>", 0, "(")
+                    ->orWhere("product.visibility", "IS", null, null, ")");
+        }
+        return $this->getCollection()->fetchAssoc($setting);
     }
 
     public function getCollection()
@@ -327,3 +419,10 @@ class ProductCollection extends CollectionBuilder
         return count($rows);
     }
 }
+
+// Create variant_group table : Done
+// Update product table, add variant_group_id, visibility attribute : Done
+// Update trigger after remove attribute from group: Done
+// Update trigger after insert or update product: Done
+// Update order item and cart item: change column variant_specification name and add variant_group_id : Done
+//

@@ -11,6 +11,7 @@ namespace Similik\Middleware;
 use Similik\Services\Di\Container;
 use Similik\Services\Http\Request;
 use Similik\Services\Http\Response;
+use Similik\Services\MiddlewareManager;
 
 abstract class MiddlewareAbstract
 {
@@ -30,5 +31,16 @@ abstract class MiddlewareAbstract
     public function getContainer(): Container
     {
         return $this->container;
+    }
+
+
+    public function getDelegate($className, $defaultValue = null)
+    {
+        return MiddlewareManager::getDelegate($className, $defaultValue);
+    }
+
+    public function hasDelegate($className)
+    {
+        return MiddlewareManager::hasDelegate($className);
     }
 }

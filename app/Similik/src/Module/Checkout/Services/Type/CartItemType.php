@@ -72,6 +72,9 @@ class CartItemType extends ObjectType
                     'product_custom_options' => [
                         'type' => Type::listOf($container->get(ItemCustomOptionType::class))
                     ],
+                    'variant_options' => [
+                        'type' => Type::listOf($container->get(ItemVariantOptionType::class))
+                    ],
                     'total' => [
                         'type' => Type::nonNull($container->get(Price::class))
                     ],
@@ -83,7 +86,7 @@ class CartItemType extends ObjectType
                                 ->andWhere('language_id', '=', get_default_language_Id())
                                 ->fetchOneAssoc();
                             if(!preg_match('/^[\.a-zA-Z0-9\-_+]+$/', $des['seo_key']))
-                                return $container->get(Router::class)->generateUrl('product.view', ["id"=>$des['product_id']]);
+                                return $container->get(Router::class)->generateUrl('product.view', ["id"=>$item['product_id']]);
                             else
                                 return $container->get(Router::class)->generateUrl('product.view.pretty', ["slug"=>$des['seo_key']]);
                         }
