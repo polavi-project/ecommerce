@@ -33,8 +33,8 @@ $eventDispatcher->addListener(
 $eventDispatcher->addListener(
     'sorting_options',
     function ($options) {
-        $options[] = ['code' => 'price', 'name' => 'Price'];
-        $options[] = ['code' => 'created_at', 'name' => 'Created date'];
+        $options[] = ['code' => 'sale_price', 'name' => 'Price'];
+        $options[] = ['code' => 'product.created_at', 'name' => 'Created date'];
 
         return $options;
     },
