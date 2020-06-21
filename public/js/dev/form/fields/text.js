@@ -2,9 +2,22 @@ import {Error} from "./error.js"
 import {FORM_FIELD_CREATED, FORM_VALIDATED, FORM_FIELD_REMOVED, FORM_LANGUAGE_CHANGED} from "./../../event-types.js";
 
 export default function Text (props) {
-    const [value, setValue] = React.useState(props.value ? props.value : '');
+    const [value, setValue] = React.useState("");
     const [error, setError] = React.useState(undefined);
     const [isDisabled, setIsDisabled] = React.useState(false);
+    const [readOnly, setReadOnly] = React.useState(false);
+
+    React.useEffect(() => {
+        setValue(props.value ? props.value : "");
+    }, [props.value]);
+
+    React.useEffect(() => {
+        setIsDisabled(props.disabled ? props.value : false);
+    }, [props.disabled]);
+
+    React.useEffect(() => {
+        setReadOnly(props.readOnly ? props.readOnly : false);
+    }, [props.readOnly]);
 
     React.useEffect(() => {
         PubSub.publishSync(FORM_FIELD_CREATED, {...props});
@@ -47,6 +60,7 @@ export default function Text (props) {
             value={value}
             onChange={onChange}
             disabled={isDisabled}
+            readOnly={readOnly}
         />
         { props.comment &&
             <small className="form-text text-muted"><i>{props.comment}</i></small>

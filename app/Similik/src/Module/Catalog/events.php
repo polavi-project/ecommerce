@@ -12,12 +12,12 @@ use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
 use function Similik\_mysql;
+use function Similik\get_current_language_id;
 use function Similik\get_default_language_Id;
 use Similik\Module\Catalog\Services\ProductCollection;
 use Similik\Module\Catalog\Services\Type\ProductCollectionFilterType;
 use Similik\Services\Di\Container;
 use Similik\Services\Http\Request;
-use Similik\Services\Routing\Router;
 
 $eventDispatcher->addListener(
     'widget_types',
@@ -142,6 +142,48 @@ $eventDispatcher->addListener(
                 return $query->fetchAllAssoc(['sort_by'=>'qty', 'sort_order'=>'ASC']);
             }
         ];
+
+        $fields['potentialVariants'] = [
+            'type' => Type::listOf($container->get(\Similik\Module\Catalog\Services\Type\ProductType::class)),
+            'description' => "Return a list of potential variants",
+            'args' => [
+                'attributeGroupId' =>  Type::nonNull(Type::int()),
+                'name' => Type::string()
+            ],
+            'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
+                if(!$args['name'])
+                    return _mysql()->getTable("product")
+                        ->leftJoin('product_description', null, [
+                            [
+                                "column"      => "product_description.language_id",
+                                "operator"    => "=",
+                                "value"       => get_current_language_id(),
+                                "ao"          => 'and',
+                                "start_group" => null,
+                                "end_group"   => null
+                            ]
+                        ])
+                        ->where("product.group_id", "=", $args["attributeGroupId"])
+                        ->andWhere("product.variant_group_id", "IS", null)
+                        ->fetchAssoc(["limit" => 100]);
+                else
+                    return _mysql()->getTable("product")
+                        ->leftJoin('product_description', null, [
+                            [
+                                "column"      => "product_description.language_id",
+                                "operator"    => "=",
+                                "value"       => get_current_language_id(),
+                                "ao"          => 'and',
+                                "start_group" => null,
+                                "end_group"   => null
+                            ]
+                        ])
+                        ->where("product.group_id", "=", $args["attributeGroupId"])
+                        ->andWhere("product.variant_group_id", "IS", null)
+                        ->andWhere("product_description.name", "LIKE", "%{$args["name"]}%")
+                        ->fetchAssoc(["limit" => 100]);
+            }
+        ];
     },
     5
 );
@@ -207,4 +249,77 @@ $eventDispatcher->addListener('before_delete_attribute_group', function($rows) {
        if($row['attribute_group_id'] == 1)
            throw new Exception("Can not delete 'Default' attribute group");
    }
+});
+
+$eventDispatcher->addListener(
+    'filter.mutation.type',
+    function (&$fields, Container $container) {
+        $fields['unlinkVariant'] = [
+            'args' => [
+                'productId' => Type::nonNull(Type::int())
+            ],
+            'type' => new ObjectType([
+                'name'=> 'unlinkVariantOutPut',
+                'fields' => [
+                    'status' => Type::nonNull(Type::boolean()),
+                    'message'=> Type::string(),
+                    'productId' => Type::int()
+                ]
+            ]),
+            'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
+                $conn = _mysql();
+                if(
+                    $container->get(Request::class)->isAdmin() == false
+                )
+                    return ['status'=> false, 'message' => 'Permission denied'];
+                $product = $conn->getTable("product")->load($args['productId']);
+
+                if(!$product)
+                    return ['status'=> true, 'message' => 'Product does not exist'];
+
+                $conn->getTable("product")->where("product_id", "=", $args["productId"])->update(["variant_group_id"=> null, "visibility" => null]);
+                return ['status'=> true, 'productId' => $args["productId"]];
+            }
+        ];
+    },
+    5
+);
+
+// Remove product from variant group if attribute option was deleted
+$productIds = [];
+$eventDispatcher->addListener('before_delete_attribute_option',  function($affectedRows) use ($container, &$productIds) {
+    foreach ($affectedRows as $row) {
+        $stm = _mysql()
+                ->getTable('product_attribute_value_index')
+                ->addFieldToSelect("product_id")
+                ->where('attribute_id', '=', $row["attribute_id"])
+                ->andWhere('option_id', '=', $row["attribute_option_id"]);
+        $productIds = [];
+        while ($row = $stm->fetch()) {
+            $productIds[] = $row['product_id'];
+        }
+    }
+});
+
+$eventDispatcher->addListener('after_delete_attribute_option',  function($affectedRows, \Similik\Services\Db\Processor $processor) use ($container, &$productIds) {
+    foreach ($affectedRows as $row) {
+        $groupIds = [];
+        $stm = $processor->getTable("variant_group")
+            ->where("attribute_one", "=", $row["attribute_id"])
+            ->orWhere("attribute_two", "=", $row["attribute_id"])
+            ->orWhere("attribute_three", "=", $row["attribute_id"])
+            ->orWhere("attribute_four", "=", $row["attribute_id"])
+            ->orWhere("attribute_five", "=", $row["attribute_id"]);
+        while ($row = $stm->fetch()) {
+            $groupIds[] = $row['variant_group_id'];
+        }
+        if(!$groupIds || !$productIds)
+            return true;
+        $processor->getTable("product")
+            ->where("variant_group_id", "IN", $groupIds)
+            ->andWhere("product_id", "IN", $productIds)
+            ->update(["variant_group_id" => null]);
+
+        return true;
+    }
 });

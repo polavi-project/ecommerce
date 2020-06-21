@@ -1,8 +1,10 @@
 import Area from "../../../../../../../../js/production/area.js";
 import Text from "../../../../../../../../js/production/form/fields/text.js";
 import Switch from "../../../../../../../../js/production/form/fields/switch.js";
+import { ADD_APP_STATE } from "../../../../../../../../js/production/event-types.js";
 
 export default function Inventory({ data }) {
+    const dispatch = ReactRedux.useDispatch();
     const [fields] = React.useState(() => {
         return [{
             component: Switch,
@@ -11,7 +13,18 @@ export default function Inventory({ data }) {
             id: "manage_stock"
         }, {
             component: Text,
-            props: { id: "qty", formId: "product-edit-form", name: "qty", type: "text", label: "Quantity", validation_rules: ["notEmpty", "integer"], isTranslateAble: false },
+            props: {
+                id: "qty",
+                formId: "product-edit-form",
+                name: "qty",
+                type: "text",
+                label: "Quantity",
+                validation_rules: ["notEmpty", "integer"],
+                isTranslateAble: false,
+                handler: e => {
+                    dispatch({ 'type': ADD_APP_STATE, 'payload': { appState: { currentQty: e.target.value } } });
+                }
+            },
             sort_order: 20,
             id: "qty"
         }, {

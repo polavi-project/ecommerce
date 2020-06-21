@@ -6,7 +6,7 @@ import { FORM_FIELD_CREATED, FORM_VALIDATED, FORM_FIELD_REMOVED, FORM_LANGUAGE_C
 export default function MultiSelect(props) {
     const [value, setValue] = React.useState(props.value ? props.value : []);
     const [error, setError] = React.useState(undefined);
-    const [isDisabled, setIsDisabled] = React.useState(false);
+    const [isDisabled, setIsDisabled] = React.useState(props.disabled);
 
     React.useEffect(() => {
         PubSub.publishSync(FORM_FIELD_CREATED, _extends({}, props));
@@ -34,6 +34,7 @@ export default function MultiSelect(props) {
     const onChange = e => {
         let val = [...e.target.options].filter(o => o.selected).map(o => o.value);
         setValue(val);
+        if (props.handler) props.handler.call(window, e, props);
     };
 
     return React.createElement(

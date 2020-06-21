@@ -20,6 +20,7 @@ $productEditMiddleware = [
     \Similik\Module\Catalog\Middleware\Product\Edit\InventoryMiddleware::class,
     \Similik\Module\Catalog\Middleware\Product\Edit\ImagesMiddleware::class,
     \Similik\Module\Catalog\Middleware\Product\Edit\SeoMiddleware::class,
+    \Similik\Module\Catalog\Middleware\Product\Edit\VariantMiddleware::class,
     \Similik\Module\Catalog\Middleware\Product\Edit\PriceMiddleware::class,
     \Similik\Module\Catalog\Middleware\Product\Edit\CategoryMiddleware::class,
     \Similik\Module\Catalog\Middleware\Product\Edit\AttributeMiddleware::class,
@@ -32,7 +33,8 @@ $router->addAdminRoute('product.edit', 'GET', '/product/edit/{id:\d+}', $product
 $router->addAdminRoute('product.save', 'POST', '/product/save[/{id:\d+}]', [
     \Similik\Module\Catalog\Middleware\Product\Save\ValidateMiddleware::class,
     \Similik\Module\Catalog\Middleware\Product\Save\UpdateMiddleware::class,
-    \Similik\Module\Catalog\Middleware\Product\Save\CreateMiddleware::class
+    \Similik\Module\Catalog\Middleware\Product\Save\CreateMiddleware::class,
+    \Similik\Module\Catalog\Middleware\Product\Save\SaveVariantMiddleware::class
 ]);
 
 $router->addAdminRoute('product.delete', ['GET', 'POST'], '/product/delete/{id:\d+}', [
@@ -138,6 +140,8 @@ $router->addSiteRoute('category.view.pretty', 'GET', '/catalog/{slug}', $categor
 
 $productViewMiddleware = [
     \Similik\Module\Catalog\Middleware\Product\View\InitMiddleware::class,
+    \Similik\Module\Catalog\Middleware\Product\View\VariantMiddleware::class,
+    \Similik\Module\Catalog\Middleware\Product\View\VariantDetectMiddleware::class,
     \Similik\Module\Catalog\Middleware\Product\View\LayoutMiddleware::class,
     \Similik\Module\Catalog\Middleware\Product\View\PriceMiddleware::class,
     \Similik\Module\Catalog\Middleware\Product\View\GeneralInfoMiddleware::class,

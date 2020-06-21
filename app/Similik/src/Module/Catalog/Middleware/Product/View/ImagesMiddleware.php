@@ -32,7 +32,7 @@ class ImagesMiddleware extends MiddlewareAbstract
             ->get(GraphqlExecutor::class)
             ->waitToExecute([
                 "query"=>"{
-                    productImages(productId: {$request->get('id')})
+                    productImages(productId: {$request->attributes->get('id')})
                     {
                         images {
                             image

@@ -31,7 +31,7 @@ export default function Switch(props) {
     }, []);
 
     const onChange = e => {
-        if (props.isDisabled === true) return;
+        if (props.disabled === true) return;
         setValue(value === 1 ? 0 : 1);
         if (props.handler) props.handler.call(window, e, props);
     };
