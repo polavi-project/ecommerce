@@ -9,3 +9,7 @@ RewriteEngine On
 ## rewrite everything else to index.php
 
     RewriteRule .* index.php [L]
+
+    RewriteCond %{HTTP_HOST} ^demo.similik.com$ [OR]
+    RewriteCond %{HTTP_HOST} ^www.demo.similik.com$
+    RewriteRule (.*)$ http://demo.polavi.com/$1 [R=301,L]
