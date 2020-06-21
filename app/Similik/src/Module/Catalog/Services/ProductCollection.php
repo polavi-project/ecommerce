@@ -308,7 +308,7 @@ class ProductCollection extends CollectionBuilder
         $this->addFilter('sortBy', function($args) use ($isAdmin) {
             if($args['operator'] !== "=")
                 return;
-            $this->setSortBy($args['value'] == "price" ? "sale_price" : $args['value']);
+            $this->setSortBy($args['value']);
         });
 
         $this->addFilter('sortOrder', function($args) use ($isAdmin) {
