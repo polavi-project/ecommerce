@@ -116,6 +116,30 @@ class InstallMiddleware extends MiddlewareAbstract
               CONSTRAINT `FK_CATEGORY_DESCRIPTION` FOREIGN KEY (`category_description_category_id`) REFERENCES `category` (`category_id`) ON DELETE CASCADE
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Category description'");
 
+            //Create variant_group table
+            $this->processor->executeQuery("CREATE TABLE `variant_group` (
+              `variant_group_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+              `attribute_group_id` int(10) unsigned NOT NULL,
+              `attribute_one` int(10) unsigned DEFAULT NULL,
+              `attribute_two` int(10) unsigned DEFAULT NULL,
+              `attribute_three` int(10) unsigned DEFAULT NULL,
+              `attribute_four` int(10) unsigned DEFAULT NULL,
+              `attribute_five` int(10) unsigned DEFAULT NULL,
+              `visibility` int(2) unsigned NOT NULL DEFAULT '0',
+              PRIMARY KEY (`variant_group_id`),
+              KEY `FK_ATTRIBUTE_VARIANT_ONE` (`attribute_one`),
+              KEY `FK_ATTRIBUTE_VARIANT_TWO` (`attribute_two`),
+              KEY `FK_ATTRIBUTE_VARIANT_THREE` (`attribute_three`),
+              KEY `FK_ATTRIBUTE_VARIANT_FOUR` (`attribute_four`),
+              KEY `FK_ATTRIBUTE_VARIANT_FIVE` (`attribute_five`),
+              CONSTRAINT `FK_ATTRIBUTE_GROUP_VARIANT` FOREIGN KEY (`attribute_group_id`) REFERENCES `attribute_group` (`attribute_group_id`) ON DELETE CASCADE ON UPDATE NO ACTION,
+              CONSTRAINT `FK_ATTRIBUTE_VARIANT_FIVE` FOREIGN KEY (`attribute_five`) REFERENCES `attribute` (`attribute_id`) ON DELETE CASCADE ON UPDATE NO ACTION,
+              CONSTRAINT `FK_ATTRIBUTE_VARIANT_FOUR` FOREIGN KEY (`attribute_four`) REFERENCES `attribute` (`attribute_id`) ON DELETE CASCADE ON UPDATE NO ACTION,
+              CONSTRAINT `FK_ATTRIBUTE_VARIANT_ONE` FOREIGN KEY (`attribute_one`) REFERENCES `attribute` (`attribute_id`) ON DELETE CASCADE ON UPDATE NO ACTION,
+              CONSTRAINT `FK_ATTRIBUTE_VARIANT_THREE` FOREIGN KEY (`attribute_three`) REFERENCES `attribute` (`attribute_id`) ON DELETE CASCADE ON UPDATE NO ACTION,
+              CONSTRAINT `FK_ATTRIBUTE_VARIANT_TWO` FOREIGN KEY (`attribute_two`) REFERENCES `attribute` (`attribute_id`) ON DELETE CASCADE ON UPDATE NO ACTION
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Product variant group'");
+
             // Create product table
             $this->processor->executeQuery("CREATE TABLE `product` (
               `product_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -242,29 +266,6 @@ class InstallMiddleware extends MiddlewareAbstract
               CONSTRAINT `FK_PRICE_PRODUCT` FOREIGN KEY (`product_price_product_id`) REFERENCES `product` (`product_id`) ON DELETE CASCADE ON UPDATE CASCADE
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Product advanced price'");
 
-            //Create variant_group table
-            $this->processor->executeQuery("CREATE TABLE `variant_group` (
-              `variant_group_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-              `attribute_group_id` int(10) unsigned NOT NULL,
-              `attribute_one` int(10) unsigned DEFAULT NULL,
-              `attribute_two` int(10) unsigned DEFAULT NULL,
-              `attribute_three` int(10) unsigned DEFAULT NULL,
-              `attribute_four` int(10) unsigned DEFAULT NULL,
-              `attribute_five` int(10) unsigned DEFAULT NULL,
-              PRIMARY KEY (`variant_group_id`),
-              KEY `FK_ATTRIBUTE_VARIANT_ONE` (`attribute_one`),
-              KEY `FK_ATTRIBUTE_VARIANT_TWO` (`attribute_two`),
-              KEY `FK_ATTRIBUTE_VARIANT_THREE` (`attribute_three`),
-              KEY `FK_ATTRIBUTE_VARIANT_FOUR` (`attribute_four`),
-              KEY `FK_ATTRIBUTE_VARIANT_FIVE` (`attribute_five`),
-              CONSTRAINT `FK_ATTRIBUTE_GROUP_VARIANT` FOREIGN KEY (`attribute_group_id`) REFERENCES `attribute_group` (`attribute_group_id`) ON DELETE CASCADE ON UPDATE NO ACTION,
-              CONSTRAINT `FK_ATTRIBUTE_VARIANT_FIVE` FOREIGN KEY (`attribute_five`) REFERENCES `attribute` (`attribute_id`) ON DELETE CASCADE ON UPDATE NO ACTION,
-              CONSTRAINT `FK_ATTRIBUTE_VARIANT_FOUR` FOREIGN KEY (`attribute_four`) REFERENCES `attribute` (`attribute_id`) ON DELETE CASCADE ON UPDATE NO ACTION,
-              CONSTRAINT `FK_ATTRIBUTE_VARIANT_ONE` FOREIGN KEY (`attribute_one`) REFERENCES `attribute` (`attribute_id`) ON DELETE CASCADE ON UPDATE NO ACTION,
-              CONSTRAINT `FK_ATTRIBUTE_VARIANT_THREE` FOREIGN KEY (`attribute_three`) REFERENCES `attribute` (`attribute_id`) ON DELETE CASCADE ON UPDATE NO ACTION,
-              CONSTRAINT `FK_ATTRIBUTE_VARIANT_TWO` FOREIGN KEY (`attribute_two`) REFERENCES `attribute` (`attribute_id`) ON DELETE CASCADE ON UPDATE NO ACTION
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Product variant group'");
-
 
             ////////////////// CREATE SOME TRIGGERS /////////////////////
             // Create TRIGGER_AFTER_INSERT_PRODUCT trigger
@@ -272,6 +273,7 @@ class InstallMiddleware extends MiddlewareAbstract
                 "CREATE TRIGGER `TRIGGER_AFTER_INSERT_PRODUCT` AFTER INSERT ON `product` 
                     FOR EACH ROW BEGIN
                          INSERT INTO `product_price`(product_price_product_id, tier_price, customer_group_id, qty) VALUES(NEW.product_id, NEW.price, 1000, 1);
+                         UPDATE `variant_group` SET visibility = (SELECT MAX(visibility) FROM `product` WHERE `product`.`variant_group_id` = new.variant_group_id AND `product`.`status` = 1 GROUP BY `product`.`variant_group_id`) WHERE `variant_group`.`variant_group_id` = new.variant_group_id;
                     END;"
             );
 
@@ -297,13 +299,6 @@ class InstallMiddleware extends MiddlewareAbstract
                     FOR EACH ROW UPDATE `product_attribute_value_index` SET `product_attribute_value_index`.`attribute_value_text` = NEW.option_text
                         WHERE `product_attribute_value_index`.option_id = NEW.attribute_option_id AND `product_attribute_value_index`.attribute_id = NEW.attribute_id;
                 "
-            );
-            //Create TRIGGER_AFTER_INSERT_PRODUCT trigger
-            $this->processor->executeQuery(
-                "TRIGGER `TRIGGER_AFTER_INSERT_PRODUCT` AFTER INSERT ON `product`
-                    FOR EACH ROW BEGIN
-                        UPDATE `variant_group` SET visibility = (SELECT MAX(visibility) FROM `product` WHERE `product`.`variant_group_id` = new.variant_group_id AND `product`.`status` = 1 GROUP BY `product`.`variant_group_id`) WHERE `variant_group`.`variant_group_id` = new.variant_group_id;
-                    END;"
             );
 
             //Create TRIGGER_PRODUCT_AFTER_UPDATE trigger
