@@ -367,27 +367,33 @@ class ProductCollection extends CollectionBuilder
                 $groups[] = $group['variant_group_id'];
             }
             $copyCollection = clone $this->getCollection();
-            $unvisibleIds = $copyCollection
-                ->setFieldToSelect("product.product_id")
-                ->addFieldToSelect("product.variant_group_id")
-                ->addFieldToSelect("SUM(product.visibility)", "sumv")
-                ->andWhere("product.variant_group_id", "IN", $groups)
-                ->groupBy("product.variant_group_id")
-                ->having("sumv", "=", 0)
-                ->fetchAssoc($setting);
-            $ids = [];
-            foreach ($unvisibleIds as $id) {
-                $ids[] = $id['product_id'];
-            }
-            if($ids)
-                $this->getCollection()
-                    ->andWhere("product.visibility", "<>", 0, "((", null)
-                    ->orWhere("product.visibility", "IS", null, null, ")")
-                    ->orWhere("product.product_id", "IN", $ids, null, ")");
-            else
+            if($groups) {
+                $unvisibleIds = $copyCollection
+                    ->setFieldToSelect("product.product_id")
+                    ->addFieldToSelect("product.variant_group_id")
+                    ->addFieldToSelect("SUM(product.visibility)", "sumv")
+                    ->andWhere("product.variant_group_id", "IN", $groups)
+                    ->groupBy("product.variant_group_id")
+                    ->having("sumv", "=", 0)
+                    ->fetchAssoc($setting);
+                $ids = [];
+                foreach ($unvisibleIds as $id) {
+                    $ids[] = $id['product_id'];
+                }
+                if ($ids)
+                    $this->getCollection()
+                        ->andWhere("product.visibility", "<>", 0, "((", null)
+                        ->orWhere("product.visibility", "IS", null, null, ")")
+                        ->orWhere("product.product_id", "IN", $ids, null, ")");
+                else
+                    $this->getCollection()
+                        ->andWhere("product.visibility", "<>", 0, "(")
+                        ->orWhere("product.visibility", "IS", null, null, ")");
+            } else {
                 $this->getCollection()
                     ->andWhere("product.visibility", "<>", 0, "(")
                     ->orWhere("product.visibility", "IS", null, null, ")");
+            }
         }
         return $this->getCollection()->fetchAssoc($setting);
     }
