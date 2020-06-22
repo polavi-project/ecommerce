@@ -92,9 +92,9 @@ $container[\Similik\Module\Catalog\Services\Type\ProductCollectionFilterType::cl
     return new \Similik\Module\Catalog\Services\Type\ProductCollectionFilterType($container);
 };
 
-$container[\Similik\Module\Catalog\Services\ProductCollection::class] =  function() use ($container) {
+$container[\Similik\Module\Catalog\Services\ProductCollection::class] = $container->factory(function() use ($container) {
     return new \Similik\Module\Catalog\Services\ProductCollection($container);
-};
+});
 
 $container[\Similik\Module\Catalog\Services\Type\CategoryCollectionType::class] =  function() use ($container) {
     return new \Similik\Module\Catalog\Services\Type\CategoryCollectionType($container);
