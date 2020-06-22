@@ -19,7 +19,7 @@ class GoogleAnalyticsTrackingMiddleware extends MiddlewareAbstract
 {
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
-        $code = "UA-158558572-1";
+        $code = "UA-170096285-2";
         if(
             !$request->isAjax() &&
             $request->attributes->get('_matched_route') != 'graphql.api' &&
