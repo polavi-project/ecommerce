@@ -1,10 +1,10 @@
-# Similik
+# Polavi
 
 A Simple eCommerce platform using PHP, Mysql and ReactJs.
 
 ## Getting Started
 
-Similik is a simple eCommerce platform. Similik uses PHP and Mysql as backend languages and ReactJS as frontend language.
+Polavi is a simple eCommerce platform. Polavi uses PHP and Mysql as backend languages and ReactJS as frontend language.
 ### Middleware system
 ```php
 declare(strict_types=1);
@@ -95,16 +95,16 @@ $this->getContainer()
     });
 ```
 ### Demo
-[Demo store](https://www.similik.com/demo/)
+[Demo store](https://polavi.com/demo/)
 
 ### Prerequisites
 
 Apache server, PHP 7.3, Mysql 5.6 and 1 free SendGrid account for transactional email
-Please check [here](https://www.similik.com/docs/system-prerequisites) for more detail.
+Please check [here](https://polavi.com/docs/system-prerequisites) for more detail.
 
 ### Installing
 
-Please check [here](https://www.similik.com/docs/installation-guide) for more detail.
+Please check [here](https://polavi.com/docs/installation-guide) for more detail.
 
 
 ## Built With
@@ -117,7 +117,7 @@ Please check [here](https://www.similik.com/docs/installation-guide) for more de
 ## Contributing
 Contributions are welcome and appreciated. I am looking for any feedback or suggestion to improve this project. You can:
 * Submit a bug/issue or suggestion
-* Use [this feedback page](https://www.similik.com/feedback) if you have any idea or feedback about this project
+* Use [this feedback page](https://polavi.com/feedback) if you have any idea or feedback about this project
 * Submit a PR
 
 ## Support / Discussion
