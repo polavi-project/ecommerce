@@ -12,4 +12,4 @@ RewriteEngine On
 
     RewriteCond %{HTTP_HOST} ^demo.similik.com$ [OR]
     RewriteCond %{HTTP_HOST} ^www.demo.similik.com$
-    RewriteRule (.*)$ http://demo.polavi.com/$1 [R=301,L]
+    RewriteRule (.*)$ https://demo.polavi.com/$1 [R=301,L]
