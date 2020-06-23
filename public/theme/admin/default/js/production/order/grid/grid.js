@@ -88,7 +88,7 @@ function NumberColumnHeader({ areaProps, filters, updateFilter }) {
 
     const onKeyPress = e => {
         if (e.key === 'Enter') {
-            if (e.target.value == "") removeFilter("order_number");else updateFilter("order_number", "=", `%${e.target.value}%`);
+            if (e.target.value == "") removeFilter("order_number");else updateFilter("order_number", "LIKE", `%${e.target.value}%`);
         }
     };
 
