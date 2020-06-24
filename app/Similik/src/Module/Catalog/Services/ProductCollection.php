@@ -42,9 +42,11 @@ class ProductCollection extends CollectionBuilder
             ]);
 
         // Display out of stock or not
-        $setting = get_config('catalog_out_of_stock_display', 0);
-        if($setting == 0) {
-            $collection->where('product.manage_stock', '=', 0)->orWhere('product.qty', '>', 0, '(')->andWhere('product.stock_availability', '=', 1, null, ')');
+        if(!$container->get(Request::class)->isAdmin()) {
+            $setting = get_config('catalog_out_of_stock_display', 0);
+            if($setting == 0) {
+                $collection->where('product.manage_stock', '=', 0, "(")->orWhere('product.qty', '>', 0, '(')->andWhere('product.stock_availability', '=', 1, null, '))');
+            }
         }
         if(!$container->get(Request::class)->isAdmin()) {
             $customerGroupId = $container->get(Request::class)->getCustomer()->isLoggedIn() ? $container->get(Request::class)->getCustomer()->getData('group_id') ?? 1 : 999;
