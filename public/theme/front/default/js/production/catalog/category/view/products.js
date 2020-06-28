@@ -6,8 +6,8 @@ export default function Products(props) {
     return React.createElement(
         "div",
         { className: "uk-width-1-1" },
-        props.with_sorting === true && React.createElement(Sorting, { sorting_options: props.sorting_options }),
+        props.with_sorting === true && React.createElement(Sorting, { sortingOptions: props.sorting_options, currentSortBy: props.currentSortBy, currentSortOrder: props.currentSortOrder }),
         React.createElement(ProductList, { products: props.products }),
-        props.with_pagination === true && React.createElement(Pagination, { total: props.total })
+        props.with_pagination === true && React.createElement(Pagination, { total: props.total, limit: props.limit, currentPage: props.currentPage })
     );
 }

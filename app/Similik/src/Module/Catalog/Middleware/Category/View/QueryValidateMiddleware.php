@@ -27,16 +27,33 @@ class QueryValidateMiddleware extends MiddlewareAbstract
      */
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
-        $filter = trim($request->query->get("p_query", ""));
-        if($filter == "")
+        $queries = $request->query->all();
+        unset($queries["ajax"]);
+        $catId = $request->attributes->get('id');
+        if(!$queries) {
+            $request->attributes->set("filters", "[{key: \"category\", operator: \"=\", value: \"$catId\"}]");
             return $delegate;
+        }
 
-        $query = "{productCollection {$filter} {products {product_id}}}";
+        $filters = ["{key: \"category\", operator: \"=\", value: \"$catId\"}"];
+        foreach ($queries as $key => $val) {
+            if (strpos($val, ',') !== false) {
+                $filters[] = "{key: \"$key\", operator: \"IN\", value: \"$val\"}";
+            } else if(strpos($val, '-') !== false) {
+                $filters[] = "{key: \"$key\", operator: \"BETWEEN\", value: \"$val\"}";
+            } else {
+                $filters[] = "{key: \"$key\", operator: \"=\", value: \"$val\"}";
+            }
+        }
+
+        $filters = "[" . implode(",", $filters) . "]";
+        $query = "{productCollection (filters: $filters) {products {product_id}}}";
         try {
-            $documentNode = Parser::parse(new Source(str_replace("<FILTER>", "(filter: { category : {operator: \"IN\" value: \"{$request->attributes->get('id')}\"}})", $query) ?: '', 'GraphQL'));
+            $documentNode = Parser::parse(new Source($query, 'GraphQL'));
             $errors = DocumentValidator::validate($this->getContainer()->get(Schema::class), $documentNode);
             if(!empty($errors))
                 throw new \Exception("Query is invalid. Need to use the root one");
+            $request->attributes->set("filters", $filters);
 
             return $delegate;
         } catch (\Exception $e) {

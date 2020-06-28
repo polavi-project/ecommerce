@@ -75,9 +75,7 @@ class QueryType extends ObjectType
                     'type' => $container->get(ProductCollectionType::class),
                     'description' => "Return list of products and total count",
                     'args' => [
-                        'filter' =>  [
-                            'type' => $container->get(ProductCollectionFilterType::class)
-                        ]
+                        'filters' =>  Type::listOf($container->get(FilterFieldType::class))
                     ],
                     'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
 //                        if($container->get(Request::class)->isAdmin() == false)

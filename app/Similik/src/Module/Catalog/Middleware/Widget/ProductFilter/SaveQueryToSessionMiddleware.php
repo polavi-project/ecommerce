@@ -22,6 +22,7 @@ class SaveQueryToSessionMiddleware extends MiddlewareAbstract
         // This is for category page, we will do it for search page later
         $request->getSession()->set("productCollectionQuery", [
             "category" => [
+                "key" => "category",
                 "operator" => "IN",
                 "value" => $request->attributes->get("id")
             ]

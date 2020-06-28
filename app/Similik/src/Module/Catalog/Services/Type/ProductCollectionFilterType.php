@@ -33,8 +33,8 @@ class ProductCollectionFilterType extends InputObjectType
                     'category' => $container->get(FilterFieldType::class),
                     'limit' => $container->get(FilterFieldType::class),
                     'page' => $container->get(FilterFieldType::class),
-                    'sortBy' => $container->get(FilterFieldType::class),
-                    'sortOrder' => $container->get(FilterFieldType::class)
+                    'sort-by' => $container->get(FilterFieldType::class),
+                    'sort-order' => $container->get(FilterFieldType::class)
                 ];
                 $conn = _mysql();
                 $tmp = $conn->getTable('attribute')

@@ -275,8 +275,8 @@ class Table
      */
     public function andWhere($column, $operator, $value, $startGroup = false, $endGroup = false)
     {
-        if(strpos($column, '.') === false)
-            $column = "`{$this->getTable()}`.{$column}";
+//        if(strpos($column, '.') === false)
+//            $column = "`{$this->getTable()}`.{$column}";
         if(is_array($value))
             foreach($value as $key=>$val) {
                 $value['binding' . _unique_number()] = $val;
@@ -299,8 +299,8 @@ class Table
 
     public function orWhere($column, $operator, $value, $startGroup = false, $endGroup = false)
     {
-        if(strpos($column, '.') === false)
-            $column = "`{$this->getTable()}`.{$column}";
+//        if(strpos($column, '.') === false)
+//            $column = "`{$this->getTable()}`.{$column}";
         if(is_array($value))
             foreach($value as $key=>$val) {
                 $value['binding' . _unique_number()] = $val;
@@ -539,7 +539,7 @@ class Table
             'start_group' => $startGroup,
             'end_group'   => $endGroup
         ];
-        $this->setBinding(str_ireplace(["`", "'", "."], ['', '', "_"], $column) . "_0", $operator, $value);
+        $this->setBinding(str_ireplace(["`", "'", "."], ['', '', "_"], $column) . "_" . (count($this->having) - 1), $operator, $value);
 
         return $this;
     }

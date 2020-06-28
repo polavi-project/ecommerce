@@ -1,15 +1,13 @@
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
 import { Fetch } from "../../../../../../../../js/production/fetch.js";
 import { buildFilterToQuery } from "./buildFilterToQuery.js";
 
-export default function Sorting({ sorting_options = [] }) {
+export default function Sorting({ sortingOptions = [], currentSortOrder, currentSortBy }) {
     const filters = ReactRedux.useSelector(state => {
         return _.get(state, 'appState.productCollectionFilter');
     });
     const sortByRef = React.useRef("");
     React.useEffect(() => {
-        sortByRef.current.value = _.get(filters, "sortBy.value");
+        sortByRef.current.value = currentSortBy;
     });
     const currentUrl = ReactRedux.useSelector(state => {
         return _.get(state, 'appState.currentUrl');
@@ -17,27 +15,22 @@ export default function Sorting({ sorting_options = [] }) {
 
     const onChangeSort = e => {
         e.preventDefault();
-        let url = new URL(currentUrl);
-        url.searchParams.set('query', buildFilterToQuery(_extends({}, filters, { sortBy: { operator: "=", value: sortByRef.current.value } })));
-        if (_.get(filters, 'sortOrder.value') === "ASC") {
-            Fetch(url, true, "GET");
-        } else Fetch(url, true, "GET");
+        if (currentSortOrder === "ASC") {
+            Fetch(buildFilterToQuery(currentUrl, [...filters, ...[{ key: "sort-by", operator: "=", value: sortByRef.current.value }]]), true, "GET");
+        } else Fetch(buildFilterToQuery(currentUrl, [...filters, ...[{ key: "sort-by", operator: "=", value: sortByRef.current.value }]]), true, "GET");
     };
 
     const onChangeDirection = e => {
         e.preventDefault();
-        let url = new URL(currentUrl);
 
-        if (_.get(filters, 'sortOrder.value') === "ASC") {
-            url.searchParams.set('query', buildFilterToQuery(_extends({}, filters, { sortOrder: { operator: "=", value: "DESC" } })));
-            Fetch(url, true, "GET");
+        if (currentSortOrder === "ASC") {
+            Fetch(buildFilterToQuery(currentUrl, [...filters, ...[{ key: "sort-order", operator: "=", value: "DESC" }]]), true, "GET");
         } else {
-            url.searchParams.set('query', buildFilterToQuery(_extends({}, filters, { sortOrder: { operator: "=", value: "ASC" } })));
-            Fetch(url, true, "GET");
+            Fetch(buildFilterToQuery(currentUrl, [...filters, ...[{ key: "sort-order", operator: "=", value: "ASC" }]]), true, "GET");
         }
     };
 
-    if (sorting_options.length === 0) return null;
+    if (sortingOptions.length === 0) return null;
 
     return React.createElement(
         "div",
@@ -66,7 +59,7 @@ export default function Sorting({ sorting_options = [] }) {
                     { value: "", disabled: true },
                     "Sort product"
                 ),
-                sorting_options.map((s, i) => {
+                sortingOptions.map((s, i) => {
                     return React.createElement(
                         "option",
                         { value: s.code, key: i },
@@ -80,7 +73,7 @@ export default function Sorting({ sorting_options = [] }) {
                 React.createElement(
                     "a",
                     { onClick: e => onChangeDirection(e) },
-                    React.createElement("span", { "uk-icon": _.get(filters, 'sortOrder.value') === "DESC" ? "icon: arrow-up; ratio: 1" : "icon: arrow-down; ratio: 1" })
+                    React.createElement("span", { "uk-icon": currentSortOrder === "DESC" ? "icon: arrow-up; ratio: 1" : "icon: arrow-down; ratio: 1" })
                 )
             )
         )
