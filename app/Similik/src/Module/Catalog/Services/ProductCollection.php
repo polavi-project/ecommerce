@@ -188,7 +188,7 @@ class ProductCollection extends CollectionBuilder
         $this->addFilter('id', function($args) use($isAdmin) {
             if($isAdmin == true) {
                 if($args['operator'] == "BETWEEN") {
-                    $arr = explode("AND", $args['value']);
+                    $arr = explode("-", $args['value']);
                     $from = (float) trim($arr[0]);
                     $to = isset($arr[1]) ? (float) trim($arr[1]) : null;
                     $this->getCollection()->andWhere('product.product_id', '>=', $from);
@@ -203,7 +203,7 @@ class ProductCollection extends CollectionBuilder
         $this->addFilter('price', function($args) use($isAdmin) {
             if($isAdmin == true) {
                 if($args['operator'] == "BETWEEN") {
-                    $arr = explode("AND", $args['value']);
+                    $arr = explode("-", $args['value']);
                     $from = (float) trim($arr[0]);
                     $to = isset($arr[1]) ? (float) trim($arr[1]) : null;
                     $this->getCollection()->andWhere('product.price', '>=', $from);
@@ -214,14 +214,14 @@ class ProductCollection extends CollectionBuilder
                 }
             } else {
                 if($args['operator'] == "BETWEEN") {
-                    $arr = explode("AND", $args['value']);
+                    $arr = explode("-", $args['value']);
                     $from = (float) trim($arr[0]);
                     $to = isset($arr[1]) ? (float) trim($arr[1]) : null;
-                    $this->getCollection()->andWhere('sale_price', '>=', $from);
+                    $this->getCollection()->andHaving('sale_price', '>=', $from);
                     if($to)
-                        $this->getCollection()->andWhere('sale_price', '<=', $to);
+                        $this->getCollection()->andHaving('sale_price', '<=', $to);
                 } else {
-                    $this->getCollection()->andWhere('sale_price', $args['operator'], $args['value']);
+                    $this->getCollection()->andHaving('sale_price', $args['operator'], $args['value']);
                 }
             }
         });
@@ -230,7 +230,7 @@ class ProductCollection extends CollectionBuilder
             if($isAdmin == false)
                 return;
             if($args['operator'] == "BETWEEN") {
-                $arr = explode("AND", $args['value']);
+                $arr = explode("-", $args['value']);
                 $from = (int) trim($arr[0]);
                 $to = isset($arr[1]) ? (int) trim($arr[1]) : null;
                 $this->getCollection()->andWhere('product.qty', '>=', $from);
@@ -257,6 +257,15 @@ class ProductCollection extends CollectionBuilder
                 $stm = _mysql()
                     ->getTable('product_category')
                     ->where('category_id', 'IN', $ids);
+                $productIds = [];
+                while ($row = $stm->fetch()) {
+                    $productIds[] = $row['product_id'];
+                }
+                $this->getCollection()->where('product.product_id', 'IN', $productIds);
+            } else if($args['operator'] == "=") {
+                $stm = _mysql()
+                    ->getTable('product_category')
+                    ->where('category_id', '=', $args['value']);
                 $productIds = [];
                 while ($row = $stm->fetch()) {
                     $productIds[] = $row['product_id'];
@@ -291,6 +300,15 @@ class ProductCollection extends CollectionBuilder
                         $productIds[] = $row['product_id'];
                     }
                     $this->getCollection()->andWhere('product.product_id', 'IN', $productIds);
+                } else {
+                    $stm = $conn->getTable('product_attribute_value_index')
+                        ->addFieldToSelect('product_id')
+                        ->where('option_id', '=', $args['value']);
+                    $productIds = [];
+                    while ($row = $stm->fetch()) {
+                        $productIds[] = $row['product_id'];
+                    }
+                    $this->getCollection()->andWhere('product.product_id', 'IN', $productIds);
                 }
             });
         }
@@ -307,13 +325,13 @@ class ProductCollection extends CollectionBuilder
             $this->setLimit((int)$args['value']);
         });
 
-        $this->addFilter('sortBy', function($args) use ($isAdmin) {
+        $this->addFilter('sort-by', function($args) use ($isAdmin) {
             if($args['operator'] !== "=")
                 return;
             $this->setSortBy($args['value']);
         });
 
-        $this->addFilter('sortOrder', function($args) use ($isAdmin) {
+        $this->addFilter('sort-order', function($args) use ($isAdmin) {
             if($args['operator'] !== "=")
                 return;
             $this->setSortOrder($args['value']);
@@ -322,28 +340,10 @@ class ProductCollection extends CollectionBuilder
 
     public function getData($rootValue, $args, Container $container, ResolveInfo $info)
     {
-        $filters = $args['filter'] ?? [];
-        if($container->get(Request::class)->isAdmin() == false)
-            $filters = $filters + [
-                    'page' => [
-                        'operator' => '=',
-                        'value' => 1
-                    ],
-                    'limit' => [
-                        'operator' => '=',
-                        'value' => get_config('catalog_product_list_limit', 50)
-                    ],
-                    'sortBy' => [
-                        'operator' => '=',
-                        'value' => get_config('catalog_product_list_sort_by', 'product.created_at')
-                    ],
-                    'sortOrder' => [
-                        'operator' => '=',
-                        'value' => get_config('catalog_product_list_sort_order', 'DESC')
-                    ]
-                ];
+        $filters = $args['filters'] ?? [];
+
         foreach ($filters as $key => $arg)
-            $this->applyFilter($key, $arg);
+            $this->applyFilter($arg["key"], $arg);
 
         return [
                 'products' => $this->load(),
@@ -356,9 +356,9 @@ class ProductCollection extends CollectionBuilder
     {
         $setting = [
             'page'=> $this->page ?? 1,
-            'limit'=> $this->limit ?? 20,
-            'sort_by'=> $this->sortBy,
-            'sort_order'=> $this->sortOrder
+            'limit'=> $this->limit ?? get_config('catalog_product_list_limit', 20),
+            'sort_by'=> $this->sortBy ?? get_config('catalog_product_list_sort_by', 'product.created_at'),
+            'sort_order'=> $this->sortOrder ?? get_config('catalog_product_list_sort_order', 'DESC')
         ];
 
         // Visibility (For variant purpose)
@@ -371,8 +371,6 @@ class ProductCollection extends CollectionBuilder
             $copyCollection = clone $this->getCollection();
             if($groups) {
                 $unvisibleIds = $copyCollection
-                    ->setFieldToSelect("product.product_id")
-                    ->addFieldToSelect("product.variant_group_id")
                     ->addFieldToSelect("SUM(product.visibility)", "sumv")
                     ->andWhere("product.variant_group_id", "IN", $groups)
                     ->groupBy("product.variant_group_id")
@@ -407,13 +405,53 @@ class ProductCollection extends CollectionBuilder
 
     public function getProductIdArray($rootValue, $args, Container $container, ResolveInfo $info)
     {
-        $filters = $args['filter'] ?? [];
+        $filters = $args['filters'] ?? [];
         foreach ($filters as $key => $arg)
             $this->applyFilter($key, $arg);
 
-        $collection = clone $this->collection;
+        $setting = [
+            'page'=> $this->page ?? 1,
+            'limit'=> $this->limit ?? get_config('catalog_product_list_limit', 20),
+            'sort_by'=> $this->sortBy ?? get_config('catalog_product_list_sort_by', 'product.created_at'),
+            'sort_order'=> $this->sortOrder ?? get_config('catalog_product_list_sort_order', 'DESC')
+        ];
+
+        // Visibility (For variant purpose)
+        if(!$this->container->get(Request::class)->isAdmin()) {
+            $visibleGroups = _mysql()->getTable("variant_group")->addFieldToSelect("variant_group_id")->where("visibility", "=", 1)->fetchAllAssoc();
+            $groups = [];
+            foreach ($visibleGroups as $group) {
+                $groups[] = $group['variant_group_id'];
+            }
+            if($groups) {
+                $c = clone $this->collection;
+                $unvisibleIds = $c
+                    ->addFieldToSelect("SUM(product.visibility)", "sumv")
+                    ->andWhere("product.variant_group_id", "IN", $groups)
+                    ->groupBy("product.variant_group_id")
+                    ->having("sumv", "=", 0)
+                    ->fetchAssoc($setting);
+                $ids = [];
+                foreach ($unvisibleIds as $id) {
+                    $ids[] = $id['product_id'];
+                }
+                if ($ids)
+                    $this->getCollection()
+                        ->andWhere("product.visibility", "<>", 0, "((", null)
+                        ->orWhere("product.visibility", "IS", null, null, ")")
+                        ->orWhere("product.product_id", "IN", $ids, null, ")");
+                else
+                    $this->getCollection()
+                        ->andWhere("product.visibility", "<>", 0, "(")
+                        ->orWhere("product.visibility", "IS", null, null, ")");
+            } else {
+                $this->getCollection()
+                    ->andWhere("product.visibility", "<>", 0, "(")
+                    ->orWhere("product.visibility", "IS", null, null, ")");
+            }
+        }
         $ids = [];
-        while ($row = $collection->setFieldToSelect("product.product_id")->fetch()) {
+        while ($row = $this->getCollection()->setFieldToSelect("product.product_id")->fetch()) {
             $ids[] = $row['product_id'];
         }
 
@@ -423,14 +461,48 @@ class ProductCollection extends CollectionBuilder
     protected function getTotal()
     {
         $collection = clone $this->collection;
-        $rows = $collection->setFieldToSelect("product.product_id")->fetchAllAssoc();
-        return count($rows);
+        $setting = [
+            'page'=> $this->page ?? 1,
+            'limit'=> $this->limit ?? get_config('catalog_product_list_limit', 20),
+            'sort_by'=> $this->sortBy ?? get_config('catalog_product_list_sort_by', 'product.created_at'),
+            'sort_order'=> $this->sortOrder ?? get_config('catalog_product_list_sort_order', 'DESC')
+        ];
+
+        // Visibility (For variant purpose)
+        if(!$this->container->get(Request::class)->isAdmin()) {
+            $visibleGroups = _mysql()->getTable("variant_group")->addFieldToSelect("variant_group_id")->where("visibility", "=", 1)->fetchAllAssoc();
+            $groups = [];
+            foreach ($visibleGroups as $group) {
+                $groups[] = $group['variant_group_id'];
+            }
+            if($groups) {
+                $c = clone $this->collection;
+                $unvisibleIds = $c
+                    ->addFieldToSelect("SUM(product.visibility)", "sumv")
+                    ->andWhere("product.variant_group_id", "IN", $groups)
+                    ->groupBy("product.variant_group_id")
+                    ->having("sumv", "=", 0)
+                    ->fetchAssoc($setting);
+                $ids = [];
+                foreach ($unvisibleIds as $id) {
+                    $ids[] = $id['product_id'];
+                }
+                if ($ids)
+                    $collection
+                        ->andWhere("product.visibility", "<>", 0, "((", null)
+                        ->orWhere("product.visibility", "IS", null, null, ")")
+                        ->orWhere("product.product_id", "IN", $ids, null, ")");
+                else
+                    $collection
+                        ->andWhere("product.visibility", "<>", 0, "(")
+                        ->orWhere("product.visibility", "IS", null, null, ")");
+            } else {
+                $collection
+                    ->andWhere("product.visibility", "<>", 0, "(")
+                    ->orWhere("product.visibility", "IS", null, null, ")");
+            }
+        }
+        $row = $collection->addFieldToSelect("COUNT(*)", "total")->fetchOneAssoc();
+        return $row["total"] ?? 0;
     }
 }
-
-// Create variant_group table : Done
-// Update product table, add variant_group_id, visibility attribute : Done
-// Update trigger after remove attribute from group: Done
-// Update trigger after insert or update product: Done
-// Update order item and cart item: change column variant_specification name and add variant_group_id : Done
-//

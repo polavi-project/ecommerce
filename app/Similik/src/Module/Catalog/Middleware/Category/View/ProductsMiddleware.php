@@ -8,9 +8,13 @@ declare(strict_types=1);
 
 namespace Similik\Module\Catalog\Middleware\Category\View;
 
+use GraphQL\Language\Parser;
+use GraphQL\Language\Source;
 use function Similik\_mysql;
+use function Similik\array_find;
 use function Similik\create_mutable_var;
 use function Similik\generate_url;
+use function Similik\get_config;
 use function Similik\get_js_file_url;
 use Similik\Module\Catalog\Services\ProductCollection;
 use Similik\Module\Graphql\Services\GraphqlExecutor;
@@ -33,7 +37,7 @@ class ProductsMiddleware extends MiddlewareAbstract
 
         $query = create_mutable_var("product_list_query", <<< QUERY
                     {
-                        productCollection <FILTER> {
+                        productCollection (filters: <FILTER>) {
                                 products {
                                     product_id
                                     name
@@ -51,21 +55,8 @@ class ProductsMiddleware extends MiddlewareAbstract
 QUERY
         );
 
-        if(trim($request->query->get("query", "")) !== "")
-            $query = str_replace("<FILTER>", trim($request->query->get("query", "")), $query);
-        else
-            $query = str_replace("<FILTER>", "", $query);
+        $query = str_replace("<FILTER>", trim($request->attributes->get("filters", "")), $query);
 
-        // Apply category filter in advanced
-        $stm = _mysql()
-            ->getTable('product_category')
-            ->addFieldToSelect("product_id")
-            ->where('category_id', '=', $request->attributes->get('id'));
-        $productIds = [];
-        while ($row = $stm->fetch()) {
-            $productIds[] = $row['product_id'];
-        }
-        $this->getContainer()->get(ProductCollection::class)->getCollection()->where('product.product_id', 'IN', $productIds);
         $promise = $this->getContainer()
             ->get(GraphqlExecutor::class)
             ->waitToExecute([
@@ -76,7 +67,15 @@ QUERY
                 /**@var \GraphQL\Executor\ExecutionResult $result */
                 if (isset($result->data['productCollection']['products'])) {
                     $products = $result->data['productCollection']['products'];
-                    $response->addState('productCollectionFilter', json_decode($result->data['productCollection']['currentFilter'], true));
+                    $response->addState('productCollectionFilter', (function() use($result) {
+                        $fs = [];
+                        $filters = json_decode($result->data['productCollection']['currentFilter'], true);
+                        foreach ($filters as $filter) {
+                            if($this->getContainer()->get(Request::class)->query->has($filter["key"]))
+                                $fs[] = $filter;
+                        }
+                        return $fs;
+                    })());
                     $response->addWidget(
                         'category_view_products',
                         'content',
@@ -84,13 +83,62 @@ QUERY
                         get_js_file_url("production/catalog/category/view/products.js", false),
                         [
                             "products" => $products,
-                            "currentFilter" => json_decode($result->data['productCollection']['currentFilter'], true),
+                            "currentFilter" => (function() use($result) {
+                                $fs = [];
+                                $filters = json_decode($result->data['productCollection']['currentFilter'], true);
+                                foreach ($filters as $filter) {
+                                    if($this->getContainer()->get(Request::class)->query->has($filter["key"]))
+                                        $fs[] = $filter;
+                                }
+                                return json_encode($fs, JSON_NUMERIC_CHECK);
+                            })(),
                             "total" => $result->data['productCollection']['total'],
+                            "limit" => (function() use($result) {
+                                $limit = array_find(json_decode($result->data['productCollection']['currentFilter'], true), function($f) {
+                                    if($f["key"] == "limit")
+                                        return $f;
+                                    return null;
+                                });
+                                if($limit == null)
+                                    return 20;
+                                return $limit["value"];
+                            })(),
+                            "currentPage" => (function() use($result) {
+                                $page = array_find(json_decode($result->data['productCollection']['currentFilter'], true), function($f) {
+                                    if($f["key"] == "page")
+                                        return $f;
+                                    return null;
+                                });
+                                if($page == null)
+                                    return 1;
+                                return $page["value"];
+                            })(),
                             "addItemApi" => generate_url('cart.add'),
                             "query" => $query,
                             "with_pagination" => create_mutable_var("with_pagination", true),
                             "with_sorting" => create_mutable_var("with_sorting", true),
-                            "sorting_options" => create_mutable_var("sorting_options", [])
+                            "sorting_options" => create_mutable_var("sorting_options", []),
+                            "currentSortOrder" => (function() use($result) {
+                                $sortOrder = array_find(json_decode($result->data['productCollection']['currentFilter'], true), function($f) {
+                                    if($f["key"] == "sort-order")
+                                        return $f;
+                                    return null;
+                                });
+                                if($sortOrder == null)
+                                    return get_config('catalog_product_list_sort_order', 'DESC');
+
+                                return $sortOrder["value"];
+                            })(),
+                            "currentSortBy" => (function() use($result) {
+                                $sortBy = array_find(json_decode($result->data['productCollection']['currentFilter'], true), function($f) {
+                                    if($f["key"] == "sort-by")
+                                        return $f;
+                                    return null;
+                                });
+                                if($sortBy == null)
+                                    return get_config('catalog_product_list_sort_by', 'product.created_at');
+                                return $sortBy["value"];
+                            })(),
                         ]
                     );
                 }

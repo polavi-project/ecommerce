@@ -66,7 +66,7 @@ function Price({ minPrice = "", maxPrice = "", areaProps }) {
                             className: "uk-input uk-form-small",
                             value: min,
                             onChange: e => onChangeMin(e),
-                            onBlur: () => areaProps.updateFilter("price", "BETWEEN", `${min}, ${max}`)
+                            onBlur: () => areaProps.updateFilter("price", "BETWEEN", `${min}-${max}`)
                         })
                     )
                 ),
@@ -95,7 +95,7 @@ function Price({ minPrice = "", maxPrice = "", areaProps }) {
                             className: "uk-input uk-form-small",
                             value: max,
                             onChange: e => onChangeMax(e),
-                            onBlur: () => areaProps.updateFilter("price", "BETWEEN", `${min}, ${max}`)
+                            onBlur: () => areaProps.updateFilter("price", "BETWEEN", `${min}-${max}`)
                         })
                     )
                 )
@@ -107,9 +107,9 @@ function Price({ minPrice = "", maxPrice = "", areaProps }) {
 function Attributes({ attributes, areaProps }) {
     const onChange = (e, attributeCode, optionId) => {
         let filter = undefined;
-        for (let key in areaProps.filters) {
-            if (areaProps.filters.hasOwnProperty(key) && key === attributeCode) filter = areaProps.filters[key];
-        }
+        areaProps.filters.forEach(f => {
+            if (f["key"] === attributeCode) filter = f;
+        });
 
         if (filter === undefined) {
             if (e.target.checked === false) {
@@ -152,7 +152,7 @@ function Attributes({ attributes, areaProps }) {
                     "ul",
                     { className: "uk-list" },
                     a.options.map((o, j) => {
-                        let value = _.get(areaProps.filters, a.attribute_code + ".value", "");
+                        let value = _.get(areaProps.filters.find(f => f["key"] === a.attribute_code), "value", "");
                         return React.createElement(
                             "li",
                             { key: j },
@@ -196,30 +196,27 @@ export default function Filter({ title }) {
     }, []);
 
     const updateFilter = (key, operator, value) => {
-        let f = {};
-        if (_.isEmpty(productCollectionFilter)) f[key] = { operator: operator, value: value };else for (let k in productCollectionFilter) {
-            if (productCollectionFilter.hasOwnProperty(k) && k !== 'page' && k !== 'limit' && k !== 'sortBy' && k !== 'sortOrder') {
-                if (k !== key) f[k] = productCollectionFilter[k];else {
-                    if (value !== undefined && !_.isEmpty(value)) f[key] = { operator: operator, value: value };
+        let fs = [];
+        if (_.isEmpty(productCollectionFilter)) fs.push({ key: key, operator: operator, value: value });else productCollectionFilter.forEach(f => {
+            if (f["key"] !== 'page' && f["key"] !== 'limit' && f["key"] !== 'sort-by' && f["key"] !== 'sort-order') {
+                if (f["key"] !== key) fs.push(f);else {
+                    if (value !== undefined && !_.isEmpty(value)) fs.push({ key: key, operator: operator, value: value });
                 }
             }
-        }
-        if (productCollectionFilter[key] === undefined) f[key] = { operator: operator, value: value };
-        let url = new URL(currentUrl);
-        url.searchParams.set('query', buildFilterToQuery(f));
-        Fetch(url, true, "GET");
+        });
+        if (productCollectionFilter.find(f => f["key"] === key) === undefined) fs.push({ key: key, operator: operator, value: value });
+        console.log(fs);
+        Fetch(buildFilterToQuery(currentUrl, fs), true, "GET");
     };
 
     const cleanFilter = () => {
-        let f = {};
+        let f = [];
         for (let k in productCollectionFilter) {
             if (productCollectionFilter.hasOwnProperty(k) && (k !== 'page' || k !== 'limit' || k !== 'sortBy' || k !== 'sortOrder')) {
                 f[k] = productCollectionFilter[k];
             }
         }
-        let url = new URL(currentUrl);
-        url.searchParams.set('query', buildFilterToQuery(f));
-        Fetch(url, true, "GET");
+        Fetch(buildFilterToQuery(currentUrl, f), true, "GET");
     };
 
     return React.createElement(Area, {
