@@ -1,23 +1,19 @@
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
 import { buildFilterToQuery } from "./buildFilterToQuery.js";
 import { Fetch } from "../../../../../../../../js/production/fetch.js";
 
-export default function Pagination({ total }) {
+export default function Pagination({ total, limit, currentPage }) {
     const filters = ReactRedux.useSelector(state => {
-        return _extends({}, _.get(state, 'appState.productCollectionFilter'));
+        return _.get(state, 'appState.productCollectionFilter');
     });
-    const limit = ReactRedux.useSelector(state => _.get(state, 'appState.productCollectionFilter.limit.value', 20));
-    const current = ReactRedux.useSelector(state => _.get(state, 'appState.productCollectionFilter.page.value', 1));
     const [isOnEdit, setIsOnEdit] = React.useState(false);
-    const [inputVal, setInPutVal] = React.useState(current);
+    const [inputVal, setInPutVal] = React.useState(currentPage);
     const currentUrl = ReactRedux.useSelector(state => {
         return _.get(state, 'appState.currentUrl');
     });
 
     React.useEffect(() => {
-        setInPutVal(current);
-    }, [current]);
+        setInPutVal(currentPage);
+    }, [currentPage]);
 
     const onKeyPress = e => {
         if (e.which !== 13) return;
@@ -25,44 +21,34 @@ export default function Pagination({ total }) {
         let page = parseInt(e.target.value);
         if (page < 1) page = 1;
         if (page > Math.ceil(total / limit)) page = Math.ceil(total / limit);
-        let url = new URL(currentUrl);
-        url.searchParams.set('query', buildFilterToQuery(_extends({}, filters, { page: { operator: "=", value: page } })));
-        Fetch(url, true, "GET");
+        Fetch(buildFilterToQuery(currentUrl, [...filters, ...[{ key: "page", operator: "=", value: page }]]), true, "GET");
         setIsOnEdit(false);
     };
 
     const onPrev = e => {
         e.preventDefault();
-        let prev = current - 1;
-        if (current === 1) return;
-        let url = new URL(currentUrl);
-        url.searchParams.set('query', buildFilterToQuery(_extends({}, filters, { page: { operator: "=", value: prev } })));
-        Fetch(url, true, "GET");
+        let prev = currentPage - 1;
+        if (currentPage === 1) return;
+        Fetch(buildFilterToQuery(currentUrl, [...filters, ...[{ key: "page", operator: "=", value: prev }]]), true, "GET");
     };
 
     const onNext = e => {
         e.preventDefault();
-        let next = current + 1;
-        if (current * limit >= total) return;
-        let url = new URL(currentUrl);
-        url.searchParams.set('query', buildFilterToQuery(_extends({}, filters, { page: { operator: "=", value: next } })));
-        Fetch(url, true, "GET");
+        let next = currentPage + 1;
+        if (currentPage * limit >= total) return;
+        Fetch(buildFilterToQuery(currentUrl, [...filters, ...[{ key: "page", operator: "=", value: next }]]), true, "GET");
     };
 
     const onFirst = e => {
         e.preventDefault();
-        if (current === 1) return;
-        let url = new URL(currentUrl);
-        url.searchParams.set('query', buildFilterToQuery(_extends({}, filters, { page: { operator: "=", value: 1 } })));
-        Fetch(url, true, "GET");
+        if (currentPage === 1) return;
+        Fetch(buildFilterToQuery(currentUrl, [...filters, ...[{ key: "page", operator: "=", value: 1 }]]), true, "GET");
     };
 
     const onLast = e => {
         e.preventDefault();
-        if (current === Math.ceil(total / limit)) return;
-        let url = new URL(currentUrl);
-        url.searchParams.set('query', buildFilterToQuery(_extends({}, filters, { page: { operator: "=", value: Math.ceil(total / limit) } })));
-        Fetch(url, true, "GET");
+        if (currentPage === Math.ceil(total / limit)) return;
+        Fetch(buildFilterToQuery(currentUrl, [...filters, ...[{ key: "page", operator: "=", value: Math.ceil(total / limit) }]]), true, "GET");
     };
 
     return React.createElement(
@@ -71,7 +57,7 @@ export default function Pagination({ total }) {
         React.createElement(
             "ul",
             { className: "uk-pagination" },
-            current > 1 && React.createElement(
+            currentPage > 1 && React.createElement(
                 "li",
                 { className: "prev" },
                 React.createElement(
@@ -101,7 +87,7 @@ export default function Pagination({ total }) {
                     { className: "pagination-input-fake uk-input uk-form-small", href: "#", onClick: e => {
                             e.preventDefault();setIsOnEdit(true);
                         } },
-                    current
+                    currentPage
                 ),
                 isOnEdit === true && React.createElement("input", { className: "uk-input uk-form-small", value: inputVal, onChange: e => setInPutVal(e.target.value), type: "text", onKeyPress: e => onKeyPress(e) })
             ),
@@ -114,7 +100,7 @@ export default function Pagination({ total }) {
                     Math.ceil(total / limit)
                 )
             ),
-            current * limit < total && React.createElement(
+            currentPage * limit < total && React.createElement(
                 "li",
                 { className: "next" },
                 React.createElement(

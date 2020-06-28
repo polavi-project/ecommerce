@@ -10,7 +10,7 @@ function IdColumnHeader({ filters, removeFilter, updateFilter, areaProps }) {
 
     const onKeyPress = e => {
         if (e.key === 'Enter') {
-            if (filterTo.current.value == "" && filterFrom.current.value == "") removeFilter("id");else updateFilter("id", "BETWEEN", `${filterFrom.current.value} AND ${filterTo.current.value}`);
+            if (filterTo.current.value == "" && filterFrom.current.value == "") removeFilter("id");else updateFilter("id", "BETWEEN", `${filterFrom.current.value}-${filterTo.current.value}`);
         }
     };
 
@@ -137,7 +137,7 @@ function PriceColumnHeader({ removeFilter, filters, updateFilter, areaProps }) {
 
     const onKeyPress = e => {
         if (e.key === 'Enter') {
-            if (filterTo.current.value == "" && filterFrom.current.value == "") removeFilter("price");else updateFilter("price", "BETWEEN", `${filterFrom.current.value} AND ${filterTo.current.value}`);
+            if (filterTo.current.value == "" && filterFrom.current.value == "") removeFilter("price");else updateFilter("price", "BETWEEN", `${filterFrom.current.value}-${filterTo.current.value}`);
         }
     };
 
@@ -465,19 +465,18 @@ export default function ProductGrid({ apiUrl, areaProps }) {
     };
 
     const buildQuery = () => {
-        let filterStr = "";
+        let filters = [];
         areaProps.filters.forEach((f, i) => {
-            filterStr += `${f.key} : {operator : "${f.operator}" value: "${f.value}"} `;
+            filters.push(`{key: "${f.key}" operator: "${f.operator}" value: "${f.value}"}`);
         });
-        filterStr = filterStr.trim();
-        if (filterStr) filterStr = `(filter : {${filterStr}})`;
+        let filterStr = filters.length > 0 ? `[${filters.join(",")}]` : "[]";
 
         let fieldStr = "";
         fields.forEach((f, i) => {
             fieldStr += `${f} `;
         });
 
-        return `{productCollection ${filterStr} {products {${fieldStr}} total currentFilter}}`;
+        return `{productCollection (filters : ${filterStr}) {products {${fieldStr}} total currentFilter}}`;
     };
 
     React.useEffect(() => {

@@ -16,6 +16,7 @@ use function Similik\get_current_language_id;
 use function Similik\get_default_language_Id;
 use Similik\Module\Catalog\Services\ProductCollection;
 use Similik\Module\Catalog\Services\Type\ProductCollectionFilterType;
+use Similik\Module\Graphql\Services\FilterFieldType;
 use Similik\Services\Di\Container;
 use Similik\Services\Http\Request;
 
@@ -63,14 +64,12 @@ $eventDispatcher->addListener(
             'type' => $container->get(\Similik\Module\Catalog\Services\Type\ProductFilterToolType::class),
             'description' => "Return data for product filter widget",
             'args' => [
-                'filter' =>  [
-                    'type' => $container->get(ProductCollectionFilterType::class)
-                ]
+                'filters' => Type::listOf($container->get(FilterFieldType::class))
             ],
             'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
                 // Get the root product collection filter
-                $filter = $container->get(Symfony\Component\HttpFoundation\Session\Session::class)->get("productCollectionQuery");
-                $args["filter"] = $args["filter"] ?? $filter;
+                $filters = $container->get(Symfony\Component\HttpFoundation\Session\Session::class)->get("productCollectionQuery");
+                $args["filters"] = $args["filters"] ?? $filters;
                 return $container->get(ProductCollection::class)->getProductIdArray($rootValue, $args, $container, $info);
             }
         ];

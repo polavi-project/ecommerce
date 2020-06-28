@@ -119,6 +119,7 @@ class SaveVariantMiddleware extends MiddlewareAbstract
 
             $variants = $variantGroup['variants'];
             $productData = $request->request->all();
+            unset($productData["images"]);
 
             foreach ($variants as $variant) {
                 if($variant['sku'] == $product['sku']) {
