@@ -60,10 +60,6 @@ $container[\Similik\Module\Catalog\Services\AttributeGroupCollection::class] =  
     return new \Similik\Module\Catalog\Services\AttributeGroupCollection($container);
 };
 
-$container[\Similik\Module\Catalog\Services\Type\AttributeGroupCollectionFilterType::class] =  function() use ($container) {
-    return new \Similik\Module\Catalog\Services\Type\AttributeGroupCollectionFilterType($container);
-};
-
 $container[\Similik\Module\Catalog\Services\Type\ProductAttributeIndex::class] =  function() use ($container) {
     return new \Similik\Module\Catalog\Services\Type\ProductAttributeIndex($container);
 };

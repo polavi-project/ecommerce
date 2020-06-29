@@ -150,9 +150,7 @@ class QueryType extends ObjectType
                     'type' => $container->get(AttributeGroupCollectionType::class),
                     'description' => "Return list of attribute group and total count",
                     'args' => [
-                        'filter' =>  [
-                            'type' => $container->get(AttributeGroupCollectionFilterType::class)
-                        ]
+                        'filters' =>  Type::listOf($container->get(FilterFieldType::class))
                     ],
                     'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
                         return $container->get(AttributeGroupCollection::class)->getData($rootValue, $args, $container, $info);
