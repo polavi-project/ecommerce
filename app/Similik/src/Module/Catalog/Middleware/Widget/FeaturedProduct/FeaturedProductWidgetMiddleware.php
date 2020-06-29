@@ -55,7 +55,7 @@ class FeaturedProductWidgetMiddleware extends MiddlewareAbstract
                 ->waitToExecute([
                     "query"=><<< QUERY
                     {
-                        featuredProducts: productCollection (filter: { sku : {operator: "IN" value: "{$products}"}}) {
+                        featuredProducts: productCollection (filters: [{key: "sku", operator: "IN" value: "{$products}"}]) {
                                 products {
                                     product_id
                                     name

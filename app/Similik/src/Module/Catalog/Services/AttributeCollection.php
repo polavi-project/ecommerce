@@ -70,13 +70,13 @@ class AttributeCollection extends CollectionBuilder
             $this->setLimit((int)$args['value']);
         });
 
-        $this->addFilter('sortBy', function($args) {
+        $this->addFilter('sort-by', function($args) {
             if($args['operator'] !== "=")
                 return;
             $this->setSortBy($args['value']);
         });
 
-        $this->addFilter('sortOrder', function($args) {
+        $this->addFilter('sort-order', function($args) {
             if($args['operator'] !== "=")
                 return;
             $this->setSortOrder($args['value']);
@@ -85,9 +85,9 @@ class AttributeCollection extends CollectionBuilder
 
     public function getData($rootValue, $args, Container $container, ResolveInfo $info)
     {
-        $filters = $args['filter'] ?? [];
+        $filters = $args['filters'] ?? [];
         foreach ($filters as $key => $arg)
-            $this->applyFilter($key, $arg);
+            $this->applyFilter($arg["key"], $arg);
 
         return [
             'attributes' => $this->load(),
