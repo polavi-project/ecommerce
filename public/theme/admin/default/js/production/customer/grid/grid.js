@@ -374,20 +374,18 @@ export default function CustomerGrid({ apiUrl, areaProps, groups = [] }) {
     };
 
     const buildQuery = () => {
-        let filterStr = "";
+        let filters = [];
         areaProps.filters.forEach((f, i) => {
-            filterStr += `${f.key} : {operator : "${f.operator}" value: "${f.value}"} `;
+            filters.push(`{key: "${f.key}" operator: "${f.operator}" value: "${f.value}"}`);
         });
-
-        filterStr = filterStr.trim();
-        if (filterStr) filterStr = `(filter : {${filterStr}})`;
+        let filterStr = filters.length > 0 ? `[${filters.join(",")}]` : "[]";
 
         let fieldStr = "";
         fields.forEach((f, i) => {
             fieldStr += `${f} `;
         });
 
-        return `{customerCollection ${filterStr} {customers {${fieldStr}} total currentFilter}}`;
+        return `{customerCollection (filters : ${filterStr}) {customers {${fieldStr}} total currentFilter}}`;
     };
 
     React.useEffect(() => {

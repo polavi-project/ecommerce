@@ -52,20 +52,12 @@ $container[\Similik\Module\Catalog\Services\AttributeCollection::class] =  funct
     return new \Similik\Module\Catalog\Services\AttributeCollection($container);
 };
 
-$container[\Similik\Module\Catalog\Services\Type\AttributeCollectionFilterType::class] =  function() use ($container) {
-    return new \Similik\Module\Catalog\Services\Type\AttributeCollectionFilterType($container);
-};
-
 $container[\Similik\Module\Catalog\Services\Type\AttributeGroupCollectionType::class] =  function() use ($container) {
     return new \Similik\Module\Catalog\Services\Type\AttributeGroupCollectionType($container);
 };
 
 $container[\Similik\Module\Catalog\Services\AttributeGroupCollection::class] =  function() use ($container) {
     return new \Similik\Module\Catalog\Services\AttributeGroupCollection($container);
-};
-
-$container[\Similik\Module\Catalog\Services\Type\AttributeGroupCollectionFilterType::class] =  function() use ($container) {
-    return new \Similik\Module\Catalog\Services\Type\AttributeGroupCollectionFilterType($container);
 };
 
 $container[\Similik\Module\Catalog\Services\Type\ProductAttributeIndex::class] =  function() use ($container) {
@@ -88,10 +80,6 @@ $container[\Similik\Module\Catalog\Services\Type\ProductCollectionType::class] =
     return new \Similik\Module\Catalog\Services\Type\ProductCollectionType($container);
 };
 
-$container[\Similik\Module\Catalog\Services\Type\ProductCollectionFilterType::class] =  function() use ($container) {
-    return new \Similik\Module\Catalog\Services\Type\ProductCollectionFilterType($container);
-};
-
 $container[\Similik\Module\Catalog\Services\ProductCollection::class] = $container->factory(function() use ($container) {
     return new \Similik\Module\Catalog\Services\ProductCollection($container);
 });
@@ -102,10 +90,6 @@ $container[\Similik\Module\Catalog\Services\Type\CategoryCollectionType::class] 
 
 $container[\Similik\Module\Catalog\Services\CategoryCollection::class] =  function() use ($container) {
     return new \Similik\Module\Catalog\Services\CategoryCollection($container);
-};
-
-$container[\Similik\Module\Catalog\Services\Type\CategoryCollectionFilterType::class] =  function() use ($container) {
-    return new \Similik\Module\Catalog\Services\Type\CategoryCollectionFilterType($container);
 };
 
 $container[\Similik\Module\Catalog\Services\CategoryMutator::class] =  function() use ($container) {

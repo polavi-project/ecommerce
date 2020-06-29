@@ -185,19 +185,18 @@ export default function AttributeGroupGrid({ apiUrl, areaProps }) {
     };
 
     const buildQuery = () => {
-        let filterStr = "";
+        let filters = [];
         areaProps.filters.forEach((f, i) => {
-            filterStr += `${f.key} : {operator : "${f.operator}" value: "${f.value}"} `;
+            filters.push(`{key: "${f.key}" operator: "${f.operator}" value: "${f.value}"}`);
         });
-        filterStr = filterStr.trim();
-        if (filterStr) filterStr = `(filter : {${filterStr}})`;
+        let filterStr = filters.length > 0 ? `[${filters.join(",")}]` : "[]";
 
         let fieldStr = "";
         fields.forEach((f, i) => {
             fieldStr += `${f} `;
         });
 
-        return `{attributeGroupCollection ${filterStr} {groups {${fieldStr}} total currentFilter}}`;
+        return `{attributeGroupCollection (filters : ${filterStr}) {groups {${fieldStr}} total currentFilter}}`;
     };
 
     React.useEffect(() => {

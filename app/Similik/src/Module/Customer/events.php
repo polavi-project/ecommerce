@@ -12,9 +12,9 @@ use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
 use function Similik\_mysql;
+use Similik\Module\Graphql\Services\FilterFieldType;
 use Similik\Services\Di\Container;
 use Similik\Services\Http\Request;
-use Similik\Services\Routing\Router;
 
 $eventDispatcher->addListener(
     'register.core.middleware',
@@ -36,9 +36,7 @@ $eventDispatcher->addListener(
                 'type' => $container->get(\Similik\Module\Customer\Services\Type\CustomerCollectionType::class),
                 'description' => "Return list of customer and total count",
                 'args' => [
-                    'filter' =>  [
-                        'type' => $container->get(\Similik\Module\Customer\Services\Type\CustomerCollectionFilterType::class)
-                    ]
+                    'filters' =>  Type::listOf($container->get(FilterFieldType::class))
                 ],
                 'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
                     if($container->get(\Similik\Services\Http\Request::class)->isAdmin() == false)
