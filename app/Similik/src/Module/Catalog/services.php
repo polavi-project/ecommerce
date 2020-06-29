@@ -52,10 +52,6 @@ $container[\Similik\Module\Catalog\Services\AttributeCollection::class] =  funct
     return new \Similik\Module\Catalog\Services\AttributeCollection($container);
 };
 
-$container[\Similik\Module\Catalog\Services\Type\AttributeCollectionFilterType::class] =  function() use ($container) {
-    return new \Similik\Module\Catalog\Services\Type\AttributeCollectionFilterType($container);
-};
-
 $container[\Similik\Module\Catalog\Services\Type\AttributeGroupCollectionType::class] =  function() use ($container) {
     return new \Similik\Module\Catalog\Services\Type\AttributeGroupCollectionType($container);
 };

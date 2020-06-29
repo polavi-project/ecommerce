@@ -17,14 +17,12 @@ use Similik\Module\Catalog\Services\AttributeCollection;
 use Similik\Module\Catalog\Services\AttributeGroupCollection;
 use Similik\Module\Catalog\Services\CategoryCollection;
 use Similik\Module\Catalog\Services\ProductCollection;
-use Similik\Module\Catalog\Services\Type\AttributeCollectionFilterType;
 use Similik\Module\Catalog\Services\Type\AttributeCollectionType;
 use Similik\Module\Catalog\Services\Type\AttributeGroupCollectionFilterType;
 use Similik\Module\Catalog\Services\Type\AttributeGroupCollectionType;
 use Similik\Module\Catalog\Services\Type\AttributeType;
 use Similik\Module\Catalog\Services\Type\CategoryCollectionFilterType;
 use Similik\Module\Catalog\Services\Type\CategoryCollectionType;
-use Similik\Module\Catalog\Services\Type\ProductCollectionFilterType;
 use Similik\Module\Catalog\Services\Type\ProductCollectionType;
 use Similik\Module\Catalog\Services\DataLoader;
 use Similik\Module\Catalog\Services\Type\AttributeGroupType;
@@ -132,9 +130,7 @@ class QueryType extends ObjectType
                     'type' => $container->get(AttributeCollectionType::class),
                     'description' => "Return list of attribute and total count",
                     'args' => [
-                        'filter' =>  [
-                            'type' => $container->get(AttributeCollectionFilterType::class)
-                        ]
+                        'filters' =>  Type::listOf($container->get(FilterFieldType::class))
                     ],
                     'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
                         return $container->get(AttributeCollection::class)->getData($rootValue, $args, $container, $info);
