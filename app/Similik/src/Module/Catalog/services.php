@@ -88,10 +88,6 @@ $container[\Similik\Module\Catalog\Services\Type\ProductCollectionType::class] =
     return new \Similik\Module\Catalog\Services\Type\ProductCollectionType($container);
 };
 
-$container[\Similik\Module\Catalog\Services\Type\ProductCollectionFilterType::class] =  function() use ($container) {
-    return new \Similik\Module\Catalog\Services\Type\ProductCollectionFilterType($container);
-};
-
 $container[\Similik\Module\Catalog\Services\ProductCollection::class] = $container->factory(function() use ($container) {
     return new \Similik\Module\Catalog\Services\ProductCollection($container);
 });
