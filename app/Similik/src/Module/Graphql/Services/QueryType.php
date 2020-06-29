@@ -18,10 +18,8 @@ use Similik\Module\Catalog\Services\AttributeGroupCollection;
 use Similik\Module\Catalog\Services\CategoryCollection;
 use Similik\Module\Catalog\Services\ProductCollection;
 use Similik\Module\Catalog\Services\Type\AttributeCollectionType;
-use Similik\Module\Catalog\Services\Type\AttributeGroupCollectionFilterType;
 use Similik\Module\Catalog\Services\Type\AttributeGroupCollectionType;
 use Similik\Module\Catalog\Services\Type\AttributeType;
-use Similik\Module\Catalog\Services\Type\CategoryCollectionFilterType;
 use Similik\Module\Catalog\Services\Type\CategoryCollectionType;
 use Similik\Module\Catalog\Services\Type\ProductCollectionType;
 use Similik\Module\Catalog\Services\DataLoader;
@@ -108,9 +106,7 @@ class QueryType extends ObjectType
                     'type' => $container->get(CategoryCollectionType::class),
                     'description' => "Return list of categories and total count",
                     'args' => [
-                        'filter' =>  [
-                            'type' => $container->get(CategoryCollectionFilterType::class)
-                        ]
+                        'filters' =>  Type::listOf($container->get(FilterFieldType::class))
                     ],
                     'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
                         return $container->get(CategoryCollection::class)->getData($rootValue, $args, $container, $info);

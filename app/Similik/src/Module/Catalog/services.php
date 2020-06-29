@@ -92,10 +92,6 @@ $container[\Similik\Module\Catalog\Services\CategoryCollection::class] =  functi
     return new \Similik\Module\Catalog\Services\CategoryCollection($container);
 };
 
-$container[\Similik\Module\Catalog\Services\Type\CategoryCollectionFilterType::class] =  function() use ($container) {
-    return new \Similik\Module\Catalog\Services\Type\CategoryCollectionFilterType($container);
-};
-
 $container[\Similik\Module\Catalog\Services\CategoryMutator::class] =  function() use ($container) {
     return new \Similik\Module\Catalog\Services\CategoryMutator($container[\Similik\Services\Db\Processor::class]);
 };
