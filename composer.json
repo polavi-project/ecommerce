@@ -1,9 +1,9 @@
 {
     "autoload": {
         "psr-4": {
-            "Similik\\":"app/Similik/src"
+            "Polavi\\":"app/Polavi/src"
         },
-        "files": ["app/Similik/src/functions.php"]
+        "files": ["app/Polavi/src/functions.php"]
     },
     "require": {
         "nikic/fast-route": "^1.3",

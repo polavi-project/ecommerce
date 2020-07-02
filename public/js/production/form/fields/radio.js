@@ -42,7 +42,7 @@ export default function Radio(props) {
 
     return React.createElement(
         "div",
-        { className: "form-group similik-radio" },
+        { className: "form-group polavi-radio" },
         props.label && React.createElement(
             "div",
             null,

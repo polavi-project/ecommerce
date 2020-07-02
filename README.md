@@ -9,12 +9,12 @@ Polavi is a simple eCommerce platform. Polavi uses PHP and Mysql as backend lang
 ```php
 declare(strict_types=1);
 
-namespace Similik\Middleware;
+namespace Polavi\Middleware;
 
-use function Similik\generate_url;
-use Similik\Services\Http\Request;
-use Similik\Services\Http\Response;
-use Similik\Services\Routing\Router;
+use function Polavi\generate_url;
+use Polavi\Services\Http\Request;
+use Polavi\Services\Http\Response;
+use Polavi\Services\Routing\Router;
 
 class RoutingMiddleware extends MiddlewareAbstract
 {

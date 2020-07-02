@@ -36,7 +36,7 @@ export default function Checkbox (props) {
         if (props.handler) props.handler.call(window, e, props);
     };
 
-    return <div className="form-group similik-checkbox">
+    return <div className="form-group polavi-checkbox">
         <div>
             <label htmlFor={props.name}><input
                 type="checkbox"
