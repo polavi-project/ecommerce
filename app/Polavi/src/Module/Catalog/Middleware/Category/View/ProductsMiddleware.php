@@ -100,7 +100,7 @@ QUERY
                                     return null;
                                 });
                                 if($limit == null)
-                                    return 20;
+                                    return get_config('catalog_product_list_limit', 20);
                                 return $limit["value"];
                             })(),
                             "currentPage" => (function() use($result) {
