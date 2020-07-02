@@ -21,9 +21,11 @@ class SaveCartMiddleware extends MiddlewareAbstract
     {
         if($request->isAdmin() == true)
             return $delegate;
-
+        $conn = _mysql();
         $cart = $this->getContainer()->get(Cart::class);
         if($cart->isEmpty()) {
+            if($cart->getData('cart_id'))
+                $conn->getTable('cart')->where('cart_id', '=', $cart->getData('cart_id'))->delete();
             if($cart->getPromises()) {
                 $promise = settle($cart->getPromises());
                 $promise->wait();
@@ -32,7 +34,6 @@ class SaveCartMiddleware extends MiddlewareAbstract
             return $delegate;
         }
 
-        $conn = _mysql();
         $conn->startTransaction();
 
         try {

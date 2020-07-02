@@ -79,6 +79,10 @@ const Fetch = (url, pushState = false, method = "GET", data = {}, onStart = null
                         page_path: url.pathname
                     });
                 }
+            } else {
+                if (_.get(response, "appState.currentRoute")) delete response.appState.currentRoute;
+                if (_.get(response, "appState.currentRouteArgs")) delete response.appState.currentRouteArgs;
+                if (_.get(response, "appState.currentUrl")) delete response.appState.currentUrl;
             }
             PubSub.publishSync(REQUEST_END, { response });
             store.dispatch({ 'type': REQUEST_END, 'payload': { data: response } });
