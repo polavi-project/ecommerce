@@ -19,7 +19,7 @@ export default function AdminLoginForm(props) {
                 React.createElement(
                     "a",
                     { href: "javascript:void(0)" },
-                    React.createElement("img", { src: props.logoUrl, title: "Similik admin login" })
+                    React.createElement("img", { src: props.logoUrl, title: "Polavi admin login" })
                 )
             ),
             React.createElement(

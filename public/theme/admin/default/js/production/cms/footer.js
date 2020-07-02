@@ -8,7 +8,7 @@ export default function Footer() {
             React.createElement(
                 "span",
                 null,
-                "Copyright \xA9 2020 Similik Commerce"
+                "Copyright \xA9 2020 Polavi Commerce"
             )
         ),
         React.createElement(

@@ -106,7 +106,7 @@ function Welcome() {
         React.createElement(
             "h2",
             null,
-            "Great. Let's start using Similik"
+            "Great. Let's start using Polavi"
         ),
         React.createElement(
             "div",
@@ -217,7 +217,7 @@ export default function Installation({ action }) {
             React.createElement(
                 "h3",
                 null,
-                "Welcome to Similik"
+                "Welcome to Polavi"
             )
         ),
         letsGo !== true && letsGo !== undefined && React.createElement(

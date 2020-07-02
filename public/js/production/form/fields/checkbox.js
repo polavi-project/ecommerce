@@ -39,7 +39,7 @@ export default function Checkbox(props) {
 
     return React.createElement(
         "div",
-        { className: "form-group similik-checkbox" },
+        { className: "form-group polavi-checkbox" },
         React.createElement(
             "div",
             null,

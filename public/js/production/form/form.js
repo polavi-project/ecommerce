@@ -68,7 +68,7 @@ function Form(props) {
         props.children,
         props.submitText !== null && React.createElement(
             "div",
-            { className: "similik-form-button form-submit-button" },
+            { className: "polavi-form-button form-submit-button" },
             React.createElement(
                 "button",
                 { type: "submit", className: "btn btn-primary" },
