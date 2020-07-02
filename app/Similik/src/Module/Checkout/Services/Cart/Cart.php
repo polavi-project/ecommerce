@@ -255,8 +255,7 @@ class Cart
                         }
                         $this->dataSource["items"] = $items;
                     }
-
-                    return $items;
+                    return create_mutable_var("filter_cart_items", $items);
                 },
                 'dependencies' => ['cart_id', 'customer_group_id', 'shipping_address_id'],
             ]
@@ -294,6 +293,28 @@ class Cart
             return new FulfilledPromise($item);
         else
             return new RejectedPromise($item);
+    }
+
+    public function removeItem(int $itemId) {
+        $items = $this->getData('items') ?? [];
+        $item = null;
+        foreach ($items as $id => $i) {
+            if($i->getData('cart_item_id') == $itemId) {
+                $item = $items[$id];
+                unset($items[$id]);
+                break;
+            }
+        }
+
+        if($item == null)
+            return new RejectedPromise("Requested item does not exist");
+
+        $promise = $this->setData('items', $items);
+
+        if($promise->getState() == 'fulfilled' && !$this->getItem($item->getId()))
+            return new FulfilledPromise($item);
+        else
+            return new RejectedPromise("Something wrong. Please try again");
     }
 
     public function getField($field) {

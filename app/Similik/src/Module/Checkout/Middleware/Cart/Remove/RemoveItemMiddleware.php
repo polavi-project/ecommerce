@@ -25,16 +25,18 @@ class RemoveItemMiddleware extends MiddlewareAbstract
      */
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
-        $this->getContainer()->get(Cart::class)->removeItem(
-            $request->attributes->get('id')
-        )->then(function(Item $item) use ($response) {
+        $promise = $this->getContainer()->get(Cart::class)->removeItem(
+            (int) $request->attributes->get('id')
+        );
+        $promise->then(function(Item $item) use ($response) {
             if(!$item instanceof Item)
                 $response->addAlert('cart_add_error', 'error', "Something wrong, please try again");
             else {
                 $response->addAlert('cart_remove_success', 'success', "{$item->getData('product_name')} was removed from shopping cart successfully");
                 $response->redirect($this->getContainer()->get(Router::class)->generateUrl('checkout.cart'));
             }
-        })->otherwise(function($reason) use ($response) {
+        });
+        $promise->otherwise(function($reason) use ($response) {
             $response->addAlert('cart_add_error', 'error', $reason)->notNewPage();
         });
 
