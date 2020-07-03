@@ -216,7 +216,7 @@ $eventDispatcher->addListener(
         return array_merge($items, [
             [
                 "id" => "customer",
-                "sort_order" => 30,
+                "sort_order" => 40,
                 "url" => null,
                 "title" => "Customer",
                 "parent_id" => null

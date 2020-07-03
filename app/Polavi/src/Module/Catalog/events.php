@@ -15,7 +15,6 @@ use function Polavi\_mysql;
 use function Polavi\get_current_language_id;
 use function Polavi\get_default_language_Id;
 use Polavi\Module\Catalog\Services\ProductCollection;
-use Polavi\Module\Catalog\Services\Type\ProductCollectionFilterType;
 use Polavi\Module\Graphql\Services\FilterFieldType;
 use Polavi\Services\Di\Container;
 use Polavi\Services\Http\Request;
@@ -201,7 +200,7 @@ $eventDispatcher->addListener(
             ],
             [
                 "id" => "catalog",
-                "sort_order" => 10,
+                "sort_order" => 20,
                 "url" => null,
                 "title" => "Catalog",
                 "parent_id" => null

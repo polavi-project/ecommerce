@@ -292,7 +292,7 @@ $eventDispatcher->addListener(
             return array_merge($items, [
                 [
                     "id" => "cms",
-                    "sort_order" => 40,
+                    "sort_order" => 50,
                     "url" => null,
                     "title" => "CMS",
                     "parent_id" => null
