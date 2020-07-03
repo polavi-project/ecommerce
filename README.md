@@ -1,10 +1,30 @@
 # Polavi
-
-A Simple eCommerce platform using PHP, Mysql and ReactJs.
+A powerful and simple eCommerce platform using ReactJs, Graphql, PHP and Mysql.
+## Features
+* Catalog management
+  * Category
+  * Product
+      * Product type and attributes
+      * Advance pricing
+        * Customer group price
+        * Tier price
+      * Product custom options - Add custom option to product with extra price
+      * Product variants
+* Coupon management
+    * Multi type of discount
+        * Fixed discount to entire order
+        * Percentage discount to entire order
+        * Fixed discount to specific products
+        * Percentage discount to specific products
+        * Buy X get Y
+        * Free shipping
+    * Complex order and customer condition
+* Order management
+* Customer management
 
 ## Getting Started
 
-Polavi is a simple eCommerce platform. Polavi uses PHP and Mysql as backend languages and ReactJS as frontend language.
+Polavi is a powerful and simple eCommerce platform. Polavi uses PHP and Mysql as backend languages and ReactJS as frontend language.
 ### Middleware system
 ```php
 declare(strict_types=1);
