@@ -1,5 +1,5 @@
 # Polavi
-A powerful and simple eCommerce platform using ReactJs, Graphql, PHP and Mysql.
+A powerful and lightweight eCommerce platform using ReactJs, Graphql, PHP and Mysql.
 ## Features
 [![Polavi backend screenshot](https://raw.githubusercontent.com/polavi-project/ecommerce/master/public/theme/admin/default/image/screenshot.jpg)](https://polavi.com)
 * Catalog management
