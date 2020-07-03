@@ -1,10 +1,37 @@
 # Polavi
-
-A Simple eCommerce platform using PHP, Mysql and ReactJs.
+A powerful and simple eCommerce platform using ReactJs, Graphql, PHP and Mysql.
+## Features
+![Polavi backend screenshot](/polavi-project/ecommerce/blob/master/public/theme/admin/default/image/screenshot.jpg)
+* Catalog management
+  * Category
+  * Product
+      * Product type and attributes
+      * Advance pricing
+        * Customer group price
+        * Tier price
+      * Product custom options - Add custom option to product with extra price
+      * Product variants
+* Coupon management
+    * Multi type of discount
+        * Fixed discount to entire order
+        * Percentage discount to entire order
+        * Fixed discount to specific products
+        * Percentage discount to specific products
+        * Buy X get Y
+        * Free shipping
+    * Complex order and customer condition
+* Order management
+* Customer management
+## Demo
+[Demo store](https://demo.polavi.com/admin)
+* Email: demo@polavi.com
+* Password: demo
 
 ## Getting Started
+### Installation
 
-Polavi is a simple eCommerce platform. Polavi uses PHP and Mysql as backend languages and ReactJS as frontend language.
+Please check [here](https://polavi.com/docs/installation-guide) for more detail.
+
 ### Middleware system
 ```php
 declare(strict_types=1);
@@ -94,18 +121,11 @@ $this->getContainer()
         }
     });
 ```
-### Demo
-[Demo store](https://polavi.com/demo/)
 
 ### Prerequisites
 
 Apache server, PHP 7.3, Mysql 5.6 and 1 free SendGrid account for transactional email
 Please check [here](https://polavi.com/docs/system-prerequisites) for more detail.
-
-### Installing
-
-Please check [here](https://polavi.com/docs/installation-guide) for more detail.
-
 
 ## Built With
 

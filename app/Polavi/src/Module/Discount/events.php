@@ -36,7 +36,7 @@ $eventDispatcher->addListener(
                 ],
                 [
                     "id" => "coupon",
-                    "sort_order" => 40,
+                    "sort_order" => 30,
                     "url" => null,
                     "title" => "Coupon",
                     "parent_id" => null
