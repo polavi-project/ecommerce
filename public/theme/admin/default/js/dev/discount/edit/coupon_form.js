@@ -356,6 +356,172 @@ function RequiredProducts({requiredProducts}) {
     </div>
 }
 
+function TargetProducts({targetProducts}) {
+    const [products, setProducts] = React.useState(targetProducts);
+
+    const addProduct = (e) => {
+        e.persist();
+        e.preventDefault();
+        setProducts(products.concat({
+            key: "",
+            operator: "",
+            value: "",
+            qty: ""
+        }));
+    };
+
+    const removeProduct = (e, index) => {
+        e.persist();
+        e.preventDefault();
+        const newProducts = products.filter((_, i) => i !== index);
+        setProducts(newProducts);
+    };
+
+    const updateProduct = (e, key, index) => {
+        e.persist();
+        e.preventDefault();
+        const newProducts = products.map((p, i) => {
+            if(i === index) {
+                return {...p, [key]: e.target.value}
+            } else
+                return p;
+        });
+        setProducts(newProducts);
+    };
+
+    return <div>
+        <div><span>Products are matched bellow conditions(All)</span></div>
+        <table className="table table-bordered" style={{"marginTop": 0}}>
+            <thead>
+            <tr>
+                <th><span>Key</span></th>
+                <th><span>Operator</span></th>
+                <th><span>Value</span></th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            { products.map((p,i) => {
+                return <tr key={i}>
+                    <td>
+                        <select
+                            name={`target_products[${i}][key]`}
+                            className={"form-control"}
+                            value={p.key}
+                            onChange={(e) => updateProduct(e, 'key', i)}
+                        >
+                            <Area
+                                id="coupon_target_product_key_list"
+                                noOuter={true}
+                                coreWidgets={[
+                                    {
+                                        component: ()=>{ return <option value="category">CategoryId</option>;},
+                                        props : {},
+                                        sort_order: 10,
+                                        id: "target_product_key_category"
+                                    },
+                                    {
+                                        component: ()=>{ return <option value="attribute_group">Attribute Group</option>;},
+                                        props : {},
+                                        sort_order: 20,
+                                        id: "target_product_key_attribute_group"
+                                    },
+                                    {
+                                        component: ()=><option value="price">Price</option>,
+                                        props : {},
+                                        sort_order: 30,
+                                        id: "target_product_key_price"
+                                    },
+                                    {
+                                        component: ()=><option value="sku">Sku</option>,
+                                        props : {},
+                                        sort_order: 40,
+                                        id: "target_product_key_sku"
+                                    }
+                                ]}
+                            />
+                        </select>
+                    </td>
+                    <td>
+                        <select
+                            name={`target_products[${i}][operator]`}
+                            className={"form-control"}
+                            value={p.operator}
+                            onChange={(e) => updateProduct(e, 'operator', i)}
+                        >
+                            <Area
+                                id="coupon_target_product_operator_list"
+                                noOuter={true}
+                                coreWidgets={[
+                                    {
+                                        component: ()=><option value="=">Equal</option>,
+                                        props : {},
+                                        sort_order: 10,
+                                        id: "coupon_target_product_operator_equal"
+                                    },
+                                    {
+                                        component: ()=><option value="<>">Not equal</option>,
+                                        props : {},
+                                        sort_order: 10,
+                                        id: "coupon_target_product_operator_equal"
+                                    },
+                                    {
+                                        component: ()=><option value=">">Greater</option>,
+                                        props : {},
+                                        sort_order: 20,
+                                        id: "coupon_target_product_operator_greater"
+                                    },
+                                    {
+                                        component: ()=><option value=">=">Greater or equal</option>,
+                                        props : {},
+                                        sort_order: 30,
+                                        id: "coupon_target_product_operator_greater_or_equal"
+                                    },
+                                    {
+                                        component: ()=><option value="<">Smaller</option>,
+                                        props : {},
+                                        sort_order: 40,
+                                        id: "coupon_target_product_operator_smaller"
+                                    },
+                                    {
+                                        component: ()=><option value="<=">Equal or smaller</option>,
+                                        props : {},
+                                        sort_order: 40,
+                                        id: "coupon_target_product_operator_equal_or_smaller"
+                                    },
+                                    {
+                                        component: ()=><option value="IN">In</option>,
+                                        props : {},
+                                        sort_order: 40,
+                                        id: "coupon_target_product_operator_in"
+                                    },
+                                    {
+                                        component: ()=><option value="NOT IN">Not in</option>,
+                                        props : {},
+                                        sort_order: 40,
+                                        id: "coupon_target_product_operator_not_in"
+                                    }
+                                ]}
+                            />
+                        </select>
+                    </td>
+                    <td>
+                        <Text
+                            name={`target_products[${i}][value]`}
+                            formId={"coupon-edit-form"}
+                            value={p.value}
+                            validation_rules={['notEmpty']}
+                        />
+                    </td>
+                    <td><a href="javascript:void(0);" className="text-danger" onClick={(e) => removeProduct(e, i)}><i className="fas fa-trash-alt"></i></a></td>
+                </tr>
+            })}
+            </tbody>
+        </table>
+        <a href="javascript:void(0);" onClick={(e) => addProduct(e)}><i className="fas fa-plus-circle"></i> Add condition</a>
+    </div>
+}
+
 function BuyXGetY({_products, discount_type}) {
     const [products, setProducts] = React.useState(_products);
     const [active, setActive] = React.useState(() => {
@@ -548,22 +714,15 @@ function TargetProduct({products, discount_type}) {
 
     return <React.Fragment>
         { active === true && <div className="sml-block mt-4">
-            <div className="sml-block-title">
-                <Text
-                    name={"target_products"}
-                    value={products}
-                    validation_rules={['notEmpty']}
-                    formId={"coupon-edit-form"}
-                    label={"Target products"}
-                    comment={"Use comma to separate in case multiple products"}
-                />
-            </div>
+            <div className="sml-block-title">Target products</div>
+            <TargetProducts targetProducts={ products}/>
         </div>}
     </React.Fragment>
 }
 
 export default function CouponForm(props) {
     const condition = props.condition ? JSON.parse(props.condition) : {};
+    const target_products = props.target_products ? JSON.parse(props.target_products) : [];
     const user_condition = props.user_condition ? JSON.parse(props.user_condition) : {};
     const buyx_gety = props.buyx_gety ? JSON.parse(props.buyx_gety) : [];
     return <Form
@@ -612,7 +771,7 @@ export default function CouponForm(props) {
                     },
                     {
                         component: TargetProduct,
-                        props: {products: props.target_products ? props.target_products : "", discount_type: props.discount_type},
+                        props: {products: target_products, discount_type: props.discount_type},
                         sort_order: 30,
                         id: "coupon-order-target-products"
                     },
