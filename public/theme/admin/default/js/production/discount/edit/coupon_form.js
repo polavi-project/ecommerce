@@ -472,8 +472,9 @@ function RequiredProducts({ requiredProducts }) {
     );
 }
 
-function TargetProducts({ targetProducts }) {
+function TargetProducts({ targetProducts, maxQty = "" }) {
     const [products, setProducts] = React.useState(targetProducts);
+    const [maxQuantity, setMaxQuantity] = React.useState(maxQty);
 
     const addProduct = e => {
         e.persist();
@@ -509,11 +510,13 @@ function TargetProducts({ targetProducts }) {
         null,
         React.createElement(
             "div",
-            null,
+            { className: "mb-3" },
             React.createElement(
                 "span",
                 null,
-                "Products are matched bellow conditions(All)"
+                "Maximum ",
+                React.createElement("input", { style: { display: "inline", width: "50px" }, name: "target_products[maxQty]", type: "text", value: maxQuantity, onChange: e => setMaxQuantity(e.target.value), className: "form-control" }),
+                " products are matched bellow conditions(All)"
             )
         ),
         React.createElement(
@@ -568,7 +571,7 @@ function TargetProducts({ targetProducts }) {
                             React.createElement(
                                 "select",
                                 {
-                                    name: `target_products[${i}][key]`,
+                                    name: `target_products[products][${i}][key]`,
                                     className: "form-control",
                                     value: p.key,
                                     onChange: e => updateProduct(e, 'key', i)
@@ -626,7 +629,7 @@ function TargetProducts({ targetProducts }) {
                             React.createElement(
                                 "select",
                                 {
-                                    name: `target_products[${i}][operator]`,
+                                    name: `target_products[products][${i}][operator]`,
                                     className: "form-control",
                                     value: p.operator,
                                     onChange: e => updateProduct(e, 'operator', i)
@@ -714,7 +717,7 @@ function TargetProducts({ targetProducts }) {
                             "td",
                             null,
                             React.createElement(Text, {
-                                name: `target_products[${i}][value]`,
+                                name: `target_products[products][${i}][value]`,
                                 formId: "coupon-edit-form",
                                 value: p.value,
                                 validation_rules: ['notEmpty']
@@ -1008,7 +1011,7 @@ function CustomerCondition(props) {
     );
 }
 
-function TargetProduct({ products, discount_type }) {
+function TargetProduct({ products, maxQty, discount_type }) {
     const [active, setActive] = React.useState(() => {
         if (discount_type === "fixed_discount_to_specific_products" || discount_type === "percentage_discount_to_specific_products") {
             return true;
@@ -1042,16 +1045,36 @@ function TargetProduct({ products, discount_type }) {
                 { className: "sml-block-title" },
                 "Target products"
             ),
-            React.createElement(TargetProducts, { targetProducts: products })
+            React.createElement(TargetProducts, { targetProducts: products, maxQty: maxQty })
         )
     );
 }
 
 export default function CouponForm(props) {
-    const condition = props.condition ? JSON.parse(props.condition) : {};
-    const target_products = props.target_products ? JSON.parse(props.target_products) : [];
-    const user_condition = props.user_condition ? JSON.parse(props.user_condition) : {};
-    const buyx_gety = props.buyx_gety ? JSON.parse(props.buyx_gety) : [];
+    let condition = {};
+    if (props.condition) try {
+        condition = JSON.parse(props.condition);
+    } catch (e) {
+        condition = {};
+    }
+    let target_products = {};
+    if (props.target_products) try {
+        target_products = JSON.parse(props.target_products);
+    } catch (e) {
+        target_products = {};
+    }
+    let user_condition = {};
+    if (props.user_condition) try {
+        user_condition = JSON.parse(props.user_condition);
+    } catch (e) {
+        user_condition = {};
+    }
+    let buyx_gety = [];
+    if (props.buyx_gety) try {
+        buyx_gety = JSON.parse(props.buyx_gety);
+    } catch (e) {
+        buyx_gety = [];
+    }
     return React.createElement(
         Form,
         _extends({
@@ -1117,7 +1140,7 @@ export default function CouponForm(props) {
                     id: "coupon-order-condition"
                 }, {
                     component: TargetProduct,
-                    props: { products: target_products, discount_type: props.discount_type },
+                    props: { products: _.get(target_products, "products", []), maxQty: _.get(target_products, "maxQty", ""), discount_type: props.discount_type },
                     sort_order: 30,
                     id: "coupon-order-target-products"
                 }, {

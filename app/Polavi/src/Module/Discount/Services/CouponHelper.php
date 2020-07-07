@@ -116,6 +116,11 @@ class CouponHelper
             $targetProducts = empty($targetProducts) ? [] : json_decode($targetProducts, true);
             if (JSON_ERROR_NONE !== json_last_error())
                 return;
+
+            $discountAbleItems = [];
+            foreach ($targetProducts as $condition) {
+
+            }
             foreach ($items as $item) {
                 $productId = $item->getData('product_id');
                 $sku = $item->getData('product_sku');
