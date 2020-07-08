@@ -391,7 +391,7 @@ function TargetProducts({targetProducts, maxQty = ""}) {
     };
 
     return <div>
-        <div className={"mb-3"}><span>Maximum <input style={{display: "inline", width: "50px"}} name={"target_products[maxQty]"} type="text" value={maxQuantity} onChange={(e) => setMaxQuantity(e.target.value)} className="form-control"/> products are matched bellow conditions(All)</span></div>
+        <div className={"mb-3"}><span>Maximum <input style={{display: "inline", width: "50px"}} name={"target_products[maxQty]"} type="text" value={maxQuantity} onChange={(e) => setMaxQuantity(e.target.value)} className="form-control"/> quantity of products are matched bellow conditions(All)</span></div>
         <table className="table table-bordered" style={{"marginTop": 0}}>
             <thead>
             <tr>

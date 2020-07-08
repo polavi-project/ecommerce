@@ -516,7 +516,7 @@ function TargetProducts({ targetProducts, maxQty = "" }) {
                 null,
                 "Maximum ",
                 React.createElement("input", { style: { display: "inline", width: "50px" }, name: "target_products[maxQty]", type: "text", value: maxQuantity, onChange: e => setMaxQuantity(e.target.value), className: "form-control" }),
-                " products are matched bellow conditions(All)"
+                " quantity of products are matched bellow conditions(All)"
             )
         ),
         React.createElement(
