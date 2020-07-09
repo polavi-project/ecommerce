@@ -7,8 +7,20 @@
 declare(strict_types=1);
 
 /**@var \Polavi\Services\Di\Container $container */
+$container->set(\Polavi\Module\Discount\Services\Validator::class, function() use ($container) {
+    return new \Polavi\Module\Discount\Services\Validator();
+});
+
+$container->set(\Polavi\Module\Discount\Services\Calculator::class, function() use ($container) {
+    return new \Polavi\Module\Discount\Services\Calculator();
+});
+
 $container->set(\Polavi\Module\Discount\Services\CouponHelper::class, function() use ($container) {
-    return new \Polavi\Module\Discount\Services\CouponHelper($container->get(\Polavi\Module\Checkout\Services\Cart\Cart::class));
+    return new \Polavi\Module\Discount\Services\CouponHelper(
+        $container->get(\Polavi\Module\Checkout\Services\Cart\Cart::class),
+        $container->get(\Polavi\Module\Discount\Services\Validator::class),
+        $container->get(\Polavi\Module\Discount\Services\Calculator::class)
+    );
 });
 
 $container->set(\Polavi\Module\Discount\Services\Type\CouponType::class, function() use ($container) {
