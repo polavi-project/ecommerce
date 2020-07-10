@@ -60,7 +60,10 @@ class CouponHelper
         } else {
             $items= $cart->getItems();
             foreach ($items as $item)
-                $item->setData('discount_amount', $discounts[$item->getId()]);
+                if(isset($discounts[$item->getId()]))
+                    $item->setData('discount_amount', $discounts[$item->getId()]);
+                else
+                    $item->setData('discount_amount', 0);
 
             return $coupon;
         }

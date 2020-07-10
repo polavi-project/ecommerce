@@ -12,7 +12,7 @@ $container->set(\Polavi\Module\Discount\Services\Validator::class, function() us
 });
 
 $container->set(\Polavi\Module\Discount\Services\Calculator::class, function() use ($container) {
-    return new \Polavi\Module\Discount\Services\Calculator();
+    return new \Polavi\Module\Discount\Services\Calculator($container->get(\Polavi\Module\Discount\Services\Validator::class));
 });
 
 $container->set(\Polavi\Module\Discount\Services\CouponHelper::class, function() use ($container) {

@@ -9,19 +9,22 @@ declare(strict_types=1);
 namespace Polavi\Module\Discount\Services;
 
 
-use function Polavi\_mysql;
 use function Polavi\get_config;
 use Polavi\Module\Checkout\Services\Cart\Cart;
 
 class Calculator
 {
+    /**@var Validator $validator*/
+    protected $validator;
+
     /**@var callable[] */
     protected $discountCalculators = [];
 
     protected $discounts = [];
 
-    public function __construct()
+    public function __construct(Validator $validator)
     {
+        $this->validator = $validator;
         $this->defaultDiscountCalculator();
     }
 
@@ -106,420 +109,41 @@ class Calculator
             return true;
         });
 
-        $this->addDiscountCalculator('discount_to_specific_products_by_category', function(array $coupon, Cart $cart) {
+        $this->addDiscountCalculator('discount_to_specific_products', function(array $coupon, Cart $cart) {
             if(!in_array($coupon['discount_type'], ["fixed_discount_to_specific_products", "percentage_discount_to_specific_products"]))
                 return true;
 
-            $items = $cart->getItems();
             $targetProducts = json_decode(trim($coupon['target_products']), true);
             if (JSON_ERROR_NONE !== json_last_error())
                 return false;
 
-            $targetProducts = empty($targetProducts) ? [] : $targetProducts["products"];
+            $maxQty = $targetProducts["maxQty"] ?? abs((int)$targetProducts["maxQty"]) ?? null;
+            $targetItems = $this->validator->getTargetProducts();
 
-            $discountItems = [];
-            foreach ($targetProducts as $condition) {
-                if($condition['key'] != 'category')
-                    continue;
-                $conn = _mysql();
-                $value = $this->parseValue($condition['value']);
-                if(is_array($value)) {
-                    if($condition['operator'] != "IN" and $condition['operator'] != "NOT IN") {
-                        return false;
-                        break;
-                    } else {
-                        foreach ($items as $item) {
-                            $check = $conn->getTable('product_category')
-                                ->where('product_id', '=', $item->getData("product_id"))
-                                ->andWhere('category_id', "IN", $value)
-                                ->fetchOneAssoc();
-                            if(($condition['operator'] == "IN" && $check != false) || ($condition['operator'] == "NOT IN" && $check == false))
-                                $discountItems[] = $item;
-                        }
-
-                    }
+            foreach ($targetItems as $i) {
+                if($coupon['discount_type'] == "fixed_discount_to_specific_products") {
+                    $discountAmount = abs(floatval($coupon['discount_amount']));
+                    if($discountAmount > $i->getData("final_price"))
+                        $discountAmount = $i->getData("final_price");
+                    $discounts[$i->getId()] = ($maxQty == null || $maxQty > $i->getData("qty")) ? $discountAmount * $i->getData("qty") : $discountAmount * $maxQty;
                 } else {
-                    if($condition['operator'] == "IN" or $condition['operator'] == "NOT IN") {
-                        foreach ($items as $item) {
-                            $check = $conn->getTable('product_category')
-                                ->where('product_id', '=', $item->getData("product_id"))
-                                ->andWhere('category_id', "IN", $value)
-                                ->fetchOneAssoc();
-                            if(($condition['operator'] == "IN" && $check != false) || ($condition['operator'] == "NOT IN" && $check == false))
-                                $discountItems[] = $item;
-                        }
-                    } else {
-                        foreach ($items as $item) {
-                            if($condition['operator'] == "<>")
-                                $check = $conn->getTable('product_category')
-                                    ->where('product_id', '=', $item->getData("product_id"))
-                                    ->andWhere('category_id', "=", $value)
-                                    ->fetchOneAssoc();
-                            else
-                                $check = $conn->getTable('product_category')
-                                    ->where('product_id', '=', $item->getData("product_id"))
-                                    ->andWhere('category_id', $condition["operator"], $value)
-                                    ->fetchOneAssoc();
-                            if(($condition['operator'] != "<>" && $check != false) || ($condition['operator'] == "<>" && $check == false))
-                                $discountItems[] = $item;
-                        }
-
+                    $discountPercent = floatval($coupon['discount_amount']) > 100 ? 100 : abs(floatval($coupon['discount_amount']));
+                    $discountAmount = $i->getData('final_price') * $discountPercent / 100;
+                    $discountAmount = ($maxQty == null || $maxQty > $i->getData("qty")) ? $discountAmount * $i->getData("qty") : $discountAmount * $maxQty;
+                    switch (get_config('sale_discount_calculation_rounding', 0)) {
+                        case 1:
+                            $discounts[$i->getId()] = ceil($discountAmount);
+                            break;
+                        case -1:
+                            $discounts[$i->getId()] = floor($discountAmount);
+                            break;
+                        case 0:
+                            $discounts[$i->getId()] = round($discountAmount);
+                            break;
                     }
                 }
-                $discounts = [];
-                foreach ($discountItems as $i) {
-                    if($coupon['discount_type'] == "fixed_discount_to_specific_products") {
-                        $discountAmount = abs(floatval($coupon['discount_amount']));
-                        if($discountAmount > $i->getData("total"))
-                            $discountAmount = $i->getData("total");
-                        $discounts[$i->getId()] = $discountAmount;
-                    } else {
-                        $discountPercent = floatval($coupon['discount_amount']) > 100 ? 100 : abs(floatval($coupon['discount_amount']));
-                        $discountAmount = $i->getData('final_price') * $i->getData('qty') * $discountPercent / 100;
-                        switch (get_config('sale_discount_calculation_rounding', 0)) {
-                            case 1:
-                                $discounts[$i->getId()] = ceil($discountAmount);
-                                break;
-                            case -1:
-                                $discounts[$i->getId()] = floor($discountAmount);
-                                break;
-                            case 0:
-                                $discounts[$i->getId()] = round($discountAmount);
-                                break;
-                        }
-                    }
-                }
-
-                if($this->discounts)
-                    $this->discounts = array_intersect_key($this->discounts, $discounts);
-                else
-                    $this->discounts = $discounts;
             }
-
-            return true;
-        });
-
-        $this->addDiscountCalculator('discount_to_specific_products_by_attribute_group', function(array $coupon, Cart $cart) {
-            if(!in_array($coupon['discount_type'], ["fixed_discount_to_specific_products", "percentage_discount_to_specific_products"]))
-                return true;
-
-            $items = $cart->getItems();
-            $targetProducts = json_decode(trim($coupon['target_products']), true);
-            if (JSON_ERROR_NONE !== json_last_error())
-                return false;
-
-            $targetProducts = empty($targetProducts) ? [] : $targetProducts["products"];
-
-            $discountItems = [];
-            foreach ($targetProducts as $condition) {
-                if($condition['key'] != 'attribute_group')
-                    continue;
-                $conn = _mysql();
-                $value = $this->parseValue($condition['value']);
-                if(is_array($value)) {
-                    if($condition['operator'] != "IN" and $condition['operator'] != "NOT IN") {
-                        return false;
-                        break;
-                    } else {
-                        foreach ($items as $item) {
-                            $check = $conn->getTable('product')
-                                ->where('product_id', '=', $item->getData("product_id"))
-                                ->andWhere('group_id', "IN", $value)
-                                ->fetchOneAssoc();
-                            if(($condition['operator'] == "IN" && $check != false) || ($condition['operator'] == "NOT IN" && $check == false))
-                                $discountItems[] = $item;
-                        }
-
-                    }
-                } else {
-                    if($condition['operator'] == "IN" or $condition['operator'] == "NOT IN") {
-                        foreach ($items as $item) {
-                            $check = $conn->getTable('product')
-                                ->where('product_id', '=', $item->getData("product_id"))
-                                ->andWhere('group_id', "IN", $value)
-                                ->fetchOneAssoc();
-                            if(($condition['operator'] == "IN" && $check != false) || ($condition['operator'] == "NOT IN" && $check == false))
-                                $discountItems[] = $item;
-                        }
-                    } else {
-                        foreach ($items as $item) {
-                            if($condition['operator'] == "<>")
-                                $check = $conn->getTable('product')
-                                    ->where('product_id', '=', $item->getData("product_id"))
-                                    ->andWhere('group_id', "=", $value)
-                                    ->fetchOneAssoc();
-                            else
-                                $check = $conn->getTable('product')
-                                    ->where('product_id', '=', $item->getData("product_id"))
-                                    ->andWhere('group_id', $condition["operator"], $value)
-                                    ->fetchOneAssoc();
-                            if(($condition['operator'] != "<>" && $check != false) || ($condition['operator'] == "<>" && $check == false))
-                                $discountItems[] = $item;
-                        }
-
-                    }
-                }
-
-                $discounts = [];
-                foreach ($discountItems as $i) {
-                    if($coupon['discount_type'] == "fixed_discount_to_specific_products") {
-                        $discountAmount = abs(floatval($coupon['discount_amount']));
-                        if($discountAmount > $i->getData("total"))
-                            $discountAmount = $i->getData("total");
-                        $discounts[$i->getId()] = $discountAmount;
-                    } else {
-                        $discountPercent = floatval($coupon['discount_amount']) > 100 ? 100 : abs(floatval($coupon['discount_amount']));
-                        $discountAmount = $i->getData('final_price') * $i->getData('qty') * $discountPercent / 100;
-                        switch (get_config('sale_discount_calculation_rounding', 0)) {
-                            case 1:
-                                $discounts[$i->getId()] = ceil($discountAmount);
-                                break;
-                            case -1:
-                                $discounts[$i->getId()] = floor($discountAmount);
-                                break;
-                            case 0:
-                                $discounts[$i->getId()] = round($discountAmount);
-                                break;
-                        }
-                    }
-                }
-
-                if($this->discounts)
-                    $this->discounts = array_intersect_key($this->discounts, $discounts);
-                else
-                    $this->discounts = $discounts;
-            }
-
-            return true;
-        });
-
-        $this->addDiscountCalculator('discount_to_specific_products_by_price', function(array $coupon, Cart $cart) {
-            if(!in_array($coupon['discount_type'], ["fixed_discount_to_specific_products", "percentage_discount_to_specific_products"]))
-                return true;
-
-            $items = $cart->getItems();
-            $targetProducts = json_decode(trim($coupon['target_products']), true);
-            if (JSON_ERROR_NONE !== json_last_error())
-                return false;
-
-            $targetProducts = empty($targetProducts) ? [] : $targetProducts["products"];
-
-            $discountItems = [];
-            foreach ($targetProducts as $condition) {
-                if($condition['key'] != 'price')
-                    continue;
-                $value = $this->parseValue($condition['value']);
-                if(is_array($value)) {
-                    if($condition['operator'] != "IN" and $condition['operator'] != "NOT IN") {
-                        return false;
-                        break;
-                    } else {
-                        foreach ($items as $item) {
-                            if($condition['operator'] == "IN") {
-                                if(in_array($item->getData('final_price'), $value)) {
-                                    $discountItems[] = $item;
-                                    break;
-                                }
-                            } else {
-                                if(!in_array($item->getData('final_price'), $value)) {
-                                    $discountItems[] = $item;
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                } else {
-                    if($condition['operator'] == "IN" or $condition['operator'] == "NOT IN") {
-                        foreach ($items as $item) {
-                            if($condition['operator'] == "IN") {
-                                if($item->getData('final_price') == $value) {
-                                    $discountItems[] = $item;
-                                    break;
-                                }
-                            } else {
-                                if($item->getData('final_price') != $value) {
-                                    $discountItems[] = $item;
-                                    break;
-                                }
-                            }
-                        }
-                    } else {
-                        foreach ($items as $item) {
-                            switch($condition['operator'])
-                            {
-                                case "=":
-                                    if($item->getData('final_price') == $value)
-                                        $discountItems[] = $item;
-                                    break;
-                                case "<":
-                                    if($item->getData('final_price') < $value)
-                                        $discountItems[] = $item;
-                                    break;
-                                case "<=":
-                                    if($item->getData('final_price') <= $value)
-                                        $discountItems[] = $item;
-                                    break;
-                                case ">":
-                                    if($item->getData('final_price') > $value)
-                                        $discountItems[] = $item;
-                                    break;
-                                case ">=":
-                                    if($item->getData('final_price') >= $value)
-                                        $discountItems[] = $item;
-                                    break;
-                                case "<>":
-                                    if($item->getData('final_price') != $value)
-                                        $discountItems[] = $item;
-                                    break;
-                            }
-                        }
-                    }
-                }
-                $discounts = [];
-                foreach ($discountItems as $i) {
-                    if($coupon['discount_type'] == "fixed_discount_to_specific_products") {
-                        $discountAmount = abs(floatval($coupon['discount_amount']));
-                        if($discountAmount > $i->getData("total"))
-                            $discountAmount = $i->getData("total");
-                        $discounts[$i->getId()] = $discountAmount;
-                    } else {
-                        $discountPercent = floatval($coupon['discount_amount']) > 100 ? 100 : abs(floatval($coupon['discount_amount']));
-                        $discountAmount = $i->getData('final_price') * $i->getData('qty') * $discountPercent / 100;
-                        switch (get_config('sale_discount_calculation_rounding', 0)) {
-                            case 1:
-                                $discounts[$i->getId()] = ceil($discountAmount);
-                                break;
-                            case -1:
-                                $discounts[$i->getId()] = floor($discountAmount);
-                                break;
-                            case 0:
-                                $discounts[$i->getId()] = round($discountAmount);
-                                break;
-                        }
-                    }
-                }
-
-                if($this->discounts)
-                    $this->discounts = array_intersect_key($this->discounts, $discounts);
-                else
-                    $this->discounts = $discounts;
-            }
-
-            return true;
-        });
-
-        $this->addDiscountCalculator('discount_to_specific_products_by_sku', function(array $coupon, Cart $cart) {
-            if(!in_array($coupon['discount_type'], ["fixed_discount_to_specific_products", "percentage_discount_to_specific_products"]))
-                return true;
-
-            $items = $cart->getItems();
-            $targetProducts = json_decode(trim($coupon['target_products']), true);
-            if (JSON_ERROR_NONE !== json_last_error())
-                return false;
-
-            $targetProducts = empty($targetProducts) ? [] : $targetProducts["products"];
-
-            $discountItems = [];
-            foreach ($targetProducts as $condition) {
-                if($condition['key'] != 'sku')
-                    continue;
-                $value = $this->parseValue($condition['value']);
-                if(is_array($value)) {
-                    if($condition['operator'] != "IN" and $condition['operator'] != "NOT IN") {
-                        return false;
-                        break;
-                    } else {
-                        foreach ($items as $item) {
-                            if($condition['operator'] == "IN") {
-                                if(in_array($item->getData('product_sku'), $value)) {
-                                    $discountItems[] = $item;
-                                    break;
-                                }
-                            } else {
-                                if(!in_array($item->getData('product_sku'), $value)) {
-                                    $discountItems[] = $item;
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                } else {
-                    if($condition['operator'] == "IN" or $condition['operator'] == "NOT IN") {
-                        foreach ($items as $item) {
-                            if($condition['operator'] == "IN") {
-                                if($item->getData('product_sku') == $value) {
-                                    $discountItems[] = $item;
-                                    break;
-                                }
-                            } else {
-                                if($item->getData('product_sku') != $value) {
-                                    $discountItems[] = $item;
-                                    break;
-                                }
-                            }
-                        }
-                    } else {
-                        foreach ($items as $item) {
-                            switch($condition['operator'])
-                            {
-                                case "=":
-                                    if($item->getData('product_sku') == $value)
-                                        $discountItems[] = $item;
-                                    break;
-                                case "<":
-                                    if($item->getData('product_sku') < $value)
-                                        $discountItems[] = $item;
-                                    break;
-                                case "<=":
-                                    if($item->getData('product_sku') <= $value)
-                                        $discountItems[] = $item;
-                                    break;
-                                case ">":
-                                    if($item->getData('product_sku') > $value)
-                                        $discountItems[] = $item;
-                                    break;
-                                case ">=":
-                                    if($item->getData('product_sku') >= $value)
-                                        $discountItems[] = $item;
-                                    break;
-                                case "<>":
-                                    if($item->getData('product_sku') != $value)
-                                        $discountItems[] = $item;
-                                    break;
-                            }
-                        }
-                    }
-                }
-
-                $discounts = [];
-                foreach ($discountItems as $i) {
-                    if($coupon['discount_type'] == "fixed_discount_to_specific_products") {
-                        $discountAmount = abs(floatval($coupon['discount_amount']));
-                        if($discountAmount > $i->getData("total"))
-                            $discountAmount = $i->getData("total");
-                        $discounts[$i->getId()] = $discountAmount;
-                    } else {
-                        $discountPercent = floatval($coupon['discount_amount']) > 100 ? 100 : abs(floatval($coupon['discount_amount']));
-                        $discountAmount = $i->getData('final_price') * $i->getData('qty') * $discountPercent / 100;
-                        switch (get_config('sale_discount_calculation_rounding', 0)) {
-                            case 1:
-                                $discounts[$i->getId()] = ceil($discountAmount);
-                                break;
-                            case -1:
-                                $discounts[$i->getId()] = floor($discountAmount);
-                                break;
-                            case 0:
-                                $discounts[$i->getId()] = round($discountAmount);
-                                break;
-                        }
-                    }
-                }
-
-                if($this->discounts)
-                    $this->discounts = array_intersect_key($this->discounts, $discounts);
-                else
-                    $this->discounts = $discounts;
-            }
+            $this->discounts = $discounts;
 
             return true;
         });
