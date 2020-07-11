@@ -114,139 +114,281 @@ class Validator
 
             return true;
         })->addValidator('requiredProductByCategory', function($coupon, Cart $cart) {
-            $conditions = json_decode($coupon['condition'], true);
-            if(!isset($conditions['required_product']))
-                return true;
+            $requiredProducts = json_decode(trim($coupon['condition']), true);
+            if (JSON_ERROR_NONE !== json_last_error())
+                return false;
+
+            $requiredProducts = empty($requiredProducts) ? [] : $requiredProducts["required_product"];
+
             $satisfied = true;
-            foreach ($conditions['required_product'] as $condition) {
+            $requiredItems = [];
+            foreach ($requiredProducts as $condition) {
                 if($condition['key'] == 'category') {
                     $satisfied = false;
                     $conn = _mysql();
                     $value = $this->parseValue($condition['value']);
-                    $requiredQty = (int) $condition['qty'];
                     if(is_array($value)) {
                         if($condition['operator'] != "IN" and $condition['operator'] != "NOT IN") {
                             return false;
                             break;
                         } else {
                             $items = $cart->getItems();
+                            $pIDs = [];
                             foreach ($items as $item) {
-                                if($item->getData('qty') < $requiredQty)
-                                    continue;
-
-                                $check = $conn->getTable('product_category')
-                                    ->where('product_id', '=', $item->getData('product_id'))
-                                    ->andWhere('category_id', $condition['operator'], $value)
-                                    ->fetchOneAssoc();
-                                if($check)
-                                    $satisfied = true;
+                                $pIDs[$item->getData("product_id")] = $item->getData("product_id");
+                            }
+                            $check = $conn->getTable('product_category')
+                                ->where('product_id', 'IN', $pIDs)
+                                ->andWhere('category_id', "IN", $value)
+                                ->groupBy('product_id')
+                                ->fetchAllAssoc();
+                            if(($condition['operator'] == "IN" && $check )) {
+                                $satisfied = true;
+                                foreach ($items as $item)
+                                    if(array_find($check, function($v) use($item) {
+                                        if($item->getData("product_id") == $v["product_id"])
+                                            return $item;
+                                        return null;
+                                    }))
+                                        $requiredItems[$item->getId()] = $item;
+                            }
+                            if(($condition['operator'] == "NOT IN" && count($check) < count($pIDs))) {
+                                $satisfied = true;
+                                foreach ($items as $item)
+                                    if(!array_find($check, function($v) use($item) {
+                                        if($item->getData("product_id") == $v["product_id"])
+                                            return $item;
+                                        return null;
+                                    }))
+                                        $requiredItems[$item->getId()] = $item;
                             }
                         }
                     } else {
                         if($condition['operator'] == "IN" or $condition['operator'] == "NOT IN") {
                             $items = $cart->getItems();
+                            $pIDs = [];
                             foreach ($items as $item) {
-                                if($item->getData('qty') < $requiredQty)
-                                    continue;
-
-                                $check = $conn->getTable('product_category')
-                                    ->where('product_id', '=', $item->getData('product_id'))
-                                    ->andWhere('category_id', $condition['operator'], [$value])
-                                    ->fetchOneAssoc();
-                                if($check)
-                                    $satisfied = true;
+                                $pIDs[$item->getData("product_id")] = $item->getData("product_id");
+                            }
+                            $check = $conn->getTable('product_category')
+                                ->where('product_id', 'IN', $pIDs)
+                                ->andWhere('category_id', "IN", [$value])
+                                ->fetchAllAssoc();
+                            if(($condition['operator'] == "IN" && $check )) {
+                                $satisfied = true;
+                                foreach ($items as $item)
+                                    if(array_find($check, function($v) use($item) {
+                                        if($item->getData("product_id") == $v["product_id"])
+                                            return $item;
+                                        return null;
+                                    }))
+                                        $requiredItems[$item->getId()] = $item;
+                            }
+                            if(($condition['operator'] == "NOT IN" && count($check) < count($pIDs))) {
+                                $satisfied = true;
+                                foreach ($items as $item)
+                                    if(!array_find($check, function($v) use($item) {
+                                        if($item->getData("product_id") == $v["product_id"])
+                                            return $item;
+                                        return null;
+                                    }))
+                                        $requiredItems[$item->getId()] = $item;
                             }
                         } else {
                             $items = $cart->getItems();
+                            $pIDs = [];
                             foreach ($items as $item) {
-                                if($item->getData('qty') < $requiredQty)
-                                    continue;
-
+                                $pIDs[$item->getData("product_id")] = $item->getData("product_id");
+                            }
+                            if($condition['operator'] == "<>")
                                 $check = $conn->getTable('product_category')
-                                    ->where('product_id', '=', $item->getData('product_id'))
+                                    ->where('product_id', 'IN', $pIDs)
+                                    ->andWhere('category_id', "=", $value)
+                                    ->fetchAllAssoc();
+                            else
+                                $check = $conn->getTable('product_category')
+                                    ->where('product_id', 'IN', $pIDs)
                                     ->andWhere('category_id', $condition['operator'], $value)
-                                    ->fetchOneAssoc();
-                                if($check)
-                                    $satisfied = true;
+                                    ->fetchAllAssoc();
+                            if($condition['operator'] != "<>" && $check){
+                                $satisfied = true;
+                                foreach ($items as $item)
+                                    if(array_find($check, function($v) use($item) {
+                                        if($item->getData("product_id") == $v["product_id"])
+                                            return $item;
+                                        return null;
+                                    }))
+                                        $requiredItems[$item->getId()] = $item;
+                            }
+                            if(($condition['operator'] == "<>" && count($check) < count($pIDs))) {
+                                $satisfied = true;
+                                foreach ($items as $item)
+                                    if(!array_find($check, function($v) use($item) {
+                                        if($item->getData("product_id") == $v["product_id"])
+                                            return $item;
+                                        return null;
+                                    }))
+                                        $requiredItems[$item->getId()] = $item;
                             }
                         }
                     }
+                    if($this->requiredProducts == null) {
+                        $this->requiredProducts = $requiredItems;
+                    } else {
+                        $this->requiredProducts = array_intersect_key($this->requiredProducts, $requiredItems);
+                    }
+                    if(!$this->requiredProducts)
+                        return false;
+                    else
+                        $satisfied = true;
                 }
             }
 
             return $satisfied;
         })->addValidator('requiredProductByAttributeGroup', function($coupon, Cart $cart) {
-            $conditions = json_decode($coupon['condition'], true);
-            if(!isset($conditions['required_product']))
-                return true;
+            $requiredProducts = json_decode(trim($coupon['condition']), true);
+            if (JSON_ERROR_NONE !== json_last_error())
+                return false;
+
+            $requiredProducts = empty($requiredProducts) ? [] : $requiredProducts["required_product"];
+
             $satisfied = true;
-            foreach ($conditions['required_product'] as $condition) {
+            $requiredItems = [];
+            foreach ($requiredProducts as $condition) {
                 if($condition['key'] == 'attribute_group') {
                     $satisfied = false;
                     $conn = _mysql();
                     $value = $this->parseValue($condition['value']);
-                    $requiredQty = (int) $condition['qty'];
                     if(is_array($value)) {
                         if($condition['operator'] != "IN" and $condition['operator'] != "NOT IN") {
                             return false;
                             break;
                         } else {
                             $items = $cart->getItems();
+                            $pIDs = [];
                             foreach ($items as $item) {
-                                if($item->getData('qty') < $requiredQty)
-                                    continue;
-
-                                $check = $conn->getTable('product')
-                                    ->where('product_id', '=', $item->getData('product_id'))
-                                    ->andWhere('group_id', $condition['operator'], $value)
-                                    ->fetchOneAssoc();
-                                if($check)
-                                    $satisfied = true;
+                                $pIDs[$item->getData("product_id")] = $item->getData("product_id");
+                            }
+                            $check = $conn->getTable('product')
+                                ->where('product_id', 'IN', $pIDs)
+                                ->andWhere('group_id', "IN", $value)
+                                ->fetchAllAssoc();
+                            if(($condition['operator'] == "IN" && $check )) {
+                                $satisfied = true;
+                                foreach ($items as $item)
+                                    if(array_find($check, function($v) use($item) {
+                                        if($item->getData("product_id") == $v["product_id"])
+                                            return $item;
+                                        return null;
+                                    }))
+                                        $requiredItems[$item->getId()] = $item;
+                            }
+                            if(($condition['operator'] == "NOT IN" && count($check) < count($pIDs))) {
+                                $satisfied = true;
+                                foreach ($items as $item)
+                                    if(!array_find($check, function($v) use($item) {
+                                        if($item->getData("product_id") == $v["product_id"])
+                                            return $item;
+                                        return null;
+                                    }))
+                                        $requiredItems[$item->getId()] = $item;
                             }
                         }
                     } else {
                         if($condition['operator'] == "IN" or $condition['operator'] == "NOT IN") {
                             $items = $cart->getItems();
+                            $pIDs = [];
                             foreach ($items as $item) {
-                                if($item->getData('qty') < $requiredQty)
-                                    continue;
-
-                                $check = $conn->getTable('product')
-                                    ->where('product_id', '=', $item->getData('product_id'))
-                                    ->andWhere('group_id', $condition['operator'], [$value])
-                                    ->fetchOneAssoc();
-                                if($check)
-                                    $satisfied = true;
+                                $pIDs[$item->getData("product_id")] = $item->getData("product_id");
+                            }
+                            $check = $conn->getTable('product')
+                                ->where('product_id', 'IN', $pIDs)
+                                ->andWhere('group_id', "IN", [$value])
+                                ->fetchAllAssoc();
+                            if(($condition['operator'] == "IN" && $check )) {
+                                $satisfied = true;
+                                foreach ($items as $item)
+                                    if(array_find($check, function($v) use($item) {
+                                        if($item->getData("product_id") == $v["product_id"])
+                                            return $item;
+                                        return null;
+                                    }))
+                                        $requiredItems[$item->getId()] = $item;
+                            }
+                            if(($condition['operator'] == "NOT IN" && count($check) < count($pIDs))) {
+                                $satisfied = true;
+                                foreach ($items as $item)
+                                    if(!array_find($check, function($v) use($item) {
+                                        if($item->getData("product_id") == $v["product_id"])
+                                            return $item;
+                                        return null;
+                                    }))
+                                        $requiredItems[$item->getId()] = $item;
                             }
                         } else {
                             $items = $cart->getItems();
+                            $pIDs = [];
                             foreach ($items as $item) {
-                                if($item->getData('qty') < $requiredQty)
-                                    continue;
-
+                                $pIDs[$item->getData("product_id")] = $item->getData("product_id");
+                            }
+                            if($condition['operator'] == "<>")
                                 $check = $conn->getTable('product')
-                                    ->where('product_id', '=', $item->getData('product_id'))
+                                    ->where('product_id', 'IN', $pIDs)
+                                    ->andWhere('group_id', "=", $value)
+                                    ->fetchAllAssoc();
+                            else
+                                $check = $conn->getTable('product')
+                                    ->where('product_id', 'IN', $pIDs)
                                     ->andWhere('group_id', $condition['operator'], $value)
-                                    ->fetchOneAssoc();
-                                if($check)
-                                    $satisfied = true;
+                                    ->fetchAllAssoc();
+                            if($condition['operator'] != "<>" && $check){
+                                $satisfied = true;
+                                foreach ($items as $item)
+                                    if(array_find($check, function($v) use($item) {
+                                        if($item->getData("product_id") == $v["product_id"])
+                                            return $item;
+                                        return null;
+                                    }))
+                                        $requiredItems[$item->getId()] = $item;
+                            }
+                            if(($condition['operator'] == "<>" && count($check) < count($pIDs))) {
+                                $satisfied = true;
+                                foreach ($items as $item)
+                                    if(!array_find($check, function($v) use($item) {
+                                        if($item->getData("product_id") == $v["product_id"])
+                                            return $item;
+                                        return null;
+                                    }))
+                                        $requiredItems[$item->getId()] = $item;
                             }
                         }
                     }
+                    if($this->requiredProducts == null) {
+                        $this->requiredProducts = $requiredItems;
+                    } else {
+                        $this->requiredProducts = array_intersect_key($this->requiredProducts, $requiredItems);
+                    }
+                    if(!$this->requiredProducts)
+                        return false;
+                    else
+                        $satisfied = true;
                 }
             }
 
             return $satisfied;
         })->addValidator('requiredProductByPrice', function($coupon, Cart $cart) {
-            $conditions = json_decode($coupon['condition'], true);
-            if(!isset($conditions['required_product']))
-                return true;
+            $requiredProducts = json_decode(trim($coupon['condition']), true);
+            if (JSON_ERROR_NONE !== json_last_error())
+                return false;
+
+            $requiredProducts = empty($requiredProducts) ? [] : $requiredProducts["required_product"];
+
             $satisfied = true;
-            foreach ($conditions['required_product'] as $condition) {
+            $requiredItems = [];
+            foreach ($requiredProducts as $condition) {
                 if($condition['key'] == 'price') {
                     $satisfied = false;
                     $value = $this->parseValue($condition['value']);
-                    $requiredQty = (int) $condition['qty'];
                     if(is_array($value)) {
                         if($condition['operator'] != "IN" and $condition['operator'] != "NOT IN") {
                             return false;
@@ -254,14 +396,16 @@ class Validator
                         } else {
                             $items = $cart->getItems();
                             foreach ($items as $item) {
-                                if($item->getData('qty') < $requiredQty)
-                                    continue;
                                 if($condition['operator'] == "IN") {
-                                    if(in_array($item->getData('final_price'), $value))
-                                        $satisfied = true;
+                                    if(in_array($item->getData('final_price'), $value)) {
+                                        $requiredItems[$item->getId()] = $item;
+                                        break;
+                                    }
                                 } else {
-                                    if(!in_array($item->getData('final_price'), $value))
-                                        $satisfied = true;
+                                    if(!in_array($item->getData('final_price'), $value)) {
+                                        $requiredItems[$item->getId()] = $item;
+                                        break;
+                                    }
                                 }
                             }
                         }
@@ -269,67 +413,83 @@ class Validator
                         if($condition['operator'] == "IN" or $condition['operator'] == "NOT IN") {
                             $items = $cart->getItems();
                             foreach ($items as $item) {
-                                if($item->getData('qty') < $requiredQty)
-                                    continue;
-
                                 if($condition['operator'] == "IN") {
-                                    if($item->getData('final_price') == $value)
-                                        $satisfied = true;
+                                    if($item->getData('final_price') == $value) {
+                                        $requiredItems[$item->getId()] = $item;
+                                        break;
+                                    }
                                 } else {
-                                    if($item->getData('final_price') != $value)
-                                        $satisfied = true;
+                                    if($item->getData('final_price') != $value) {
+                                        $requiredItems[$item->getId()] = $item;
+                                        break;
+                                    }
                                 }
                             }
                         } else {
                             $items = $cart->getItems();
                             foreach ($items as $item) {
-                                if($item->getData('qty') < $requiredQty)
-                                    continue;
-
                                 switch($condition['operator'])
                                 {
                                     case "=":
-                                        if($item->getData('final_price') == $value)
-                                            $satisfied = true;
+                                        if($item->getData('final_price') == $value) {
+                                            $requiredItems[$item->getId()] = $item;
+                                        }
                                         break;
                                     case "<":
-                                        if($item->getData('final_price') < $value)
-                                            $satisfied = true;
+                                        if($item->getData('final_price') < $value) {
+                                            $requiredItems[$item->getId()] = $item;
+                                        }
                                         break;
                                     case "<=":
-                                        if($item->getData('final_price') <= $value)
-                                            $satisfied = true;
+                                        if($item->getData('final_price') <= $value) {
+                                            $requiredItems[$item->getId()] = $item;
+                                        }
                                         break;
                                     case ">":
-                                        if($item->getData('final_price') > $value)
-                                            $satisfied = true;
+                                        if($item->getData('final_price') > $value) {
+                                            $requiredItems[$item->getId()] = $item;
+                                        }
                                         break;
                                     case ">=":
-                                        if($item->getData('final_price') >= $value)
-                                            $satisfied = true;
+                                        if($item->getData('final_price') >= $value) {
+                                            $requiredItems[$item->getId()] = $item;
+                                        }
                                         break;
                                     case "<>":
-                                        if($item->getData('final_price') != $value)
-                                            $satisfied = true;
+                                        if($item->getData('final_price') != $value) {
+                                            $requiredItems[$item->getId()] = $item;
+                                        }
                                         break;
                                 }
                             }
                         }
                     }
+                    if($this->requiredProducts == null) {
+                        $this->requiredProducts = $requiredItems;
+                    } else {
+                        $this->requiredProducts = array_intersect_key($this->requiredProducts, $requiredItems);
+                    }
+                    if(!$this->requiredProducts)
+                        return false;
+                    else
+                        $satisfied = true;
                 }
             }
 
             return $satisfied;
         })->addValidator('requiredProductBySKU', function($coupon, Cart $cart) {
-            $conditions = json_decode($coupon['condition'], true);
-            if(!isset($conditions['required_product']))
-                return true;
+            $requiredProducts = json_decode(trim($coupon['condition']), true);
+            if (JSON_ERROR_NONE !== json_last_error())
+                return false;
+
+            $requiredProducts = empty($requiredProducts) ? [] : $requiredProducts["required_product"];
+
             $satisfied = true;
-            foreach ($conditions['required_product'] as $condition) {
+            $requiredItems = [];
+            foreach ($requiredProducts as $condition) {
                 if($condition['key'] == 'sku') {
                     $satisfied = false;
                     $value = $this->parseValue($condition['value']);
-                    $requiredQty = (int) $condition['qty'];
                     if(is_array($value)) {
                         if($condition['operator'] != "IN" and $condition['operator'] != "NOT IN") {
                             return false;
@@ -337,14 +497,16 @@ class Validator
                         } else {
                             $items = $cart->getItems();
                             foreach ($items as $item) {
-                                if($item->getData('qty') < $requiredQty)
-                                    continue;
                                 if($condition['operator'] == "IN") {
-                                    if(in_array($item->getData('product_sku'), $value))
-                                        $satisfied = true;
+                                    if(in_array($item->getData('product_sku'), $value)) {
+                                        $requiredItems[$item->getId()] = $item;
+                                        break;
+                                    }
                                 } else {
-                                    if(!in_array($item->getData('product_sku'), $value))
-                                        $satisfied = true;
+                                    if(!in_array($item->getData('product_sku'), $value)) {
+                                        $requiredItems[$item->getId()] = $item;
+                                        break;
+                                    }
                                 }
                             }
                         }
@@ -352,53 +514,60 @@ class Validator
                         if($condition['operator'] == "IN" or $condition['operator'] == "NOT IN") {
                             $items = $cart->getItems();
                             foreach ($items as $item) {
-                                if($item->getData('qty') < $requiredQty)
-                                    continue;
-
                                 if($condition['operator'] == "IN") {
-                                    if($item->getData('product_sku') == $value)
-                                        $satisfied = true;
+                                    if($item->getData('product_sku') == $value) {
+                                        $requiredItems[$item->getId()] = $item;
+                                        break;
+                                    }
                                 } else {
-                                    if($item->getData('product_sku') != $value)
-                                        $satisfied = true;
+                                    if($item->getData('product_sku') != $value) {
+                                        $requiredItems[$item->getId()] = $item;
+                                        break;
+                                    }
                                 }
                             }
                         } else {
                             $items = $cart->getItems();
                             foreach ($items as $item) {
-                                if($item->getData('qty') < $requiredQty)
-                                    continue;
-
                                 switch($condition['operator'])
                                 {
                                     case "=":
                                         if($item->getData('product_sku') == $value)
-                                            $satisfied = true;
+                                            $requiredItems[$item->getId()] = $item;
                                         break;
                                     case "<":
                                         if($item->getData('product_sku') < $value)
-                                            $satisfied = true;
+                                            $requiredItems[$item->getId()] = $item;
                                         break;
                                     case "<=":
                                         if($item->getData('product_sku') <= $value)
-                                            $satisfied = true;
+                                            $requiredItems[$item->getId()] = $item;
                                         break;
                                     case ">":
                                         if($item->getData('product_sku') > $value)
-                                            $satisfied = true;
+                                            $requiredItems[$item->getId()] = $item;
                                         break;
                                     case ">=":
                                         if($item->getData('product_sku') >= $value)
-                                            $satisfied = true;
+                                            $requiredItems[$item->getId()] = $item;
                                         break;
                                     case "<>":
                                         if($item->getData('product_sku') != $value)
-                                            $satisfied = true;
+                                            $requiredItems[$item->getId()] = $item;
                                         break;
                                 }
                             }
                         }
                     }
+                    if($this->requiredProducts == null) {
+                        $this->requiredProducts = $requiredItems;
+                    } else {
+                        $this->requiredProducts = array_intersect_key($this->requiredProducts, $requiredItems);
+                    }
+                    if(!$this->requiredProducts)
+                        return false;
+                    else
+                        $satisfied = true;
                 }
             }
 
@@ -525,17 +694,15 @@ class Validator
                             }
                         }
                     }
-                    if($satisfied == false || !$targetItems)
+                    if($satisfied || !$targetItems)
                         return false;
                     if($this->targetProducts == null) {
                         $this->targetProducts = $targetItems;
-                        return true;
                     } else {
                         $this->targetProducts = array_intersect_key($this->targetProducts, $targetItems);
-                        if($this->targetProducts)
-                            return true;
-                        return false;
                     }
+                    if(!$this->targetProducts)
+                        return false;
                 }
             }
 
@@ -660,17 +827,15 @@ class Validator
                             }
                         }
                     }
-                    if($satisfied == false || !$targetItems)
+                    if($satisfied || !$targetItems)
                         return false;
                     if($this->targetProducts == null) {
                         $this->targetProducts = $targetItems;
-                        return true;
                     } else {
                         $this->targetProducts = array_intersect_key($this->targetProducts, $targetItems);
-                        if($this->targetProducts)
-                            return true;
-                        return false;
                     }
+                    if(!$this->targetProducts)
+                        return false;
                 }
             }
 
@@ -769,17 +934,15 @@ class Validator
                             }
                         }
                     }
-                    if($satisfied == false || !$targetItems)
+                    if($satisfied || !$targetItems)
                         return false;
                     if($this->targetProducts == null) {
                         $this->targetProducts = $targetItems;
-                        return true;
                     } else {
                         $this->targetProducts = array_intersect_key($this->targetProducts, $targetItems);
-                        if($this->targetProducts)
-                            return true;
-                        return false;
                     }
+                    if(!$this->targetProducts)
+                        return false;
                 }
             }
 
@@ -878,17 +1041,15 @@ class Validator
                             }
                         }
                     }
-                    if($satisfied == false || !$targetItems)
+                    if($satisfied || !$targetItems)
                         return false;
                     if($this->targetProducts == null) {
                         $this->targetProducts = $targetItems;
-                        return true;
                     } else {
                         $this->targetProducts = array_intersect_key($this->targetProducts, $targetItems);
-                        if($this->targetProducts)
-                            return true;
-                        return false;
                     }
+                    if(!$this->targetProducts)
+                        return false;
                 }
             }
 
