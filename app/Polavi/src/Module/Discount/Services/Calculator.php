@@ -64,8 +64,8 @@ class Calculator
                     $rowTotal = $item->getData('final_price') * $item->getData('qty');
                     $sharedDiscount = round($rowTotal * $cartDiscountAmount / $this->getCartTotalBeforeDiscount($cart), 0);
                 }
-                if(!isset($this->discounts[$item->getData('cart_item_id')]) or $this->discounts[$item->getData('cart_item_id')] != $sharedDiscount) {
-                    $this->discounts[$item->getData('cart_item_id')] = $sharedDiscount;
+                if(!isset($this->discounts[$item->getId()]) or $this->discounts[$item->getId()] != $sharedDiscount) {
+                    $this->discounts[$item->getId()] = $sharedDiscount;
                 }
 
                 $distributedAmount += $sharedDiscount;
@@ -99,8 +99,8 @@ class Calculator
                     $rowTotal = $item->getData('final_price') * $item->getData('qty');
                     $sharedDiscount = round($rowTotal * $cartDiscountAmount / $this->getCartTotalBeforeDiscount($cart), 0);
                 }
-                if(!isset($this->discounts[$item->getData('cart_item_id')]) or $this->discounts[$item->getData('cart_item_id')] != $sharedDiscount) {
-                    $this->discounts[$item->getData('cart_item_id')] = $sharedDiscount;
+                if(!isset($this->discounts[$item->getId()]) or $this->discounts[$item->getId()] != $sharedDiscount) {
+                    $this->discounts[$item->getId()] = $sharedDiscount;
                 }
 
                 $distributedAmount += $sharedDiscount;
