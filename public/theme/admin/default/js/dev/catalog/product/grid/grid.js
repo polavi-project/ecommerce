@@ -302,7 +302,7 @@ function StatusColumnRow({row}) {
         return <td><span className="uk-label uk-label-danger">Disabled</span></td>;
 }
 
-export default function ProductGrid({apiUrl, areaProps})
+export default function ProductGrid({apiUrl, areaProps, limit})
 {
     const [products, setProducts] = React.useState([]);
     const [fields, setFields] = React.useState([]);
@@ -475,6 +475,6 @@ export default function ProductGrid({apiUrl, areaProps})
         {products.length === 0 &&
         <div>There is no product to display</div>
         }
-        <Pagination total={total} currentFilters={areaProps.filters} setFilter={areaProps.updateFilter}/>
+        <Pagination total={total} page={_.get(areaProps.filters.find((e)=> e.key === 'page'), 'value', 1)} limit={_.get(areaProps.filters.find((e)=> e.key === 'limit'), 'value', limit)} setFilter={areaProps.updateFilter}/>
     </div>
 }

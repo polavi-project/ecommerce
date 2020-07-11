@@ -1,16 +1,11 @@
-export default function Pagination({ total, currentFilters, setFilter }) {
-    const currentLimit = _.get(currentFilters.find(e => e.key == 'limit'), 'value', 20);
-    const [limit, setLimit] = React.useState(_.get(currentFilters.find(e => e.key == 'limit'), 'value', 20));
-    const current = _.get(currentFilters.find(e => e.key == 'page'), 'value', 1);
-    const [inputVal, setInPutVal] = React.useState(current);
+export default function Pagination({ total, limit, page, setFilter }) {
+    const pageInput = React.useRef(null);
+    const limitInput = React.useRef(null);
 
     React.useEffect(() => {
-        setInPutVal(current);
-    }, [current]);
-
-    React.useEffect(() => {
-        setLimit(currentLimit);
-    }, [currentLimit]);
+        pageInput.current.value = page;
+        limitInput.current.value = limit;
+    });
 
     const onKeyPress = e => {
         if (e.which !== 13) return;
@@ -23,27 +18,27 @@ export default function Pagination({ total, currentFilters, setFilter }) {
 
     const onPrev = e => {
         e.preventDefault();
-        let prev = current - 1;
-        if (current === 1) return;
+        let prev = page - 1;
+        if (page === 1) return;
         setFilter('page', '=', prev);
     };
 
     const onNext = e => {
         e.preventDefault();
-        let next = current + 1;
-        if (current * limit >= total) return;
+        let next = page + 1;
+        if (page * limit >= total) return;
         setFilter('page', '=', next);
     };
 
     const onFirst = e => {
         e.preventDefault();
-        if (current === 1) return;
+        if (page === 1) return;
         setFilter('page', '=', 1);
     };
 
     const onLast = e => {
         e.preventDefault();
-        if (current === Math.ceil(total / limit)) return;
+        if (page === Math.ceil(total / limit)) return;
         setFilter('page', '=', Math.ceil(total / limit));
     };
 
@@ -86,7 +81,7 @@ export default function Pagination({ total, currentFilters, setFilter }) {
                     React.createElement(
                         'div',
                         { className: 'flex-column-reverse sml-flex' },
-                        React.createElement('input', { className: 'form-control', value: limit, onChange: e => onChangeLimit(e), type: 'text', onKeyPress: e => onKeyPressLimit(e) })
+                        React.createElement('input', { className: 'form-control', ref: limitInput, type: 'text', onKeyPress: e => onKeyPressLimit(e) })
                     )
                 ),
                 React.createElement(
@@ -98,7 +93,7 @@ export default function Pagination({ total, currentFilters, setFilter }) {
                         'per page'
                     )
                 ),
-                current > 1 && React.createElement(
+                page > 1 && React.createElement(
                     'td',
                     { className: 'prev' },
                     React.createElement(
@@ -119,7 +114,7 @@ export default function Pagination({ total, currentFilters, setFilter }) {
                 React.createElement(
                     'td',
                     { className: 'current' },
-                    React.createElement('input', { className: 'form-control', value: inputVal, onChange: e => setInPutVal(e.target.value), type: 'text', onKeyPress: e => onKeyPress(e) })
+                    React.createElement('input', { className: 'form-control', ref: pageInput, type: 'text', onKeyPress: e => onKeyPress(e) })
                 ),
                 React.createElement(
                     'td',
@@ -130,7 +125,7 @@ export default function Pagination({ total, currentFilters, setFilter }) {
                         Math.ceil(total / limit)
                     )
                 ),
-                current * limit < total && React.createElement(
+                page * limit < total && React.createElement(
                     'td',
                     { className: 'next' },
                     React.createElement(

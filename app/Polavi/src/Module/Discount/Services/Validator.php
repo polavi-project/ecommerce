@@ -28,6 +28,12 @@ class Validator
         $this->defaultValidator();
     }
 
+    /**
+     * @param $id
+     * @param callable $callable. This callable will be executed every time we validate a coupon.
+     * It will receive 2 arguments are Cart object and and array of coupon data.
+     * @return $this
+     */
     public function addValidator($id, callable $callable)
     {
         $this->validators[$id] = $callable;
@@ -35,6 +41,10 @@ class Validator
         return $this;
     }
 
+    /**
+     * @param $id
+     * @return $this
+     */
     public function removeValidator($id)
     {
         unset($this->validators[$id]);
@@ -42,6 +52,10 @@ class Validator
         return $this;
     }
 
+    /**
+     * @param Cart $cart
+     * @return float|int
+     */
     protected function getCartTotalBeforeDiscount(Cart $cart) {
         $total = 0;
         foreach ($cart->getItems() as $item)
@@ -50,6 +64,9 @@ class Validator
         return $total;
     }
 
+    /**
+     * This method registers list of default coupon validators.
+     */
     protected function defaultValidator()
     {
         $this->addValidator('general', function($coupon) {
@@ -1072,6 +1089,10 @@ class Validator
     }
 
 
+    /**
+     * @param $value
+     * @return array|string|null
+     */
     protected function parseValue($value) {
         if(is_int($value) or is_float($value))
             return $value;
@@ -1084,6 +1105,11 @@ class Validator
         return $arr;
     }
 
+    /**
+     * @param $coupon
+     * @param Cart $cart
+     * @return bool
+     */
     public function validate($coupon, Cart $cart)
     {
         $this->targetProducts = null;
