@@ -38,7 +38,7 @@ export default function Switch(props) {
 
     return React.createElement(
         "div",
-        { className: "form-group similik-switch" },
+        { className: "form-group polavi-switch" },
         props.label && React.createElement(
             "label",
             { htmlFor: props.name },

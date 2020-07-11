@@ -38,7 +38,7 @@ export default function Radio (props) {
         if (props.handler) props.handler.call(window, e, props);
     };
 
-    return <div className="form-group similik-radio">
+    return <div className="form-group polavi-radio">
         {props.label && <div><label>{props.label}</label></div>}
         {
             props.options.map((o,i) => {

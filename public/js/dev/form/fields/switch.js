@@ -35,7 +35,7 @@ export default function Switch (props) {
         if (props.handler) props.handler.call(window, e, props);
     };
 
-    return <div className="form-group similik-switch">
+    return <div className="form-group polavi-switch">
         {props.label && <label htmlFor={props.name}>{props.label}</label>}
         <input type="hidden" value={value} name={props.name}/>
         <div>
