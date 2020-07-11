@@ -1,16 +1,11 @@
-export default function Pagination({total, currentFilters, setFilter}) {
-    const currentLimit = _.get(currentFilters.find((e)=> e.key == 'limit'), 'value', 20);
-    const [limit, setLimit] = React.useState(_.get(currentFilters.find((e)=> e.key == 'limit'), 'value', 20));
-    const current = _.get(currentFilters.find((e)=> e.key == 'page'), 'value', 1);
-    const [inputVal, setInPutVal] = React.useState(current);
+export default function Pagination({total, limit, page, setFilter}) {
+    const pageInput = React.useRef(null);
+    const limitInput = React.useRef(null);
 
     React.useEffect(() => {
-        setInPutVal(current);
-    }, [current]);
-
-    React.useEffect(() => {
-        setLimit(currentLimit);
-    }, [currentLimit]);
+        pageInput.current.value = page;
+        limitInput.current.value = limit;
+    });
 
     const onKeyPress = (e) => {
         if(e.which !== 13)
@@ -26,30 +21,30 @@ export default function Pagination({total, currentFilters, setFilter}) {
 
     const onPrev = (e) => {
         e.preventDefault();
-        let prev = current - 1;
-        if(current === 1)
+        let prev = page - 1;
+        if(page === 1)
             return;
         setFilter('page', '=', prev);
     };
 
     const onNext = (e) => {
         e.preventDefault();
-        let next = current + 1;
-        if(current * limit >= total)
+        let next = page + 1;
+        if(page * limit >= total)
             return;
         setFilter('page', '=', next);
     };
 
     const onFirst = (e) => {
         e.preventDefault();
-        if(current === 1)
+        if(page === 1)
             return;
         setFilter('page', '=', 1);
     };
 
     const onLast = (e) => {
         e.preventDefault();
-        if(current === Math.ceil(total/limit))
+        if(page === Math.ceil(total/limit))
             return;
         setFilter('page', '=', Math.ceil(total/limit));
     };
@@ -78,17 +73,17 @@ export default function Pagination({total, currentFilters, setFilter}) {
                 <td><span>Show</span></td>
                 <td className="limit">
                     <div className="flex-column-reverse sml-flex">
-                        <input className="form-control" value={limit} onChange={(e) => onChangeLimit(e)} type="text" onKeyPress={(e)=> onKeyPressLimit(e)} />
+                        <input className="form-control" ref={limitInput} type="text" onKeyPress={(e)=> onKeyPressLimit(e)} />
                     </div>
                 </td>
                 <td className="per-page"><span>per page</span></td>
-                {current > 1 && <td className="prev"><a href={"#"} onClick={(e) => onPrev(e)}><i className="far fa-caret-square-left"></i></a></td>}
+                {page > 1 && <td className="prev"><a href={"#"} onClick={(e) => onPrev(e)}><i className="far fa-caret-square-left"></i></a></td>}
                 <td className="first"><a href="#" onClick={(e) => onFirst(e)}>1</a></td>
                 <td className="current">
-                    <input className="form-control" value={inputVal} onChange={(e) => setInPutVal(e.target.value)} type="text" onKeyPress={(e)=> onKeyPress(e)} />
+                    <input className="form-control" ref={pageInput} type="text" onKeyPress={(e)=> onKeyPress(e)} />
                 </td>
                 <td className="last"><a href="#" onClick={(e) => onLast(e)}>{Math.ceil(total/limit)}</a></td>
-                {(current * limit) < total && <td className="next"><a href={"#"} onClick={(e) => onNext(e)}><i className="far fa-caret-square-right"></i></a></td>}
+                {(page * limit) < total && <td className="next"><a href={"#"} onClick={(e) => onNext(e)}><i className="far fa-caret-square-right"></i></a></td>}
                 <td className="total"><span>{total} records</span></td>
             </tr>
         </table>

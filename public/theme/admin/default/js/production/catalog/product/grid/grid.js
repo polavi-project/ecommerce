@@ -443,7 +443,7 @@ function StatusColumnRow({ row }) {
     );
 }
 
-export default function ProductGrid({ apiUrl, areaProps }) {
+export default function ProductGrid({ apiUrl, areaProps, limit }) {
     const [products, setProducts] = React.useState([]);
     const [fields, setFields] = React.useState([]);
     const [total, setTotal] = React.useState(0);
@@ -605,6 +605,6 @@ export default function ProductGrid({ apiUrl, areaProps }) {
             null,
             "There is no product to display"
         ),
-        React.createElement(Pagination, { total: total, currentFilters: areaProps.filters, setFilter: areaProps.updateFilter })
+        React.createElement(Pagination, { total: total, page: _.get(areaProps.filters.find(e => e.key === 'page'), 'value', 1), limit: _.get(areaProps.filters.find(e => e.key === 'limit'), 'value', limit), setFilter: areaProps.updateFilter })
     );
 }

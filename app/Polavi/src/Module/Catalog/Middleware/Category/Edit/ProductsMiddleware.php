@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace Polavi\Module\Catalog\Middleware\Category\Edit;
 
 use function Polavi\generate_url;
+use function Polavi\get_config;
 use function Polavi\get_js_file_url;
 use Polavi\Services\Http\Request;
 use Polavi\Services\Http\Response;
@@ -49,7 +50,8 @@ class ProductsMiddleware extends MiddlewareAbstract
                 'product_grid_container',
                 10, get_js_file_url("production/catalog/category/edit/products.js", true),
                 [
-                    "apiUrl" => generate_url('admin.graphql.api')
+                    "apiUrl" => generate_url('admin.graphql.api'),
+                    "limit" => get_config('catalog_product_list_limit', 20)
                 ]
             );
         }
