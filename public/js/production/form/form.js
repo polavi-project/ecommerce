@@ -6,6 +6,7 @@ import { Fetch } from "../fetch.js";
 
 function Form(props) {
     const validationRules = React.useRef({});
+    const formRef = React.useRef();
     const [token1, setToken1] = React.useState(() => {
         let token = PubSub.subscribe(FORM_FIELD_CREATED, function (message, data) {
             if (data.name === undefined || data.validation_rules === undefined || data.disabled === true || data.formId !== props.id) return;
@@ -64,14 +65,16 @@ function Form(props) {
 
     return React.createElement(
         "form",
-        { id: props.id, method: "POST", onSubmit: e => onSubmit(e), className: props.className },
+        { ref: formRef, id: props.id, method: "POST", onSubmit: e => onSubmit(e), className: props.className },
         props.children,
         props.submitText !== null && React.createElement(
             "div",
             { className: "polavi-form-button form-submit-button" },
             React.createElement(
-                "button",
-                { type: "submit", className: "btn btn-primary" },
+                "a",
+                { href: "javascript:void(0)", className: "btn btn-primary", onClick: () => {
+                        formRef.current.dispatchEvent(new Event('submit'));
+                    } },
                 props.submitText ? props.submitText : 'Submit'
             )
         )
