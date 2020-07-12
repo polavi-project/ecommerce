@@ -62,7 +62,7 @@ function ListingPage(props) {
             React.createElement(
                 "div",
                 { className: "sml-block-title" },
-                "Listing page"
+                "Product listing page"
             ),
             React.createElement(Area, {
                 id: "catalog_setting_form_listing",
@@ -141,7 +141,7 @@ function DetailPage(props) {
             React.createElement(
                 "div",
                 { className: "sml-block-title" },
-                "Listing page"
+                "Product single page"
             ),
             React.createElement(Area, {
                 id: "catalog_setting_form_detail",
