@@ -621,6 +621,6 @@ export default function OrderGrid({ apiUrl, areaProps }) {
             null,
             "There is no order to display"
         ),
-        React.createElement(Pagination, { total: total, currentFilters: areaProps.filters, setFilter: areaProps.updateFilter })
+        React.createElement(Pagination, { total: total, page: _.get(areaProps.filters.find(e => e.key === 'page'), 'value', 1), limit: _.get(areaProps.filters.find(e => e.key === 'limit'), 'value', 20), setFilter: areaProps.updateFilter })
     );
 }
