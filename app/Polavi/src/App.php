@@ -52,6 +52,9 @@ class App
         $this->container = new Container();
     }
 
+    /**
+     * This function registers some default services
+     */
     public function registerDefaultService()
     {
         the_container($this->container)->set(Router::class, function($c) {
@@ -160,6 +163,9 @@ class App
         dispatch_event('after.load.module', []);
     }
 
+    /**
+     * This is application trigger. Run the app
+     */
     public function run()
     {
         $this->loadModule();
