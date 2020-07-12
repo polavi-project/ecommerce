@@ -15,7 +15,7 @@ export default function CategoryEditForm(props) {
                 </div>
                 <div className="buttons">
                     <A className="btn btn-danger" url={props.cancelUrl}>Cancel</A>
-                    <button type="submit" className="btn btn-primary">Submit</button>
+                    <a href="javascript:void(0)" onClick={()=>document.getElementById('category-edit-form').dispatchEvent(new Event('submit'))} className="btn btn-primary">Submit</a>
                 </div>
             </div>
             <div className="row">

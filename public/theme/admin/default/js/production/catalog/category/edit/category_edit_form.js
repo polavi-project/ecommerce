@@ -38,8 +38,8 @@ export default function CategoryEditForm(props) {
                         "Cancel"
                     ),
                     React.createElement(
-                        "button",
-                        { type: "submit", className: "btn btn-primary" },
+                        "a",
+                        { href: "javascript:void(0)", onClick: () => document.getElementById('category-edit-form').dispatchEvent(new Event('submit')), className: "btn btn-primary" },
                         "Submit"
                     )
                 )
