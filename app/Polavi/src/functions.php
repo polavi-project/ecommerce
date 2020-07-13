@@ -71,11 +71,23 @@ function subscribe(string $eventName, callable $callback, int $priority = 0)
     the_container()->get(EventDispatcher::class)->addListener($eventName, $callback, $priority);
 }
 
+/**
+ * @param $routerName
+ * @param array $params
+ * @param array|null $query
+ * @return string
+ */
 function generate_url($routerName, array $params = [], array $query = null)
 {
     return the_container()->get(Router::class)->generateUrl($routerName, $params, $query);
 }
 
+/**
+ * @param string $name
+ * @param null $defaultValue
+ * @param int $languageId
+ * @return mixed|null
+ */
 function get_config(string $name, $defaultValue = null, int $languageId = 0)
 {
     if(!file_exists(CONFIG_PATH . DS . 'config.php'))
@@ -110,6 +122,10 @@ function get_config(string $name, $defaultValue = null, int $languageId = 0)
     }
 }
 
+/**
+ * @param bool $isAdmin
+ * @return string
+ */
 function get_base_url($isAdmin = false)
 {
     $secure = get_config('general_https', 0, 0) == 0 ? false: true;
