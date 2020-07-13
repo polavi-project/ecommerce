@@ -200,6 +200,11 @@ function get_js_file_url(string $subPath, bool $isAdmin = false)
         throw new \RuntimeException(sprintf("Requested file %s does not exist", $subPath) );
 }
 
+/**
+ * @param string $subPath
+ * @param bool $isAdmin
+ * @return mixed
+ */
 function get_css_file_url(string $subPath, bool $isAdmin = false)
 {
     $fileUrl = null;
@@ -220,10 +225,16 @@ function get_css_file_url(string $subPath, bool $isAdmin = false)
         throw new \RuntimeException(sprintf("Requested file %s does not exist", $subPath) );
 }
 
+/**
+ * @return mixed|null
+ */
 function get_default_language_Id() {
     return get_config('general_default_language', 26);
 }
 
+/**
+ * @return mixed
+ */
 function get_default_language_code() {
     return Language::listLanguagesV2()[get_default_language_Id()][0];
 }
