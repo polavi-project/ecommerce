@@ -239,10 +239,16 @@ function get_default_language_code() {
     return Language::listLanguagesV2()[get_default_language_Id()][0];
 }
 
+/**
+ * @return int
+ */
 function get_current_language_id() {
     return (int)the_container()->get(Session::class)->get('languageId', get_default_language_Id());
 }
 
+/**
+ * @return mixed|null
+ */
 function get_display_languages() {
     $languages = get_config('general_languages', []);
     array_walk($languages, function(&$language_id) {
