@@ -370,6 +370,6 @@ export default function CustomerGrid({apiUrl, areaProps, groups=[]})
         {customers.length === 0 &&
         <div>There is no customer to display</div>
         }
-        <Pagination total={total} currentFilters={areaProps.filters} setFilter={areaProps.updateFilter}/>
+        <Pagination total={total} page={_.get(areaProps.filters.find((e)=> e.key === 'page'), 'value', 1)} limit={_.get(areaProps.filters.find((e)=> e.key === 'limit'), 'value', 20)} setFilter={areaProps.updateFilter}/>
     </div>
 }
