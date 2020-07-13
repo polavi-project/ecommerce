@@ -142,17 +142,27 @@ function get_base_url($isAdmin = false)
         return trim($baseUrl, '/') . '/' . ADMIN_PATH;
 }
 
+/**
+ * @param bool $isAdmin
+ * @return mixed
+ */
 function get_base_url_scheme_less($isAdmin = false)
 {
     $url = get_base_url($isAdmin);
     return str_replace(['http:', 'https:'], '', $url);
 }
 
+/**
+ * @return string
+ */
 function get_admin_theme_url()
 {
     return get_base_url() .  '/public/theme/admin/default';
 }
 
+/**
+ * @return string
+ */
 function get_theme_url()
 {
     $themeName = get_config('general_theme', 'default');
@@ -160,29 +170,34 @@ function get_theme_url()
     return get_base_url() .  '/public/theme/front/' . $themeName;
 }
 
-function get_js_file_url(string $sub_path, bool $isAdmin = false)
+/**
+ * @param string $subPath
+ * @param bool $isAdmin
+ * @return mixed
+ */
+function get_js_file_url(string $subPath, bool $isAdmin = false)
 {
     $fileUrl = null;
 
     if($isAdmin == true) {
-        if(file_exists(THEME_PATH . "/admin/default/js/" . $sub_path))
-            $fileUrl = get_admin_theme_url() . "/js/" . $sub_path;
-        else if(file_exists(JS_PATH . DS . $sub_path))
-            $fileUrl = get_base_url() . '/public/js/' . $sub_path;
+        if(file_exists(THEME_PATH . "/admin/default/js/" . $subPath))
+            $fileUrl = get_admin_theme_url() . "/js/" . $subPath;
+        else if(file_exists(JS_PATH . DS . $subPath))
+            $fileUrl = get_base_url() . '/public/js/' . $subPath;
     } else {
         $themeName = get_config('general_theme', 'default');
-        if(file_exists(THEME_PATH . "/front/{$themeName}/js/" . $sub_path))
-            $fileUrl = get_base_url() .  '/public/theme/front/' . $themeName . "/js/" . $sub_path;
-        else if(file_exists(THEME_PATH . "/front/default/js/" . $sub_path))
-            $fileUrl = get_base_url() .  '/public/theme/front/default' . "/js/" . $sub_path;
-        else if(file_exists(JS_PATH . DS . $sub_path))
-            $fileUrl = get_base_url() . '/public/js/' . $sub_path;
+        if(file_exists(THEME_PATH . "/front/{$themeName}/js/" . $subPath))
+            $fileUrl = get_base_url() .  '/public/theme/front/' . $themeName . "/js/" . $subPath;
+        else if(file_exists(THEME_PATH . "/front/default/js/" . $subPath))
+            $fileUrl = get_base_url() .  '/public/theme/front/default' . "/js/" . $subPath;
+        else if(file_exists(JS_PATH . DS . $subPath))
+            $fileUrl = get_base_url() . '/public/js/' . $subPath;
     }
 
     if($fileUrl)
         return str_replace(['http:', 'https:'], '', $fileUrl);
     else
-        throw new \RuntimeException(sprintf("Requested file %s does not exist", $sub_path) );
+        throw new \RuntimeException(sprintf("Requested file %s does not exist", $subPath) );
 }
 
 function get_css_file_url(string $subPath, bool $isAdmin = false)
