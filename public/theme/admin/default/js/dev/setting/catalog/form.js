@@ -49,7 +49,7 @@ function NoImagePlaceHolder({value = null}) {
 function ListingPage(props) {
     return <div className="col-4">
         <div className="sml-block">
-            <div className="sml-block-title">Listing page</div>
+            <div className="sml-block-title">Product listing page</div>
             <Area
                 id="catalog_setting_form_listing"
                 coreWidgets={[
@@ -127,7 +127,7 @@ function ListingPage(props) {
 function DetailPage(props) {
     return <div className="col-4">
         <div className="sml-block">
-            <div className="sml-block-title">Listing page</div>
+            <div className="sml-block-title">Product single page</div>
             <Area
                 id="catalog_setting_form_detail"
                 coreWidgets={[
