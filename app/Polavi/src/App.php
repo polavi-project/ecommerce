@@ -134,10 +134,11 @@ class App
             'Setting',
             'SendGrid',
             'Graphql',
-            'GoogleAnalytics'
+            'GoogleAnalytics',
+            'Migration'
         ];
         if(!file_exists(CONFIG_PATH . DS . 'config.php'))
-            $coreModules[] = 'Install';
+            $coreModules[] = 'Migration';
 
         $installed = file_exists(CONFIG_PATH . DS . 'config.php');
         // TODO: Refactor this

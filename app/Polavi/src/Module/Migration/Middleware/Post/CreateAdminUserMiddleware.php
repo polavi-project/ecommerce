@@ -6,7 +6,7 @@
 
 declare(strict_types=1);
 
-namespace Polavi\Module\Install\Middleware\Post;
+namespace Polavi\Module\Migration\Middleware\Post;
 
 
 use function Polavi\_mysql;

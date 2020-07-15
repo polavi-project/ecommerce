@@ -6,7 +6,7 @@
 
 declare(strict_types=1);
 
-namespace Polavi\Module\Install\Middleware\Form;
+namespace Polavi\Module\Migration\Middleware\Form;
 
 
 use function Polavi\generate_url;
@@ -28,7 +28,7 @@ class FormMiddleware extends MiddlewareAbstract
             0,
             get_js_file_url("production/install/form/installation_form.js", true),
             [
-                'action'=>generate_url('polavi.install.post')
+                'action'=>generate_url('migration.install.post')
             ]
         );
     }

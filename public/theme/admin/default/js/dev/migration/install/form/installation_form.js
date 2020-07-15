@@ -80,6 +80,7 @@ function Welcome() {
         </div>
     </div>
 }
+
 export default function Installation({action}) {
     const letsGo = ReactRedux.useSelector(state => _.get(state, 'appState.letsGo'));
     const dispatch = ReactRedux.useDispatch();
@@ -88,44 +89,44 @@ export default function Installation({action}) {
         [
             {
                 step: 'Basic setting',
-                api: ReactRedux.useSelector(state => _.get(state, 'appState.baseUrlAdmin') + '/setting/migrate/install'),
+                api: ReactRedux.useSelector(state => _.get(state, 'appState.baseUrlAdmin') + '/migration/module/install/Setting'),
                 running: false,
                 status: undefined,
                 message: 'Waiting',
             },
             {
                 step: 'Cms module',
-                api: ReactRedux.useSelector(state => _.get(state, 'appState.baseUrlAdmin') + '/cms/migrate/install'),
+                api: ReactRedux.useSelector(state => _.get(state, 'appState.baseUrlAdmin') + '/migration/module/install/Cms'),
                 status: undefined,
                 message: 'Waiting'
             },
             {
                 step: 'Customer module',
-                api: ReactRedux.useSelector(state => _.get(state, 'appState.baseUrlAdmin') + '/customer/migrate/install'),
+                api: ReactRedux.useSelector(state => _.get(state, 'appState.baseUrlAdmin') + '/migration/module/install/Customer'),
                 status: undefined,
                 message: 'Waiting'
             },
             {
                 step: 'Tax module',
-                api: ReactRedux.useSelector(state => _.get(state, 'appState.baseUrlAdmin') + '/tax/migrate/install'),
+                api: ReactRedux.useSelector(state => _.get(state, 'appState.baseUrlAdmin') + '/migration/module/install/Tax'),
                 status: undefined,
                 message: 'Waiting'
             },
             {
                 step: 'Catalog setting',
-                api: ReactRedux.useSelector(state => _.get(state, 'appState.baseUrlAdmin') + '/catalog/migrate/install'),
+                api: ReactRedux.useSelector(state => _.get(state, 'appState.baseUrlAdmin') + '/migration/module/install/Catalog'),
                 status: undefined,
                 message: 'Waiting'
             },
             {
                 step: 'Checkout setting',
-                api: ReactRedux.useSelector(state => _.get(state, 'appState.baseUrlAdmin') + '/checkout/migrate/install'),
+                api: ReactRedux.useSelector(state => _.get(state, 'appState.baseUrlAdmin') + '/migration/module/install/Checkout'),
                 status: undefined,
                 message: 'Waiting'
             },
             {
                 step: 'Discount setting',
-                api: ReactRedux.useSelector(state => _.get(state, 'appState.baseUrlAdmin') + '/discount/migrate/install'),
+                api: ReactRedux.useSelector(state => _.get(state, 'appState.baseUrlAdmin') + '/migration/module/install/Discount'),
                 status: undefined,
                 message: 'Waiting'
             },

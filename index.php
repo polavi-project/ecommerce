@@ -11,6 +11,7 @@ define('DS', DIRECTORY_SEPARATOR);
 define('PS', PATH_SEPARATOR);
 define('LIBRARY_PATH', dirname(__FILE__) . DS . 'app' . DS . 'Polavi' . DS . 'src' . DS . 'Library');
 define('MODULE_PATH', dirname(__FILE__) . DS . 'app' . DS . 'Polavi' . DS . 'src' . DS . 'Module');
+define('COMMUNITY_MODULE_PATH', dirname(__FILE__) . DS . 'app' . DS . 'Community');
 define('EXTENSION_PATH', dirname(__FILE__) . DS . 'extension');
 define('CONFIG_PATH', dirname(__FILE__) . DS . 'config');
 define('VAR_PATH', dirname(__FILE__) . DS . 'var');

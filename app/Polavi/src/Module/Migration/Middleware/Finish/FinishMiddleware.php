@@ -6,7 +6,7 @@
 
 declare(strict_types=1);
 
-namespace Polavi\Module\Install\Middleware\Finish;
+namespace Polavi\Module\Migration\Middleware\Finish;
 
 
 use Polavi\Middleware\MiddlewareAbstract;
