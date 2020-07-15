@@ -12,30 +12,43 @@ use function Polavi\_unique_number;
 
 class Table
 {
+    /**@var Processor $processor*/
     protected $processor;
 
+    /**@var string $table*/
     protected $table;
 
+    /**@var string $primary*/
     protected $primary;
 
+    /**@var array $columns*/
     protected $columns = [];
 
+    /**@var array $data*/
     protected $data = [];
 
+    /**@var array $join*/
     protected $join = [];
 
+    /**@var array $where*/
     protected $where = [];
 
+    /**@var string $groupBy*/
     protected $groupBy;
 
+    /**@var array $having*/
     protected $having = [];
 
+    /**@var string $customWhereClause*/
     protected $customWhereClause;
 
+    /**@var array $binding*/
     protected $binding = [];
 
+    /**@var string $query*/
     protected $query = '';
 
+    /**@var array $selectFields*/
     protected $selectFields;
 
     protected $targetRow;
@@ -51,14 +64,18 @@ class Table
         return $this;
     }
 
+    /**
+     * This method describes a table, get column list and primary key.
+     * @return $this
+     */
     protected function describeTable()
     {
         $sql = "DESCRIBE `{$this->getTable()}`";
         $stmt = $this->processor->executeQuery($sql);
         $columns = [];
         if($stmt) {
-            $raw_column_data = $stmt->fetchAll(\Pdo::FETCH_ASSOC);
-            foreach($raw_column_data as $key => $column){
+            $rawColumnData = $stmt->fetchAll(\Pdo::FETCH_ASSOC);
+            foreach($rawColumnData as $key => $column){
                 if (strtoupper($column['Key']) == 'PRI')
                     $this->primary = $column['Field'];
                 else {
