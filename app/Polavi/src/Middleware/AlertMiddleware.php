@@ -26,6 +26,7 @@ class AlertMiddleware extends MiddlewareAbstract
             get_js_file_url("production/alert.js", $request->isAdmin()),
             ["alerts"=>[]]
         );
-        return true;
+
+        return $delegate;
     }
 }
