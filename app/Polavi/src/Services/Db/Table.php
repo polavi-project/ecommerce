@@ -686,6 +686,14 @@ class Table
         return $this->having($column, $operator, $value, $startGroup, $endGroup);
     }
 
+    /**
+     * @param $column
+     * @param $operator
+     * @param $value
+     * @param bool $startGroup
+     * @param bool $endGroup
+     * @return $this
+     */
     public function orHaving($column, $operator, $value, $startGroup = false, $endGroup = false)
     {
         if(strpos($column, '.') === false)
@@ -717,7 +725,7 @@ class Table
     }
 
     /**
-     * @return string
+     * @return array
      */
     public function getHaving()
     {
