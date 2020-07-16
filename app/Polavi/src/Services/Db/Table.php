@@ -399,6 +399,14 @@ class Table
         return $this;
     }
 
+    /**
+     * @param $column
+     * @param $operator
+     * @param $value
+     * @param bool $startGroup
+     * @param bool $endGroup
+     * @return $this
+     */
     public function orWhere($column, $operator, $value, $startGroup = false, $endGroup = false)
     {
 //        if(strpos($column, '.') === false)
@@ -421,11 +429,18 @@ class Table
         return $this;
     }
 
+    /**
+     * @return array
+     */
     public function getJoin()
     {
         return count($this->join) > 0 ? $this->join : [];
     }
 
+    /**
+     * @param $table
+     * @return array
+     */
     protected function checkForJoin($table)
     {
         $query = '
@@ -467,6 +482,10 @@ class Table
         return $relation;
     }
 
+    /**
+     * @param $id
+     * @return mixed
+     */
     public function load($id)
     {
         if($this->getWhere())
@@ -477,11 +496,19 @@ class Table
         return $this->fetchOneAssoc(['limit'=> 1]);
     }
 
+    /**
+     * @param $field
+     * @param $value
+     * @return mixed
+     */
     public function loadByField($field, $value)
     {
         return $this->where($field, '=', $value)->fetchOneAssoc(['select' => '*', 'limit'=> 1]);
     }
 
+    /**
+     * Delete a record, Where clause must be defined fist
+     */
     public function delete()
     {
         $this->processor->delete($this);
