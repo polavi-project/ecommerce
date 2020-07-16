@@ -88,41 +88,66 @@ class Table
         return $this;
     }
 
+    /**
+     * @return Processor
+     */
     public function getProcessor()
     {
         return $this->processor;
     }
 
+    /**
+     * @return string
+     */
     public function getTable()
     {
         return $this->table;
     }
 
+    /**
+     * @return string
+     */
     public function getPrimary()
     {
         return $this->primary;
     }
 
+    /**
+     * @return array
+     */
     public function getColumns()
     {
         return $this->columns;
     }
 
+    /**
+     * @return string
+     */
     public function getQuery()
     {
         return $this->query;
     }
 
+    /**
+     * @return array
+     */
     public function getWhere()
     {
         return $this->where;
     }
 
+    /**
+     * @return array
+     */
     public function getBinding()
     {
         return $this->binding;
     }
 
+    /**
+     * @param array $data
+     * @return $this
+     */
     public function setData($data = [])
     {
         $this->data = $data;
@@ -130,11 +155,18 @@ class Table
         return $this;
     }
 
+    /**
+     * @return array
+     */
     public function getData()
     {
         return $this->data;
     }
 
+    /**
+     * @param array $data
+     * @return $this
+     */
     public function addData(array $data)
     {
         $this->data = array_merge($this->data, $data);
@@ -142,6 +174,10 @@ class Table
         return $this;
     }
 
+    /**
+     * @param $name
+     * @return mixed
+     */
     public function __get($name)
     {
         return $this->data[$name];
@@ -154,6 +190,11 @@ class Table
         return $this;
     }
 
+    /**
+     * @param string $field
+     * @param string|null $alias
+     * @return Table
+     */
     public function addFieldToSelect(string $field, string $alias = null) : Table
     {
         $this->selectFields[$field] = $alias ? $alias : null;
@@ -161,6 +202,11 @@ class Table
         return $this;
     }
 
+    /**
+     * @param string $field
+     * @param string|null $alias
+     * @return Table
+     */
     public function setFieldToSelect(string $field, string $alias = null) : Table
     {
         $this->selectFields = [$field => $alias];
@@ -168,11 +214,19 @@ class Table
         return $this;
     }
 
+    /**
+     * @return array
+     */
     public function getSelectFields()
     {
         return $this->selectFields;
     }
 
+    /**
+     * @param $column
+     * @param $operator
+     * @param $value
+     */
     protected function setBinding($column, $operator, $value)
     {
         $binding = [];
