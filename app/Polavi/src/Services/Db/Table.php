@@ -259,26 +259,57 @@ class Table
         $this->binding = array_merge($this->binding, $binding);
     }
 
+    /**
+     * @param $table
+     * @param null $alias
+     * @param array $extraCondition
+     * @return Table
+     */
     public function leftJoin($table, $alias = null, array $extraCondition = [])
     {
         return $this->join($table, 'LEFT JOIN', $alias, $extraCondition);
     }
 
+    /**
+     * @param $table
+     * @param null $alias
+     * @param array $extraCondition
+     * @return Table
+     */
     public function rightJoin($table, $alias = null, array $extraCondition = [])
     {
         return $this->join($table, 'RIGHT JOIN', $alias, $extraCondition);
     }
 
+    /**
+     * @param $table
+     * @param null $alias
+     * @param array $extraCondition
+     * @return Table
+     */
     public function innerJoin($table, $alias = null, array $extraCondition = [])
     {
         return $this->join($table, 'INNER JOIN', $alias, $extraCondition);
     }
 
+    /**
+     * @param $table
+     * @param null $alias
+     * @param array $extraCondition
+     * @return Table
+     */
     public function fullOuterJoin($table, $alias = null, array $extraCondition = [])
     {
         return $this->join($table, 'FULL OUTER JOIN', $alias, $extraCondition);
     }
 
+    /**
+     * @param $table
+     * @param string $joinType
+     * @param null $alias
+     * @param array $extraCondition
+     * @return $this
+     */
     public function join($table, string $joinType, $alias = null, array $extraCondition = [])
     {
         if(!in_array($joinType, ['LEFT JOIN', 'RIGHT JOIN', 'FULL OUTER JOIN', 'INNER JOIN']))
