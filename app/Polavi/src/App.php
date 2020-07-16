@@ -119,33 +119,26 @@ class App
 
     protected function loadModule()
     {
-        $coreModules = [
-            'Catalog',
-            'Customer',
-            'Cms',
-            'Checkout',
-            'Cod',
-            'FlatRate',
-            'PaypalExpress',
-            'Tax',
-            'Discount',
-            'Order',
-            'User',
-            'Setting',
-            'SendGrid',
-            'Graphql',
-            'GoogleAnalytics',
-            'Migration'
-        ];
+        $modules = [];
         if(!file_exists(CONFIG_PATH . DS . 'config.php'))
-            $coreModules[] = 'Migration';
+            $modules[] = 'Migration';
+        else {
+            $table = _mysql()->getTable('migration');
+            while ($row = $table
+                ->where('status', '=', 1)
+                ->fetch()) {
+                $modules[] = $row['module'];
+            }
+        }
 
         $installed = file_exists(CONFIG_PATH . DS . 'config.php');
         // TODO: Refactor this
         $eventDispatcher = $this->container->get(EventDispatcher::class);
         $router = $this->container->get(Router::class);
         $container = $this->container;
-        foreach($coreModules as $module) {
+        foreach($modules as $module) {
+            if(!file_exists(COMMUNITY_MODULE_PATH . DS . $module) && !file_exists(MODULE_PATH . DS . $module))
+                continue;
             if(file_exists( MODULE_PATH . DS . $module . DS . 'services.php'))
                 (function() use ($module, $container) {
                     include MODULE_PATH . DS . $module . DS . 'services.php';

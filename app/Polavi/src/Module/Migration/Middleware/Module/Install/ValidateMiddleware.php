@@ -20,6 +20,13 @@ class ValidateMiddleware extends MiddlewareAbstract
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
         try {
+            if(file_exists(CONFIG_PATH . DS . 'config.php'))
+                require CONFIG_PATH . DS . 'config.php';
+            else if(file_exists(CONFIG_PATH . DS . 'config.tmp.php'))
+                require CONFIG_PATH . DS . 'config.tmp.php';
+            else
+                throw new \Exception("You need to install the app first");
+
             $module = $request->attributes->get("module");
             if(!preg_match('/^[A-Za-z0-9_]+$/', $module))
                 throw new \Exception("Invalid module name");

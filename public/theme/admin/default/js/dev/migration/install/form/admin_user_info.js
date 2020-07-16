@@ -1,7 +1,7 @@
-import {Form} from "../../../../../../../js/production/form/form.js"
-import Area from "../../../../../../../js/production/area.js"
-import Text from "../../../../../../../js/production/form/fields/text.js";
-import Password from "../../../../../../../js/production/form/fields/password.js";
+import {Form} from "../../../../../../../../js/production/form/form.js"
+import Area from "../../../../../../../../js/production/area.js"
+import Text from "../../../../../../../../js/production/form/fields/text.js";
+import Password from "../../../../../../../../js/production/form/fields/password.js";
 
 export default function FirstUserForm(props) {
     const [isSuccess, setIsSuccess] = React.useState(true);

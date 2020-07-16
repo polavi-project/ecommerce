@@ -1,6 +1,6 @@
-import {Form} from "../../../../../../../js/production/form/form.js"
-import Area from "../../../../../../../js/production/area.js"
-import Text from "../../../../../../../js/production/form/fields/text.js";
+import {Form} from "../../../../../../../../js/production/form/form.js"
+import Area from "../../../../../../../../js/production/area.js"
+import Text from "../../../../../../../../js/production/form/fields/text.js";
 
 export default function DatabaseForm(props) {
     const [isSuccess, setIsSuccess] = React.useState(true);

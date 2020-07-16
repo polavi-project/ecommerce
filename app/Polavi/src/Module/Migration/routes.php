@@ -21,6 +21,7 @@ $router->addAdminRoute('migration.install.finish', 'POST', '/install/finish', [
     \Polavi\Module\Migration\Middleware\Finish\FinishMiddleware::class
 ]);
 
-$router->addSiteRoute('migration.module.install', 'GET', '/migration/module/install/{module}', [
-    \Polavi\Module\Migration\Middleware\Form\FormMiddleware::class
+$router->addAdminRoute('migration.module.install', ["GET", "POST"], '/migration/module/install/{module}', [
+    \Polavi\Module\Migration\Middleware\Module\Install\ValidateMiddleware::class,
+    \Polavi\Module\Migration\Middleware\Module\Install\InstallMiddleware::class
 ]);

@@ -1,5 +1,5 @@
-import {Fetch} from "../../../../../../../js/production/fetch.js";
-import {ADD_APP_STATE} from "../../../../../../../js/dev/event-types.js";
+import {Fetch} from "../../../../../../../../js/production/fetch.js";
+import {ADD_APP_STATE} from "../../../../../../../../js/dev/event-types.js";
 
 function FinishInstallation() {
     const dispatch = ReactRedux.useDispatch();

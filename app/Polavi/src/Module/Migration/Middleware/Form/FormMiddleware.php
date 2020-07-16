@@ -26,7 +26,7 @@ class FormMiddleware extends MiddlewareAbstract
             'installation_form',
             'content',
             0,
-            get_js_file_url("production/install/form/installation_form.js", true),
+            get_js_file_url("production/migration/install/form/installation_form.js", true),
             [
                 'action'=>generate_url('migration.install.post')
             ]

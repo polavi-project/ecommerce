@@ -1,8 +1,8 @@
-import {Form} from "../../../../../../../js/production/form/form.js";
-import Text from "../../../../../../../js/production/form/fields/text.js";
-import Password from "../../../../../../../js/production/form/fields/password.js";
-import {ADD_APP_STATE} from "../../../../../../../js/dev/event-types.js";
-import {Fetch} from "../../../../../../../js/production/fetch.js";
+import {Form} from "../../../../../../../../js/production/form/form.js";
+import Text from "../../../../../../../../js/production/form/fields/text.js";
+import Password from "../../../../../../../../js/production/form/fields/password.js";
+import {ADD_APP_STATE} from "../../../../../../../../js/dev/event-types.js";
+import {Fetch} from "../../../../../../../../js/production/fetch.js";
 
 function DBInfo() {
     return <div className="uk-width-1-2">
