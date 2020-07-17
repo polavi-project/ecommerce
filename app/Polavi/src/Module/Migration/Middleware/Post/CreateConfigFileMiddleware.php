@@ -10,6 +10,7 @@ namespace Polavi\Module\Migration\Middleware\Post;
 
 
 use Polavi\Middleware\MiddlewareAbstract;
+use Polavi\Services\Db\Configuration;
 use Polavi\Services\Http\Request;
 use Polavi\Services\Http\Response;
 use Symfony\Component\Filesystem\Filesystem;
@@ -23,13 +24,13 @@ class CreateConfigFileMiddleware extends MiddlewareAbstract
  * See COPYING.txt for license details.
  */
 
-
-define('DB_DRIVER', 'mysql');
-define('DB_HOST', '%s');
-define('DB_DATABASE', '%s');
-define('DB_USERNAME', '%s');
-define('DB_PASSWORD', '%s');
-define('DB_PREFIX', '');
+return [
+    "driver" => "mysql",
+    "host"   => "%s",
+    "database" => "%s",
+    "username" => "%s",
+    "password" => "%s"
+];
 EOT;
     public function __invoke(Request $request, Response $response)
     {
@@ -49,6 +50,15 @@ EOT;
                 $user,
                 $password
             );
+            $this->getContainer()->set(Configuration::class, function() use($database, $host, $user, $password) {
+                return new Configuration(
+                    $database,
+                    "mysql",
+                    $host,
+                    $user,
+                    $password
+                );
+            });
             $fileSystem->dumpFile(CONFIG_PATH . DS . 'config.tmp.php', $fileContent);
         } catch(\Exception $e) {
             $response->addData('success', 0);

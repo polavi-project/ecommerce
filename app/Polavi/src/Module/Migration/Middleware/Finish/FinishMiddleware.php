@@ -24,7 +24,6 @@ class FinishMiddleware extends MiddlewareAbstract
             $redirect = new RedirectResponse($this->getContainer()->get(Router::class)->generateUrl('homepage'));
             return $redirect->send();
         }
-        require_once CONFIG_PATH . DS . 'config.tmp.php';
         $fileSystem = new Filesystem();
         $fileSystem->rename(CONFIG_PATH . DS . 'config.tmp.php', CONFIG_PATH . DS . 'config.php', true);
 

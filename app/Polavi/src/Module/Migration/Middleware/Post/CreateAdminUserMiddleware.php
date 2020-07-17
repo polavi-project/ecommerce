@@ -11,6 +11,7 @@ namespace Polavi\Module\Migration\Middleware\Post;
 
 use function Polavi\_mysql;
 use Polavi\Middleware\MiddlewareAbstract;
+use Polavi\Services\Db\Configuration;
 use Polavi\Services\Http\Request;
 use Polavi\Services\Http\Response;
 
@@ -23,7 +24,7 @@ class CreateAdminUserMiddleware extends MiddlewareAbstract
         $conn = _mysql();
         $conn->startTransaction();
         try {
-            $adminUserTable = $conn->executeQuery("SELECT TABLE_NAME FROM information_schema.tables WHERE table_schema = :dbName AND TABLE_NAME = \"admin_user\" LIMIT 0,1", ['dbName'=> DB_DATABASE])->fetch(\PDO::FETCH_ASSOC);
+            $adminUserTable = $conn->executeQuery("SELECT TABLE_NAME FROM information_schema.tables WHERE table_schema = :dbName AND TABLE_NAME = \"admin_user\" LIMIT 0,1", ['dbName'=> $this->getContainer()->get(Configuration::class)->getDb()])->fetch(\PDO::FETCH_ASSOC);
             if($adminUserTable === false)
                 $conn->executeQuery("CREATE TABLE `admin_user` (
                   `admin_user_id` int(10) unsigned NOT NULL AUTO_INCREMENT,

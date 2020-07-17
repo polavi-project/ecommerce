@@ -45,7 +45,7 @@ function the_container(Container $start = null) : Container
 
 function _mysql()
 {
-    return new Processor();
+    return the_container()->get(Processor::class);
 }
 
 function dispatch_event(string $eventName, array $args = []) {

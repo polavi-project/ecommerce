@@ -11,6 +11,7 @@ namespace Polavi\Module\Migration\Middleware\Post;
 
 use function Polavi\_mysql;
 use Polavi\Middleware\MiddlewareAbstract;
+use Polavi\Services\Db\Configuration;
 use Polavi\Services\Http\Request;
 use Polavi\Services\Http\Response;
 
@@ -19,11 +20,10 @@ class CreateMigrationTableMiddleware extends MiddlewareAbstract
 {
     public function __invoke(Request $request, Response $response)
     {
-        require_once CONFIG_PATH . DS . 'config.tmp.php';
         $conn = _mysql();
         $conn->startTransaction();
         try {
-            $migrationTable = $conn->executeQuery("SELECT TABLE_NAME FROM information_schema.tables WHERE table_schema = :dbName AND TABLE_NAME = \"migration\" LIMIT 0,1", ['dbName'=> DB_DATABASE])->fetch(\PDO::FETCH_ASSOC);
+            $migrationTable = $conn->executeQuery("SELECT TABLE_NAME FROM information_schema.tables WHERE table_schema = :dbName AND TABLE_NAME = \"migration\" LIMIT 0,1", ['dbName'=> $this->getContainer()->get(Configuration::class)->getDb()])->fetch(\PDO::FETCH_ASSOC);
             if($migrationTable === false)
                 $conn->executeQuery("CREATE TABLE `migration` (
                   `migration_id` int(10) unsigned NOT NULL AUTO_INCREMENT,

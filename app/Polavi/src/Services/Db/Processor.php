@@ -16,10 +16,14 @@ class Processor extends \PDO
 
     private $inTransaction = false;
 
-    public function __construct()
+    /**@var Configuration $configuration*/
+    private $configuration;
+
+    public function __construct(Configuration $configuration)
     {
+        $this->configuration = $configuration;
         try {
-            parent::__construct('mysql:dbname=' . DB_DATABASE . ';host=' . DB_HOST .';charset=utf8mb4', DB_USERNAME, DB_PASSWORD );
+            parent::__construct('mysql:dbname=' . $configuration->getDb() . ';host=' . $configuration->getHost() .';charset=utf8mb4', $configuration->getUser(), $configuration->getPassword() );
         } catch (\PDOException $e) {
             throw $e;
         }
@@ -108,7 +112,7 @@ class Processor extends \PDO
      */
     protected function buildSelect(Table $table)
     {
-        $table_name = DB_PREFIX . $table->getTable();
+        $table_name = $this->configuration->getPrefix() . $table->getTable();
         $query = "SELECT ";
         $fields = $table->getSelectFields();
         if($fields == null)
@@ -161,7 +165,7 @@ class Processor extends \PDO
                 $alias = $join['alias'];
             else
                 $alias = $join['table'];
-            $joinClause .= "{$join['type']} `" . DB_PREFIX . $join['table'] . "` AS `" . $alias . "` ON {$join['on']} ";
+            $joinClause .= "{$join['type']} `" . $this->configuration->getPrefix() . $join['table'] . "` AS `" . $alias . "` ON {$join['on']} ";
             $joinClause = rtrim($joinClause, 'AND');
             $where = "";
             if(isset($join['where'])) {
@@ -322,7 +326,7 @@ class Processor extends \PDO
         }
         if(count($insertColumns)==0)
             throw new \RuntimeException("Something wrong, can not save data");
-        $query = "INSERT INTO `" . DB_PREFIX . $table->getTable() . "` (`" . implode('`, `', $insertColumns) . "`) VALUES (:" . implode(', :', $insertColumns) . ")";
+        $query = "INSERT INTO `" . $this->configuration->getPrefix() . $table->getTable() . "` (`" . implode('`, `', $insertColumns) . "`) VALUES (:" . implode(', :', $insertColumns) . ")";
         try {
             $stmt = $this->prepare($query);
             $stmt->execute($binding);
@@ -369,7 +373,7 @@ class Processor extends \PDO
             throw new \RuntimeException('You are trying to update no column');
         $prepare = trim($prepare, ',');
         $whereClause = $this->buildWhere($table->getWhere(), $binding);
-        $query = "UPDATE `" . DB_PREFIX . $table->getTable() . "` SET " . $prepare . " {$whereClause}";
+        $query = "UPDATE `" . $this->configuration->getPrefix() . $table->getTable() . "` SET " . $prepare . " {$whereClause}";
         try {
             $stmt = $this->prepare($query);
             $stmt->execute($binding);
@@ -416,7 +420,7 @@ class Processor extends \PDO
             $prepare .= "`" . $column . "` = :" . $column . ",";
         }
         $prepare = trim($prepare, ',');
-        $query = "INSERT INTO `" . DB_PREFIX . $table->getTable() . "` (`" . implode('`, `', $insertColumns) . "`)
+        $query = "INSERT INTO `" . $this->configuration->getPrefix() . $table->getTable() . "` (`" . implode('`, `', $insertColumns) . "`)
                     VALUES (:" . implode(', :', $insertColumns) . ")
                       ON DUPLICATE KEY UPDATE {$prepare}";
         try {
@@ -443,7 +447,7 @@ class Processor extends \PDO
 
         $whereClause = $this->buildWhere($table->getWhere());
         $binding = $table->getBinding();
-        $query = "DELETE FROM `" . DB_PREFIX . $table->getTable()  . "` " . $whereClause;
+        $query = "DELETE FROM `" . $this->configuration->getPrefix() . $table->getTable()  . "` " . $whereClause;
         try {
             $stmt = $this->prepare($query);
             $stmt->execute($binding);

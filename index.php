@@ -25,14 +25,6 @@ define('ADMIN_PATH', 'admin');
 
 require './vendor/autoload.php';
 
-if(file_exists(CONFIG_PATH . DS . 'config.php'))
-    require './config/config.php';
-
-else if(!strpos($_SERVER['REQUEST_URI'], 'install')) {
-    $redirect = new \Symfony\Component\HttpFoundation\RedirectResponse(\Polavi\get_base_url() . '/install');
-    return $redirect->send();
-}
-
 (function() {
     $app = new \Polavi\App();
     $app->registerDefaultService();

@@ -27,7 +27,8 @@ class InstallMiddleware extends MiddlewareAbstract
             if(!preg_match('/^[A-Za-z0-9_]+$/', $module))
                 throw new \Exception("Invalid module name");
             $conn = _mysql();
-            the_container(new Container());
+            $container = $this->getContainer();
+            $container->set("moduleLoading", true);
             (function() use($path, $module, &$conn) {
                 if(!file_exists($path . DS . "migration.php"))
                     throw new \Exception("migration.php file was not found");
@@ -41,13 +42,13 @@ class InstallMiddleware extends MiddlewareAbstract
                     $migrateCallback();
                 }
 
-                $conn->getTable("migration")->insert([
-                    "module" => $module,
-                    "version" => $version,
-                    "status" => 1
-                ]);
+//                $conn->getTable("migration")->insert([
+//                    "module" => $module,
+//                    "version" => $version,
+//                    "status" => 1
+//                ]);
             })();
-            the_container()
+            $container->offsetUnset("moduleLoading");
             $response->addData('success', 1)->addData('message', 'Done');
             return $delegate;
         } catch (\Exception $e) {

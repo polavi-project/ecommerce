@@ -20,11 +20,7 @@ class ValidateMiddleware extends MiddlewareAbstract
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
         try {
-            if(file_exists(CONFIG_PATH . DS . 'config.php'))
-                require CONFIG_PATH . DS . 'config.php';
-            else if(file_exists(CONFIG_PATH . DS . 'config.tmp.php'))
-                require CONFIG_PATH . DS . 'config.tmp.php';
-            else
+            if(!file_exists(CONFIG_PATH . DS . 'config.php') and !file_exists(CONFIG_PATH . DS . 'config.tmp.php'))
                 throw new \Exception("You need to install the app first");
 
             $module = $request->attributes->get("module");

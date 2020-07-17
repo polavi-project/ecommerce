@@ -20,6 +20,7 @@ use Polavi\Middleware\PromiseWaiterMiddleware;
 use Polavi\Middleware\SaveCartMiddleware;
 use Polavi\Middleware\UserAuthenticateMiddleware;
 use Polavi\Module\Graphql\Services\ExecutionPromise;
+use Polavi\Services\Db\Configuration;
 use Polavi\Services\Db\Processor;
 use Polavi\Services\Di\Container;
 use Polavi\Services\Event\EventDispatcher;
@@ -61,10 +62,9 @@ class App
             return new Router($c[Request::class], new RouteParser());
         });
 
-        the_container()->set(Processor::class, function($c) {
-            $processor = new Processor();
-            return $processor;
-        });
+        the_container()->set(Processor::class,  $this->container->factory(function() {
+            return new Processor($this->container->get(Configuration::class));
+        }));
 
         the_container()[Session::class] = function($c) {
             return new Session(new NativeSessionStorage([], new NativeFileSessionHandler()));
@@ -131,11 +131,10 @@ class App
             }
         }
 
-        $installed = file_exists(CONFIG_PATH . DS . 'config.php');
-        // TODO: Refactor this
         $eventDispatcher = $this->container->get(EventDispatcher::class);
         $router = $this->container->get(Router::class);
         $container = $this->container;
+        $container->set("moduleLoading", true);
         foreach($modules as $module) {
             if(!file_exists(COMMUNITY_MODULE_PATH . DS . $module) && !file_exists(MODULE_PATH . DS . $module))
                 continue;
@@ -144,8 +143,8 @@ class App
                     include MODULE_PATH . DS . $module . DS . 'services.php';
                 })();
 
-            if(file_exists( MODULE_PATH . DS . $module . DS . 'events.php') && $installed === true)
-                (function() use ($module, $eventDispatcher, $container) {
+            if(file_exists( MODULE_PATH . DS . $module . DS . 'events.php'))
+                (function() use ($module, $eventDispatcher) {
                     include MODULE_PATH . DS . $module . DS . 'events.php';
                 })();
 
@@ -154,7 +153,42 @@ class App
                     include MODULE_PATH . DS . $module . DS . 'routes.php';
                 })();
         }
+        $container->offsetUnset("moduleLoading");
         dispatch_event('after.load.module', []);
+    }
+
+    protected function prepareToStart()
+    {
+        if(file_exists(CONFIG_PATH . DS . 'config.php')) {
+            $configuration = require_once './config/config.php';
+            $this->container->set(Configuration::class, function() use($configuration) {
+                return new Configuration(
+                    $configuration["database"],
+                    $configuration["driver"],
+                    $configuration["host"],
+                    $configuration["username"],
+                    $configuration["password"]
+                );
+            });
+        } else if(file_exists(CONFIG_PATH . DS . 'config.tmp.php')) {
+            $configuration = require_once './config/config.tmp.php';
+            $this->container->set(Configuration::class, function() use($configuration) {
+                return new Configuration(
+                    $configuration["database"],
+                    $configuration["driver"],
+                    $configuration["host"],
+                    $configuration["username"],
+                    $configuration["password"]
+                );
+            });
+        }
+
+        else if(!strpos($_SERVER['REQUEST_URI'], 'install')) {
+            $redirect = new \Symfony\Component\HttpFoundation\RedirectResponse(\Polavi\get_base_url() . '/install');
+            return $redirect->send();
+        }
+
+        return true;
     }
 
     /**
@@ -163,6 +197,7 @@ class App
     public function run()
     {
         $this->loadModule();
+        $this->prepareToStart();
         if(file_exists(CONFIG_PATH . DS . 'config.php'))
             $middleware = [
                 0 => ConfigMiddleware::class,

@@ -18,6 +18,14 @@ class Container extends \Pimple\Container
 
     public function get($id)
     {
+        if($this->offsetExists("moduleLoading"))
+            return null;
+        return parent::offsetGet($id);
+    }
+
+    public function offsetGet($id) {
+        if($this->offsetExists("moduleLoading"))
+            return null;
         return parent::offsetGet($id);
     }
 }

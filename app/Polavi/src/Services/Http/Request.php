@@ -23,10 +23,11 @@ class Request extends \Symfony\Component\HttpFoundation\Request
 
     public static function createFromGlobals()
     {
-        if (self::$instance === null) {
-            $request = parent::createFromGlobals();
-            self::$instance = $request;
-        }
+        if (self::$instance !== null)
+            throw new \Exception("You only can initialize Request object one time");
+        
+        $request = parent::createFromGlobals();
+        self::$instance = $request;
         return self::$instance;
     }
 
