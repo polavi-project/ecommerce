@@ -8,6 +8,7 @@
 namespace Polavi\Services\Db;
 
 use function Polavi\dispatch_event;
+use Polavi\Services\Event\EventDispatcher;
 use Polavi\Services\Log\Logger;
 
 class Processor extends \PDO
@@ -19,9 +20,13 @@ class Processor extends \PDO
     /**@var Configuration $configuration*/
     private $configuration;
 
-    public function __construct(Configuration $configuration)
+    /**@var EventDispatcher $eventDispatcher*/
+    private $eventDispatcher;
+
+    public function __construct(Configuration $configuration, EventDispatcher $eventDispatcher)
     {
         $this->configuration = $configuration;
+        $this->eventDispatcher = $eventDispatcher;
         try {
             parent::__construct('mysql:dbname=' . $configuration->getDb() . ';host=' . $configuration->getHost() .';charset=utf8mb4', $configuration->getUser(), $configuration->getPassword() );
         } catch (\PDOException $e) {
@@ -300,7 +305,7 @@ class Processor extends \PDO
      */
     public function insert(Table $table, array  $data = [])
     {
-        dispatch_event("before_insert_{$table->getTable()}", [&$data]);
+        $this->eventDispatcher->dispatch("before_insert_{$table->getTable()}", [&$data]);
         unset($data[$table->getPrimary()]);
         $binding = [];
         $insertColumns = [];
@@ -331,7 +336,7 @@ class Processor extends \PDO
             $stmt = $this->prepare($query);
             $stmt->execute($binding);
             $rowCount = $stmt->rowCount();
-            dispatch_event("after_insert_{$table->getTable()}", [$data, $rowCount, $this]);
+            $this->eventDispatcher->dispatch("after_insert_{$table->getTable()}", [$data, $rowCount, $this]);
             return $rowCount;
         } catch (\Exception $e) {
             $this->commit = false;
@@ -348,7 +353,7 @@ class Processor extends \PDO
      */
     public function update(Table $table, array $data = [])
     {
-        dispatch_event("before_update_{$table->getTable()}", [&$data]);
+        $this->eventDispatcher->dispatch("before_update_{$table->getTable()}", [&$data]);
         $prepare = '';
         $binding = [];
         foreach ($table->getColumns() as $column) {
@@ -378,7 +383,7 @@ class Processor extends \PDO
             $stmt = $this->prepare($query);
             $stmt->execute($binding);
             $rowCount = $stmt->rowCount();
-            dispatch_event("after_update_{$table->getTable()}", [$data, $rowCount, $this]);
+            $this->eventDispatcher->dispatch("after_update_{$table->getTable()}", [$data, $rowCount, $this]);
             return $rowCount;
         } catch (\Exception $e) {
             $this->commit = false;
@@ -427,7 +432,7 @@ class Processor extends \PDO
             $stmt = $this->prepare($query);
             $stmt->execute($binding);
             $rowCount = $stmt->rowCount();
-            dispatch_event("after_insert_on_update_{$table->getTable()}", [$data, $rowCount, $this]);
+            $this->eventDispatcher->dispatch("after_insert_on_update_{$table->getTable()}", [$data, $rowCount, $this]);
             return $stmt->rowCount();
         } catch (\PDOException $e) {
             $this->commit = false;
@@ -443,7 +448,7 @@ class Processor extends \PDO
     public function delete(Table $table)
     {
         $affectedRows = $table->fetchAllAssoc();
-        dispatch_event("before_delete_{$table->getTable()}", [$affectedRows]);
+        $this->eventDispatcher->dispatch("before_delete_{$table->getTable()}", [$affectedRows]);
 
         $whereClause = $this->buildWhere($table->getWhere());
         $binding = $table->getBinding();
@@ -451,7 +456,7 @@ class Processor extends \PDO
         try {
             $stmt = $this->prepare($query);
             $stmt->execute($binding);
-            dispatch_event("after_delete_{$table->getTable()}", [$affectedRows, $this]);
+            $this->eventDispatcher->dispatch("after_delete_{$table->getTable()}", [$affectedRows, $this]);
         } catch (\PDOException $e) {
             $this->commit = false;
             throw $e;

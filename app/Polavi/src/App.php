@@ -63,7 +63,10 @@ class App
         });
 
         the_container()->set(Processor::class,  $this->container->factory(function() {
-            return new Processor($this->container->get(Configuration::class));
+            return new Processor(
+                $this->container->get(Configuration::class),
+                $this->container->get(EventDispatcher::class)
+            );
         }));
 
         the_container()[Session::class] = function($c) {
@@ -183,7 +186,7 @@ class App
             });
         }
 
-        else if(!strpos($_SERVER['REQUEST_URI'], 'install')) {
+        if(!strpos($_SERVER['REQUEST_URI'], 'install') and !file_exists(CONFIG_PATH . DS . 'config.php')) {
             $redirect = new \Symfony\Component\HttpFoundation\RedirectResponse(\Polavi\get_base_url() . '/install');
             return $redirect->send();
         }

@@ -11,10 +11,9 @@ namespace Polavi\Module\Migration\Middleware\Module\Install;
 
 use function Polavi\_mysql;
 use Polavi\Middleware\MiddlewareAbstract;
-use Polavi\Services\Di\Container;
+use Polavi\Services\Db\Processor;
 use Polavi\Services\Http\Request;
 use Polavi\Services\Http\Response;
-use function Polavi\the_container;
 
 class InstallMiddleware extends MiddlewareAbstract
 {
@@ -24,37 +23,47 @@ class InstallMiddleware extends MiddlewareAbstract
         try {
             $module = $request->attributes->get("module");
             $path = file_exists(MODULE_PATH . DS . $module) ? MODULE_PATH . DS . $module : COMMUNITY_MODULE_PATH . DS . $module;
-            if(!preg_match('/^[A-Za-z0-9_]+$/', $module))
-                throw new \Exception("Invalid module name");
             $conn = _mysql();
-            $container = $this->getContainer();
-            $container->set("moduleLoading", true);
+            $this->getContainer()->set("moduleLoading", true);
             (function() use($path, $module, &$conn) {
                 if(!file_exists($path . DS . "migration.php"))
                     throw new \Exception("migration.php file was not found");
                 $migrations = require_once $path . DS . "migration.php" ?? [];
-                if(!isset($version))
-                    throw new \Exception("Version variable must be defined");
+                if(!isset($version) or !preg_match("/^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)/", $version))
+                    throw new \Exception("Version variable is either not defined or invalid");
 
-                foreach ($migrations as $migrateCallback) {
-                    if(!is_callable($migrateCallback))
-                        throw new \Exception("Invalid migrate function");
-                    $migrateCallback();
-                }
+                if(is_array($migrations))
+                    $this->runMigration($migrations, $conn);
 
-//                $conn->getTable("migration")->insert([
-//                    "module" => $module,
-//                    "version" => $version,
-//                    "status" => 1
-//                ]);
+                $conn->getTable("migration")->insert([
+                    "module" => $module,
+                    "version" => $version,
+                    "status" => 1
+                ]);
             })();
-            $container->offsetUnset("moduleLoading");
+            $this->getContainer()->offsetUnset("moduleLoading");
             $response->addData('success', 1)->addData('message', 'Done');
             return $delegate;
         } catch (\Exception $e) {
             $response->addData('success', 0);
             $response->addData('message', $e->getMessage());
             return $response;
+        }
+    }
+
+    protected function runMigration(array $migrations, Processor $conn)
+    {
+        // Each of element must have valid version number (example: 1.0.1)
+        $migrations = array_filter($migrations, function($v, $k) {
+            return preg_match("/^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)/", $k);
+        }, ARRAY_FILTER_USE_BOTH);
+
+        uksort($migrations, function($a, $b) {
+            return version_compare($a, $b) >= 0;
+        });
+
+        foreach ($migrations as $v => $callback) {
+            $callback($conn);
         }
     }
 }
