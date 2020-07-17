@@ -484,6 +484,14 @@ class Processor extends \PDO
         return $setting;
     }
 
+    /**
+     * @return Configuration
+     */
+    public function getConfiguration(): Configuration
+    {
+        return $this->configuration;
+    }
+
     protected function validate(Table $table, array $data = [])
     {
         foreach($table->getColumns() as $column) {

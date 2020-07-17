@@ -10,6 +10,7 @@ namespace Polavi\Module\Tax\Services;
 
 use function Polavi\get_config;
 use Polavi\Services\Db\Processor;
+use function Polavi\the_container;
 
 class TaxCalculator
 {
@@ -78,7 +79,7 @@ class TaxCalculator
         if(isset(self::$rates[$taxClassId][$country . $province . $postcode]))
             return self::$rates[$taxClassId][$country . $province . $postcode];
 
-        $conn = new Processor();
+        $conn = the_container()->get(Processor::class);
         $taxRates = $conn->getTable('tax_rate')
             ->where('tax_class_id', '=', (int)$taxClassId)
             ->fetchAllAssoc([

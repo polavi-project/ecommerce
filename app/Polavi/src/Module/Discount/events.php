@@ -98,12 +98,12 @@ $eventDispatcher->addListener(
     5
 );
 
-$eventDispatcher->addListener("register_cart_field", function(&$fields) use($container) {
+$eventDispatcher->addListener("register_cart_field", function(&$fields) {
     // Register discount to cart
     $fields["coupon"] = [
-        "resolver" => function(Cart $cart) use($container) {
+        "resolver" => function(Cart $cart) {
             $coupon = $cart->getDataSource()['coupon'] ?? $cart->getData("coupon") ?? null;
-            return $container->get(\Polavi\Module\Discount\Services\CouponHelper::class)->applyCoupon($coupon, $cart);
+            return \Polavi\the_container()->get(\Polavi\Module\Discount\Services\CouponHelper::class)->applyCoupon($coupon, $cart);
         },
         "dependencies" => ['customer_id', 'customer_group_id', 'items']
     ];
@@ -128,9 +128,9 @@ $eventDispatcher->addListener("register_cart_field", function(&$fields) use($con
     ];
 });
 
-$eventDispatcher->addListener("register_cart_item_field", function(array &$fields) use($container)  {
+$eventDispatcher->addListener("register_cart_item_field", function(array &$fields) {
     $fields["discount_amount"] = [
-        "resolver" => function(Item $item) use($container) {
+        "resolver" => function(Item $item) {
             return $item->getDataSource()['discount_amount'] ?? 0;
         }
     ];

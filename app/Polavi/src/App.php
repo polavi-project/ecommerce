@@ -122,10 +122,8 @@ class App
 
     protected function loadModule()
     {
-        $modules = [];
-        if(!file_exists(CONFIG_PATH . DS . 'config.php'))
-            $modules[] = 'Migration';
-        else {
+        $modules = ["Migration"];
+        if(file_exists(CONFIG_PATH . DS . 'config.php')) {
             $table = _mysql()->getTable('migration');
             while ($row = $table
                 ->where('status', '=', 1)
@@ -199,8 +197,8 @@ class App
      */
     public function run()
     {
-        $this->loadModule();
         $this->prepareToStart();
+        $this->loadModule();
         if(file_exists(CONFIG_PATH . DS . 'config.php'))
             $middleware = [
                 0 => ConfigMiddleware::class,

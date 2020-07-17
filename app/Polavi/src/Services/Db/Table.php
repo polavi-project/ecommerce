@@ -461,11 +461,11 @@ class Table
 				AND information_schema.key_column_usage.referenced_table_name IS NOT NULL';
 
         $stmt = $this->processor->prepare($query);
-        $stmt->execute([':database' => DB_DATABASE, ':table' => $table, ':referenced_table' => $this->getTable()]);
+        $stmt->execute([':database' => $this->processor->getConfiguration()->getDb(), ':table' => $table, ':referenced_table' => $this->getTable()]);
         $result = $stmt->fetchAll();
         if(!$result) {
             $stmt = $this->processor->prepare($query);
-            $stmt->execute([':database' => DB_DATABASE, ':table' => $this->getTable(), ':referenced_table' => $table]);
+            $stmt->execute([':database' => $this->processor->getConfiguration()->getDb(), ':table' => $this->getTable(), ':referenced_table' => $table]);
             $result = $stmt->fetchAll();
             if(!$result)
                 throw new \RuntimeException("No relation between {$table} and {$this->getTable()}");

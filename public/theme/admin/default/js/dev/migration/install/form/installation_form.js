@@ -107,6 +107,12 @@ export default function Installation({action}) {
                 message: 'Waiting'
             },
             {
+                step: 'User module',
+                api: ReactRedux.useSelector(state => _.get(state, 'appState.baseUrlAdmin') + '/migration/module/install/User'),
+                status: undefined,
+                message: 'Waiting'
+            },
+            {
                 step: 'Tax module',
                 api: ReactRedux.useSelector(state => _.get(state, 'appState.baseUrlAdmin') + '/migration/module/install/Tax'),
                 status: undefined,
@@ -125,8 +131,38 @@ export default function Installation({action}) {
                 message: 'Waiting'
             },
             {
+                step: 'Order setting',
+                api: ReactRedux.useSelector(state => _.get(state, 'appState.baseUrlAdmin') + '/migration/module/install/Order'),
+                status: undefined,
+                message: 'Waiting'
+            },
+            {
+                step: 'FlatRate module',
+                api: ReactRedux.useSelector(state => _.get(state, 'appState.baseUrlAdmin') + '/migration/module/install/FlatRate'),
+                status: undefined,
+                message: 'Waiting'
+            },
+            {
+                step: 'Cod module',
+                api: ReactRedux.useSelector(state => _.get(state, 'appState.baseUrlAdmin') + '/migration/module/install/Cod'),
+                status: undefined,
+                message: 'Waiting'
+            },
+            {
                 step: 'Discount setting',
                 api: ReactRedux.useSelector(state => _.get(state, 'appState.baseUrlAdmin') + '/migration/module/install/Discount'),
+                status: undefined,
+                message: 'Waiting'
+            },
+            {
+                step: 'Graphql module',
+                api: ReactRedux.useSelector(state => _.get(state, 'appState.baseUrlAdmin') + '/migration/module/install/Graphql'),
+                status: undefined,
+                message: 'Waiting'
+            },
+            {
+                step: 'SendGrid module',
+                api: ReactRedux.useSelector(state => _.get(state, 'appState.baseUrlAdmin') + '/migration/module/install/SendGrid'),
                 status: undefined,
                 message: 'Waiting'
             },

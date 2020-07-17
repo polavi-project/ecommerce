@@ -31,10 +31,10 @@ $eventDispatcher->addListener(
 );
 
 
-$eventDispatcher->addListener("register_cart_field", function(&$fields) use($container) {
+$eventDispatcher->addListener("register_cart_field", function(&$fields) {
     // Register discount to cart
     $fields["shipping_fee_incl_tax"] = [
-        "resolver" => function(Cart $cart) use($container) {
+        "resolver" => function(Cart $cart) {
             return $cart->getData('shipping_fee_excl_tax'); // TODO: Adding tax
         },
         "dependencies" => ['shipping_fee_excl_tax']

@@ -285,7 +285,7 @@ $eventDispatcher->addListener(
 
 // Remove product from variant group if attribute option was deleted
 $productIds = [];
-$eventDispatcher->addListener('before_delete_attribute_option',  function($affectedRows) use ($container, &$productIds) {
+$eventDispatcher->addListener('before_delete_attribute_option',  function($affectedRows) use (&$productIds) {
     foreach ($affectedRows as $row) {
         $stm = _mysql()
                 ->getTable('product_attribute_value_index')
@@ -299,7 +299,7 @@ $eventDispatcher->addListener('before_delete_attribute_option',  function($affec
     }
 });
 
-$eventDispatcher->addListener('after_delete_attribute_option',  function($affectedRows, \Polavi\Services\Db\Processor $processor) use ($container, &$productIds) {
+$eventDispatcher->addListener('after_delete_attribute_option',  function($affectedRows, \Polavi\Services\Db\Processor $processor) use (&$productIds) {
     foreach ($affectedRows as $row) {
         $groupIds = [];
         $stm = $processor->getTable("variant_group")
