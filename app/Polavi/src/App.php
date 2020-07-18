@@ -122,13 +122,20 @@ class App
 
     protected function loadModule()
     {
-        $modules = ["Migration"];
+        $modules[] = [
+            "m" => "Migration",
+            "v" => "1.0.0"
+        ];
+
         if(file_exists(CONFIG_PATH . DS . 'config.php')) {
             $table = _mysql()->getTable('migration');
             while ($row = $table
                 ->where('status', '=', 1)
                 ->fetch()) {
-                $modules[] = $row['module'];
+                $modules[] = [
+                    "m" => $row['module'],
+                    "v" => $row['version']
+                ];
             }
         }
 
@@ -136,26 +143,37 @@ class App
         $router = $this->container->get(Router::class);
         $container = $this->container;
         $container->set("moduleLoading", true);
-        foreach($modules as $module) {
-            if(!file_exists(COMMUNITY_MODULE_PATH . DS . $module) && !file_exists(MODULE_PATH . DS . $module))
+        foreach($modules as $key => $module) {
+            if(!file_exists(COMMUNITY_MODULE_PATH . DS . $module["m"]) && !file_exists(MODULE_PATH . DS . $module["m"]))
                 continue;
-            if(file_exists( MODULE_PATH . DS . $module . DS . 'services.php'))
+            if(file_exists( MODULE_PATH . DS . $module["m"] . DS . 'services.php'))
                 (function() use ($module, $container) {
-                    include MODULE_PATH . DS . $module . DS . 'services.php';
+                    include MODULE_PATH . DS . $module["m"] . DS . 'services.php';
                 })();
 
-            if(file_exists( MODULE_PATH . DS . $module . DS . 'events.php'))
+            if(file_exists( MODULE_PATH . DS . $module["m"] . DS . 'events.php'))
                 (function() use ($module, $eventDispatcher) {
-                    include MODULE_PATH . DS . $module . DS . 'events.php';
+                    include MODULE_PATH . DS . $module["m"] . DS . 'events.php';
                 })();
 
-            if(file_exists( MODULE_PATH . DS . $module . DS . 'routes.php'))
-                (function() use ($module, $router, $container) {
-                    include MODULE_PATH . DS . $module . DS . 'routes.php';
+            if(file_exists( MODULE_PATH . DS . $module["m"] . DS . 'routes.php'))
+                (function() use ($module, $router) {
+                    include MODULE_PATH . DS . $module["m"] . DS . 'routes.php';
                 })();
+
+            if(file_exists( MODULE_PATH . DS . $module["m"] . DS . 'migration.php')) {
+                $v= null;
+                $modules[$key]["migrateCallbacks"] = (function() use (&$v, $module) {
+                    $callbacks = include MODULE_PATH . DS . $module["m"] . DS . 'migration.php';
+                    $v = $version;
+                    return $callbacks;
+                })();
+                $modules[$key]["nv"] = $v;
+            }
         }
         $container->offsetUnset("moduleLoading");
-        dispatch_event('after.load.module', []);
+
+        return $modules;
     }
 
     protected function prepareToStart()
@@ -192,13 +210,42 @@ class App
         return true;
     }
 
+    protected function upgradeModules(array $modules)
+    {
+        foreach ($modules as $k => $module) {
+            if(isset($module["nv"]) and version_compare($module["v"], $module["nv"]) == -1) {
+                $callbacks = $module["migrateCallbacks"];
+                $callbacks = array_filter($callbacks, function($version) use($module) {
+                    return preg_match("/^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)/", $version) && version_compare($module["v"], $version) == -1;
+                }, ARRAY_FILTER_USE_KEY);
+
+                uksort($callbacks, function($a, $b) {
+                    return version_compare($a, $b) >= 0;
+                });
+
+                $conn = $this->container->get(Processor::class);
+                $conn->startTransaction();
+                try {
+                    foreach ($callbacks as $callback)
+                        $callback($conn);
+                    $conn->getTable("migration")->where("module", "=", $module["m"])->update(["version" => $module["nv"]]);
+                    $conn->commit();
+                } catch (\Exception $e) {
+                    $conn->rollback();
+                    // Log a message here
+                }
+            }
+        }
+    }
+
     /**
      * This is application trigger. Run the app
      */
     public function run()
     {
         $this->prepareToStart();
-        $this->loadModule();
+        $modules = $this->loadModule();
+        $this->upgradeModules($modules);
         if(file_exists(CONFIG_PATH . DS . 'config.php'))
             $middleware = [
                 0 => ConfigMiddleware::class,

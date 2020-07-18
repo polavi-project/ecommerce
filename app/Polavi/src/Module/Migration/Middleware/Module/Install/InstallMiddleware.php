@@ -20,10 +20,11 @@ class InstallMiddleware extends MiddlewareAbstract
 
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
+        $conn = _mysql();
+        $conn->startTransaction();
         try {
             $module = $request->attributes->get("module");
             $path = file_exists(MODULE_PATH . DS . $module) ? MODULE_PATH . DS . $module : COMMUNITY_MODULE_PATH . DS . $module;
-            $conn = _mysql();
             $this->getContainer()->set("moduleLoading", true);
             (function() use($path, $module, &$conn) {
                 if(!file_exists($path . DS . "migration.php"))
@@ -43,8 +44,11 @@ class InstallMiddleware extends MiddlewareAbstract
             })();
             $this->getContainer()->offsetUnset("moduleLoading");
             $response->addData('success', 1)->addData('message', 'Done');
+
+            $conn->commit();
             return $delegate;
         } catch (\Exception $e) {
+            $conn->rollback();
             $response->addData('success', 0);
             $response->addData('message', $e->getMessage());
             return $response;

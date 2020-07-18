@@ -1,7 +1,6 @@
 <?php
 
-$version = "1.0.0";
-\Polavi\the_container()->get(\Polavi\Services\Http\Request::class);
+$version = "1.0.1";
 return [
     "1.0.0" => function(\Polavi\Services\Db\Processor $conn) {
         $conn->executeQuery("CREATE TABLE `setting` (
@@ -37,5 +36,8 @@ return [
                         'language_id'=>0
                     ]);
         }
+    },
+    "1.0.1" => function(\Polavi\Services\Db\Processor $conn) {
+        $conn->getTable('setting')->where("name", "=", "general_store_name")->update(["value" => "Polavi Store testing migration store"]);
     }
 ];
