@@ -144,27 +144,32 @@ class App
         $container = $this->container;
         $container->set("moduleLoading", true);
         foreach($modules as $key => $module) {
-            if(!file_exists(COMMUNITY_MODULE_PATH . DS . $module["m"]) && !file_exists(MODULE_PATH . DS . $module["m"]))
+            if(file_exists(MODULE_PATH . DS . $module["m"])) {
+                $path = MODULE_PATH . DS . $module["m"];
+            } else if(file_exists(COMMUNITY_MODULE_PATH . DS . $module["m"])) {
+                $path = COMMUNITY_MODULE_PATH . DS . $module["m"];
+            } else
                 continue;
-            if(file_exists( MODULE_PATH . DS . $module["m"] . DS . 'services.php'))
-                (function() use ($module, $container) {
-                    include MODULE_PATH . DS . $module["m"] . DS . 'services.php';
+
+            if(file_exists( $path . DS . 'services.php'))
+                (function() use ($path, $container) {
+                    include $path . DS . 'services.php';
                 })();
 
-            if(file_exists( MODULE_PATH . DS . $module["m"] . DS . 'events.php'))
-                (function() use ($module, $eventDispatcher) {
-                    include MODULE_PATH . DS . $module["m"] . DS . 'events.php';
+            if(file_exists( $path . DS . 'events.php'))
+                (function() use ($path, $eventDispatcher) {
+                    include $path . DS . 'events.php';
                 })();
 
-            if(file_exists( MODULE_PATH . DS . $module["m"] . DS . 'routes.php'))
-                (function() use ($module, $router) {
-                    include MODULE_PATH . DS . $module["m"] . DS . 'routes.php';
+            if(file_exists( $path . DS . 'routes.php'))
+                (function() use ($path, $router) {
+                    include $path . DS . 'routes.php';
                 })();
 
-            if(file_exists( MODULE_PATH . DS . $module["m"] . DS . 'migration.php')) {
+            if(file_exists( $path . DS . 'migration.php')) {
                 $v= null;
-                $modules[$key]["migrateCallbacks"] = (function() use (&$v, $module) {
-                    $callbacks = include MODULE_PATH . DS . $module["m"] . DS . 'migration.php';
+                $modules[$key]["migrateCallbacks"] = (function() use (&$v, $path) {
+                    $callbacks = include $path . DS . 'migration.php';
                     $v = $version;
                     return $callbacks;
                 })();
@@ -215,6 +220,8 @@ class App
         foreach ($modules as $k => $module) {
             if(isset($module["nv"]) and version_compare($module["v"], $module["nv"]) == -1) {
                 $callbacks = $module["migrateCallbacks"];
+                if(!is_array($callbacks))
+                    $callbacks = [];
                 $callbacks = array_filter($callbacks, function($version) use($module) {
                     return preg_match("/^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)/", $version) && version_compare($module["v"], $version) == -1;
                 }, ARRAY_FILTER_USE_KEY);
@@ -232,7 +239,7 @@ class App
                     $conn->commit();
                 } catch (\Exception $e) {
                     $conn->rollback();
-                    // Log a message here
+                    $this->container->get(Logger::class)->error(sprintf("Could not upgrade module %s. Error: %s", $module["m"], $e->getMessage()));
                 }
             }
         }

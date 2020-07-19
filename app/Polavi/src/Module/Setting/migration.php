@@ -1,6 +1,7 @@
 <?php
 
 $version = "1.0.1";
+
 return [
     "1.0.0" => function(\Polavi\Services\Db\Processor $conn) {
         $conn->executeQuery("CREATE TABLE `setting` (

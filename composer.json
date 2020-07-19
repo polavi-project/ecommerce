@@ -1,7 +1,8 @@
 {
     "autoload": {
         "psr-4": {
-            "Polavi\\":"app/Polavi/src"
+            "Polavi\\":"app/Polavi/src",
+            "": "extension"
         },
         "files": ["app/Polavi/src/functions.php"]
     },
