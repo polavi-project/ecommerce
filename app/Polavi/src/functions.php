@@ -452,6 +452,13 @@ function resize_image(string $path, int $width, int $height) {
     }
 }
 
+/**
+ * Find an element in an array and return default value if not found
+ * @param $array
+ * @param callable $callback
+ * @param null $default
+ * @return |null
+ */
 function array_find($array, callable $callback, $default = null) {
     if(!is_array($array))
         return $default;
