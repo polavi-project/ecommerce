@@ -44,14 +44,20 @@ class InstallMiddleware extends MiddlewareAbstract
                 ]);
             })();
             $this->getContainer()->offsetUnset("moduleLoading");
-            $response->addAlert("module_install_success", "success", sprintf("Module %s is installed successfully", $module))
-                ->redirect(generate_url("extensions.grid"));
+            $response->addData('success', 1)->addData('message', 'Done');
+
+            if($request->getMethod() == "GET")
+                $response->addAlert("module_install_success", "success", sprintf("Module %s is installed successfully", $module))
+                    ->redirect(generate_url("extensions.grid"));
 
             $conn->commit();
             return $response;
         } catch (\Exception $e) {
             $conn->rollback();
-            $response->addAlert("module_install_error", "error", $e->getMessage())->notNewPage();
+            $response->addData('success', 0);
+
+            if($request->getMethod() == "GET")
+                $response->addAlert("module_install_error", "error", $e->getMessage())->notNewPage();
             return $response;
         }
     }

@@ -35,7 +35,11 @@ class CreateMigrationTableMiddleware extends MiddlewareAbstract
                   PRIMARY KEY (`migration_id`),
                   UNIQUE KEY `MODULE_UNIQUE` (`module`)
                 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Migration'");
-
+            $conn->getTable('migration')->insert([
+                "module" => "Migration",
+                "version" => "1.0.0",
+                "status" => 1
+            ]);
             $conn->commit();
         } catch (\Exception $e) {
             $conn->rollback();

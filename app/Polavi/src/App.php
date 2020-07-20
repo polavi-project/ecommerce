@@ -124,15 +124,12 @@ class App
 
     protected function loadModule()
     {
-        $modules[] = [
-            "m" => "Migration",
-            "v" => "1.0.0"
-        ];
+        $modules = [];
 
         if(file_exists(CONFIG_PATH . DS . 'config.php')) {
             $conn = _mysql();
             // This is for the one who installed the app
-            $migrationTable = $conn->executeQuery("SELECT TABLE_NAME FROM information_schema.tables WHERE table_schema = :dbName AND TABLE_NAME = \"product\" LIMIT 0,1", ['dbName'=> $conn->getConfiguration()->getDb()])->fetch(\PDO::FETCH_ASSOC);
+            $migrationTable = $conn->executeQuery("SELECT TABLE_NAME FROM information_schema.tables WHERE table_schema = :dbName AND TABLE_NAME = \"migration\" LIMIT 0,1", ['dbName'=> $conn->getConfiguration()->getDb()])->fetch(\PDO::FETCH_ASSOC);
             if($migrationTable == false) {
                 $conn->executeQuery("CREATE TABLE `migration` (
                   `migration_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -152,6 +149,7 @@ class App
                         "status" => 1
                     ]);
             }
+
             $table = $conn->getTable('migration');
             while ($row = $table
                 ->where('status', '=', 1)
@@ -161,6 +159,11 @@ class App
                     "v" => $row['version']
                 ];
             }
+        } else {
+            $modules[] = [
+                "m" => "Migration",
+                "v" => "1.0.0"
+            ];
         }
 
         $eventDispatcher = $this->container->get(EventDispatcher::class);
