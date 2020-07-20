@@ -43,6 +43,8 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\Handler\NativeFileSessionHandler;
 use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
 
+define("VERSION", "1.0-dev");
+
 class App
 {
     /*@var Container $container*/
@@ -128,7 +130,29 @@ class App
         ];
 
         if(file_exists(CONFIG_PATH . DS . 'config.php')) {
-            $table = _mysql()->getTable('migration');
+            $conn = _mysql();
+            // This is for the one who installed the app
+            $migrationTable = $conn->executeQuery("SELECT TABLE_NAME FROM information_schema.tables WHERE table_schema = :dbName AND TABLE_NAME = \"product\" LIMIT 0,1", ['dbName'=> $conn->getConfiguration()->getDb()])->fetch(\PDO::FETCH_ASSOC);
+            if($migrationTable == false) {
+                $conn->executeQuery("CREATE TABLE `migration` (
+                  `migration_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+                  `module` char(255) NOT NULL,
+                  `version` char(255) NOT NULL,
+                  `status` char(255) NOT NULL,
+                  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                  PRIMARY KEY (`migration_id`),
+                  UNIQUE KEY `MODULE_UNIQUE` (`module`)
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Migration'");
+
+                foreach (CORE_MODULES as $m)
+                    $conn->getTable('migration')->insert([
+                        "module" => $m,
+                        "version" => "1.0.0",
+                        "status" => 1
+                    ]);
+            }
+            $table = $conn->getTable('migration');
             while ($row = $table
                 ->where('status', '=', 1)
                 ->fetch()) {
@@ -144,11 +168,11 @@ class App
         $container = $this->container;
         $container->set("moduleLoading", true);
         foreach($modules as $key => $module) {
-            if(file_exists(MODULE_PATH . DS . $module["m"])) {
+            if(in_array($module["m"], CORE_MODULES))
                 $path = MODULE_PATH . DS . $module["m"];
-            } else if(file_exists(COMMUNITY_MODULE_PATH . DS . $module["m"])) {
+            else
                 $path = COMMUNITY_MODULE_PATH . DS . $module["m"];
-            } else
+            if(!file_exists($path))
                 continue;
 
             if(file_exists( $path . DS . 'services.php'))

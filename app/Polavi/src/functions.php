@@ -30,6 +30,27 @@ use Polavi\Services\Locale\Language;
 use Polavi\Services\Routing\Router;
 use Symfony\Component\HttpFoundation\Session\Session;
 
+define(
+    "CORE_MODULES",
+    [
+        "Catalog",
+        "Checkout",
+        "Cms",
+        "Cod",
+        "Customer",
+        "Discount",
+        "FlatRate",
+        "GoogleAnalytics",
+        "Graphql",
+        "Migration",
+        "Order",
+        "SendGrid",
+        "Setting",
+        "Tax",
+        "User",
+    ]
+);
+
 function the_container(Container $start = null) : Container
 {
     static $container;

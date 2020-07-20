@@ -27,15 +27,15 @@ $router->addAdminRoute('migration.module.install', ["GET", "POST"], '/migration/
 ]);
 
 $router->addAdminRoute('migration.module.disable', ["GET", "POST"], '/migration/module/disable/{module}', [
-    \Polavi\Module\Migration\Middleware\Module\Install\ValidateMiddleware::class,
-    \Polavi\Module\Migration\Middleware\Module\Install\InstallMiddleware::class
+    \Polavi\Module\Migration\Middleware\Module\Disable\ValidateMiddleware::class,
+    \Polavi\Module\Migration\Middleware\Module\Disable\DisableMiddleware::class
 ]);
 
 $router->addAdminRoute('migration.module.enable', ["GET", "POST"], '/migration/module/enable/{module}', [
-    \Polavi\Module\Migration\Middleware\Module\Install\ValidateMiddleware::class,
-    \Polavi\Module\Migration\Middleware\Module\Install\InstallMiddleware::class
+    \Polavi\Module\Migration\Middleware\Module\Enable\ValidateMiddleware::class,
+    \Polavi\Module\Migration\Middleware\Module\Enable\EnableMiddleware::class
 ]);
 
-$router->addAdminRoute('extension.grid', 'GET', '/extensions', [
+$router->addAdminRoute('extensions.grid', 'GET', '/extensions', [
     \Polavi\Module\Migration\Middleware\Module\Grid\GridMiddleware::class
 ]);

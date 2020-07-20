@@ -35,8 +35,8 @@ export default function ExtensionGrid({extensions})
                         </td>
                         <td>
                             {parseInt(m.status) === 1 && <div><A url={m.disableUrl} className="text-danger">Disable</A></div>}
-                            {parseInt(m.status) === 0 && <div><A url={m.disableUrl} className="text-primary">Enable</A></div>}
-                            {m.status === undefined && <div><A url={m.installUrl} className="text-primary">Install</A></div>}
+                            {parseInt(m.status) === 0 && <div><A url={m.enableUrl} className="text-primary">Enable</A></div>}
+                            {m.status === null && <div><A url={m.installUrl} className="text-primary">Install</A></div>}
                         </td>
                     </tr>
                 })}

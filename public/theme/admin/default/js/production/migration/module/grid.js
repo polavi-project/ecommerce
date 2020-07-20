@@ -133,11 +133,11 @@ export default function ExtensionGrid({ extensions }) {
                                     null,
                                     React.createElement(
                                         A,
-                                        { url: m.disableUrl, className: "text-primary" },
+                                        { url: m.enableUrl, className: "text-primary" },
                                         "Enable"
                                     )
                                 ),
-                                m.status === undefined && React.createElement(
+                                m.status === null && React.createElement(
                                     "div",
                                     null,
                                     React.createElement(

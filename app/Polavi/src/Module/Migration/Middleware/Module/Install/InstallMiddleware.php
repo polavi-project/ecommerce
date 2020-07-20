@@ -10,6 +10,7 @@ namespace Polavi\Module\Migration\Middleware\Module\Install;
 
 
 use function Polavi\_mysql;
+use function Polavi\generate_url;
 use Polavi\Middleware\MiddlewareAbstract;
 use Polavi\Services\Db\Processor;
 use Polavi\Services\Http\Request;
@@ -43,14 +44,14 @@ class InstallMiddleware extends MiddlewareAbstract
                 ]);
             })();
             $this->getContainer()->offsetUnset("moduleLoading");
-            $response->addData('success', 1)->addData('message', 'Done');
+            $response->addAlert("module_install_success", "success", sprintf("Module %s is installed successfully", $module))
+                ->redirect(generate_url("extensions.grid"));
 
             $conn->commit();
-            return $delegate;
+            return $response;
         } catch (\Exception $e) {
             $conn->rollback();
-            $response->addData('success', 0);
-            $response->addData('message', $e->getMessage());
+            $response->addAlert("module_install_error", "error", $e->getMessage())->notNewPage();
             return $response;
         }
     }
