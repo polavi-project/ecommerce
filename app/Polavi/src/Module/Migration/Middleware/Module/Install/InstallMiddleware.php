@@ -30,7 +30,7 @@ class InstallMiddleware extends MiddlewareAbstract
             (function() use($path, $module, &$conn) {
                 if(!file_exists($path . DS . "migration.php"))
                     throw new \Exception("migration.php file was not found");
-                $migrations = require_once $path . DS . "migration.php" ?? [];
+                $migrations = require_once $path . DS . "migration.php";
                 if(!isset($version) or !preg_match("/^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)/", $version))
                     throw new \Exception("Version variable is either not defined or invalid");
 

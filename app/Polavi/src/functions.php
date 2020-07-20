@@ -48,6 +48,7 @@ define(
         "Setting",
         "Tax",
         "User",
+        "Contact",
     ]
 );
 

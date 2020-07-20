@@ -142,13 +142,10 @@ class App
                   UNIQUE KEY `MODULE_UNIQUE` (`module`)
                 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Migration'");
 
-                foreach (CORE_MODULES as $m)
-                    $conn->getTable('migration')->insert([
-                        "module" => $m,
-                        "version" => "1.0.0",
-                        "status" => 1
-                    ]);
             }
+
+            // We install core module automatically if it was not installed(Module released after fresh installation)
+            $this->installCoreModules();
 
             $table = $conn->getTable('migration');
             while ($row = $table
@@ -242,6 +239,45 @@ class App
         return true;
     }
 
+    /**
+     * This method will install core module automatically if it was not installed before.
+     */
+    protected function installCoreModules()
+    {
+        $conn = _mysql();
+        foreach (CORE_MODULES as $module) {
+            $check = $conn->getTable("migration")->loadByField("module", $module);
+            if(!$check) {
+                // This core extension is not installed
+                (function() use($module, &$conn) {
+                    $callbacks = require MODULE_PATH . DS . $module . DS . "migration.php";
+                    if(!is_array($callbacks))
+                        $callbacks = [];
+                    $callbacks = array_filter($callbacks, function($v, $k) {
+                        return preg_match("/^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)/", $k);
+                    }, ARRAY_FILTER_USE_BOTH);
+
+                    uksort($callbacks, function($a, $b) {
+                        return version_compare($a, $b) >= 0;
+                    });
+
+                    foreach ($callbacks as $v => $callback) {
+                        $callback($conn);
+                    }
+                    $conn->getTable("migration")->insert([
+                        "module" => $module,
+                        "version" => $version,
+                        "status" => 1
+                    ]);
+                })();
+            }
+        }
+    }
+
+    /**
+     * We will check and upgrade module automatically if new version was released
+     * @param array $modules
+     */
     protected function upgradeModules(array $modules)
     {
         foreach ($modules as $k => $module) {
