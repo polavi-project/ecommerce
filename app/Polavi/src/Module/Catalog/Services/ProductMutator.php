@@ -14,6 +14,7 @@ use function Polavi\get_default_language_Id;
 use function Polavi\resize_image;
 use function Polavi\str_replace_last;
 use Polavi\Services\Db\Processor;
+use function Polavi\the_container;
 
 class ProductMutator
 {
@@ -23,7 +24,7 @@ class ProductMutator
     public function __construct(Processor $processor = null)
     {
         if($processor == null)
-            $this->processor = new Processor();
+            $this->processor = the_container()->get(Processor::class);
         else
             $this->processor = $processor;
     }

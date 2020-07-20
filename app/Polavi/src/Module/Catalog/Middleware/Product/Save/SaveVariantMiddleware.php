@@ -38,7 +38,7 @@ class SaveVariantMiddleware extends MiddlewareAbstract
         }
 
         try {
-            $conn = new Processor();
+            $conn = $this->getContainer()->get(Processor::class);
             $conn->startTransaction();
 
             $product = $conn->getTable("product")->load($productId);

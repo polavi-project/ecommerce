@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Polavi\Module\User\Services;
 
+use function Polavi\_mysql;
 use Polavi\Services\Db\Processor;
 use Polavi\Services\Db\Table;
 use Polavi\Services\Http\Request;
@@ -32,7 +33,7 @@ class Authenticator
         if($this->request->getSession()->get('user_id', null) != null)
             return true;
 
-        $userTable = new Table('admin_user', new Processor());
+        $userTable = _mysql()->getTable("admin_user");
         $user = $userTable->where('email', '=', $email)->fetchOneAssoc();
         if($user == false)
             throw new \RuntimeException("Email or password is invalid");

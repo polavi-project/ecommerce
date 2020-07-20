@@ -8,6 +8,7 @@
 namespace Polavi\Services\Db;
 
 use function Polavi\dispatch_event;
+use Polavi\Services\Event\EventDispatcher;
 use Polavi\Services\Log\Logger;
 
 class Processor extends \PDO
@@ -16,10 +17,18 @@ class Processor extends \PDO
 
     private $inTransaction = false;
 
-    public function __construct()
+    /**@var Configuration $configuration*/
+    private $configuration;
+
+    /**@var EventDispatcher $eventDispatcher*/
+    private $eventDispatcher;
+
+    public function __construct(Configuration $configuration, EventDispatcher $eventDispatcher)
     {
+        $this->configuration = $configuration;
+        $this->eventDispatcher = $eventDispatcher;
         try {
-            parent::__construct('mysql:dbname=' . DB_DATABASE . ';host=' . DB_HOST .';charset=utf8mb4', DB_USERNAME, DB_PASSWORD );
+            parent::__construct('mysql:dbname=' . $configuration->getDb() . ';host=' . $configuration->getHost() .';charset=utf8mb4', $configuration->getUser(), $configuration->getPassword() );
         } catch (\PDOException $e) {
             throw $e;
         }
@@ -108,7 +117,7 @@ class Processor extends \PDO
      */
     protected function buildSelect(Table $table)
     {
-        $table_name = DB_PREFIX . $table->getTable();
+        $table_name = $this->configuration->getPrefix() . $table->getTable();
         $query = "SELECT ";
         $fields = $table->getSelectFields();
         if($fields == null)
@@ -161,7 +170,7 @@ class Processor extends \PDO
                 $alias = $join['alias'];
             else
                 $alias = $join['table'];
-            $joinClause .= "{$join['type']} `" . DB_PREFIX . $join['table'] . "` AS `" . $alias . "` ON {$join['on']} ";
+            $joinClause .= "{$join['type']} `" . $this->configuration->getPrefix() . $join['table'] . "` AS `" . $alias . "` ON {$join['on']} ";
             $joinClause = rtrim($joinClause, 'AND');
             $where = "";
             if(isset($join['where'])) {
@@ -296,7 +305,7 @@ class Processor extends \PDO
      */
     public function insert(Table $table, array  $data = [])
     {
-        dispatch_event("before_insert_{$table->getTable()}", [&$data]);
+        $this->eventDispatcher->dispatch("before_insert_{$table->getTable()}", [&$data]);
         unset($data[$table->getPrimary()]);
         $binding = [];
         $insertColumns = [];
@@ -322,12 +331,12 @@ class Processor extends \PDO
         }
         if(count($insertColumns)==0)
             throw new \RuntimeException("Something wrong, can not save data");
-        $query = "INSERT INTO `" . DB_PREFIX . $table->getTable() . "` (`" . implode('`, `', $insertColumns) . "`) VALUES (:" . implode(', :', $insertColumns) . ")";
+        $query = "INSERT INTO `" . $this->configuration->getPrefix() . $table->getTable() . "` (`" . implode('`, `', $insertColumns) . "`) VALUES (:" . implode(', :', $insertColumns) . ")";
         try {
             $stmt = $this->prepare($query);
             $stmt->execute($binding);
             $rowCount = $stmt->rowCount();
-            dispatch_event("after_insert_{$table->getTable()}", [$data, $rowCount, $this]);
+            $this->eventDispatcher->dispatch("after_insert_{$table->getTable()}", [$data, $rowCount, $this]);
             return $rowCount;
         } catch (\Exception $e) {
             $this->commit = false;
@@ -344,7 +353,7 @@ class Processor extends \PDO
      */
     public function update(Table $table, array $data = [])
     {
-        dispatch_event("before_update_{$table->getTable()}", [&$data]);
+        $this->eventDispatcher->dispatch("before_update_{$table->getTable()}", [&$data]);
         $prepare = '';
         $binding = [];
         foreach ($table->getColumns() as $column) {
@@ -369,12 +378,12 @@ class Processor extends \PDO
             throw new \RuntimeException('You are trying to update no column');
         $prepare = trim($prepare, ',');
         $whereClause = $this->buildWhere($table->getWhere(), $binding);
-        $query = "UPDATE `" . DB_PREFIX . $table->getTable() . "` SET " . $prepare . " {$whereClause}";
+        $query = "UPDATE `" . $this->configuration->getPrefix() . $table->getTable() . "` SET " . $prepare . " {$whereClause}";
         try {
             $stmt = $this->prepare($query);
             $stmt->execute($binding);
             $rowCount = $stmt->rowCount();
-            dispatch_event("after_update_{$table->getTable()}", [$data, $rowCount, $this]);
+            $this->eventDispatcher->dispatch("after_update_{$table->getTable()}", [$data, $rowCount, $this]);
             return $rowCount;
         } catch (\Exception $e) {
             $this->commit = false;
@@ -416,14 +425,14 @@ class Processor extends \PDO
             $prepare .= "`" . $column . "` = :" . $column . ",";
         }
         $prepare = trim($prepare, ',');
-        $query = "INSERT INTO `" . DB_PREFIX . $table->getTable() . "` (`" . implode('`, `', $insertColumns) . "`)
+        $query = "INSERT INTO `" . $this->configuration->getPrefix() . $table->getTable() . "` (`" . implode('`, `', $insertColumns) . "`)
                     VALUES (:" . implode(', :', $insertColumns) . ")
                       ON DUPLICATE KEY UPDATE {$prepare}";
         try {
             $stmt = $this->prepare($query);
             $stmt->execute($binding);
             $rowCount = $stmt->rowCount();
-            dispatch_event("after_insert_on_update_{$table->getTable()}", [$data, $rowCount, $this]);
+            $this->eventDispatcher->dispatch("after_insert_on_update_{$table->getTable()}", [$data, $rowCount, $this]);
             return $stmt->rowCount();
         } catch (\PDOException $e) {
             $this->commit = false;
@@ -439,15 +448,15 @@ class Processor extends \PDO
     public function delete(Table $table)
     {
         $affectedRows = $table->fetchAllAssoc();
-        dispatch_event("before_delete_{$table->getTable()}", [$affectedRows]);
+        $this->eventDispatcher->dispatch("before_delete_{$table->getTable()}", [$affectedRows]);
 
         $whereClause = $this->buildWhere($table->getWhere());
         $binding = $table->getBinding();
-        $query = "DELETE FROM `" . DB_PREFIX . $table->getTable()  . "` " . $whereClause;
+        $query = "DELETE FROM `" . $this->configuration->getPrefix() . $table->getTable()  . "` " . $whereClause;
         try {
             $stmt = $this->prepare($query);
             $stmt->execute($binding);
-            dispatch_event("after_delete_{$table->getTable()}", [$affectedRows, $this]);
+            $this->eventDispatcher->dispatch("after_delete_{$table->getTable()}", [$affectedRows, $this]);
         } catch (\PDOException $e) {
             $this->commit = false;
             throw $e;
@@ -473,6 +482,14 @@ class Processor extends \PDO
         $setting = array_merge($defaultSetting, $setting);
 
         return $setting;
+    }
+
+    /**
+     * @return Configuration
+     */
+    public function getConfiguration(): Configuration
+    {
+        return $this->configuration;
     }
 
     protected function validate(Table $table, array $data = [])

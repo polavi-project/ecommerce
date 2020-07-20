@@ -19,11 +19,11 @@ use Polavi\Services\Routing\Router;
 
 $eventDispatcher->addListener(
         'filter.query.type',
-        function (&$fields) use ($container) {
+        function (&$fields) {
             /**@var array $fields*/
             $fields += [
                 'cmsPage' => [
-                    'type' => $container->get(\Polavi\Module\Cms\Services\Type\CmsPageType::class),
+                    'type' => \Polavi\the_container()->get(\Polavi\Module\Cms\Services\Type\CmsPageType::class),
                     'description' => 'Return a cms page',
                     'args' => [
                         'id' => Type::nonNull(Type::id()),
@@ -52,11 +52,11 @@ $eventDispatcher->addListener(
             ];
             $fields += [
                 'pageCollection' => [
-                    'type' => $container->get(\Polavi\Module\Cms\Services\Type\PageCollectionType::class),
+                    'type' => \Polavi\the_container()->get(\Polavi\Module\Cms\Services\Type\PageCollectionType::class),
                     'description' => "Return list of cms page and total count",
                     'args' => [
                         'filter' =>  [
-                            'type' => $container->get(\Polavi\Module\Cms\Services\Type\PageCollectionFilterType::class)
+                            'type' => \Polavi\the_container()->get(\Polavi\Module\Cms\Services\Type\PageCollectionFilterType::class)
                         ]
                     ],
                     'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
@@ -71,7 +71,7 @@ $eventDispatcher->addListener(
 
             $fields += [
                 'cmsWidget' => [
-                    'type' => $container->get(\Polavi\Module\Cms\Services\Type\WidgetType::class),
+                    'type' => \Polavi\the_container()->get(\Polavi\Module\Cms\Services\Type\WidgetType::class),
                     'description' => 'Return a widget',
                     'args' => [
                         'id' => Type::nonNull(Type::id())
@@ -89,11 +89,11 @@ $eventDispatcher->addListener(
             ];
             $fields += [
                 'widgetCollection' => [
-                    'type' => $container->get(\Polavi\Module\Cms\Services\Type\WidgetCollectionType::class),
+                    'type' => \Polavi\the_container()->get(\Polavi\Module\Cms\Services\Type\WidgetCollectionType::class),
                     'description' => "Return list of widget and total count",
                     'args' => [
                         'filter' =>  [
-                            'type' => $container->get(\Polavi\Module\Cms\Services\Type\WidgetCollectionFilterType::class)
+                            'type' => \Polavi\the_container()->get(\Polavi\Module\Cms\Services\Type\WidgetCollectionFilterType::class)
                         ]
                     ],
                     'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {

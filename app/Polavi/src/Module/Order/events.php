@@ -64,11 +64,11 @@ $eventDispatcher->addListener(
 
 $eventDispatcher->addListener(
     'filter.query.type',
-    function (&$fields) use ($container) {
+    function (&$fields) {
         /**@var array $fields*/
         $fields += [
             'order' => [
-                'type' => $container->get(OrderType::class),
+                'type' => \Polavi\the_container()->get(OrderType::class),
                 'description' => "Return an order",
                 'args' => [
                     'id' =>  Type::nonNull(Type::int())
@@ -82,11 +82,11 @@ $eventDispatcher->addListener(
                 }
             ],
             'orderCollection' => [
-                'type' => $container->get(OrderCollectionType::class),
+                'type' => \Polavi\the_container()->get(OrderCollectionType::class),
                 'description' => "Return list of order and total count",
                 'args' => [
                     'filter' =>  [
-                        'type' => $container->get(OrderCollectionFilterType::class)
+                        'type' => \Polavi\the_container()->get(OrderCollectionFilterType::class)
                     ]
                 ],
                 'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
@@ -171,7 +171,7 @@ $eventDispatcher->addListener(
                 }
             ],
             'bestSellers' => [
-                'type' => Type::listOf($container->get(\Polavi\Module\Catalog\Services\Type\ProductType::class)),
+                'type' => Type::listOf(\Polavi\the_container()->get(\Polavi\Module\Catalog\Services\Type\ProductType::class)),
                 'description' => "Return list of best seller product",
                 'args' => [
                     'limit' => Type::nonNull(Type::int()),
