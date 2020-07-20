@@ -47,8 +47,7 @@ define(
         "SendGrid",
         "Setting",
         "Tax",
-        "User",
-        "Contact",
+        "User"
     ]
 );
 

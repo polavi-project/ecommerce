@@ -1,6 +1,6 @@
 <?php
 
-$version = "1.0.1";
+$version = "1.0.0";
 
 return [
     "1.0.0" => function(\Polavi\Services\Db\Processor $conn) {
@@ -40,8 +40,5 @@ return [
                         'language_id'=>0
                     ]);
         }
-    },
-    "1.0.1" => function(\Polavi\Services\Db\Processor $conn) {
-        $conn->getTable('setting')->where("name", "=", "general_store_name")->update(["value" => "Polavi Store testing migration store"]);
     }
 ];
