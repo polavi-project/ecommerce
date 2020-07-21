@@ -465,6 +465,11 @@ class Processor extends \PDO
         return $this;
     }
 
+    /**
+     * @param Table $table
+     * @param array $setting
+     * @return array
+     */
     protected function validateSelectQuerySetting(Table $table, array $setting)
     {
         $defaultSetting = [
@@ -492,6 +497,10 @@ class Processor extends \PDO
         return $this->configuration;
     }
 
+    /**
+     * @param Table $table
+     * @param array $data
+     */
     protected function validate(Table $table, array $data = [])
     {
         foreach($table->getColumns() as $column) {
@@ -499,6 +508,10 @@ class Processor extends \PDO
         }
     }
 
+    /**
+     * @param $table
+     * @return array|bool
+     */
     public function describeTable($table)
     {
         $sql = 'DESCRIBE ' . $table;
@@ -508,6 +521,10 @@ class Processor extends \PDO
         return false;
     }
 
+    /**
+     * @param $field
+     * @param array $data
+     */
     protected function validateField($field, array &$data = [])
     {
         if($field['Null']=='NO' and (!isset($data[$field['Field']]) or trim($data[$field['Field']])==''))
