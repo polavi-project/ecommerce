@@ -21,6 +21,11 @@ class Request extends \Symfony\Component\HttpFoundation\Request
     /** @var self $request*/
     private static $instance = null;
 
+    /**
+     * Create a Request object from global data
+     * @return Request|\Symfony\Component\HttpFoundation\Request
+     * @throws \Exception
+     */
     public static function createFromGlobals()
     {
         if (self::$instance !== null)
@@ -31,6 +36,11 @@ class Request extends \Symfony\Component\HttpFoundation\Request
         return self::$instance;
     }
 
+    /**
+     * Assign User object to the Request object
+     * @param $user
+     * @return $this
+     */
     public function setUser($user)
     {
         if($this->user)
@@ -39,6 +49,11 @@ class Request extends \Symfony\Component\HttpFoundation\Request
         return $this;
     }
 
+    /**
+     * Assign User object to the Request object
+     * @param Customer $customer
+     * @return $this
+     */
     public function setCustomer(Customer $customer)
     {
         $this->customer = $customer;
@@ -46,16 +61,25 @@ class Request extends \Symfony\Component\HttpFoundation\Request
         return $this;
     }
 
+    /**
+     * @return Customer
+     */
     public function getCustomer()
     {
         return $this->customer;
     }
 
+    /**
+     * @return string|null
+     */
     public function getUser()
     {
         return $this->user;
     }
 
+    /**
+     * @return string
+     */
     public function getUri() : string
     {
         $uri =  str_replace('index.php', '', $this->getPathInfo());
@@ -69,6 +93,10 @@ class Request extends \Symfony\Component\HttpFoundation\Request
         return $uri;
     }
 
+    /**
+     * Check if current request is an Ajax request or not
+     * @return bool
+     */
     public function isAjax() : bool
     {
         if((int)$this->query->get('ajax') === 1)
@@ -77,6 +105,9 @@ class Request extends \Symfony\Component\HttpFoundation\Request
             return $this->isXmlHttpRequest();
     }
 
+    /**
+     * @return bool
+     */
     public function isAdmin() : bool
     {
         if(preg_match("/^\/" . ADMIN_PATH . "/", $this->getPathInfo()))
