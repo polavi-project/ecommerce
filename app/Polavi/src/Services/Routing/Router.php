@@ -31,6 +31,13 @@ class Router
         $this->parser = $parser;
     }
 
+    /**
+     * @param string $id
+     * @param $method
+     * @param string $pattern
+     * @param array $middleware
+     * @return $this
+     */
     public function addAdminRoute(string $id, $method, string $pattern, array $middleware)
     {
         if(isset($this->adminRoutes[$id]))
@@ -43,6 +50,13 @@ class Router
         return $this;
     }
 
+    /**
+     * @param string $id
+     * @param $method
+     * @param string $pattern
+     * @param array $middleware
+     * @return $this
+     */
     public function addSiteRoute(string $id, $method, string $pattern, array $middleware)
     {
         if(isset($this->siteRoutes[$id]))
@@ -75,6 +89,9 @@ class Router
         return $dispatcher;
     }
 
+    /**
+     * @return int
+     */
     public function dispatch()
     {
         $dispatcher = $this->routeInit();
@@ -103,6 +120,13 @@ class Router
         }
     }
 
+    /**
+     * This method generates a url base on route ID and arguments
+     * @param string $routeId
+     * @param array $params
+     * @param array|null $query
+     * @return string
+     */
     public function generateUrl(string $routeId, array $params = [], array $query = null) : string
     {
         $route = $this->siteRoutes[$routeId] ?? $this->adminRoutes[$routeId] ?? null;
