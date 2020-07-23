@@ -14,6 +14,11 @@ use FastRoute\RouteParser\Std;
 
 class RouteParser extends Std
 {
+    /**
+     * Parse a route
+     * @param $route
+     * @return array|mixed[]|\mixed[][]|null
+     */
     public function parse($route)
     {
         $routeWithoutClosingOptionals = rtrim($route, ']');
@@ -47,6 +52,10 @@ class RouteParser extends Std
         return $routeData;
     }
 
+    /**
+     * @param $route
+     * @return array|mixed[]
+     */
     private function parsePlaceholders($route)
     {
         if (!preg_match_all(
