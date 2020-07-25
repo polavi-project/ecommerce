@@ -5,16 +5,29 @@ export default function Minicart({ cartUrl, checkoutUrl }) {
     const language = ReactRedux.useSelector(state => _.get(state, 'appState.language[0]', 'en'));
     const items = ReactRedux.useSelector(state => _.get(state, 'appState.cart.items', []));
     const subTotal = new Intl.NumberFormat(language, { style: 'currency', currency: currency }).format(ReactRedux.useSelector(state => _.get(state, 'appState.cart.subTotal')));
+    const [show, setShow] = React.useState(false);
+
+    const onOpen = e => {
+        e.preventDefault();
+        setShow(true);
+    };
+
+    const onClose = e => {
+        e.preventDefault();
+        setShow(false);
+    };
 
     if (items.length === 0) return React.createElement(
         'div',
-        { className: 'uk-inline mini-cart-wrapper' },
+        { className: 'mini-cart-wrapper' },
         React.createElement(
             'a',
-            { href: '#', onClick: e => {
-                    e.preventDefault();
-                }, className: 'uk-link-muted' },
-            React.createElement('span', { 'uk-icon': 'cart' }),
+            { href: '#', onClick: e => onOpen(e) },
+            React.createElement(
+                'span',
+                null,
+                'Cart'
+            ),
             React.createElement(
                 'span',
                 null,
@@ -25,7 +38,16 @@ export default function Minicart({ cartUrl, checkoutUrl }) {
         ),
         React.createElement(
             'div',
-            { className: 'mini-cart-content', 'uk-dropdown': 'mode: click; pos: bottom-left' },
+            { className: 'mini-cart-content', style: { display: show === false ? "none" : "block" } },
+            React.createElement(
+                'div',
+                { className: 'd-flex justify-content-end' },
+                React.createElement(
+                    'a',
+                    { href: '#', onClick: e => onClose(e) },
+                    'X'
+                )
+            ),
             React.createElement(
                 'div',
                 null,
@@ -37,15 +59,15 @@ export default function Minicart({ cartUrl, checkoutUrl }) {
             )
         )
     );
+
     return React.createElement(
         'div',
-        { className: 'uk-inline mini-cart-wrapper' },
+        { className: 'mini-cart-wrapper' },
         React.createElement(
             'a',
             { href: '#', onClick: e => {
                     e.preventDefault();
-                }, className: 'uk-link-muted' },
-            React.createElement('span', { 'uk-icon': 'cart' }),
+                }, className: '' },
             React.createElement(
                 'span',
                 null,
@@ -56,48 +78,61 @@ export default function Minicart({ cartUrl, checkoutUrl }) {
         ),
         React.createElement(
             'div',
-            { className: 'mini-cart-content', 'uk-dropdown': 'mode: click; pos: bottom-justify' },
+            { className: 'mini-cart-content' },
             React.createElement(
                 'div',
-                { className: 'uk-clearfix' },
+                { className: 'd-flex justify-content-end' },
+                React.createElement(
+                    'a',
+                    { href: '#', onClick: e => onClose(e) },
+                    'X'
+                )
+            ),
+            React.createElement(
+                'div',
+                { className: '' },
                 items.map((item, index) => {
                     const _price = new Intl.NumberFormat(language, { style: 'currency', currency: currency }).format(item.final_price);
                     return React.createElement(
                         'div',
-                        { key: index, className: 'uk-grid uk-grid-small' },
+                        { key: index, className: 'container' },
                         React.createElement(
                             'div',
-                            { className: 'uk-width-3-4' },
+                            { className: 'row' },
                             React.createElement(
-                                A,
-                                { url: item.url },
+                                'div',
+                                { className: 'col-9' },
                                 React.createElement(
-                                    'span',
+                                    A,
+                                    { url: item.url },
+                                    React.createElement(
+                                        'span',
+                                        null,
+                                        item.product_name
+                                    )
+                                ),
+                                React.createElement(
+                                    'div',
                                     null,
-                                    item.product_name
+                                    item.qty,
+                                    ' x ',
+                                    _price
                                 )
                             ),
                             React.createElement(
                                 'div',
-                                null,
-                                item.qty,
-                                ' x ',
-                                _price
+                                { className: 'col-3' },
+                                'x'
                             )
-                        ),
-                        React.createElement(
-                            'div',
-                            { className: 'uk-width-1-4' },
-                            'x'
                         )
                     );
                 }),
                 React.createElement(
                     'div',
-                    null,
+                    { className: 'justify-content-end' },
                     React.createElement(
                         'div',
-                        { className: 'uk-align-right' },
+                        { className: '' },
                         React.createElement(
                             'span',
                             null,
@@ -116,7 +151,7 @@ export default function Minicart({ cartUrl, checkoutUrl }) {
                 null,
                 React.createElement(
                     A,
-                    { className: 'uk-button uk-button-small uk-button-primary', url: cartUrl },
+                    { className: 'btn btn-primary', url: cartUrl },
                     React.createElement(
                         'span',
                         null,
@@ -125,7 +160,7 @@ export default function Minicart({ cartUrl, checkoutUrl }) {
                 ),
                 React.createElement(
                     A,
-                    { className: 'uk-button uk-button-small uk-button-primary uk-margin-small-left', url: checkoutUrl },
+                    { className: 'btn btn-primary mr-1', url: checkoutUrl },
                     React.createElement(
                         'span',
                         null,

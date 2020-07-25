@@ -14,6 +14,7 @@ function Area(props) {
     };
 
     const widgets = ReactRedux.useSelector(state => getWidgets(state.widgets), _.isEqual);
+    const templateDebugMode = ReactRedux.useSelector(state => _.get(state, 'appState.template_debug_mode', 0));
 
     let Wrapper$Component = props.noOuter !== true ? (props.wrapper !== undefined ? props.wrapper : "div") : React.Fragment;
 
@@ -23,10 +24,14 @@ function Area(props) {
     else
         wrapperProps = {className : props.className ? props.className : "" };
 
-    if(widgets.length === 0)
+    if(widgets.length === 0 && parseInt(templateDebugMode) === 0)
         return null;
 
+    if(parseInt(templateDebugMode) === 1)
+        wrapperProps["className"] = wrapperProps.className += " debug-mode";
+
     return <Wrapper$Component {...wrapperProps}>
+        {parseInt(templateDebugMode) === 1 && <span className={"area-id-debug"}>{props.id}</span>}
         {widgets.map((w) => {
             let C = w.component;
             if(typeof C === 'string')

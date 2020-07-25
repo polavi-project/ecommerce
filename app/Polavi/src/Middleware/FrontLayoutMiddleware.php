@@ -31,58 +31,103 @@ class FrontLayoutMiddleware extends MiddlewareAbstract
             'wrapper',
             0,
             get_js_file_url("production/area.js"),
-            ["id"=> "container", "className" => "uk-container"]
+            ["id"=> "container", "className" => "container-wrapper"]
+        );
+
+        $response->addWidget(
+            'header_top',
+            'container',
+            0,
+            get_js_file_url("production/area.js"),
+            ["id"=> "header_top", "className" => "header-top"]
         );
 
         $response->addWidget(
             'header',
             'container',
-            0,
-            get_js_file_url("production/area.js"),
-            ["id"=> "header", "className" => "uk-clearfix header"]
+            10,
+            get_js_file_url("production/cms/header.js"),
+            ["id"=> "header", "className" => "header"]
         );
 
         $response->addWidget(
-            'menu',
-            'container',
-            10,
-            get_js_file_url("production/area.js"),
-            ["id"=> "menu", "className" => ""]
-        );
-        $response->addWidget(
-            'content_grid',
+            'header_bottom',
             'container',
             20,
             get_js_file_url("production/area.js"),
-            ["id"=> "content_grid", "className" => "content uk-grid uk-grid-small"]
+            ["id"=> "header_bottom", "className" => "header-top"]
         );
+
         $response->addWidget(
-            'leftColumn',
-            'content_grid',
-            10,
-            get_js_file_url("production/area.js"),
-            ["id"=> "leftColumn", "className"=> "uk-width-1-4@m"]
-        );
-        $response->addWidget(
-            'content',
-            'content_grid',
-            20,
-            get_js_file_url("production/area.js"),
-            ["id"=>"content", "className"=>"uk-width-expand"]
-        );
-        $response->addWidget(
-            'rightColumn',
-            'content_grid',
+            'content_top',
+            'container',
             30,
             get_js_file_url("production/area.js"),
-            ["id"=> "rightColumn", "className"=> ""]
+            ["id"=> "content_top", "className" => "content-top"]
         );
+
+        $response->addWidget(
+            'content',
+            'container',
+            40,
+            get_js_file_url("production/cms/content.js"),
+            ["id"=> "content", "className" => "content container"]
+        );
+
+        $response->addWidget(
+            'content_bottom',
+            'container',
+            50,
+            get_js_file_url("production/area.js"),
+            ["id"=> "content_bottom", "className" => "content-bottom"]
+        );
+
+        $response->addWidget(
+            'left_column',
+            'content',
+            10,
+            get_js_file_url("production/area.js"),
+            ["id"=> "left_column", "className"=> "col-3"]
+        );
+
+        $response->addWidget(
+            'content_center',
+            'content',
+            20,
+            get_js_file_url("production/area.js"),
+            ["id"=>"content_center", "className"=>"col-expand"]
+        );
+
+        $response->addWidget(
+            'right_column',
+            'content',
+            30,
+            get_js_file_url("production/area.js"),
+            ["id"=> "right_column", "className"=> "col-3"]
+        );
+
+        $response->addWidget(
+            'footer_top',
+            'container',
+            60,
+            get_js_file_url("production/area.js"),
+            ["id"=>"footer_top", "className" => "footer-top"]
+        );
+
         $response->addWidget(
             'footer',
             'container',
-            30,
+            70,
             get_js_file_url("production/area.js"),
-            ["id"=>"footer", "className" => ""]
+            ["id"=>"footer", "className" => "footer"]
+        );
+
+        $response->addWidget(
+            'footer_bottom',
+            'container',
+            80,
+            get_js_file_url("production/area.js"),
+            ["id"=>"footer_bottom", "className" => "footer-bottom"]
         );
 
         return $delegate;

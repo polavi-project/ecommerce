@@ -1,19 +1,9 @@
 import A from "../../../../../../js/production/a.js";
 
-function GuestGreeting({ loginUrl, registerUrl }) {
+function GuestGreeting({ loginUrl }) {
     return React.createElement(
         "div",
-        { className: "uk-inline" },
-        React.createElement(
-            A,
-            { url: registerUrl },
-            React.createElement(
-                "span",
-                null,
-                "Create account"
-            )
-        ),
-        " | ",
+        { className: "" },
         React.createElement(
             A,
             { url: loginUrl },
@@ -30,7 +20,7 @@ function UserGreeting({ logoutUrl, myAccountUrl }) {
     const customerInfo = ReactRedux.useSelector(state => _.get(state, 'appState.customer'));
     return React.createElement(
         "div",
-        { className: "uk-inline" },
+        { className: "" },
         React.createElement(
             "span",
             null,
@@ -75,7 +65,7 @@ export default function HeaderBlock(props) {
 
     return React.createElement(
         "div",
-        { className: "customer-area-header" },
+        { className: "customer-header" },
         isLoggedIn && React.createElement(UserGreeting, props),
         !isLoggedIn && React.createElement(GuestGreeting, props)
     );
