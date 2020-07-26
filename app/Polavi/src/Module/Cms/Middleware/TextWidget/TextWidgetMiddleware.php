@@ -26,7 +26,7 @@ class TextWidgetMiddleware extends MiddlewareAbstract
         $this->getContainer()
             ->get(GraphqlExecutor::class)
             ->waitToExecute([
-                "query"=>"{textWidgets : widgetCollection (filter : {type : {operator : \"=\" value: \"text\"}}) {widgets { cms_widget_id name setting {key value} displaySetting {key value} sort_order }}}"
+                "query"=>"{textWidgets : widgetCollection (filters : [{key: \"type\" operator : \"=\" value: \"text\"}]) {widgets { cms_widget_id name setting {key value} displaySetting {key value} sort_order }}}"
             ])->then(function($result) use ($request, $response) {
                 /**@var \GraphQL\Executor\ExecutionResult $result */
                 if(isset($result->data['textWidgets'])) {
@@ -37,19 +37,12 @@ class TextWidgetMiddleware extends MiddlewareAbstract
                                 return json_decode($value['value'], true);
                             return null;
                         }, []);
-                        if(empty($layouts))
-                            return true;
+
                         $match = false;
                         foreach ($layouts as $layout) {
-                            if($matchedRoute == $layout) {
+                            if($matchedRoute == $layout || $layout == "all") {
                                 $match = true;
                                 break;
-                            }
-                            if (strpos($layout, '|') !== false) {
-                                if(in_array($matchedRoute, explode('|', $layout))) {
-                                    $match = true;
-                                    break;
-                                }
                             }
                         }
                         return $match;
@@ -67,15 +60,18 @@ class TextWidgetMiddleware extends MiddlewareAbstract
                             return null;
                         });
 
-                        $areas = array_find($widget['displaySetting'], function($value, $key) {
+                        $areas = [];
+                        foreach ($widget['displaySetting'] as $key => $value) {
                             if($value['key'] == 'area')
-                                return json_decode($value['value'], true);
-                            return null;
-                        }, []);
+                                $areas = array_merge($areas, json_decode($value['value'], true));
+                            if($value['key'] == 'area_manual_input')
+                                $areas = array_merge($areas, explode(",", $value['value']));
+                        }
+
                         foreach ($areas as $area)
                             $response->addWidget(
                                 $widget['cms_widget_id'] . '-text-widget',
-                                $area,
+                                trim($area),
                                 (int)$widget['sort_order'],
                                 get_js_file_url("production/cms/widget/text_widget.js", false),
                                 [

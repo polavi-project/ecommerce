@@ -115,3 +115,6 @@ table .form-group{margin-bottom: 0px}
 .admin-login h3.page-title{display: none}
 .login-logo img{max-width: 35px}
 .admin-login-form .polavi-form-button{display: flex; flex-direction: row-reverse}
+
+/************ WIDGET EDIT ************/
+.widget-edit-layouts{height: 300px; overflow-y: auto}

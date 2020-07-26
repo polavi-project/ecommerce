@@ -1,7 +1,8 @@
 import Area from "../../../../../../../js/production/area.js";
 import Checkbox from "../../../../../../../js/production/form/fields/checkbox.js";
+import Text from "../../../../../../../js/production/form/fields/text.js";
 
-function AreaList({ selectedAreas = [], formId = '' }) {
+function AreaList({ selectedAreas = [], manualInputAreas = "", formId = '' }) {
     return React.createElement(Area, {
         id: "area-list",
         coreWidgets: [{
@@ -113,6 +114,16 @@ function AreaList({ selectedAreas = [], formId = '' }) {
                 label: "Footer bottom"
             },
             'sort_order': 100,
+            'id': 'footer-bottom-area'
+        }, {
+            'component': Text,
+            'props': {
+                name: "area_manual_input",
+                formId: formId,
+                value: manualInputAreas,
+                label: "Area keys (comma separated)"
+            },
+            'sort_order': 110,
             'id': 'footer-bottom-area'
         }]
     });

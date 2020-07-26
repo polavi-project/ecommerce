@@ -52,7 +52,7 @@ $router->addSiteRoute('customer.update', 'POST', '/customer/update/{id:\d+}', [
     \Polavi\Module\Customer\Middleware\Update\UpdateAccountMiddleware::class,
 ]);
 
-$router->addSiteRoute('customer.logout', 'GET', '/customer/logout', [
+$router->addSiteRoute('customer.logout', ["GET"], '/customer/logout', [
     \Polavi\Module\Customer\Middleware\Logout\LogoutMiddleware::class,
 ]);
 

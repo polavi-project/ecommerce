@@ -44,11 +44,13 @@ class FeaturedProductWidgetMiddleware extends MiddlewareAbstract
             }, '');
 
             $displaySetting = json_decode($widget['display_setting'], true);
-            $areas = array_find($displaySetting, function($value, $key) {
+            $areas = [];
+            foreach ($displaySetting as $key => $value) {
                 if($value['key'] == 'area')
-                    return json_decode($value['value'], true);
-                return null;
-            }, []);
+                    $areas = array_merge($areas, json_decode($value['value'], true));
+                if($value['key'] == 'area_manual_input')
+                    $areas = array_merge($areas, explode(",", $value['value']));
+            }
 
             $this->getContainer()
                 ->get(GraphqlExecutor::class)
@@ -76,7 +78,7 @@ QUERY
                         foreach ($areas as $area)
                             $response->addWidget(
                                 $widget['cms_widget_id'] . '-featured-products-widget',
-                                $area,
+                                trim($area),
                                 (int)$widget['sort_order'],
                                 get_js_file_url("production/catalog/widgets/featured_products.js", false),
                                 [

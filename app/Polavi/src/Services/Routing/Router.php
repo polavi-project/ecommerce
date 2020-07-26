@@ -166,4 +166,12 @@ class Router
         } else
             return trim($path, '/');
     }
+
+    /**
+     * @return array
+     */
+    public function getSiteRoutes(): array
+    {
+        return $this->siteRoutes;
+    }
 }

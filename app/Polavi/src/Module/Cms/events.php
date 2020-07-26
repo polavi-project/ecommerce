@@ -13,6 +13,7 @@ use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
 use function Polavi\_mysql;
 use function Polavi\get_default_language_Id;
+use Polavi\Module\Graphql\Services\FilterFieldType;
 use Polavi\Services\Di\Container;
 use Polavi\Services\Http\Request;
 use Polavi\Services\Routing\Router;
@@ -55,9 +56,7 @@ $eventDispatcher->addListener(
                     'type' => \Polavi\the_container()->get(\Polavi\Module\Cms\Services\Type\PageCollectionType::class),
                     'description' => "Return list of cms page and total count",
                     'args' => [
-                        'filter' =>  [
-                            'type' => \Polavi\the_container()->get(\Polavi\Module\Cms\Services\Type\PageCollectionFilterType::class)
-                        ]
+                        'filters' =>  Type::listOf(\Polavi\the_container()->get(FilterFieldType::class))
                     ],
                     'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
                         if($container->get(\Polavi\Services\Http\Request::class)->isAdmin() == false)
@@ -92,9 +91,7 @@ $eventDispatcher->addListener(
                     'type' => \Polavi\the_container()->get(\Polavi\Module\Cms\Services\Type\WidgetCollectionType::class),
                     'description' => "Return list of widget and total count",
                     'args' => [
-                        'filter' =>  [
-                            'type' => \Polavi\the_container()->get(\Polavi\Module\Cms\Services\Type\WidgetCollectionFilterType::class)
-                        ]
+                        'filters' =>  Type::listOf(\Polavi\the_container()->get(FilterFieldType::class))
                     ],
                     'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
                         $collection = new \Polavi\Module\Cms\Services\WidgetCollection($container);
@@ -264,8 +261,8 @@ $eventDispatcher->addListener(
                 $data['setting'] = json_encode($data['setting'], JSON_NUMERIC_CHECK);
                 $data['display_setting'] = json_encode($data['display_setting'], JSON_NUMERIC_CHECK);
                 if(isset($data['id']) and $data['id']) {
-                    $page = $conn->getTable('cms_widget')->load($data['id']);
-                    if(!$page)
+                    $widget = $conn->getTable('cms_widget')->load($data['id']);
+                    if(!$widget)
                         return ['status'=> false, 'widget' => null, 'message' => 'Requested widget does not exist'];
                     $conn->getTable('cms_widget')->where('cms_widget_id', '=', $data['id'])->update($data);
                     return [

@@ -12,6 +12,7 @@ export default function TextWidget({id, name, status, setting, displaySetting, s
         JSON.parse(_.get(_.find(displaySetting, {key:'layout'}), 'value', [])) : [];
     const area = _.find(displaySetting, {key:'area'}) !== undefined ?
         JSON.parse(_.get(_.find(displaySetting, {key:'area'}), 'value', [])) : [];
+    const manualInputAreas = _.find(displaySetting, {key:'area_manual_input'}) !== undefined ? _.get(_.find(displaySetting, {key:'area_manual_input'}), 'value', "") : "";
 
     const dispatch = ReactRedux.useDispatch();
     const onComplete = (response) => {
@@ -79,7 +80,7 @@ export default function TextWidget({id, name, status, setting, displaySetting, s
                     </div>
                     <div className="sml-block mt-4">
                         <div className="sml-block-title">Select area</div>
-                        <AreaList formId={"text-widget-edit-form"} selectedAreas={area}/>
+                        <AreaList formId={"text-widget-edit-form"} selectedAreas={area} manualInputAreas={manualInputAreas}/>
                         <Text
                             name="variables[widget][sort_order]"
                             value={sort_order}
