@@ -117,10 +117,6 @@ $router->addAdminRoute('attribute.group.save', 'POST', '/attribute/group/save[/{
     \Polavi\Module\Catalog\Middleware\AttributeGroup\Save\CreateMiddleware::class
 ]);
 
-$router->addAdminRoute('catalog.install', 'POST', '/catalog/migrate/install', [
-    \Polavi\Module\Catalog\Middleware\Migrate\Install\InstallMiddleware::class
-]);
-
 ////////////////////////////////////////////
 ////            SITE ROUTERS           /////
 ////////////////////////////////////////////
