@@ -8,10 +8,6 @@ declare(strict_types=1);
 
 /** @var \Polavi\Services\Routing\Router $router */
 
-$router->addAdminRoute('checkout.install', 'POST', '/checkout/migrate/install', [
-    \Polavi\Module\Checkout\Middleware\Migrate\Install\InstallMiddleware::class
-]);
-
 $router->addSiteRoute('checkout.cart', 'GET', '/cart', [
     \Polavi\Module\Checkout\Middleware\Cart\View\ShoppingCartMiddleware::class,
     \Polavi\Module\Checkout\Middleware\Cart\View\ItemsMiddleware::class,
