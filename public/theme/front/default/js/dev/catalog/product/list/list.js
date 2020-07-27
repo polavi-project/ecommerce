@@ -3,16 +3,16 @@ import {Name} from "./item/name.js";
 import {Thumbnail} from "./item/thumbnail.js";
 import {Price} from "./item/price.js";
 
-export default function ProductList({products = []}) {
+export default function ProductList({products = [], countPerRow = 4}) {
     if(products.length === 0)
-        return <div className="product-list"><div className="uk-text-center">There is no product to display</div></div>;
-    return <div className="uk-container">
-        <div className="product-list uk-grid-small uk-grid uk-flex-center uk-child-width-1-4@m uk-child-width-1-2@s">
-            {
-                products.map((p, index) => {
-                    return <Area
+        return <div className="product-list"><div>There is no product to display</div></div>;
+    return <div className={"product-list row " + "row-cols-" + countPerRow}>
+        {
+            products.map((p, index) => {
+                return <React.Fragment>
+                    <Area
                         id={"product_item"}
-                        className="listing-tem"
+                        className="listing-tem col"
                         product={p}
                         key={index}
                         coreWidgets={[
@@ -36,8 +36,8 @@ export default function ProductList({products = []}) {
                             }
                         ]}
                     />
-                })
-            }
-        </div>
+                </React.Fragment>
+            })
+        }
     </div>
 }

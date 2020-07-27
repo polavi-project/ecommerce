@@ -65,18 +65,6 @@ export default function ProductFilter({id, name, status, setting = [], displaySe
                                 validation_rules={['notEmpty']}
                                 label="Title"
                             />
-                            <input type='text' name="variables[widget][setting][1][key]" value="show_count" readOnly style={{display:'none'}}/>
-                            <div><span>Show product count?</span></div>
-                            <Radio
-                                name="variables[widget][setting][1][value]"
-                                value={_.get(_.find(setting, {key:'show_count'}), 'value', '')}
-                                formId="product-filter-widget-edit-form"
-                                validation_rules={['notEmpty']}
-                                options={[
-                                    {value: '1', text: 'Yes'},
-                                    {value: '0', text: 'No'}
-                                ]}
-                            />
                         </div>
                         <div className="mt-4 text-right">
                             <button type="submit" className="btn btn-primary">Submit</button>

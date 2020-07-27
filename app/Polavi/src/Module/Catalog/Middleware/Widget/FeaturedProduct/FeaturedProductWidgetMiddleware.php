@@ -71,7 +71,7 @@ class FeaturedProductWidgetMiddleware extends MiddlewareAbstract
                         }
                     }
 QUERY
-                ])->then(function($result) use ($request, $response, $areas, $widget) {
+                ])->then(function($result) use ($request, $response, $areas, $widget, $setting) {
                     /**@var \GraphQL\Executor\ExecutionResult $result */
                     //var_dump($result->data['featuredProducts']['products']);
                     if(isset($result->data['featuredProducts'])) {
@@ -83,6 +83,11 @@ QUERY
                                 get_js_file_url("production/catalog/widgets/featured_products.js", false),
                                 [
                                     "title" => $widget['name'],
+                                    "countPerRow" => array_find($setting, function($value, $key) {
+                                        if($value['key'] == 'product_number_per_row')
+                                            return $value['value'];
+                                        return 4;
+                                    }),
                                     "products" => $result->data['featuredProducts']['products'],
                                     "addItemApi" => generate_url('cart.add')
                                 ]

@@ -31,8 +31,8 @@ export default function Minicart({cartUrl, checkoutUrl}) {
         </div>;
 
     return <div className="mini-cart-wrapper">
-        <a href="#" onClick={(e)=> {e.preventDefault()}} className=""><span>({items.length})</span></a>
-        <div className="mini-cart-content">
+        <a href="#" onClick={(e)=> onOpen(e)} className=""><span>Cart</span><span>({items.length})</span></a>
+        <div className="mini-cart-content" style={{display: show === false ? "none" : "block"}}>
             <div className="d-flex justify-content-end">
                 <a href="#" onClick={(e)=> onClose(e)}>X</a>
             </div>
@@ -51,16 +51,16 @@ export default function Minicart({cartUrl, checkoutUrl}) {
                         </div>
                     })
                 }
-                <div className="justify-content-end">
+                <div className="d-flex justify-content-end mt-4">
                     <div className="">
                         <span>Total: </span>
                         <span>{subTotal}</span>
                     </div>
                 </div>
             </div>
-            <div>
-                <A className="btn btn-primary" url={cartUrl}><span>Shopping cart</span></A>
-                <A className="btn btn-primary mr-1" url={checkoutUrl}><span>Checkout</span></A>
+            <div className="d-flex justify-content-end mt-4">
+                <A className="btn btn-primary mr-2" url={cartUrl}><span>Shopping cart</span></A>
+                <A className="btn btn-primary" url={checkoutUrl}><span>Checkout</span></A>
             </div>
         </div>
     </div>

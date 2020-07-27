@@ -76,23 +76,6 @@ export default function ProductFilter({ id, name, status, setting = [], displayS
                                 formId: "product-filter-widget-edit-form",
                                 validation_rules: ['notEmpty'],
                                 label: "Title"
-                            }),
-                            React.createElement("input", { type: "text", name: "variables[widget][setting][1][key]", value: "show_count", readOnly: true, style: { display: 'none' } }),
-                            React.createElement(
-                                "div",
-                                null,
-                                React.createElement(
-                                    "span",
-                                    null,
-                                    "Show product count?"
-                                )
-                            ),
-                            React.createElement(Radio, {
-                                name: "variables[widget][setting][1][value]",
-                                value: _.get(_.find(setting, { key: 'show_count' }), 'value', ''),
-                                formId: "product-filter-widget-edit-form",
-                                validation_rules: ['notEmpty'],
-                                options: [{ value: '1', text: 'Yes' }, { value: '0', text: 'No' }]
                             })
                         ),
                         React.createElement(

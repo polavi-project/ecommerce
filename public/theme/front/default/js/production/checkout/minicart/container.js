@@ -65,9 +65,12 @@ export default function Minicart({ cartUrl, checkoutUrl }) {
         { className: 'mini-cart-wrapper' },
         React.createElement(
             'a',
-            { href: '#', onClick: e => {
-                    e.preventDefault();
-                }, className: '' },
+            { href: '#', onClick: e => onOpen(e), className: '' },
+            React.createElement(
+                'span',
+                null,
+                'Cart'
+            ),
             React.createElement(
                 'span',
                 null,
@@ -78,7 +81,7 @@ export default function Minicart({ cartUrl, checkoutUrl }) {
         ),
         React.createElement(
             'div',
-            { className: 'mini-cart-content' },
+            { className: 'mini-cart-content', style: { display: show === false ? "none" : "block" } },
             React.createElement(
                 'div',
                 { className: 'd-flex justify-content-end' },
@@ -129,7 +132,7 @@ export default function Minicart({ cartUrl, checkoutUrl }) {
                 }),
                 React.createElement(
                     'div',
-                    { className: 'justify-content-end' },
+                    { className: 'd-flex justify-content-end mt-4' },
                     React.createElement(
                         'div',
                         { className: '' },
@@ -148,10 +151,10 @@ export default function Minicart({ cartUrl, checkoutUrl }) {
             ),
             React.createElement(
                 'div',
-                null,
+                { className: 'd-flex justify-content-end mt-4' },
                 React.createElement(
                     A,
-                    { className: 'btn btn-primary', url: cartUrl },
+                    { className: 'btn btn-primary mr-2', url: cartUrl },
                     React.createElement(
                         'span',
                         null,
@@ -160,7 +163,7 @@ export default function Minicart({ cartUrl, checkoutUrl }) {
                 ),
                 React.createElement(
                     A,
-                    { className: 'btn btn-primary mr-1', url: checkoutUrl },
+                    { className: 'btn btn-primary', url: checkoutUrl },
                     React.createElement(
                         'span',
                         null,

@@ -69,7 +69,37 @@ export default function FeaturedProductWidget({ id, name, status, setting, displ
                                 formId: "text-widget-edit-form",
                                 label: "Status"
                             }),
-                            React.createElement("input", { type: "text", name: "variables[widget][setting][0][key]", value: "products", readOnly: true, style: { display: 'none' } }),
+                            React.createElement("input", { type: "text", name: "variables[widget][setting][0][key]", value: "product_number_per_row", readOnly: true, style: { display: 'none' } }),
+                            React.createElement(
+                                "div",
+                                null,
+                                React.createElement(
+                                    "span",
+                                    null,
+                                    "Number of product per row"
+                                )
+                            ),
+                            React.createElement(
+                                "div",
+                                { className: "form-field" },
+                                React.createElement(Text, {
+                                    className: "form-control",
+                                    name: "variables[widget][setting][0][value]",
+                                    value: _.get(_.find(setting, { key: 'product_number_per_row' }), 'value', 4),
+                                    type: "text", defaultValue: "4",
+                                    placeholder: "Number of product per row"
+                                }),
+                                React.createElement(
+                                    "div",
+                                    null,
+                                    React.createElement(
+                                        "i",
+                                        null,
+                                        "Support multiple sku, comma separated."
+                                    )
+                                )
+                            ),
+                            React.createElement("input", { type: "text", name: "variables[widget][setting][1][key]", value: "products", readOnly: true, style: { display: 'none' } }),
                             React.createElement(
                                 "div",
                                 null,
@@ -84,7 +114,7 @@ export default function FeaturedProductWidget({ id, name, status, setting, displ
                                 { className: "form-field" },
                                 React.createElement("input", {
                                     className: "form-control",
-                                    name: "variables[widget][setting][0][value]",
+                                    name: "variables[widget][setting][1][value]",
                                     value: products,
                                     type: "text", defaultValue: "",
                                     onChange: e => {

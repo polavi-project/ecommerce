@@ -3,26 +3,26 @@ import { Name } from "./item/name.js";
 import { Thumbnail } from "./item/thumbnail.js";
 import { Price } from "./item/price.js";
 
-export default function ProductList({ products = [] }) {
+export default function ProductList({ products = [], countPerRow = 4 }) {
     if (products.length === 0) return React.createElement(
         "div",
         { className: "product-list" },
         React.createElement(
             "div",
-            { className: "uk-text-center" },
+            null,
             "There is no product to display"
         )
     );
     return React.createElement(
         "div",
-        { className: "uk-container" },
-        React.createElement(
-            "div",
-            { className: "product-list uk-grid-small uk-grid uk-flex-center uk-child-width-1-4@m uk-child-width-1-2@s" },
-            products.map((p, index) => {
-                return React.createElement(Area, {
+        { className: "product-list row " + "row-cols-" + countPerRow },
+        products.map((p, index) => {
+            return React.createElement(
+                React.Fragment,
+                null,
+                React.createElement(Area, {
                     id: "product_item",
-                    className: "listing-tem",
+                    className: "listing-tem col",
                     product: p,
                     key: index,
                     coreWidgets: [{
@@ -41,8 +41,8 @@ export default function ProductList({ products = [] }) {
                         sort_order: 30,
                         id: "price"
                     }]
-                });
-            })
-        )
+                })
+            );
+        })
     );
 }
