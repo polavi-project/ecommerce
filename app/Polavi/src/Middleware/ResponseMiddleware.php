@@ -48,7 +48,8 @@ class ResponseMiddleware extends MiddlewareAbstract
                 $this
                     ->getContainer()
                     ->get(Helmet::class)
-                    ->addScript(['src'=> get_js_file_url('production/tinymce/tinymce.min.js')], 1)
+                    ->addScript(['src'=> get_js_file_url('production/ckeditor4/ckeditor.js')], 1)
+                    ->addScript(['src'=> get_js_file_url('production/ckeditor4/config.js')], 1)
                     ->addScript(['src'=> get_js_file_url('production/flatpickr.js')], 1)
                     ->addLink(['rel'=>'stylesheet', 'href'=> get_css_file_url('flatpickr.min.css', $request->isAdmin())]);
             }

@@ -118,3 +118,6 @@ table .form-group{margin-bottom: 0px}
 
 /************ WIDGET EDIT ************/
 .widget-edit-layouts{height: 300px; overflow-y: auto}
+
+/* FILE BROWSER */
+.file-browser{position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: #fff; z-index: 1000}

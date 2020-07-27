@@ -16,7 +16,6 @@ use function Polavi\get_default_language_Id;
 use Polavi\Module\Graphql\Services\FilterFieldType;
 use Polavi\Services\Di\Container;
 use Polavi\Services\Http\Request;
-use Polavi\Services\Routing\Router;
 
 $eventDispatcher->addListener(
         'filter.query.type',
@@ -86,6 +85,7 @@ $eventDispatcher->addListener(
                     }
                 ]
             ];
+
             $fields += [
                 'widgetCollection' => [
                     'type' => \Polavi\the_container()->get(\Polavi\Module\Cms\Services\Type\WidgetCollectionType::class),
@@ -96,6 +96,59 @@ $eventDispatcher->addListener(
                     'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
                         $collection = new \Polavi\Module\Cms\Services\WidgetCollection($container);
                         return $collection->getData($rootValue, $args, $container, $info);
+                    }
+                ]
+            ];
+
+            $fields += [
+                'fileBrowser' => [
+                    'type' => new ObjectType([
+                        "name" => "File browser",
+                        "fields" => [
+                            "folders" => Type::listOf(Type::string()),
+                            "files" => Type::listOf(\Polavi\the_container()->get(\Polavi\Module\Cms\Services\Type\FileType::class)),
+                            "error" => Type::string()
+                        ]
+                    ]),
+                    'description' => "Return list of folder and files",
+                    'args' => [
+                        'root' =>  Type::string()
+                    ],
+                    'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
+                        try {
+                            $fileSystem = new \Symfony\Component\Filesystem\Filesystem();
+                            $uploadPath = MEDIA_PATH . DS . "upload";
+                            if(!file_exists($uploadPath))
+                                $fileSystem->mkdir($uploadPath);
+                            $browserPath = $uploadPath . DS . $args["root"];
+                            if(!file_exists($browserPath) or !is_dir($browserPath))
+                                throw new Exception("Invalid path");
+
+                            $fs = $directories = array_diff(scandir($browserPath), ['..', '.']);
+                            $folders = [];
+                            $files = [];
+                            foreach ($fs as $f) {
+                                if(is_dir($f))
+                                    $folders[] = $f;
+                                else {
+                                    $file = new \Symfony\Component\HttpFoundation\File\File($browserPath . DS . $f);
+                                    if(in_array($file->getMimeType(), ["image/jpeg", "image/png", "image/gif"]))
+                                        $files[] = [
+                                            'name' => $file->getFilename(),
+                                            'type' => $file->getMimeType(),
+                                            'size' => $file->getSize(),
+                                            'path' => $args['root'] . '/' . $file->getFilename(),
+                                            'url'  => \Polavi\get_base_url_scheme_less() . '/public/media/upload/' . $args['root'] . '/' . $file->getFilename()
+                                        ];
+                                }
+                            }
+                            return [
+                                "folders" => $folders,
+                                "files" => $files
+                            ];
+                        } catch (Exception $e) {
+                            return ["error" => $e->getMessage(), "folders" => [], "files" => []];
+                        }
                     }
                 ]
             ];
