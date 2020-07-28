@@ -107,7 +107,8 @@ $eventDispatcher->addListener(
                         "fields" => [
                             "folders" => Type::listOf(Type::string()),
                             "files" => Type::listOf(\Polavi\the_container()->get(\Polavi\Module\Cms\Services\Type\FileType::class)),
-                            "error" => Type::string()
+                            "message" => Type::string(),
+                            'status' => Type::nonNull(Type::boolean()),
                         ]
                     ]),
                     'description' => "Return list of folder and files",
@@ -124,11 +125,11 @@ $eventDispatcher->addListener(
                             if(!file_exists($browserPath) or !is_dir($browserPath))
                                 throw new Exception("Invalid path");
 
-                            $fs = $directories = array_diff(scandir($browserPath), ['..', '.']);
+                            $fs = array_diff(scandir($browserPath), ['..', '.']);
                             $folders = [];
                             $files = [];
                             foreach ($fs as $f) {
-                                if(is_dir($f))
+                                if(is_dir($browserPath . DS . $f))
                                     $folders[] = $f;
                                 else {
                                     $file = new \Symfony\Component\HttpFoundation\File\File($browserPath . DS . $f);
@@ -144,10 +145,11 @@ $eventDispatcher->addListener(
                             }
                             return [
                                 "folders" => $folders,
-                                "files" => $files
+                                "files" => $files,
+                                "status" => true
                             ];
                         } catch (Exception $e) {
-                            return ["error" => $e->getMessage(), "folders" => [], "files" => []];
+                            return ["status" => false, "message" => $e->getMessage(), "folders" => [], "files" => []];
                         }
                     }
                 ]
@@ -225,6 +227,43 @@ $eventDispatcher->addListener(
                 }
 
                 return ['files' => $outPut];
+            }
+        ];
+
+        $fields['createMediaFolder'] = [
+            'args'=> [
+                'path'=> Type::nonNull(Type::string())
+            ],
+            'type' => new ObjectType([
+                'name'=> 'createMediaFolderOutput',
+                'fields' => [
+                    'status' => Type::nonNull(Type::boolean()),
+                    'message'=> Type::string(),
+                    'name' => Type::string(),
+                    'path' => Type::string()
+                ]
+            ]),
+            'resolve'=> function($value, $args, Container $container, ResolveInfo $info) {
+                $targetPath = MEDIA_PATH . DS . "upload" . DS . $args['path'];
+                $fileSystem = new \Symfony\Component\Filesystem\Filesystem();
+                if($fileSystem->exists($targetPath))
+                    return [
+                        "status" => 0,
+                        "message" => "Folder is already existed"
+                    ];
+                try {
+                    $fileSystem->mkdir($targetPath);
+                    return [
+                        "status" => 1,
+                        "name" => basename($targetPath),
+                        "path" => $args["path"]
+                    ];
+                } catch (Exception $e) {
+                    return [
+                        "status" => 0,
+                        "message" => $e->getMessage()
+                    ];
+                }
             }
         ];
 
