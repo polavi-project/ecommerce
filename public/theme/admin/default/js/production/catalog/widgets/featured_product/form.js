@@ -86,7 +86,9 @@ export default function FeaturedProductWidget({ id, name, status, setting, displ
                                     className: "form-control",
                                     name: "variables[widget][setting][0][value]",
                                     value: _.get(_.find(setting, { key: 'product_number_per_row' }), 'value', 4),
-                                    type: "text", defaultValue: "4",
+                                    type: "text",
+                                    defaultValue: "4",
+                                    si: true,
                                     placeholder: "Number of product per row"
                                 }),
                                 React.createElement(

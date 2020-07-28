@@ -5,25 +5,24 @@
  
 CKEDITOR.editorConfig = function( config ) {
 	config.toolbarGroups = [
-		{ name: 'editing', groups: [ 'find', 'selection', 'spellchecker', 'editing' ] },
+		{ name: 'editing', groups: [ 'find', 'selection', 'editing', 'spellchecker' ] },
+		{ name: 'clipboard', groups: [ 'undo', 'clipboard' ] },
 		{ name: 'document', groups: [ 'mode', 'document', 'doctools' ] },
-		{ name: 'clipboard', groups: [ 'clipboard', 'undo' ] },
-		{ name: 'forms', groups: [ 'forms' ] },
 		{ name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
-		{ name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align', 'bidi', 'paragraph' ] },
 		{ name: 'links', groups: [ 'links' ] },
 		{ name: 'insert', groups: [ 'insert' ] },
-		{ name: 'styles', groups: [ 'styles' ] },
 		{ name: 'tools', groups: [ 'tools' ] },
+		{ name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align', 'bidi', 'paragraph' ] },
+		{ name: 'styles', groups: [ 'styles' ] },
+		{ name: 'forms', groups: [ 'forms' ] },
 		{ name: 'colors', groups: [ 'colors' ] },
 		{ name: 'about', groups: [ 'about' ] },
 		'/',
 		'/',
 		{ name: 'others', groups: [ 'others' ] }
 	];
-
 	config.extraPlugins = 'polaviimages';
 
 	config.removeDialogTabs = 'image:advanced';
-	config.removeButtons = 'TextField,Textarea,Select,Button,ImageButton,HiddenField,Cut,Copy,Paste,PasteText,PasteFromWord,Save,NewPage,Preview,Print,Replace,SelectAll,Scayt,Find,Flash,Iframe,PageBreak,Language,Form';
+	config.removeButtons = 'TextField,Textarea,Select,Button,ImageButton,HiddenField,Cut,Copy,Paste,PasteText,PasteFromWord,Save,NewPage,Preview,Print,Replace,SelectAll,Scayt,Find,Flash,Iframe,PageBreak,Language,Form,Templates,Checkbox,Radio,CopyFormatting,RemoveFormat,CreateDiv,Anchor,About,TextColor,BGColor,ShowBlocks,Image,HorizontalRule';
 };

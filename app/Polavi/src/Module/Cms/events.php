@@ -267,6 +267,44 @@ $eventDispatcher->addListener(
             }
         ];
 
+        $fields['deleteMediaFile'] = [
+            'args'=> [
+                'path'=> Type::nonNull(Type::string())
+            ],
+            'type' => new ObjectType([
+                'name'=> 'deleteMediaFileOutput',
+                'fields' => [
+                    'status' => Type::nonNull(Type::boolean()),
+                    'message'=> Type::string()
+                ]
+            ]),
+            'resolve'=> function($value, $args, Container $container, ResolveInfo $info) {
+                $targetPath = MEDIA_PATH . DS . "upload" . DS . $args['path'];
+                $fileSystem = new \Symfony\Component\Filesystem\Filesystem();
+                if(!$fileSystem->exists($targetPath))
+                    return [
+                        "status" => 0,
+                        "message" => "File is not existing"
+                    ];
+                if(is_dir($targetPath))
+                    return [
+                        "status" => 0,
+                        "message" => "Invalid file"
+                    ];
+                try {
+                    $fileSystem->remove($targetPath);
+                    return [
+                        "status" => 1
+                    ];
+                } catch (Exception $e) {
+                    return [
+                        "status" => 0,
+                        "message" => $e->getMessage()
+                    ];
+                }
+            }
+        ];
+
         $fields['createCmsPage'] = [
             'args'=> [
                 'page' => [

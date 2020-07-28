@@ -86,7 +86,15 @@ function FileBrowser({ editor, setFileBrowser }) {
         });
 
         if (file === null) setError("No file selected");else {
-            // Delete selected file
+            let path = currentPath.map(f => f.name);
+            path.push(file.name);
+            let query = `mutation DeleteMediaFile { deleteMediaFile (path: "${path.join("/")}") {status message}}`;
+            setLoading(true);
+            fetch(api + "?query=" + query, {
+                method: "GET"
+            }).then(res => res.json()).then(response => {
+                if (response.payload.data.deleteMediaFile.status === true) setCurrentPath(currentPath.map(f => f));else setError(response.payload.data.deleteMediaFile.message);
+            }).catch(error => setError(e)).finally(() => setLoading(false));
         }
     };
 
@@ -317,7 +325,7 @@ function FileBrowser({ editor, setFileBrowser }) {
     );
 }
 
-export default function Tinycme(props) {
+export default function Ckeditor(props) {
     const [fileBrowser, setFileBrowser] = React.useState(false);
     const [editor, setEditor] = React.useState(null);
 
@@ -331,7 +339,7 @@ export default function Tinycme(props) {
         });
 
         let tokenTwo = PubSub.subscribe(FILE_BROWSER_REQUESTED, function (message, data) {
-            setFileBrowser(true);
+            if (data.editor.name == props.name) setFileBrowser(true);
         });
 
         return function cleanup() {

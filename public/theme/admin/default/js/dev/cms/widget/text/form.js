@@ -1,5 +1,5 @@
 import Text from "../../../../../../../../js/production/form/fields/text.js";
-import Tinycme from "../../../../../../../../js/production/form/fields/tinycme.js";
+import Tinycme from "../../../../../../../../js/production/form/fields/ckeditor.js";
 import {LayoutList} from "../../../../production/cms/widget/layout_list.js";
 import {AreaList} from "../../../../production/cms/widget/area_list.js";
 import {Form} from "../../../../../../../../js/production/form/form.js";
