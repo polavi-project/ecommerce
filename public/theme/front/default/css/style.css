@@ -57,7 +57,7 @@ img{max-width: 100%}
 .checkout-shipping-address, .checkout-shipping-methods,.checkout-payment-methods, .checkout-billing-address, .checkout-contact{margin-bottom: 20px!important;}
 
 /* HEADER */
-.header{padding: 20px 0}
+.header{padding: 20px 0 0}
 .customer-header{padding-right: 20px}
 /* FOOTER */
 .container .footer{padding-top: 50px; padding-bottom: 20px}
