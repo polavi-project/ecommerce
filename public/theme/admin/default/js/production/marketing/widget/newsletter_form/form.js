@@ -83,6 +83,13 @@ export default function NewsletterWidget({ id, name, status, setting, displaySet
                             formId: "newsletter-form-widget-edit-form",
                             label: "Html after input"
                         }),
+                        React.createElement("input", { type: "text", name: "variables[widget][setting][3][key]", value: "wrapper_class", readOnly: true, style: { display: 'none' } }),
+                        React.createElement(Text, {
+                            name: "variables[widget][setting][3][value]",
+                            value: _.find(setting, { key: 'wrapper_class' }) !== undefined ? _.get(_.find(setting, { key: 'wrapper_class' }), 'value', '') : '',
+                            formId: "newsletter-form-widget-edit-form",
+                            label: "Wrapper class"
+                        }),
                         React.createElement(
                             "div",
                             { className: "mt-4 text-right" },

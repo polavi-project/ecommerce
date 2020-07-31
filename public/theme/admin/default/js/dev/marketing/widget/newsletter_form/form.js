@@ -73,6 +73,13 @@ export default function NewsletterWidget({id, name, status, setting, displaySett
                             formId="newsletter-form-widget-edit-form"
                             label={"Html after input"}
                         />
+                        <input type='text' name="variables[widget][setting][3][key]" value="wrapper_class" readOnly style={{display:'none'}}/>
+                        <Text
+                            name="variables[widget][setting][3][value]"
+                            value={_.find(setting, {key:'wrapper_class'}) !== undefined ? _.get(_.find(setting, {key:'wrapper_class'}), 'value', '') : ''}
+                            formId="newsletter-form-widget-edit-form"
+                            label={"Wrapper class"}
+                        />
                         <div className="mt-4 text-right">
                             <button type="submit" className="btn btn-primary">Submit</button>
                         </div>
