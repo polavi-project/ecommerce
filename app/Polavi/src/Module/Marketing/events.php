@@ -62,3 +62,30 @@ $eventDispatcher->addListener(
     },
     5
 );
+
+$eventDispatcher->addListener(
+    'widget_types',
+    function ($types) {
+        $types[] = ['code' => 'newsletter_form', 'name' => 'Newsletter form widget'];
+
+        return $types;
+    },
+    0
+);
+
+
+$eventDispatcher->addListener('register.widget.create.middleware', function(\Polavi\Services\MiddlewareManager $mm) {
+    $mm->registerMiddleware(\Polavi\Module\Marketing\Middleware\SubscribeFormWidget\FormMiddleware::class, 0);
+});
+
+$eventDispatcher->addListener('register.widget.edit.middleware', function(\Polavi\Services\MiddlewareManager $mm) {
+    $mm->registerMiddleware(\Polavi\Module\Marketing\Middleware\SubscribeFormWidget\FormMiddleware::class, 0);
+});
+
+$eventDispatcher->addListener(
+    'register.core.middleware',
+    function (\Polavi\Services\MiddlewareManager $middlewareManager) {
+        $middlewareManager->registerMiddleware(\Polavi\Module\Marketing\Middleware\SubscribeFormWidget\NewsletterFormWidgetMiddleware::class, 21);
+    },
+    5
+);
