@@ -1,6 +1,9 @@
 <?php
 
 $version = "1.0.0";
+$description = "This is Marketing module. Polavi core";
+$author = "Polavi team";
+
 return [
     "1.0.0" => function(\Polavi\Services\Db\Processor $conn) {
         $pageTable = $conn->executeQuery("SELECT TABLE_NAME FROM information_schema.tables WHERE table_schema = :dbName AND TABLE_NAME = \"cms_page\" LIMIT 0,1", ['dbName'=> $conn->getConfiguration()->getDb()])->fetch(\PDO::FETCH_ASSOC);
