@@ -429,6 +429,8 @@ class Processor extends \PDO
                     VALUES (:" . implode(', :', $insertColumns) . ")
                       ON DUPLICATE KEY UPDATE {$prepare}";
         try {
+            Logger::write($query);
+            Logger::write($table->getBinding());
             $stmt = $this->prepare($query);
             $stmt->execute($binding);
             $rowCount = $stmt->rowCount();
