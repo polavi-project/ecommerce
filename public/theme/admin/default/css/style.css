@@ -165,3 +165,13 @@ table .form-group{margin-bottom: 0px}
     flex: 0 0 11.1111111111%;
     max-width: 11.1111111111%;
 }
+
+.area-widget-templates .item{margin-top: 20px; cursor: pointer}
+
+.area-widget-templates .item .unit{height: 20px}
+.area-widget-templates .item .unit1{background-color: #ff9a76}
+.area-widget-templates .item .unit2{background-color: #ffeadb}
+.area-widget-templates .item .unit3{background-color: #f7c5a8}
+.area-widget-templates .item .unit4{background-color: #679b9b}
+.area-widget-templates .item.selected{outline: 3px solid #0b0b0b}
+.area-columns-setting .item-inner{border: 1px solid #e1e1e1; padding: 10px; min-height: 145px}

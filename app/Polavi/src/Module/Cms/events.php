@@ -451,6 +451,7 @@ $eventDispatcher->addListener(
     function ($types) {
         $types[] = ['code' => 'text', 'name' => 'Text widget'];
         $types[] = ['code' => 'menu', 'name' => 'Menu widget'];
+        $types[] = ['code' => 'area', 'name' => 'Area'];
 
         return $types;
     },
@@ -460,11 +461,13 @@ $eventDispatcher->addListener(
 $eventDispatcher->addListener('register.widget.create.middleware', function(\Polavi\Services\MiddlewareManager $mm) {
     $mm->registerMiddleware(\Polavi\Module\Cms\Middleware\TextWidget\FormMiddleware::class, 0);
     $mm->registerMiddleware(\Polavi\Module\Cms\Middleware\MenuWidget\FormMiddleware::class, 0);
+    $mm->registerMiddleware(\Polavi\Module\Cms\Middleware\AreaWidget\FormMiddleware::class, 0);
 });
 
 $eventDispatcher->addListener('register.widget.edit.middleware', function(\Polavi\Services\MiddlewareManager $mm) {
     $mm->registerMiddleware(\Polavi\Module\Cms\Middleware\TextWidget\FormMiddleware::class, 0);
     $mm->registerMiddleware(\Polavi\Module\Cms\Middleware\MenuWidget\FormMiddleware::class, 0);
+    $mm->registerMiddleware(\Polavi\Module\Cms\Middleware\AreaWidget\FormMiddleware::class, 0);
 });
 
 $eventDispatcher->addListener('register.admin.graphql.api.middleware', function(\Polavi\Services\MiddlewareManager $mm) {
@@ -476,6 +479,7 @@ $eventDispatcher->addListener(
     function (\Polavi\Services\MiddlewareManager $middlewareManager) {
         $middlewareManager->registerMiddleware(\Polavi\Module\Cms\Middleware\TextWidget\TextWidgetMiddleware::class, 21);
         $middlewareManager->registerMiddleware(\Polavi\Module\Cms\Middleware\MenuWidget\MenuWidgetMiddleware::class, 21);
+        $middlewareManager->registerMiddleware(\Polavi\Module\Cms\Middleware\AreaWidget\AreaWidgetMiddleware::class, 21);
         $middlewareManager->registerMiddleware(\Polavi\Module\Cms\Middleware\Page\View\LogoMiddleware::class, 22);
         $middlewareManager->registerMiddlewareBefore(\Polavi\Middleware\ResponseMiddleware::class, \Polavi\Module\Cms\Middleware\Page\View\NotFoundPageMiddleware::class);
     },

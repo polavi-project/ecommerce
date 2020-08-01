@@ -19,8 +19,10 @@ class FrontLayoutMiddleware extends MiddlewareAbstract
     {
         if($request->isAdmin())
             return $delegate;
+
         if($request->getMethod() != 'GET')
             return $delegate;
+
         if(
             $request->attributes->get('_matched_route') == 'graphql.api'
         )
@@ -119,7 +121,7 @@ class FrontLayoutMiddleware extends MiddlewareAbstract
             'container',
             70,
             get_js_file_url("production/area.js"),
-            ["id"=>"footer", "className" => "footer"]
+            ["id"=>"footer", "className" => "footer container"]
         );
 
         $response->addWidget(

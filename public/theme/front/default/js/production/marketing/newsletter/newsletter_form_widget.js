@@ -2,7 +2,6 @@ import { Form } from "../../../../../../../js/production/form/form.js";
 import Text from "../../../../../../../js/production/form/fields/text.js";
 
 export default function NewsletterForm({ title, html_before, html_after, subscribeUrl }) {
-
     return React.createElement(
         Form,
         {

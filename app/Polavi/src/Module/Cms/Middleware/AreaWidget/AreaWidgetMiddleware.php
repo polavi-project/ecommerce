@@ -6,18 +6,17 @@
 
 declare(strict_types=1);
 
-namespace Polavi\Module\Marketing\Middleware\SubscribeFormWidget;
+namespace Polavi\Module\Cms\Middleware\AreaWidget;
 
 
 use function Polavi\array_find;
-use function Polavi\generate_url;
 use function Polavi\get_js_file_url;
 use Polavi\Middleware\MiddlewareAbstract;
 use Polavi\Module\Graphql\Services\GraphqlExecutor;
 use Polavi\Services\Http\Request;
 use Polavi\Services\Http\Response;
 
-class NewsletterFormWidgetMiddleware extends MiddlewareAbstract
+class AreaWidgetMiddleware extends MiddlewareAbstract
 {
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
@@ -27,19 +26,18 @@ class NewsletterFormWidgetMiddleware extends MiddlewareAbstract
         $this->getContainer()
             ->get(GraphqlExecutor::class)
             ->waitToExecute([
-                "query"=>"{newsletterFormWidgets : widgetCollection (filters : [{key: \"type\" operator : \"=\" value: \"newsletter_form\"}]) {widgets { cms_widget_id name setting {key value} displaySetting {key value} sort_order }}}"
+                "query"=>"{areaWidgets : widgetCollection (filters : [{key: \"type\" operator : \"=\" value: \"area\"}]) {widgets { cms_widget_id name setting {key value} displaySetting {key value} sort_order }}}"
             ])->then(function($result) use ($request, $response) {
                 /**@var \GraphQL\Executor\ExecutionResult $result */
-                if(isset($result->data['newsletterFormWidgets'])) {
+                if(isset($result->data['areaWidgets'])) {
                     $matchedRoute = $request->attributes->get('_matched_route');
-                    $widgets = array_filter($result->data['newsletterFormWidgets']['widgets'], function($v) use($matchedRoute) {
+                    $widgets = array_filter($result->data['areaWidgets']['widgets'], function($v) use($matchedRoute) {
                         $layouts = array_find($v['displaySetting'], function($value, $key) {
                             if($value['key'] == 'layout')
                                 return json_decode($value['value'], true);
                             return null;
                         }, []);
-                        if(empty($layouts))
-                            return true;
+
                         $match = false;
                         foreach ($layouts as $layout) {
                             if($matchedRoute == $layout || $layout == "all") {
@@ -50,22 +48,37 @@ class NewsletterFormWidgetMiddleware extends MiddlewareAbstract
                         return $match;
                     }, ARRAY_FILTER_USE_BOTH);
                     foreach ($widgets as $widget) {
-                        $title = array_find($widget['setting'], function($value, $key) {
-                            if($value['key'] == 'title')
+                        $areaId = array_find($widget['setting'], function($value, $key) {
+                            if($value['key'] == 'id')
                                 return $value['value'];
                             return null;
                         });
 
-                        $htmlBefore = array_find($widget['setting'], function($value, $key) {
-                            if($value['key'] == 'html_before')
+                        $template = array_find($widget['setting'], function($value, $key) {
+                            if($value['key'] == 'template')
                                 return $value['value'];
                             return null;
                         });
 
-                        $htmlAfter = array_find($widget['setting'], function($value, $key) {
-                            if($value['key'] == 'html_after')
+                        $containerClass = array_find($widget['setting'], function($value, $key) {
+                            if($value['key'] == 'container_class')
                                 return $value['value'];
                             return null;
+                        });
+
+                        $columns = array_find($widget['setting'], function($value, $key) {
+                            if($value['key'] == 'columns') {
+                                try {
+                                    $columns = json_decode($value['value'], true);
+                                    if (JSON_ERROR_NONE !== json_last_error()) {
+                                        throw new \InvalidArgumentException(json_last_error_msg());
+                                    }
+                                    return $columns;
+                                } catch (\Exception $e) {
+                                    return [];
+                                }
+                            }
+                            return [];
                         });
 
                         $areas = [];
@@ -78,17 +91,17 @@ class NewsletterFormWidgetMiddleware extends MiddlewareAbstract
 
                         foreach ($areas as $area)
                             $response->addWidget(
-                                $widget['cms_widget_id'] . '-newsletter-form-widget',
-                                $area,
+                                $widget['cms_widget_id'] . '-area-widget',
+                                trim($area),
                                 (int)$widget['sort_order'],
-                                get_js_file_url("production/marketing/newsletter/newsletter_form_widget.js", false),
+                                get_js_file_url("production/cms/widget/area_widget.js", false),
                                 [
-                                    "id" => $widget['cms_widget_id'] . '-newsletter-form-widget',
+                                    "id" => $widget['cms_widget_id'] . '-area-widget',
+                                    "areaId" => $areaId,
                                     "name" => $widget['name'],
-                                    "title" => $title,
-                                    "html_before" => $htmlBefore,
-                                    "html_after" => $htmlAfter,
-                                    "subscribeUrl" => generate_url("newsletter.subscribe")
+                                    "template" => $template,
+                                    "containerClass" => $containerClass,
+                                    "columns" => $columns
                                 ]
                             );
                     }
