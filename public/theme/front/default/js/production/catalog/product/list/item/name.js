@@ -5,7 +5,7 @@ const Name = ({ name, url }) => {
         { className: "product-name product-list-name" },
         React.createElement(
             A,
-            { className: "uk-link-text", url: url },
+            { className: "", url: url },
             React.createElement(
                 "span",
                 null,

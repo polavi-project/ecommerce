@@ -34,10 +34,10 @@ export default function Sorting({ sortingOptions = [], currentSortOrder, current
 
     return React.createElement(
         "div",
-        { className: "product-sorting uk-clearfix uk-flex-right uk-flex" },
+        { className: "product-sorting" },
         React.createElement(
             "div",
-            { className: "product-sorting-inner uk-flex-right uk-flex" },
+            { className: "product-sorting-inner flex-column justify-content-end" },
             React.createElement(
                 "div",
                 null,
@@ -50,7 +50,7 @@ export default function Sorting({ sortingOptions = [], currentSortOrder, current
             React.createElement(
                 "select",
                 {
-                    className: "uk-select uk-form-small",
+                    className: "form-control",
                     onChange: e => onChangeSort(e),
                     ref: sortByRef
                 },
@@ -73,7 +73,14 @@ export default function Sorting({ sortingOptions = [], currentSortOrder, current
                 React.createElement(
                     "a",
                     { onClick: e => onChangeDirection(e) },
-                    React.createElement("span", { "uk-icon": currentSortOrder === "DESC" ? "icon: arrow-up; ratio: 1" : "icon: arrow-down; ratio: 1" })
+                    React.createElement(
+                        "svg",
+                        { xmlns: "http://www.w3.org/2000/svg", width: "24", height: "24", viewBox: "0 0 24 24", fill: "none",
+                            stroke: "currentColor", "stroke-width": "2", "stroke-linecap": "round", "stroke-linejoin": "round",
+                            className: "feather feather-arrow-up" },
+                        React.createElement("line", { x1: "12", y1: "19", x2: "12", y2: "5" }),
+                        React.createElement("polyline", { points: "5 12 12 5 19 12" })
+                    )
                 )
             )
         )

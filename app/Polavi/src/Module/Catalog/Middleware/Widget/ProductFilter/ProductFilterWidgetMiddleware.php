@@ -10,6 +10,7 @@ namespace Polavi\Module\Catalog\Middleware\Widget\ProductFilter;
 
 
 use function Polavi\array_find;
+use function Polavi\get_config;
 use function Polavi\get_js_file_url;
 use Polavi\Middleware\MiddlewareAbstract;
 use Polavi\Module\Graphql\Services\GraphqlExecutor;
@@ -70,7 +71,9 @@ class ProductFilterWidgetMiddleware extends MiddlewareAbstract
                                 (int)$widget['sort_order'],
                                 get_js_file_url("production/catalog/widgets/filter.js", false),
                                 [
-                                    "title" => $title
+                                    "title" => $title,
+                                    "price_max_step" => get_config("catalog_product_filter_price_max_step", 5),
+                                    "price_min_range" => get_config("catalog_product_filter_price_min_range", 50)
                                 ]
                             );
                     }

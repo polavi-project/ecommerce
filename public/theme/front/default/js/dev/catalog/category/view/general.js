@@ -5,7 +5,7 @@ const Name = ({name}) => {
 };
 
 const Description = ({description}) => {
-    return <div className="category-description">{description}</div>
+    return <div className="category-description" dangerouslySetInnerHTML={{__html: description}}></div>
 };
 
 export default function CategoryInfo(props) {

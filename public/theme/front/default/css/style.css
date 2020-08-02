@@ -49,6 +49,9 @@ img{max-width: 100%}
 .group-form{float: left; width: 50%; box-sizing: border-box; padding: 10px}
 .polavi-form-button{margin-top: 15px}
 
+/* LIST BASIC */
+ul.list-basic{list-style: none; padding-left: 0; }
+ul.list-basic li{padding: 10px 0}
 /* CHECKOUT PAGE*/
 .checkout-cart-summary-table td{text-align: right}
 /* SHOPPING CART PAGE*/
@@ -60,23 +63,32 @@ img{max-width: 100%}
 .header{padding: 20px 0 0}
 .customer-header{padding-right: 20px}
 /* FOOTER */
-.container .footer{padding-top: 50px; padding-bottom: 20px}
+.footer{padding: 30px 0; background-color: #111}
+.footer *{color: #fff}
 /* PRODUCT LISTING PAGE */
+.category-general-info .category-name{margin-bottom: 20px}
+.category-general-info .category-description{margin-bottom: 30px}
 .product-sorting-inner{}
 .product-list .listing-tem{margin-bottom: 30px}
-.listing-tem .product-price-listing{margin: 10px 0}
+.listing-tem .product-price-listing{margin: 5px 0}
 .list-placeholder-helper {
     display: inline-block;
     height: 100%;
     vertical-align: middle;
 }
-.product-thumbnail-listing{text-align: center; min-height: 220px}
+.product-thumbnail-listing{text-align: center; min-height: 220px; background-color: #e1e1e1}
 .product-thumbnail-listing img {vertical-align: middle}
-.product-price-listing .regular-price{font-weight: 700; text-decoration: line-through}
+.product-list-name{margin-top: 20px}
+.product-list-name a{font-weight: bold}
+.product-price-listing .sale-price{font-weight: bold}
+.product-price-listing .regular-price{font-weight: normal; text-decoration: line-through; color: #8F8F8F; padding-left: 20px}
 .uk-pagination li > a {line-height: 30px}
 .uk-pagination li .uk-input {text-align: center; width: 35px; padding:5px}
 .uk-pagination li a.uk-input {padding-top: 0}
 .products-pagination{margin-top: 20px}
+.product-filter-tool .filter-title{font-weight: bold; text-transform: uppercase; margin-bottom: 20px}
+.product-filter-tool .list-basic li{padding: 5px 0}
+.product-filter-tool .list-basic .option-name{padding-left: 5px}
 /* PRODUCT SINGLE PAGE */
 .product-single-name{font-size: 19px; font-weight: bold}
 .regular-price{font-weight: 700; text-decoration: line-through}

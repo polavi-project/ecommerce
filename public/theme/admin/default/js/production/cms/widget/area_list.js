@@ -18,13 +18,13 @@ function AreaList({ selectedAreas = [], manualInputAreas = "", formId = '' }) {
         }, {
             'component': Checkbox,
             'props': {
-                name: "area[header]",
-                isChecked: selectedAreas.find(e => e === 'header') === undefined ? false : true,
+                name: "area[header_middle]",
+                isChecked: selectedAreas.find(e => e === 'header_middle') === undefined ? false : true,
                 formId: formId,
                 label: "Header"
             },
             'sort_order': 10,
-            'id': 'header-area'
+            'id': 'header-middle-area'
         }, {
             'component': Checkbox,
             'props': {
@@ -48,13 +48,13 @@ function AreaList({ selectedAreas = [], manualInputAreas = "", formId = '' }) {
         }, {
             'component': Checkbox,
             'props': {
-                name: "area[content_center]",
-                isChecked: selectedAreas.find(e => e === 'content_center') === undefined ? false : true,
+                name: "area[content_middle]",
+                isChecked: selectedAreas.find(e => e === 'content_middle') === undefined ? false : true,
                 formId: formId,
-                label: "Content center"
+                label: "Content middle"
             },
             'sort_order': 40,
-            'id': 'content-area'
+            'id': 'content-middle-area'
         }, {
             'component': Checkbox,
             'props': {
@@ -88,6 +88,16 @@ function AreaList({ selectedAreas = [], manualInputAreas = "", formId = '' }) {
         }, {
             'component': Checkbox,
             'props': {
+                name: "area[content_center]",
+                isChecked: selectedAreas.find(e => e === 'content_center') === undefined ? false : true,
+                formId: formId,
+                label: "Content center"
+            },
+            'sort_order': 75,
+            'id': 'content-center-area'
+        }, {
+            'component': Checkbox,
+            'props': {
                 name: "area[footer_top]",
                 isChecked: selectedAreas.find(e => e === 'footer_top') === undefined ? false : true,
                 formId: formId,
@@ -98,8 +108,8 @@ function AreaList({ selectedAreas = [], manualInputAreas = "", formId = '' }) {
         }, {
             'component': Checkbox,
             'props': {
-                name: "area[footer]",
-                isChecked: selectedAreas.find(e => e === 'footer') === undefined ? false : true,
+                name: "area[footer_middle]",
+                isChecked: selectedAreas.find(e => e === 'footer_middle') === undefined ? false : true,
                 formId: formId,
                 label: "Footer"
             },

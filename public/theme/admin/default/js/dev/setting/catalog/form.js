@@ -117,6 +117,30 @@ function ListingPage(props) {
                         },
                         sort_order: 60,
                         id: "catalog_product_list_image_height"
+                    },
+                    {
+                        component: Text,
+                        props : {
+                            id : "catalog_product_filter_price_min_range",
+                            formId: "catalog_setting_form",
+                            name: "catalog_product_filter_price_min_range",
+                            label: "Price filter min range",
+                            value: _.get(props, "data.catalog_product_filter_price_min_range", "50")
+                        },
+                        sort_order: 70,
+                        id: "catalog_product_filter_price_min_range"
+                    },
+                    {
+                        component: Text,
+                        props : {
+                            id : "catalog_product_filter_price_max_step",
+                            formId: "catalog_setting_form",
+                            name: "catalog_product_filter_price_max_step",
+                            label: "Price filter max number of step",
+                            value: _.get(props, "data.catalog_product_filter_price_max_step", "5")
+                        },
+                        sort_order: 80,
+                        id: "catalog_product_filter_price_max_step"
                     }
                 ]}
             />

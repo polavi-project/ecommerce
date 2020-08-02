@@ -36,57 +36,74 @@ class FrontLayoutMiddleware extends MiddlewareAbstract
             ["id"=> "container", "className" => "container-wrapper"]
         );
 
+        /***** HEADER ******/
+        $response->addWidget(
+            'header',
+            'container',
+            10,
+            get_js_file_url("production/area.js"),
+            ["id"=> "header", "className" => "header"]
+        );
         $response->addWidget(
             'header_top',
-            'container',
-            0,
+            'header',
+            10,
             get_js_file_url("production/area.js"),
             ["id"=> "header_top", "className" => "header-top"]
         );
 
         $response->addWidget(
+            'header_middle',
             'header',
-            'container',
-            10,
+            20,
             get_js_file_url("production/cms/header.js"),
-            ["id"=> "header", "className" => "header"]
+            ["id"=> "header_middle", "className" => "header-middle"]
         );
 
         $response->addWidget(
             'header_bottom',
+            'header',
+            30,
+            get_js_file_url("production/area.js"),
+            ["id"=> "header_bottom", "className" => "header-bottom"]
+        );
+
+
+        /***** CONTENT ******/
+        $response->addWidget(
+            'content',
             'container',
             20,
             get_js_file_url("production/area.js"),
-            ["id"=> "header_bottom", "className" => "header-top"]
+            ["id"=> "content", "className" => "content"]
         );
-
         $response->addWidget(
             'content_top',
-            'container',
-            30,
+            'content',
+            10,
             get_js_file_url("production/area.js"),
             ["id"=> "content_top", "className" => "content-top"]
         );
 
         $response->addWidget(
+            'content_middle',
             'content',
-            'container',
-            40,
+            20,
             get_js_file_url("production/cms/content.js"),
-            ["id"=> "content", "className" => "content container"]
+            ["id"=> "content_middle", "className" => "content-middle container"]
         );
 
         $response->addWidget(
             'content_bottom',
-            'container',
-            50,
+            'content',
+            30,
             get_js_file_url("production/area.js"),
             ["id"=> "content_bottom", "className" => "content-bottom"]
         );
 
         $response->addWidget(
             'left_column',
-            'content',
+            'content_middle',
             10,
             get_js_file_url("production/area.js"),
             ["id"=> "left_column", "className"=> "col-3"]
@@ -94,7 +111,7 @@ class FrontLayoutMiddleware extends MiddlewareAbstract
 
         $response->addWidget(
             'content_center',
-            'content',
+            'content_middle',
             20,
             get_js_file_url("production/area.js"),
             ["id"=>"content_center", "className"=>"col-expand"]
@@ -102,32 +119,40 @@ class FrontLayoutMiddleware extends MiddlewareAbstract
 
         $response->addWidget(
             'right_column',
-            'content',
+            'content_middle',
             30,
             get_js_file_url("production/area.js"),
             ["id"=> "right_column", "className"=> "col-3"]
         );
 
+        /***** FOOTER ******/
         $response->addWidget(
-            'footer_top',
+            'footer',
             'container',
             60,
+            get_js_file_url("production/area.js"),
+            ["id"=>"footer", "className" => "footer"]
+        );
+        $response->addWidget(
+            'footer_top',
+            'footer',
+            10,
             get_js_file_url("production/area.js"),
             ["id"=>"footer_top", "className" => "footer-top"]
         );
 
         $response->addWidget(
+            'footer_middle',
             'footer',
-            'container',
-            70,
+            20,
             get_js_file_url("production/area.js"),
-            ["id"=>"footer", "className" => "footer container"]
+            ["id"=>"footer_middle", "className" => "footer-middle container"]
         );
 
         $response->addWidget(
             'footer_bottom',
-            'container',
-            80,
+            'footer',
+            30,
             get_js_file_url("production/area.js"),
             ["id"=>"footer_bottom", "className" => "footer-bottom"]
         );

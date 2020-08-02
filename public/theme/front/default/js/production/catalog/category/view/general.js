@@ -9,11 +9,7 @@ const Name = ({ name }) => {
 };
 
 const Description = ({ description }) => {
-    return React.createElement(
-        "div",
-        { className: "category-description" },
-        description
-    );
+    return React.createElement("div", { className: "category-description", dangerouslySetInnerHTML: { __html: description } });
 };
 
 export default function CategoryInfo(props) {

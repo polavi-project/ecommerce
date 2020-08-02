@@ -78,7 +78,7 @@ QUERY
                     })());
                     $response->addWidget(
                         'category_view_products',
-                        'content',
+                        'content_center',
                         10,
                         get_js_file_url("production/catalog/category/view/products.js", false),
                         [
