@@ -42,7 +42,8 @@ $router->addAdminRoute('widget.grid', 'GET', '/widgets', [
 ]);
 
 $router->addAdminRoute('widget.create', 'GET', '/widget/create', [
-    \Polavi\Module\Cms\Middleware\Widget\Edit\EditMiddleware::class
+    \Polavi\Module\Cms\Middleware\Widget\Edit\EditMiddleware::class,
+    \Polavi\Module\Cms\Middleware\Widget\Edit\GetLayoutsMiddleware::class
 ]);
 
 $router->addAdminRoute('widget.edit', 'GET', '/widget/edit/{type}/{id:\d+}', [

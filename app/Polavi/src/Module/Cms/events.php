@@ -452,6 +452,7 @@ $eventDispatcher->addListener(
         $types[] = ['code' => 'text', 'name' => 'Text widget'];
         $types[] = ['code' => 'menu', 'name' => 'Menu widget'];
         $types[] = ['code' => 'area', 'name' => 'Area'];
+        $types[] = ['code' => 'breadcrumbs', 'name' => 'Breadcrumbs'];
 
         return $types;
     },
@@ -462,12 +463,14 @@ $eventDispatcher->addListener('register.widget.create.middleware', function(\Pol
     $mm->registerMiddleware(\Polavi\Module\Cms\Middleware\TextWidget\FormMiddleware::class, 0);
     $mm->registerMiddleware(\Polavi\Module\Cms\Middleware\MenuWidget\FormMiddleware::class, 0);
     $mm->registerMiddleware(\Polavi\Module\Cms\Middleware\AreaWidget\FormMiddleware::class, 0);
+    $mm->registerMiddleware(\Polavi\Module\Cms\Middleware\BreadcrumbsWidget\FormMiddleware::class, 0);
 });
 
 $eventDispatcher->addListener('register.widget.edit.middleware', function(\Polavi\Services\MiddlewareManager $mm) {
     $mm->registerMiddleware(\Polavi\Module\Cms\Middleware\TextWidget\FormMiddleware::class, 0);
     $mm->registerMiddleware(\Polavi\Module\Cms\Middleware\MenuWidget\FormMiddleware::class, 0);
     $mm->registerMiddleware(\Polavi\Module\Cms\Middleware\AreaWidget\FormMiddleware::class, 0);
+    $mm->registerMiddleware(\Polavi\Module\Cms\Middleware\BreadcrumbsWidget\FormMiddleware::class, 0);
 });
 
 $eventDispatcher->addListener('register.admin.graphql.api.middleware', function(\Polavi\Services\MiddlewareManager $mm) {
@@ -482,6 +485,14 @@ $eventDispatcher->addListener(
         $middlewareManager->registerMiddleware(\Polavi\Module\Cms\Middleware\AreaWidget\AreaWidgetMiddleware::class, 21);
         $middlewareManager->registerMiddleware(\Polavi\Module\Cms\Middleware\Page\View\LogoMiddleware::class, 22);
         $middlewareManager->registerMiddlewareBefore(\Polavi\Middleware\ResponseMiddleware::class, \Polavi\Module\Cms\Middleware\Page\View\NotFoundPageMiddleware::class);
+    },
+    5
+);
+
+$eventDispatcher->addListener(
+    'register.core.middleware',
+    function (\Polavi\Services\MiddlewareManager $middlewareManager) {
+        $middlewareManager->registerMiddlewareAfter(\Polavi\Middleware\HandlerMiddleware::class, \Polavi\Module\Cms\Middleware\BreadcrumbsWidget\BreadcrumbsWidgetMiddleware::class);
     },
     5
 );

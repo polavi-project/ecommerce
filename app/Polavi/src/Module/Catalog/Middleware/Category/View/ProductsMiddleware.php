@@ -103,6 +103,7 @@ QUERY
                                     return get_config('catalog_product_list_limit', 20);
                                 return $limit["value"];
                             })(),
+                            "countPerRow" => get_config("catalog_product_list_number_per_row", 3),
                             "currentPage" => (function() use($result) {
                                 $page = array_find(json_decode($result->data['productCollection']['currentFilter'], true), function($f) {
                                     if($f["key"] == "page")

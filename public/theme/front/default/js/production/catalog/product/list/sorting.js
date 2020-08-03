@@ -37,7 +37,7 @@ export default function Sorting({ sortingOptions = [], currentSortOrder, current
         { className: "product-sorting" },
         React.createElement(
             "div",
-            { className: "product-sorting-inner flex-column justify-content-end" },
+            { className: "product-sorting-inner d-flex justify-content-end" },
             React.createElement(
                 "div",
                 null,
@@ -72,14 +72,21 @@ export default function Sorting({ sortingOptions = [], currentSortOrder, current
                 { className: "sort-direction" },
                 React.createElement(
                     "a",
-                    { onClick: e => onChangeDirection(e) },
-                    React.createElement(
+                    { onClick: e => onChangeDirection(e), href: "#" },
+                    currentSortOrder === "DESC" ? React.createElement(
                         "svg",
-                        { xmlns: "http://www.w3.org/2000/svg", width: "24", height: "24", viewBox: "0 0 24 24", fill: "none",
+                        { xmlns: "http://www.w3.org/2000/svg", width: "15", height: "15", viewBox: "0 0 24 24", fill: "none",
                             stroke: "currentColor", "stroke-width": "2", "stroke-linecap": "round", "stroke-linejoin": "round",
                             className: "feather feather-arrow-up" },
                         React.createElement("line", { x1: "12", y1: "19", x2: "12", y2: "5" }),
                         React.createElement("polyline", { points: "5 12 12 5 19 12" })
+                    ) : React.createElement(
+                        "svg",
+                        { xmlns: "http://www.w3.org/2000/svg", width: "15", height: "15", viewBox: "0 0 24 24", fill: "none",
+                            stroke: "currentColor", "stroke-width": "2", "stroke-linecap": "round", "stroke-linejoin": "round",
+                            className: "feather feather-arrow-down" },
+                        React.createElement("line", { x1: "12", y1: "5", x2: "12", y2: "19" }),
+                        React.createElement("polyline", { points: "19 12 12 19 5 12" })
                     )
                 )
             )

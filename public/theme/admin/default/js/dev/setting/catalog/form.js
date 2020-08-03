@@ -62,8 +62,20 @@ function ListingPage(props) {
                             label: "Number of product in listing page",
                             value: _.get(props, "data.catalog_product_list_limit", 50)
                         },
-                        sort_order: 20,
+                        sort_order: 10,
                         id: "catalog_product_list_limit"
+                    },
+                    {
+                        component: Text,
+                        props : {
+                            id : "catalog_product_list_number_per_row",
+                            formId: "catalog_setting_form",
+                            name: "catalog_product_list_number_per_row",
+                            label: "Number of product per row",
+                            value: _.get(props, "data.catalog_product_list_number_per_row", 3)
+                        },
+                        sort_order: 20,
+                        id: "catalog_product_list_number_per_row"
                     },
                     {
                         component: Select,

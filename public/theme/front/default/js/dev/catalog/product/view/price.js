@@ -28,12 +28,12 @@ const Price = ({tierPrices = []}) => {
     const language = ReactRedux.useSelector(state => _.get(state, 'appState.language[0]', 'en'));
     const _regularPrice = new Intl.NumberFormat(language, { style: 'currency', currency: currency }).format(regularPrice);
     const _salePrice = new Intl.NumberFormat(language, { style: 'currency', currency: currency }).format(salePrice);
-    return <div className="product-view-price uk-margin-small-top">
+    return <div className="product-view-price mt-4">
         {parseFloat(salePrice) < parseFloat(regularPrice) && <div>
-            <span className="regular-price">{_regularPrice}</span> <span className="sale-price">{_salePrice}</span>
+            <span className="sale-price h4">{_salePrice}</span> <span className="regular-price h4">{_regularPrice}</span>
         </div>}
         {parseFloat(salePrice) === parseFloat(regularPrice) && <div>
-            <span className="sale-price">{_regularPrice}</span>
+            <span className="sale-price h4">{_regularPrice}</span>
         </div>}
         <TierPrice prices={ tierPrices.filter((p) => p.qty > 1)}/>
     </div>

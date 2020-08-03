@@ -68,6 +68,7 @@ class InitMiddleware extends MiddlewareAbstract
             ]);
 
         $response->addState('currentPageType', 'Category')->addState('categoryId', $category['category_id']);
-        return $delegate;
+
+        return $category;
     }
 }

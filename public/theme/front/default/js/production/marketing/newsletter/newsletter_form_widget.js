@@ -22,7 +22,7 @@ export default function NewsletterForm({ title, html_before, html_after, subscri
                 )
             ),
             React.createElement("div", { className: "html-before", dangerouslySetInnerHTML: { __html: html_before } }),
-            React.createElement(Text, { name: "email", value: "", validation_rules: ["required", "email"] }),
+            React.createElement(Text, { name: "email", value: "", validation_rules: ["notEmpty", "email"], formId: "newsletter-subscribe-form" }),
             React.createElement("div", { className: "html-before", dangerouslySetInnerHTML: { __html: html_after } })
         )
     );

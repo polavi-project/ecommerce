@@ -43,20 +43,20 @@ const Price = ({ tierPrices = [] }) => {
     const _salePrice = new Intl.NumberFormat(language, { style: 'currency', currency: currency }).format(salePrice);
     return React.createElement(
         'div',
-        { className: 'product-view-price uk-margin-small-top' },
+        { className: 'product-view-price mt-4' },
         parseFloat(salePrice) < parseFloat(regularPrice) && React.createElement(
             'div',
             null,
             React.createElement(
                 'span',
-                { className: 'regular-price' },
-                _regularPrice
+                { className: 'sale-price h4' },
+                _salePrice
             ),
             ' ',
             React.createElement(
                 'span',
-                { className: 'sale-price' },
-                _salePrice
+                { className: 'regular-price h4' },
+                _regularPrice
             )
         ),
         parseFloat(salePrice) === parseFloat(regularPrice) && React.createElement(
@@ -64,7 +64,7 @@ const Price = ({ tierPrices = [] }) => {
             null,
             React.createElement(
                 'span',
-                { className: 'sale-price' },
+                { className: 'sale-price h4' },
                 _regularPrice
             )
         ),

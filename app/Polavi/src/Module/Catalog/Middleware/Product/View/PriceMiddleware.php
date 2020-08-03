@@ -34,8 +34,8 @@ class PriceMiddleware extends MiddlewareAbstract
                 if(isset($result->data['productTierPrice'])) {
                     $response->addWidget(
                         'product_view_price',
-                        'product_view_general_info',
-                        25,
+                        'product_single_page_form',
+                        30,
                         get_js_file_url("production/catalog/product/view/price.js", false),
                         ['tierPrices' => $result->data['productTierPrice']]
                     );

@@ -35,6 +35,14 @@ function Price({minPrice = 0, maxPrice = 0, price_max_step, price_min_range, are
         setSteps(getSteps(minPrice, maxPrice, price_max_step, price_min_range));
     }, [minPrice, maxPrice]);
 
+    const updateFilter = (e) => {
+        if(e.target.checked === true) {
+            areaProps.updateFilter("price", "BETWEEN", e.target.value)
+        } else {
+            areaProps.updateFilter("price", "BETWEEN", undefined)
+        }
+    };
+
     return <div>
         <div><strong>Price</strong></div>
         <ul className="list-basic">
@@ -47,7 +55,7 @@ function Price({minPrice = 0, maxPrice = 0, price_max_step, price_min_range, are
                         type={"checkbox"}
                         value={`${s.from}-${s.to}`}
                         checked={currentFilter === `${s.from}-${s.to}`}
-                        onChange={(e)=> areaProps.updateFilter("price", "BETWEEN", e.target.value)}/> <span className="option-name">{`${from} - ${to}`}</span></label>
+                        onChange={(e)=> updateFilter(e)}/> <span className="option-name">{`${from} - ${to}`}</span></label>
                 </li>
             })}
         </ul>
@@ -160,7 +168,7 @@ export default function Filter({title, price_max_step, price_min_range}) {
             });
         if(productCollectionFilter.find((f) => f["key"] === key) === undefined)
             fs.push({key: key, operator: operator, value: value});
-        console.log(fs);
+
         Fetch(buildFilterToQuery(currentUrl, fs), true, "GET");
     };
 

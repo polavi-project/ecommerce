@@ -48,7 +48,7 @@ img{max-width: 100%}
 }
 .group-form{float: left; width: 50%; box-sizing: border-box; padding: 10px}
 .polavi-form-button{margin-top: 15px}
-
+.field-validation-error{color: #f0506e}
 /* LIST BASIC */
 ul.list-basic{list-style: none; padding-left: 0; }
 ul.list-basic li{padding: 10px 0}
@@ -63,7 +63,7 @@ ul.list-basic li{padding: 10px 0}
 .header{padding: 20px 0 0}
 .customer-header{padding-right: 20px}
 /* FOOTER */
-.footer{padding: 30px 0; background-color: #111}
+.footer{padding: 30px 0; background-color: #111; margin-top: 30px}
 .footer *{color: #fff}
 /* PRODUCT LISTING PAGE */
 .category-general-info .category-name{margin-bottom: 20px}
@@ -86,16 +86,29 @@ ul.list-basic li{padding: 10px 0}
 .uk-pagination li .uk-input {text-align: center; width: 35px; padding:5px}
 .uk-pagination li a.uk-input {padding-top: 0}
 .products-pagination{margin-top: 20px}
+.products-pagination input{max-width: 40px}
 .product-filter-tool .filter-title{font-weight: bold; text-transform: uppercase; margin-bottom: 20px}
 .product-filter-tool .list-basic li{padding: 5px 0}
 .product-filter-tool .list-basic .option-name{padding-left: 5px}
-/* PRODUCT SINGLE PAGE */
-.product-single-name{font-size: 19px; font-weight: bold}
-.regular-price{font-weight: 700; text-decoration: line-through}
+.product-sorting-inner .label{white-space: nowrap; padding-right: 10px; line-height: 35px}
+.tool-bar-top{margin-bottom: 20px}
+.tool-bar-top .products-pagination{margin-top: 0px}
+.tool-bar-top ul{margin: 0 0 !important;}
+.sort-direction a{padding-left: 5px; line-height: 30px}
+    /* PRODUCT SINGLE PAGE */
+.regular-price{text-decoration: line-through; color: #8F8F8F; padding-left: 20px}
 
 /*MINI CART*/
-.mini-cart-content{position: fixed; top: 0; right: 0; bottom: 0; width: 390px; background: #fff; padding: 20px; border-left: 1px solid #E1E1E1}
-
+.mini-cart-content{position: fixed; top: 0; right: 0; bottom: 0; width: 450px; background: #fff; padding: 20px; border-left: 1px solid #E1E1E1; z-index: 1000; overflow-y: auto}
+.mini-cart-content .container{padding-left: 0px; padding-right: 0px}
+.mini-cart-summary .name{padding-right: 10px}
+/* NEWSLETTER */
+.newsletter-form .title{font-weight: 500; line-height: 1.2; font-size: 1.25rem; margin-bottom: 1.5rem}
+/* BREADCRUMBS */
+.breadcrumbs{max-width: 1140px; margin: 0 auto}
+.breadcrumbs ul{list-style: none; padding-left: 10px}
+.breadcrumbs ul li {display: inline-block}
+.breadcrumbs ul li:not(:last-child)::after {font-family: "Font Awesome 5 Free"; font-weight: 600; content: "\f105"; padding: 0 10px}
 /**
  * placeholder-loading v0.2.5
  * Author: Zalog (https://www.zalog.ro/)
@@ -214,3 +227,6 @@ ul.list-basic li{padding: 10px 0}
 .variant-option-list li.selected{background: #058C8C}
 .variant-option-list li.selected a{color: #000}
 .variant-option-list li.un-available{background: #E1E1E1}
+.add-to-cart{margin-top: 30px;}
+.add-to-cart input{max-width: 100px}
+.add-to-cart .button{margin-left: 10px}
