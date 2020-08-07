@@ -10,7 +10,7 @@ function Items() {
         { id: 'summary-items' },
         React.createElement(
             'table',
-            { className: 'uk-table uk-table-small' },
+            { className: 'table' },
             React.createElement(
                 'thead',
                 null,

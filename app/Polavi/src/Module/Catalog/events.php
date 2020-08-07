@@ -348,5 +348,27 @@ $eventDispatcher->addListener('breadcrumbs_items', function(array $items) {
 
     }
 
+    if(in_array($container->get(Request::class)->get("_matched_route"), ["product.view", "product.view.pretty"])) {
+        $product = MiddlewareManager::getDelegate(\Polavi\Module\Catalog\Middleware\Product\View\InitMiddleware::class, null);
+        if($product == null) {
+            $product = _mysql()->getTable('product')
+                ->leftJoin('product_description', null, [
+                    [
+                        'column'      => "product_description.language_id",
+                        'operator'    => "=",
+                        'value'       => $container->get(Request::class)->get('language', get_default_language_Id()),
+                        'ao'          => 'and',
+                        'start_group' => null,
+                        'end_group'   => null
+                    ]
+                ])
+                ->where('product.product_id', '=', $container->get(Request::class)->attributes->get('id'))
+                ->fetchOneAssoc();
+        }
+
+        $items[] = ["sort_order"=> 1, "title"=> $product["name"], "link"=> null];
+
+    }
+
     return $items;
 });

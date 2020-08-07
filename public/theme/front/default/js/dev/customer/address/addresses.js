@@ -62,7 +62,7 @@ export default function Addresses(props) {
         config.body.append('variables[customerId]', parseInt(props.customer_id));
     };
 
-    return <div className="">
+    return <div className="col-12 col-md-6 mt-4">
         <h2>Your address(s)</h2>
         {addresses.map((a,i)=> {
             return <div key={i} className="border-block">

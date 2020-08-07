@@ -4,7 +4,7 @@ import { Fetch } from "../../../../../../js/production/fetch.js";
 function OrderInfo(props) {
     return React.createElement(
         "div",
-        { className: "uk-width-1-1" },
+        { className: "" },
         React.createElement(
             "div",
             null,
@@ -64,7 +64,7 @@ function Summary({ tax_amount, discount_amount, coupon, grand_total }) {
             ),
             React.createElement(
                 "table",
-                { className: "uk-table uk-table-small" },
+                { className: "table" },
                 React.createElement(
                     "tbody",
                     null,
@@ -151,7 +151,7 @@ function Summary({ tax_amount, discount_amount, coupon, grand_total }) {
 function Items({ items }) {
     return React.createElement(
         "table",
-        { className: "uk-table uk-table-small" },
+        { className: "table" },
         React.createElement(
             "thead",
             null,
@@ -293,7 +293,7 @@ function Order({ index, order }) {
 function Loader() {
     return React.createElement(
         "ul",
-        { "uk-accordion": "1" },
+        { className: "list-basic" },
         React.createElement(
             "li",
             null,
@@ -362,7 +362,7 @@ export default function Orders({ query }) {
     }, []);
     return React.createElement(
         "div",
-        { className: "uk-margin-medium-top my-orders" },
+        { className: "col-12 col-md-6 mt-4" },
         React.createElement(
             "h2",
             null,
@@ -371,7 +371,7 @@ export default function Orders({ query }) {
         loading === true && React.createElement(Loader, null),
         loading === false && React.createElement(
             "ul",
-            { "uk-accordion": "1" },
+            { className: "list-basic" },
             orders.map((o, i) => {
                 return React.createElement(Order, { index: i, key: i, order: o });
             })

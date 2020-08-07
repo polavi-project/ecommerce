@@ -48,7 +48,7 @@ class AttributeMiddleware extends MiddlewareAbstract
                 if(isset($result->data['productAttributeIndex']) and $result->data['productAttributeIndex']) {
                     $response->addWidget(
                         'product_view_attribute',
-                        'product_detail_tab',
+                        'product_single_tabs',
                         20,
                         get_js_file_url("production/catalog/product/view/attributes.js", false),
                         [

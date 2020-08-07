@@ -8,7 +8,7 @@ export default function Images({images, productName}) {
     let mainImage = images.find(function(i) {
         return i.isMain === true;
     });
-    return <div className="more-view">
+    return <div className="product-single-media">
         {mainImage && <MainImage src={mainImage.main} alt={productName}/>}
         <ul className="more-view-thumbnail product-gallery">
             {images.map((i,j) => {

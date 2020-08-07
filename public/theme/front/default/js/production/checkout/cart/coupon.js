@@ -14,9 +14,9 @@ function Coupon(props) {
 
     return React.createElement(
         "div",
-        { className: "shopping-cart-coupon uk-width-1-4" },
+        { className: "shopping-cart-coupon col-4" },
         React.createElement(
-            "p",
+            "h4",
             null,
             React.createElement(
                 "strong",
@@ -26,16 +26,16 @@ function Coupon(props) {
         ),
         React.createElement(
             "div",
-            { className: "uk-margin" },
+            { className: "mb-4" },
             React.createElement("input", {
-                className: "uk-input uk-form-width-medium uk-form-small",
+                className: "form-control",
                 type: "text", value: coupon,
                 onChange: e => onChange(e),
                 placeholder: "Enter coupon code" })
         ),
         React.createElement(
             "button",
-            { className: "uk-button uk-button-primary uk-button-small", onClick: e => submit(e) },
+            { className: "btn btn-primary", onClick: e => submit(e) },
             "Submit"
         )
     );

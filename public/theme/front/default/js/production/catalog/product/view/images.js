@@ -12,7 +12,7 @@ export default function Images({ images, productName }) {
     });
     return React.createElement(
         "div",
-        { className: "more-view" },
+        { className: "product-single-media" },
         mainImage && React.createElement(MainImage, { src: mainImage.main, alt: productName }),
         React.createElement(
             "ul",

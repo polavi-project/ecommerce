@@ -61,7 +61,7 @@ function GrandTotal({grandTotal}) {
 function CartSummary() {
     const cart = ReactRedux.useSelector(state => _.get(state, 'appState.cart', {}));
     return <div className="checkout-summary-cart">
-        <table className="uk-table uk-table-small checkout-cart-summary-table">
+        <table className="checkout-cart-summary-table">
             <tbody>
             <Area
                 id={"checkout_summary_cart"}

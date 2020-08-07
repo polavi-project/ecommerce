@@ -1,4 +1,5 @@
 import Area from "../../../../../../../../js/production/area.js";
+import Tabs from "./tabs.js";
 
 export default function ProductPageLayout() {
     return React.createElement(
@@ -24,6 +25,7 @@ export default function ProductPageLayout() {
                 })
             )
         ),
+        React.createElement(Tabs, { id: "product_single_tabs" }),
         React.createElement(Area, {
             id: "product_page_bottom",
             className: "product-page-top"

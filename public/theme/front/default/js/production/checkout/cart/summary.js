@@ -86,9 +86,9 @@ function Summary(props) {
     const cart = ReactRedux.useSelector(state => _.get(state, 'appState.cart', {}));
     return React.createElement(
         "div",
-        { className: "uk-width-1-4@m" },
+        { className: "col-4" },
         React.createElement(
-            "p",
+            "h4",
             null,
             React.createElement(
                 "span",
@@ -98,7 +98,7 @@ function Summary(props) {
         ),
         React.createElement(
             "table",
-            { className: "uk-table" },
+            { className: "table" },
             React.createElement(
                 "tbody",
                 null,
@@ -131,9 +131,9 @@ function Summary(props) {
             )
         ),
         React.createElement(
-            "p",
-            null,
-            React.createElement(A, { className: "uk-button uk-button-primary uk-button-small", url: props.checkoutUrl, text: "Checkout" })
+            "div",
+            { className: "shopping-cart-checkout-btn" },
+            React.createElement(A, { className: "btn btn-primary", url: props.checkoutUrl, text: "Checkout" })
         )
     );
 }

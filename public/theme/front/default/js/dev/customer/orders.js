@@ -2,7 +2,7 @@ import A from "../../../../../../js/production/a.js";
 import {Fetch} from "../../../../../../js/production/fetch.js";
 
 function OrderInfo(props) {
-    return <div className={"uk-width-1-1"}>
+    return <div className={""}>
         <div>
             <span>
                 {
@@ -32,7 +32,7 @@ function Summary({tax_amount, discount_amount, coupon, grand_total}) {
     return <div className={"uk-width-1-3"}>
         <div className="uk-overflow-auto">
             <div><strong>Summary</strong></div>
-            <table className="uk-table uk-table-small">
+            <table className="table">
                 <tbody>
                 <tr><td><span>Tax:</span></td><td><span>{_tax_amount}</span></td></tr>
                 { parseInt(discount_amount) > 0 &&
@@ -46,7 +46,7 @@ function Summary({tax_amount, discount_amount, coupon, grand_total}) {
 }
 
 function Items({items}) {
-    return <table className="uk-table uk-table-small">
+    return <table className="table">
         <thead>
         <tr>
             <th>
@@ -101,7 +101,7 @@ function Order({index, order}) {
 }
 
 function Loader() {
-    return <ul uk-accordion="1">
+    return <ul className="list-basic">
         <li>
             <div className="ph-item">
                 <div>
@@ -145,10 +145,10 @@ export default function Orders({query}) {
             }
         })
     }, []);
-    return <div className="uk-margin-medium-top my-orders">
+    return <div className="col-12 col-md-6 mt-4">
         <h2>Your orders</h2>
         {loading === true && <Loader/>}
-        {loading === false && <ul uk-accordion="1">
+        {loading === false && <ul className="list-basic">
             {orders.map((o,i) => {
                 return <Order index={i} key={i} order={o}/>;
             })}

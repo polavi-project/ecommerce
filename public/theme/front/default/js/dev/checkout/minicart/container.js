@@ -78,8 +78,8 @@ export default function Minicart({cartUrl, checkoutUrl}) {
                 </div>
             </div>
             <div className="d-flex justify-content-end mt-4">
-                <A className="btn btn-primary mr-2" url={cartUrl}><span>Shopping cart</span></A>
-                <A className="btn btn-success" url={checkoutUrl}><span>Checkout</span></A>
+                <A className="mini-cart-button shopping-cart btn btn-primary mr-2" url={cartUrl}><span>Shopping cart</span></A>
+                <A className="mini-cart-button shopping-cart btn btn-success" url={checkoutUrl}><span>Checkout</span></A>
             </div>
         </div>
     </div>

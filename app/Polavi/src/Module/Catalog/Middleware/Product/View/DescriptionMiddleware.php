@@ -48,7 +48,7 @@ class DescriptionMiddleware extends MiddlewareAbstract
                 if(isset($result->data['description']) and $result->data['description']) {
                     $response->addWidget(
                         'product_description',
-                        'product_detail_tab',
+                        'product_single_tabs',
                         10,
                         get_js_file_url("production/catalog/product/view/description.js", false),
                         ['description' => $result->data['description']['description']]

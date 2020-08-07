@@ -12,7 +12,6 @@ use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
 use function Polavi\_mysql;
-use Polavi\Module\Checkout\Services\Cart\Cart;
 use Polavi\Services\Di\Container;
 use Polavi\Services\Http\Request;
 
@@ -153,3 +152,14 @@ $eventDispatcher->addListener(
     },
     5
 );
+
+$eventDispatcher->addListener('breadcrumbs_items', function(array $items) {
+    $container = \Polavi\the_container();
+    if(in_array($container->get(Request::class)->get("_matched_route"), ["checkout.cart"])) {
+        $items[] = ["sort_order"=> 1, "title"=> "Shopping cart", "link"=> null];
+    }
+    if(in_array($container->get(Request::class)->get("_matched_route"), ["checkout.index"])) {
+        $items[] = ["sort_order"=> 1, "title"=> "Checkout", "link"=> null];
+    }
+    return $items;
+});

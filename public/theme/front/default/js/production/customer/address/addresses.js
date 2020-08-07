@@ -64,7 +64,7 @@ export default function Addresses(props) {
 
     return React.createElement(
         "div",
-        { className: "" },
+        { className: "col-12 col-md-6 mt-4" },
         React.createElement(
             "h2",
             null,

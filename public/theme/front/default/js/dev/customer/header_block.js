@@ -9,7 +9,7 @@ function GuestGreeting({loginUrl}) {
 function UserGreeting({logoutUrl, myAccountUrl}) {
     const customerInfo = ReactRedux.useSelector(state => _.get(state, 'appState.customer'));
     return <div className="">
-        <span><span>Hello </span> <span>{_.get(customerInfo, 'full_name')}!</span></span> <A url={myAccountUrl}><span>My account</span></A> | <A url={logoutUrl}><span>Log out</span></A>
+        <A url={myAccountUrl}><span>Hello </span> <span>{_.get(customerInfo, 'full_name')}!</span></A> | <A url={logoutUrl}><span>Log out</span></A>
     </div>
 }
 

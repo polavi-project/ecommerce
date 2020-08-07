@@ -3,20 +3,20 @@ import A from "../../../../../../../js/production/a.js";
 function Empty({ homeUrl }) {
     return React.createElement(
         "div",
-        { className: "empty-shopping-cart uk-width-1-1" },
+        { className: "empty-shopping-cart w-100" },
         React.createElement(
             "div",
-            { className: "uk-align-center uk-text-center" },
+            null,
             React.createElement(
                 "div",
-                null,
+                { className: "mb-4" },
                 React.createElement(
-                    "h3",
+                    "h4",
                     null,
                     "Your cart is empty!"
                 )
             ),
-            React.createElement(A, { text: "Home page", url: homeUrl, classes: "uk-button uk-button-default uk-button-small" })
+            React.createElement(A, { text: "Home page", url: homeUrl, className: "btn btn-primary" })
         )
     );
 }
@@ -31,7 +31,7 @@ function ItemOptions({ options = [] }) {
         { className: "cart-item-options" },
         React.createElement(
             "ul",
-            { className: "uk-list" },
+            { className: "list-basic" },
             options.map((o, i) => {
                 return React.createElement(
                     "li",
@@ -80,7 +80,7 @@ function ItemVariantOptions({ options = [] }) {
         { className: "cart-item-variant-options" },
         React.createElement(
             "ul",
-            { className: "uk-list" },
+            { className: "list-basic" },
             options.map((o, i) => {
                 return React.createElement(
                     "li",
@@ -117,10 +117,10 @@ function Items({ items }) {
 
     if (items.length === 0) return React.createElement(Empty, { homeUrl: baseUrl });else return React.createElement(
         "div",
-        { id: "shopping-cart-items", className: "uk-width-3-4@m" },
+        { id: "shopping-cart-items", className: "col-8" },
         React.createElement(
             "table",
-            { className: "uk-table uk-table-divider" },
+            { className: "table" },
             React.createElement(
                 "thead",
                 null,
@@ -196,7 +196,7 @@ function Items({ items }) {
                             React.createElement(
                                 "div",
                                 { className: "cart-tem-info" },
-                                React.createElement(A, { url: item.productUrl, text: item.product_name, classes: "uk-link-muted" }),
+                                React.createElement(A, { url: item.productUrl, text: item.product_name, classes: "" }),
                                 item.error.map((e, i) => React.createElement(
                                     "div",
                                     { className: "text-danger", key: i },
@@ -258,7 +258,11 @@ function Items({ items }) {
                             React.createElement(
                                 A,
                                 { url: item.removeUrl, text: "" },
-                                React.createElement("span", { "uk-icon": "close" })
+                                React.createElement(
+                                    "span",
+                                    null,
+                                    "x"
+                                )
                             )
                         )
                     );

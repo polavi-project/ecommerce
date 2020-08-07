@@ -1,4 +1,5 @@
 import Area from "../../../../../../../../js/production/area.js";
+import Tabs from "./tabs.js";
 
 export default function ProductPageLayout() {
     return <div className="product-detail">
@@ -18,6 +19,7 @@ export default function ProductPageLayout() {
                 />
             </div>
         </div>
+        <Tabs id={"product_single_tabs"}/>
         <Area
             id="product_page_bottom"
             className="product-page-top"

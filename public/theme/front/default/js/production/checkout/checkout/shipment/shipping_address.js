@@ -31,7 +31,6 @@ function ShippingAddressBlock() {
         { className: "checkout-shipping-address" },
         React.createElement(Area, {
             id: "checkout_shipping_address_block",
-            className: "uk-width-1-1",
             needSelectAddress: needSelectAddress,
             setNeedSelectAddress: setNeedSelectAddress,
             coreWidgets: [{

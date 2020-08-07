@@ -6,7 +6,7 @@ const TierPrice = ({prices = []}) => {
         return null;
 
     return <div className={"tier-price"}>
-        <ul className="uk-list">
+        <ul className="list-basic">
             {prices.map((price, index)=>{
                 const _price = new Intl.NumberFormat(language, { style: 'currency', currency: currency }).format(price.price);
                 return <li key={index}>Buy {price.qty} for <span>{_price}</span></li>

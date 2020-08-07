@@ -4,7 +4,7 @@ export default function OrderSummary({ number, tax, discount, grandTotal }) {
         { className: "order-success-summary" },
         React.createElement(
             "table",
-            { className: "uk-table uk-table-divider" },
+            { className: "table" },
             React.createElement(
                 "thead",
                 null,

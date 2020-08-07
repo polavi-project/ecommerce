@@ -12,10 +12,12 @@ use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
 use function Polavi\_mysql;
+use function Polavi\get_current_language_id;
 use function Polavi\get_default_language_Id;
 use Polavi\Module\Graphql\Services\FilterFieldType;
 use Polavi\Services\Di\Container;
 use Polavi\Services\Http\Request;
+use Polavi\Services\MiddlewareManager;
 
 $eventDispatcher->addListener(
         'filter.query.type',
@@ -496,3 +498,29 @@ $eventDispatcher->addListener(
     },
     5
 );
+
+$eventDispatcher->addListener('breadcrumbs_items', function(array $items) {
+    $container = \Polavi\the_container();
+    if(in_array($container->get(Request::class)->get("_matched_route"), ["page.view", "page.view.pretty"])) {
+        $page = MiddlewareManager::getDelegate(\Polavi\Module\Cms\Middleware\Page\View\ViewMiddleware::class, null);
+        if($page == null) {
+            $page = _mysql()->getTable('cms_page')
+                ->leftJoin('cms_page_description', null, [
+                    [
+                        'column'      => "cms_page_description.language_id",
+                        'operator'    => "=",
+                        'value'       => get_current_language_id(),
+                        'ao'          => 'and',
+                        'start_group' => null,
+                        'end_group'   => null
+                    ]
+                ])
+                ->where('cms_page.cms_page_id', '=', $container->get(Request::class)->attributes->get('id'))
+                ->fetchOneAssoc();
+        }
+
+        $items[] = ["sort_order"=> 1, "title"=> $page["name"], "link"=> null];
+    }
+
+    return $items;
+});

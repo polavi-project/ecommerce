@@ -1,15 +1,15 @@
-const Attributes = ({ attributes }) => {
-    return React.createElement(
-        "li",
-        null,
-        React.createElement(
-            "a",
-            { className: "uk-accordion-title", href: "#" },
-            "Specification"
-        ),
+const Attributes = ({ attributes, areaProps }) => {
+
+    React.useEffect(() => {
+        areaProps.registerTab({ name: "Specification", id: "specification" });
+    }, []);
+
+    return areaProps.currentTab == "specification" ? React.createElement(
+        "div",
+        { className: "specification" },
         React.createElement(
             "ul",
-            { className: "uk-accordion-content" },
+            { className: "list-basic" },
             attributes.map((attribute, index) => {
                 return React.createElement(
                     "li",
@@ -29,6 +29,6 @@ const Attributes = ({ attributes }) => {
                 );
             })
         )
-    );
+    ) : null;
 };
 export default Attributes;

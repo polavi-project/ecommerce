@@ -9,7 +9,7 @@ const TierPrice = ({ prices = [] }) => {
         { className: "tier-price" },
         React.createElement(
             'ul',
-            { className: 'uk-list' },
+            { className: 'list-basic' },
             prices.map((price, index) => {
                 const _price = new Intl.NumberFormat(language, { style: 'currency', currency: currency }).format(price.price);
                 return React.createElement(

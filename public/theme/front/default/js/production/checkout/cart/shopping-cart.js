@@ -3,7 +3,7 @@ import Area from "../../../../../../../js/production/area.js";
 function Title() {
     return React.createElement(
         "div",
-        { className: "uk-width-1-1" },
+        { className: "mb-4 col-12" },
         React.createElement(
             "h1",
             { className: "uk-text-center" },
@@ -15,7 +15,7 @@ function Title() {
 function ShoppingCart() {
     return React.createElement(Area, {
         id: "shopping-cart-page",
-        className: "uk-grid uk-grid-small",
+        className: "row",
         coreWidgets: [{
             component: Title,
             props: {},

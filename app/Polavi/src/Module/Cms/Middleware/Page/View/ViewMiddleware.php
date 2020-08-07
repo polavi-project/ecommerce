@@ -67,6 +67,7 @@ class ViewMiddleware extends MiddlewareAbstract
             $response->setStatusCode(404);
             return $response;
         }
+
         $request->attributes->set('id', $page['cms_page_id']);
         $this->getContainer()->get(Helmet::class)->setTitle($page['meta_title'])
             ->addMeta([
@@ -77,7 +78,7 @@ class ViewMiddleware extends MiddlewareAbstract
 
         $response->addWidget(
             'cms_page_view',
-            'content',
+            'content_center',
             10,
             get_js_file_url("production/cms/page/cms_page.js", false),
             [
@@ -86,6 +87,7 @@ class ViewMiddleware extends MiddlewareAbstract
                 "content" => $page['content'],
             ]
         );
-        return $delegate;
+
+        return $page;
     }
 }

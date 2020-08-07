@@ -30,7 +30,11 @@ export default function Cod(props) {
                 onChange: e => onChange(e),
                 checked: paymentMethod === 'cod'
             }),
-            label
+            React.createElement(
+                'span',
+                { className: 'pl-2' },
+                label
+            )
         )
     );
 }

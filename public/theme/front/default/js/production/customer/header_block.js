@@ -22,8 +22,8 @@ function UserGreeting({ logoutUrl, myAccountUrl }) {
         "div",
         { className: "" },
         React.createElement(
-            "span",
-            null,
+            A,
+            { url: myAccountUrl },
             React.createElement(
                 "span",
                 null,
@@ -35,16 +35,6 @@ function UserGreeting({ logoutUrl, myAccountUrl }) {
                 null,
                 _.get(customerInfo, 'full_name'),
                 "!"
-            )
-        ),
-        " ",
-        React.createElement(
-            A,
-            { url: myAccountUrl },
-            React.createElement(
-                "span",
-                null,
-                "My account"
             )
         ),
         " | ",

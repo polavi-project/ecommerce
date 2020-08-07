@@ -221,7 +221,7 @@ export default function Minicart({ cartUrl, checkoutUrl }) {
                 { className: 'd-flex justify-content-end mt-4' },
                 React.createElement(
                     A,
-                    { className: 'btn btn-primary mr-2', url: cartUrl },
+                    { className: 'mini-cart-button shopping-cart btn btn-primary mr-2', url: cartUrl },
                     React.createElement(
                         'span',
                         null,
@@ -230,7 +230,7 @@ export default function Minicart({ cartUrl, checkoutUrl }) {
                 ),
                 React.createElement(
                     A,
-                    { className: 'btn btn-success', url: checkoutUrl },
+                    { className: 'mini-cart-button shopping-cart btn btn-success', url: checkoutUrl },
                     React.createElement(
                         'span',
                         null,

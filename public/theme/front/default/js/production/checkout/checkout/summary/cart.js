@@ -137,7 +137,7 @@ function CartSummary() {
         { className: 'checkout-summary-cart' },
         React.createElement(
             'table',
-            { className: 'uk-table uk-table-small checkout-cart-summary-table' },
+            { className: 'checkout-cart-summary-table' },
             React.createElement(
                 'tbody',
                 null,

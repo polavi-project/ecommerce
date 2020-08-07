@@ -20,53 +20,56 @@ export default function RegistrationForm(props) {
             dispatch({'type' : ADD_ALERT, 'payload': {alerts: [{id: "customer_register_error", message: _.get(response, 'customerCreation.message', 'Something wrong, please try again'), type: "error"}]}});
     };
     return <Form id={"customer-register-form"} onComplete={onComplete} {...props}>
-        <Area
-            id={"customer-register-form-inner"}
-            coreWidgets={[
-                {
-                    'component': Heading,
-                    'props': {
+        <div className={"row"}>
+            <Area
+                id={"customer-register-form-inner"}
+                className={"col-4"}
+                coreWidgets={[
+                    {
+                        'component': Heading,
+                        'props': {
+                        },
+                        'sort_order': 10,
+                        'id': 'register_form_heading'
                     },
-                    'sort_order': 10,
-                    'id': 'register_form_heading'
-                },
-                {
-                    'component': Text,
-                    'props': {
-                        name: "variables[customer][full_name]",
-                        value: "",
-                        formId: "customer-register-form",
-                        label: "Full name",
-                        validation_rules: ['notEmpty']
+                    {
+                        'component': Text,
+                        'props': {
+                            name: "variables[customer][full_name]",
+                            value: "",
+                            formId: "customer-register-form",
+                            label: "Full name",
+                            validation_rules: ['notEmpty']
+                        },
+                        'sort_order': 20,
+                        'id': 'full_name'
                     },
-                    'sort_order': 20,
-                    'id': 'full_name'
-                },
-                {
-                    'component': Text,
-                    'props': {
-                        name: "variables[customer][email]",
-                        value: "",
-                        formId: "customer-register-form",
-                        label: "Email",
-                        validation_rules: ['notEmpty', 'email']
+                    {
+                        'component': Text,
+                        'props': {
+                            name: "variables[customer][email]",
+                            value: "",
+                            formId: "customer-register-form",
+                            label: "Email",
+                            validation_rules: ['notEmpty', 'email']
+                        },
+                        'sort_order': 40,
+                        'id': 'email'
                     },
-                    'sort_order': 40,
-                    'id': 'email'
-                },
-                {
-                    'component': Password,
-                    'props': {
-                        name: "variables[customer][password]",
-                        value: "",
-                        formId: "customer-register-form",
-                        label: "Password",
-                        validation_rules: ['notEmpty']
-                    },
-                    'sort_order': 50,
-                    'id': 'password'
-                }
-            ]}
-        />
+                    {
+                        'component': Password,
+                        'props': {
+                            name: "variables[customer][password]",
+                            value: "",
+                            formId: "customer-register-form",
+                            label: "Password",
+                            validation_rules: ['notEmpty']
+                        },
+                        'sort_order': 50,
+                        'id': 'password'
+                    }
+                ]}
+            />
+        </div>
     </Form>
 }
