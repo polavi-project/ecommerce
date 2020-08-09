@@ -70,6 +70,7 @@ ul.list-basic li{padding: 10px 0}
 /* FOOTER */
 .footer{padding: 30px 0; background-color: #111; margin-top: 30px}
 .footer *{color: #fff}
+.footer-social i{font-size: 30px}
 /* PRODUCT LISTING PAGE */
 .category-general-info .category-name{margin-bottom: 20px}
 .category-general-info .category-description{margin-bottom: 30px}
@@ -100,7 +101,8 @@ ul.list-basic li{padding: 10px 0}
 .tool-bar-top .products-pagination{margin-top: 0px}
 .tool-bar-top ul{margin: 0 0 !important;}
 .sort-direction a{padding-left: 5px; line-height: 30px}
-    /* PRODUCT SINGLE PAGE */
+
+/* PRODUCT SINGLE PAGE */
 .regular-price{text-decoration: line-through; color: #8F8F8F; padding-left: 20px}
 .add-to-cart .button a{padding-left: 30px; padding-right: 30px}
 .product-detail .tabs{margin-top: 20px}
@@ -252,3 +254,11 @@ ul.list-basic li{padding: 10px 0}
 
 /* ORDER SUCCESS */
 .order-success-message{text-align: center}
+
+/* NEWSLETTER FORM */
+.newsletter-form .form-group{margin: 10px 0}
+.newsletter-form input.form-control{border: 1px solid #fff; background-color: #111; color: #fff; border-radius: 0}
+#newsletter-subscribe-form .btn{background-color: #fff; color: #111; border-radius: 0}
+
+/* CUSTOMER ACCOUNT */
+.account-address-summary{border-bottom: 1px solid #e1e1e1; padding-bottom: 20px; margin-bottom: 20px}

@@ -71,6 +71,7 @@ class ResponseMiddleware extends MiddlewareAbstract
                     ->get(Helmet::class)
                     ->addScript(['src'=> get_js_file_url('production/uikit.min.js'), 'type'=>'text/javascript', 'defer'=> "true"], 9)
                     ->addScript(['src'=> get_js_file_url('production/uikit-icons.min.js'), 'type'=>'text/javascript', 'defer'=> "true"], 10)
+                    ->addScript(['src'=> get_js_file_url('production/bootstrap/bootstrap.min.js'), 'type'=>'text/javascript', 'defer'=> "true"], 15)
                     ->addLink(['rel'=>'stylesheet', 'href'=> get_css_file_url('animate.min.css', $request->isAdmin())])
                     ->addLink(['rel'=>'stylesheet', 'href'=> get_css_file_url('fontawesome/css/all.min.css', $request->isAdmin())])
                     ->addLink(['rel'=>'stylesheet', 'href'=> get_css_file_url('bootstrap.css', $request->isAdmin())])

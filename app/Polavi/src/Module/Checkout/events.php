@@ -38,14 +38,14 @@ $eventDispatcher->addListener(
     },
     0
 );
-
-$eventDispatcher->addListener(
-    'register.core.middleware',
-    function (\Polavi\Services\MiddlewareManager $middlewareManager) {
-        $middlewareManager->registerMiddlewareBefore(\Polavi\Middleware\ResponseMiddleware::class, \Polavi\Module\Checkout\Middleware\Cart\Add\ButtonMiddleware::class);
-    },
-    0
-);
+//
+//$eventDispatcher->addListener(
+//    'register.core.middleware',
+//    function (\Polavi\Services\MiddlewareManager $middlewareManager) {
+//        $middlewareManager->registerMiddlewareBefore(\Polavi\Middleware\ResponseMiddleware::class, \Polavi\Module\Checkout\Middleware\Cart\Add\ButtonMiddleware::class);
+//    },
+//    0
+//);
 $eventDispatcher->addListener(
     'filter.mutation.type',
     function (&$fields, Container $container) {

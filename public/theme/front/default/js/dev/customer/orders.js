@@ -90,14 +90,21 @@ function Items({items}) {
 
 function Order({index, order}) {
     let date = new Date(order.created_at);
-    return <li className={index === 0 ? "uk-open" : ""}>
-        <a className="uk-accordion-title" href="#">#{order.order_number} <i>{date.toDateString()}</i></a>
-        <div className="uk-accordion-content">
-            <OrderInfo {...order}/>
-            <Items items={order.items}/>
-            <Summary {...order}/>
+    return <div className="card">
+        <div className="card-header" id={"heading" + index}>
+            <button className="btn btn-link btn-block text-left" type="button" data-toggle="collapse"
+                    data-target={"#collapse" + index} aria-expanded="true" aria-controls={"collapse" + index}>
+                <span>#{order.order_number}</span> <i>{date.toDateString()}</i>
+            </button>
         </div>
-    </li>
+        <div id={"collapse" + index} className={index === 0 ? "collapse show" : "collapse"} aria-labelledby={"heading" + index} data-parent="#my-account-orders">
+            <div className="card-body">
+                <OrderInfo {...order}/>
+                <Items items={order.items}/>
+                <Summary {...order}/>
+            </div>
+        </div>
+    </div>
 }
 
 function Loader() {
@@ -130,7 +137,6 @@ function Loader() {
             </div>
         </li>
     </ul>
-
 }
 
 export default function Orders({query}) {
@@ -148,11 +154,11 @@ export default function Orders({query}) {
     return <div className="col-12 col-md-6 mt-4">
         <h2>Your orders</h2>
         {loading === true && <Loader/>}
-        {loading === false && <ul className="list-basic">
+        {loading === false && <div className="accordion" id="my-account-orders">
             {orders.map((o,i) => {
                 return <Order index={i} key={i} order={o}/>;
             })}
-        </ul>}
+        </div>}
         {(loading === false && orders.length === 0) && <p>You have no order to show</p>}
     </div>
 }
