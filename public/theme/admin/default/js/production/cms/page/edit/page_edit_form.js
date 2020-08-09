@@ -3,12 +3,13 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 import { Form } from "../../../../../../../../js/production/form/form.js";
 import Area from "../../../../../../../../js/production/area.js";
 import Text from "../../../../../../../../js/production/form/fields/text.js";
-import Tinycme from "../../../../../../../../js/production/form/fields/tinycme.js";
+import Tinycme from "../../../../../../../../js/production/form/fields/ckeditor.js";
 import Select from "../../../../../../../../js/production/form/fields/select.js";
 import { ADD_ALERT } from "../../../../../../../../js/production/event-types.js";
 import A from "../../../../../../../../js/production/a.js";
 import Switch from "../../../../../../../../js/production/form/fields/switch.js";
 import { Fetch } from "../../../../../../../../js/production/fetch.js";
+import TextArea from "../../../../../../../../js/production/form/fields/textarea.js";
 
 function General({ pageId, name, content, layout, status }) {
     return React.createElement(
@@ -73,7 +74,7 @@ function SEO({ url_key, meta_keywords, meta_title, meta_description }) {
                 sort_order: 30,
                 id: "meta_title"
             }, {
-                component: Text,
+                component: TextArea,
                 props: { id: 'meta_description', value: meta_description, formId: "page-edit-form", name: "variables[page][meta_description]", label: "Meta description" },
                 sort_order: 40,
                 id: "meta_description"
@@ -136,7 +137,7 @@ export default function PageEditFormComponent(props) {
                 { className: "row" },
                 React.createElement(Area, {
                     id: "admin_page_edit_form_left",
-                    className: "col-6",
+                    className: "col-8",
                     coreWidgets: [{
                         component: General,
                         props: _extends({}, props),
@@ -145,7 +146,7 @@ export default function PageEditFormComponent(props) {
                     }] }),
                 React.createElement(Area, {
                     id: "admin_page_edit_form_right",
-                    className: "col-6",
+                    className: "col-4",
                     coreWidgets: [{
                         component: SEO,
                         props: _extends({}, props),

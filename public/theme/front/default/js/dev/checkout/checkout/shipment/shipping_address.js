@@ -25,7 +25,6 @@ function ShippingAddressBlock() {
     return <div className="checkout-shipping-address">
         <Area
             id={"checkout_shipping_address_block"}
-            className="uk-width-1-1"
             needSelectAddress={needSelectAddress}
             setNeedSelectAddress={setNeedSelectAddress}
             coreWidgets={[

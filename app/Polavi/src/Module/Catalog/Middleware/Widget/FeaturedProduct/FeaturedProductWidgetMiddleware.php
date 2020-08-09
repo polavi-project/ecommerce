@@ -44,11 +44,13 @@ class FeaturedProductWidgetMiddleware extends MiddlewareAbstract
             }, '');
 
             $displaySetting = json_decode($widget['display_setting'], true);
-            $areas = array_find($displaySetting, function($value, $key) {
+            $areas = [];
+            foreach ($displaySetting as $key => $value) {
                 if($value['key'] == 'area')
-                    return json_decode($value['value'], true);
-                return null;
-            }, []);
+                    $areas = array_merge($areas, json_decode($value['value'], true));
+                if($value['key'] == 'area_manual_input')
+                    $areas = array_merge($areas, explode(",", $value['value']));
+            }
 
             $this->getContainer()
                 ->get(GraphqlExecutor::class)
@@ -69,18 +71,23 @@ class FeaturedProductWidgetMiddleware extends MiddlewareAbstract
                         }
                     }
 QUERY
-                ])->then(function($result) use ($request, $response, $areas, $widget) {
+                ])->then(function($result) use ($request, $response, $areas, $widget, $setting) {
                     /**@var \GraphQL\Executor\ExecutionResult $result */
                     //var_dump($result->data['featuredProducts']['products']);
                     if(isset($result->data['featuredProducts'])) {
                         foreach ($areas as $area)
                             $response->addWidget(
                                 $widget['cms_widget_id'] . '-featured-products-widget',
-                                $area,
+                                trim($area),
                                 (int)$widget['sort_order'],
                                 get_js_file_url("production/catalog/widgets/featured_products.js", false),
                                 [
                                     "title" => $widget['name'],
+                                    "countPerRow" => array_find($setting, function($value, $key) {
+                                        if($value['key'] == 'product_number_per_row')
+                                            return $value['value'];
+                                        return 4;
+                                    }),
                                     "products" => $result->data['featuredProducts']['products'],
                                     "addItemApi" => generate_url('cart.add')
                                 ]

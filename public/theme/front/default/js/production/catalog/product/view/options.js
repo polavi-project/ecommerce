@@ -9,10 +9,10 @@ export default function Options({ options = [] }) {
 
     return React.createElement(
         "div",
-        { className: "product-single-options uk-margin-small-bottom" },
+        { className: "product-single-options mt-4 mb-4" },
         React.createElement(
             "div",
-            { className: "product-single-options-title uk-margin-small-top" },
+            { className: "product-single-options-title mb-2" },
             React.createElement(
                 "strong",
                 null,

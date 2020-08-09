@@ -86,9 +86,9 @@ class PageCollection extends CollectionBuilder
 
     public function getData($rootValue, $args, Container $container, ResolveInfo $info)
     {
-        $filters = $args['filter'] ?? [];
+        $filters = $args['filters'] ?? [];
         foreach ($filters as $key => $arg)
-            $this->applyFilter($key, $arg);
+            $this->applyFilter($arg["key"], $arg);
 
         return [
             'pages' => $this->load(),

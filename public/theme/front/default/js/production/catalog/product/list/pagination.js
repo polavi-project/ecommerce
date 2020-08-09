@@ -53,16 +53,16 @@ export default function Pagination({ total, limit, currentPage }) {
 
     return React.createElement(
         "div",
-        { className: "products-pagination uk-flex uk-flex-center" },
+        { className: "products-pagination" },
         React.createElement(
             "ul",
-            { className: "uk-pagination" },
+            { className: "pagination" },
             currentPage > 1 && React.createElement(
                 "li",
-                { className: "prev" },
+                { className: "page-item prev" },
                 React.createElement(
                     "a",
-                    { href: "#", onClick: e => onPrev(e) },
+                    { className: "page-link", href: "#", onClick: e => onPrev(e) },
                     React.createElement(
                         "span",
                         null,
@@ -72,40 +72,40 @@ export default function Pagination({ total, limit, currentPage }) {
             ),
             React.createElement(
                 "li",
-                { className: "first" },
+                { className: "page-item first" },
                 React.createElement(
                     "a",
-                    { href: "#", onClick: e => onFirst(e) },
+                    { className: "page-link", href: "#", onClick: e => onFirst(e) },
                     "1"
                 )
             ),
             React.createElement(
                 "li",
-                { className: "current" },
+                { className: "page-item current" },
                 isOnEdit === false && React.createElement(
                     "a",
-                    { className: "pagination-input-fake uk-input uk-form-small", href: "#", onClick: e => {
+                    { className: "page-link pagination-input-fake uk-input uk-form-small", href: "#", onClick: e => {
                             e.preventDefault();setIsOnEdit(true);
                         } },
                     currentPage
                 ),
-                isOnEdit === true && React.createElement("input", { className: "uk-input uk-form-small", value: inputVal, onChange: e => setInPutVal(e.target.value), type: "text", onKeyPress: e => onKeyPress(e) })
+                isOnEdit === true && React.createElement("input", { className: "page-link uk-input uk-form-small", value: inputVal, onChange: e => setInPutVal(e.target.value), type: "text", onKeyPress: e => onKeyPress(e) })
             ),
             React.createElement(
                 "li",
-                { className: "last" },
+                { className: "page-item last" },
                 React.createElement(
                     "a",
-                    { href: "#", onClick: e => onLast(e) },
+                    { className: "page-link", href: "#", onClick: e => onLast(e) },
                     Math.ceil(total / limit)
                 )
             ),
             currentPage * limit < total && React.createElement(
                 "li",
-                { className: "next" },
+                { className: "page-item next" },
                 React.createElement(
                     "a",
-                    { href: "#", onClick: e => onNext(e) },
+                    { className: "page-link", href: "#", onClick: e => onNext(e) },
                     React.createElement(
                         "span",
                         null,

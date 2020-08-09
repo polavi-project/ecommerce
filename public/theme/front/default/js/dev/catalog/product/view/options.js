@@ -8,8 +8,8 @@ export default function Options({options = []}) {
     const currency = ReactRedux.useSelector(state => _.get(state, 'appState.orderData.currency', 'USD'));
     const language = ReactRedux.useSelector(state => _.get(state, 'appState.orderData.language', 'en'));
 
-    return <div className="product-single-options uk-margin-small-bottom">
-        <div className="product-single-options-title uk-margin-small-top"><strong>Options</strong></div>
+    return <div className="product-single-options mt-4 mb-4">
+        <div className="product-single-options-title mb-2"><strong>Options</strong></div>
         {options.map((o,i) => {
             let values = o.values.map((v) => {
                 let _price = new Intl.NumberFormat(language, { style: 'currency', currency: currency }).format(v.extra_price);

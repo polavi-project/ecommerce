@@ -34,6 +34,8 @@ class BeforeSaveMiddleware extends MiddlewareAbstract
             $area[] = $key;
         $variables['widget']['display_setting'][] = ['key'=>'area', 'value'=>json_encode($area)];
 
+        $variables['widget']['display_setting']["area_manual_input"] = ['key'=>'area_manual_input', 'value'=>$request->request->get('area_manual_input', "")];
+
         $setting = $variables['widget']['setting'] ?? [];
         $setting = array_map(function($val) {
             if(is_array($val['value']))

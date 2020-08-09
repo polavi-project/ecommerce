@@ -6,7 +6,7 @@ import { Summary } from "./summary/summary.js";
 export default function CheckoutPage() {
     return React.createElement(Area, {
         id: "checkout_page",
-        className: "uk-grid-small uk-grid",
+        className: "row",
         coreWidgets: [{
             'component': Shipment,
             'props': {},

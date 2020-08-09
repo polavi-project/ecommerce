@@ -12,12 +12,14 @@ use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
 use function Polavi\_mysql;
+use function Polavi\generate_url;
 use function Polavi\get_current_language_id;
 use function Polavi\get_default_language_Id;
 use Polavi\Module\Catalog\Services\ProductCollection;
 use Polavi\Module\Graphql\Services\FilterFieldType;
 use Polavi\Services\Di\Container;
 use Polavi\Services\Http\Request;
+use Polavi\Services\MiddlewareManager;
 
 $eventDispatcher->addListener(
     'widget_types',
@@ -320,4 +322,53 @@ $eventDispatcher->addListener('after_delete_attribute_option',  function($affect
 
         return true;
     }
+});
+
+$eventDispatcher->addListener('breadcrumbs_items', function(array $items) {
+    $container = \Polavi\the_container();
+    if(in_array($container->get(Request::class)->get("_matched_route"), ["category.view", "category.view.pretty"])) {
+        $category = MiddlewareManager::getDelegate(\Polavi\Module\Catalog\Middleware\Category\View\InitMiddleware::class, null);
+        if($category == null) {
+            $category = _mysql()->getTable('category')
+                ->leftJoin('category_description', null, [
+                    [
+                        'column'      => "category_description.language_id",
+                        'operator'    => "=",
+                        'value'       => $container->get(Request::class)->get('language', get_default_language_Id()),
+                        'ao'          => 'and',
+                        'start_group' => null,
+                        'end_group'   => null
+                    ]
+                ])
+                ->where('category.category_id', '=', $container->get(Request::class)->attributes->get('id'))
+                ->fetchOneAssoc();
+        }
+
+        $items[] = ["sort_order"=> 1, "title"=> $category["name"], "link"=> null];
+
+    }
+
+    if(in_array($container->get(Request::class)->get("_matched_route"), ["product.view", "product.view.pretty"])) {
+        $product = MiddlewareManager::getDelegate(\Polavi\Module\Catalog\Middleware\Product\View\InitMiddleware::class, null);
+        if($product == null) {
+            $product = _mysql()->getTable('product')
+                ->leftJoin('product_description', null, [
+                    [
+                        'column'      => "product_description.language_id",
+                        'operator'    => "=",
+                        'value'       => $container->get(Request::class)->get('language', get_default_language_Id()),
+                        'ao'          => 'and',
+                        'start_group' => null,
+                        'end_group'   => null
+                    ]
+                ])
+                ->where('product.product_id', '=', $container->get(Request::class)->attributes->get('id'))
+                ->fetchOneAssoc();
+        }
+
+        $items[] = ["sort_order"=> 1, "title"=> $product["name"], "link"=> null];
+
+    }
+
+    return $items;
 });

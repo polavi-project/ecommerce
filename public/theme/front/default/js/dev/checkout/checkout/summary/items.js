@@ -6,7 +6,7 @@ function Items() {
 
     const items = ReactRedux.useSelector(state => _.get(state, 'appState.cart.items', []));
     return <div id="summary-items">
-        <table className="uk-table uk-table-small">
+        <table className="table">
             <thead>
             <tr>
                 <td><span>Product</span></td>

@@ -41,7 +41,6 @@ function BillingAddressBlock() {
         { className: "checkout-billing-address" },
         React.createElement(Area, {
             id: "checkout_billing_address_block",
-            className: "uk-width-1-1",
             needSelectAddress: needSelectAddress,
             setNeedSelectAddress: setNeedSelectAddress,
             coreWidgets: [{

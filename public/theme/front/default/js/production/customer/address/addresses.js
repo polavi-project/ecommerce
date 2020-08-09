@@ -64,7 +64,7 @@ export default function Addresses(props) {
 
     return React.createElement(
         "div",
-        { className: "" },
+        { className: "col-12 col-md-6 mt-4" },
         React.createElement(
             "h2",
             null,
@@ -73,9 +73,8 @@ export default function Addresses(props) {
         addresses.map((a, i) => {
             return React.createElement(
                 "div",
-                { key: i, className: "border-block" },
-                React.createElement(AddressInfo, { address: a }),
-                a.editing && React.createElement(AddressForm, {
+                { key: i, className: "account-address-summary" },
+                a.editing !== true ? React.createElement(AddressInfo, { address: a }) : React.createElement(AddressForm, {
                     address: a,
                     id: "customer-address-form-" + i,
                     onStart: config => onStart(config, a),

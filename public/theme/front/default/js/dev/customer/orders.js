@@ -2,7 +2,7 @@ import A from "../../../../../../js/production/a.js";
 import {Fetch} from "../../../../../../js/production/fetch.js";
 
 function OrderInfo(props) {
-    return <div className={"uk-width-1-1"}>
+    return <div className={""}>
         <div>
             <span>
                 {
@@ -32,7 +32,7 @@ function Summary({tax_amount, discount_amount, coupon, grand_total}) {
     return <div className={"uk-width-1-3"}>
         <div className="uk-overflow-auto">
             <div><strong>Summary</strong></div>
-            <table className="uk-table uk-table-small">
+            <table className="table">
                 <tbody>
                 <tr><td><span>Tax:</span></td><td><span>{_tax_amount}</span></td></tr>
                 { parseInt(discount_amount) > 0 &&
@@ -46,7 +46,7 @@ function Summary({tax_amount, discount_amount, coupon, grand_total}) {
 }
 
 function Items({items}) {
-    return <table className="uk-table uk-table-small">
+    return <table className="table">
         <thead>
         <tr>
             <th>
@@ -90,18 +90,25 @@ function Items({items}) {
 
 function Order({index, order}) {
     let date = new Date(order.created_at);
-    return <li className={index === 0 ? "uk-open" : ""}>
-        <a className="uk-accordion-title" href="#">#{order.order_number} <i>{date.toDateString()}</i></a>
-        <div className="uk-accordion-content">
-            <OrderInfo {...order}/>
-            <Items items={order.items}/>
-            <Summary {...order}/>
+    return <div className="card">
+        <div className="card-header" id={"heading" + index}>
+            <button className="btn btn-link btn-block text-left" type="button" data-toggle="collapse"
+                    data-target={"#collapse" + index} aria-expanded="true" aria-controls={"collapse" + index}>
+                <span>#{order.order_number}</span> <i>{date.toDateString()}</i>
+            </button>
         </div>
-    </li>
+        <div id={"collapse" + index} className={index === 0 ? "collapse show" : "collapse"} aria-labelledby={"heading" + index} data-parent="#my-account-orders">
+            <div className="card-body">
+                <OrderInfo {...order}/>
+                <Items items={order.items}/>
+                <Summary {...order}/>
+            </div>
+        </div>
+    </div>
 }
 
 function Loader() {
-    return <ul uk-accordion="1">
+    return <ul className="list-basic">
         <li>
             <div className="ph-item">
                 <div>
@@ -130,7 +137,6 @@ function Loader() {
             </div>
         </li>
     </ul>
-
 }
 
 export default function Orders({query}) {
@@ -145,14 +151,14 @@ export default function Orders({query}) {
             }
         })
     }, []);
-    return <div className="uk-margin-medium-top my-orders">
+    return <div className="col-12 col-md-6 mt-4">
         <h2>Your orders</h2>
         {loading === true && <Loader/>}
-        {loading === false && <ul uk-accordion="1">
+        {loading === false && <div className="accordion" id="my-account-orders">
             {orders.map((o,i) => {
                 return <Order index={i} key={i} order={o}/>;
             })}
-        </ul>}
+        </div>}
         {(loading === false && orders.length === 0) && <p>You have no order to show</p>}
     </div>
 }

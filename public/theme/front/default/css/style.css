@@ -37,66 +37,93 @@
            -webkit-transform: scaleY(1.0);
        }
 }
-html {font-size: 14px !important;}
 ul{margin: 10px 0 !important;}
+img{max-width: 100%}
+.debug-mode{border: 1px dotted red; padding: 10px}
+.col-expand{flex: 1; padding-left: 10px; padding-right: 10px}
+
 /* FORM */
 .group-wrapper{
     display: inline;
 }
 .group-form{float: left; width: 50%; box-sizing: border-box; padding: 10px}
 .polavi-form-button{margin-top: 15px}
-
+.field-validation-error{color: #f0506e}
+/* LIST BASIC */
+ul.list-basic{list-style: none; padding-left: 0; }
+ul.list-basic li{padding: 10px 0}
 /* CHECKOUT PAGE*/
+.checkout-cart-summary-table{width: 100%}
+.checkout-cart-summary-table td{padding: 5px}
 .checkout-cart-summary-table td{text-align: right}
+.checkout-cart-summary-table td:last-child{width: 30%}
+.checkout-button .btn{width: 100%}
 /* SHOPPING CART PAGE*/
 .cart-item-thumb{ float: left; padding-right: 10px}
 .cart-tem-info{overflow: hidden}
 .checkout-shipping-address, .checkout-shipping-methods,.checkout-payment-methods, .checkout-billing-address, .checkout-contact{margin-bottom: 20px!important;}
-
+.shopping-cart-checkout-btn .btn{width: 100%}
+.empty-shopping-cart{text-align: center}
 /* HEADER */
-.header{padding-top: 20px; position: relative}
-.logo{float: left;}
-.customer-area-header{float: right}
-.main-menu{float:left; width: 100%;margin-top: 20px}
-.uk-navbar-item, .uk-navbar-nav>li>a, .uk-navbar-toggle{min-height: 45px!important;}
+.header{padding: 20px 0 0}
+.customer-header{padding-right: 20px}
 /* FOOTER */
-.container .footer{padding-top: 50px; padding-bottom: 20px}
+.footer{padding: 30px 0; background-color: #111; margin-top: 30px}
+.footer *{color: #fff}
+.footer-social i{font-size: 30px}
 /* PRODUCT LISTING PAGE */
+.category-general-info .category-name{margin-bottom: 20px}
+.category-general-info .category-description{margin-bottom: 30px}
 .product-sorting-inner{}
 .product-list .listing-tem{margin-bottom: 30px}
-.listing-tem .product-price-listing{margin: 10px 0}
+.listing-tem .product-price-listing{margin: 5px 0}
 .list-placeholder-helper {
     display: inline-block;
     height: 100%;
     vertical-align: middle;
 }
-.product-thumbnail-listing{text-align: center; min-height: 220px}
+.product-thumbnail-listing{text-align: center; min-height: 220px; background-color: #e1e1e1}
 .product-thumbnail-listing img {vertical-align: middle}
-.product-price-listing .regular-price{font-weight: 700; text-decoration: line-through}
+.product-list-name{margin-top: 20px}
+.product-list-name a{font-weight: bold}
+.product-price-listing .sale-price{font-weight: bold}
+.product-price-listing .regular-price{font-weight: normal; text-decoration: line-through; color: #8F8F8F; padding-left: 20px}
 .uk-pagination li > a {line-height: 30px}
 .uk-pagination li .uk-input {text-align: center; width: 35px; padding:5px}
 .uk-pagination li a.uk-input {padding-top: 0}
 .products-pagination{margin-top: 20px}
+.products-pagination input{max-width: 40px}
+.product-filter-tool .filter-title{font-weight: bold; text-transform: uppercase; margin-bottom: 20px}
+.product-filter-tool .list-basic li{padding: 5px 0}
+.product-filter-tool .list-basic .option-name{padding-left: 5px}
+.product-sorting-inner .label{white-space: nowrap; padding-right: 10px; line-height: 35px}
+.tool-bar-top{margin-bottom: 20px}
+.tool-bar-top .products-pagination{margin-top: 0px}
+.tool-bar-top ul{margin: 0 0 !important;}
+.sort-direction a{padding-left: 5px; line-height: 30px}
+
 /* PRODUCT SINGLE PAGE */
-.product-single-name{font-size: 19px; font-weight: bold}
-.regular-price{font-weight: 700; text-decoration: line-through}
-
+.regular-price{text-decoration: line-through; color: #8F8F8F; padding-left: 20px}
+.add-to-cart .button a{padding-left: 30px; padding-right: 30px}
+.product-detail .tabs{margin-top: 20px}
+.product-detail .tabs .header{list-style: none; padding-left: 0; margin-bottom: 25px!important;}
+.product-detail .tabs .header li{display: inline-block; margin: 0px 10px; padding: 5px 0}
+.product-detail .tabs .header li a:hover{text-decoration: none}
+.product-detail .tabs .header li:first-child{margin-left: 0}
+.product-detail .tabs .header li.unactivated a{color: #8F8F8F}
+.product-detail .tabs .header li.active{border-bottom: 3px solid #111}
 /*MINI CART*/
-.mini-cart-content{
-    box-shadow: none !important;
-    padding: 10px !important;
-    border: 1px solid var(--borderColor);
-    min-width: 290px !important
-}
-.mini-cart-wrapper{
-    position: absolute !important;
-    top: 50px;
-    right: 0;
-}
-
-
-
-
+.mini-cart-content{position: fixed; top: 0; right: 0; bottom: 0; width: 450px; background: #fff; padding: 20px; border-left: 1px solid #E1E1E1; z-index: 1000; overflow-y: auto}
+.mini-cart-content .container{padding-left: 0px; padding-right: 0px}
+.mini-cart-summary .name{padding-right: 10px}
+.mini-cart-button{padding-left: 30px; padding-right: 30px}
+/* NEWSLETTER */
+.newsletter-form .title{font-weight: 500; line-height: 1.2; font-size: 1.25rem; margin-bottom: 1.5rem}
+/* BREADCRUMBS */
+.breadcrumbs{max-width: 1140px; margin: 0 auto; margin-bottom: 20px}
+.breadcrumbs ul{list-style: none; padding-left: 10px}
+.breadcrumbs ul li {display: inline-block}
+.breadcrumbs ul li:not(:last-child)::after {font-family: "Font Awesome 5 Free"; font-weight: 600; content: "\f105"; padding: 0 10px}
 /**
  * placeholder-loading v0.2.5
  * Author: Zalog (https://www.zalog.ro/)
@@ -209,9 +236,29 @@ ul{margin: 10px 0 !important;}
 .notification .alert{width: 450px; margin: 10px auto}
 
 /* PRODUCT SINGLE*/
+.tabs .specification ul li:first-child{padding-top:0 }
 .variant-container{margin-top: 20px}
 .variant-option-list{display: flex; padding-left: 0}
 .variant-option-list li{list-style: none; border: 1px solid #E1E1E1; padding: 5px; margin-right: 5px; min-width: 30px; text-align: center}
 .variant-option-list li.selected{background: #058C8C}
 .variant-option-list li.selected a{color: #000}
 .variant-option-list li.un-available{background: #E1E1E1}
+.add-to-cart{margin-top: 15px;}
+.add-to-cart input{max-width: 130px}
+.add-to-cart .button{margin-left: 10px}
+.product-view-price{margin-top: 35px}
+.product-single-media .product-single-page-image{min-width: 100%; min-height: 455px; background-color: #E1E1E1}
+.more-view-thumbnail{list-style: none; padding-left: 0}
+.more-view-thumbnail li{display: inline-block; margin-right: 10px}
+.tier-price .list-basic li{padding: 5px 0}
+
+/* ORDER SUCCESS */
+.order-success-message{text-align: center}
+
+/* NEWSLETTER FORM */
+.newsletter-form .form-group{margin: 10px 0}
+.newsletter-form input.form-control{border: 1px solid #fff; background-color: #111; color: #fff; border-radius: 0}
+#newsletter-subscribe-form .btn{background-color: #fff; color: #111; border-radius: 0}
+
+/* CUSTOMER ACCOUNT */
+.account-address-summary{border-bottom: 1px solid #e1e1e1; padding-bottom: 20px; margin-bottom: 20px}

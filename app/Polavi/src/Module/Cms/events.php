@@ -12,10 +12,12 @@ use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
 use function Polavi\_mysql;
+use function Polavi\get_current_language_id;
 use function Polavi\get_default_language_Id;
+use Polavi\Module\Graphql\Services\FilterFieldType;
 use Polavi\Services\Di\Container;
 use Polavi\Services\Http\Request;
-use Polavi\Services\Routing\Router;
+use Polavi\Services\MiddlewareManager;
 
 $eventDispatcher->addListener(
         'filter.query.type',
@@ -55,9 +57,7 @@ $eventDispatcher->addListener(
                     'type' => \Polavi\the_container()->get(\Polavi\Module\Cms\Services\Type\PageCollectionType::class),
                     'description' => "Return list of cms page and total count",
                     'args' => [
-                        'filter' =>  [
-                            'type' => \Polavi\the_container()->get(\Polavi\Module\Cms\Services\Type\PageCollectionFilterType::class)
-                        ]
+                        'filters' =>  Type::listOf(\Polavi\the_container()->get(FilterFieldType::class))
                     ],
                     'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
                         if($container->get(\Polavi\Services\Http\Request::class)->isAdmin() == false)
@@ -87,18 +87,72 @@ $eventDispatcher->addListener(
                     }
                 ]
             ];
+
             $fields += [
                 'widgetCollection' => [
                     'type' => \Polavi\the_container()->get(\Polavi\Module\Cms\Services\Type\WidgetCollectionType::class),
                     'description' => "Return list of widget and total count",
                     'args' => [
-                        'filter' =>  [
-                            'type' => \Polavi\the_container()->get(\Polavi\Module\Cms\Services\Type\WidgetCollectionFilterType::class)
-                        ]
+                        'filters' =>  Type::listOf(\Polavi\the_container()->get(FilterFieldType::class))
                     ],
                     'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
                         $collection = new \Polavi\Module\Cms\Services\WidgetCollection($container);
                         return $collection->getData($rootValue, $args, $container, $info);
+                    }
+                ]
+            ];
+
+            $fields += [
+                'fileBrowser' => [
+                    'type' => new ObjectType([
+                        "name" => "File browser",
+                        "fields" => [
+                            "folders" => Type::listOf(Type::string()),
+                            "files" => Type::listOf(\Polavi\the_container()->get(\Polavi\Module\Cms\Services\Type\FileType::class)),
+                            "message" => Type::string(),
+                            'status' => Type::nonNull(Type::boolean()),
+                        ]
+                    ]),
+                    'description' => "Return list of folder and files",
+                    'args' => [
+                        'root' =>  Type::string()
+                    ],
+                    'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
+                        try {
+                            $fileSystem = new \Symfony\Component\Filesystem\Filesystem();
+                            $uploadPath = MEDIA_PATH . DS . "upload";
+                            if(!file_exists($uploadPath))
+                                $fileSystem->mkdir($uploadPath);
+                            $browserPath = $uploadPath . DS . $args["root"];
+                            if(!file_exists($browserPath) or !is_dir($browserPath))
+                                throw new Exception("Invalid path");
+
+                            $fs = array_diff(scandir($browserPath), ['..', '.']);
+                            $folders = [];
+                            $files = [];
+                            foreach ($fs as $f) {
+                                if(is_dir($browserPath . DS . $f))
+                                    $folders[] = $f;
+                                else {
+                                    $file = new \Symfony\Component\HttpFoundation\File\File($browserPath . DS . $f);
+                                    if(in_array($file->getMimeType(), ["image/jpeg", "image/png", "image/gif"]))
+                                        $files[] = [
+                                            'name' => $file->getFilename(),
+                                            'type' => $file->getMimeType(),
+                                            'size' => $file->getSize(),
+                                            'path' => $args['root'] . '/' . $file->getFilename(),
+                                            'url'  => \Polavi\get_base_url_scheme_less() . '/public/media/upload/' . $args['root'] . '/' . $file->getFilename()
+                                        ];
+                                }
+                            }
+                            return [
+                                "folders" => $folders,
+                                "files" => $files,
+                                "status" => true
+                            ];
+                        } catch (Exception $e) {
+                            return ["status" => false, "message" => $e->getMessage(), "folders" => [], "files" => []];
+                        }
                     }
                 ]
             ];
@@ -175,6 +229,81 @@ $eventDispatcher->addListener(
                 }
 
                 return ['files' => $outPut];
+            }
+        ];
+
+        $fields['createMediaFolder'] = [
+            'args'=> [
+                'path'=> Type::nonNull(Type::string())
+            ],
+            'type' => new ObjectType([
+                'name'=> 'createMediaFolderOutput',
+                'fields' => [
+                    'status' => Type::nonNull(Type::boolean()),
+                    'message'=> Type::string(),
+                    'name' => Type::string(),
+                    'path' => Type::string()
+                ]
+            ]),
+            'resolve'=> function($value, $args, Container $container, ResolveInfo $info) {
+                $targetPath = MEDIA_PATH . DS . "upload" . DS . $args['path'];
+                $fileSystem = new \Symfony\Component\Filesystem\Filesystem();
+                if($fileSystem->exists($targetPath))
+                    return [
+                        "status" => 0,
+                        "message" => "Folder is already existed"
+                    ];
+                try {
+                    $fileSystem->mkdir($targetPath);
+                    return [
+                        "status" => 1,
+                        "name" => basename($targetPath),
+                        "path" => $args["path"]
+                    ];
+                } catch (Exception $e) {
+                    return [
+                        "status" => 0,
+                        "message" => $e->getMessage()
+                    ];
+                }
+            }
+        ];
+
+        $fields['deleteMediaFile'] = [
+            'args'=> [
+                'path'=> Type::nonNull(Type::string())
+            ],
+            'type' => new ObjectType([
+                'name'=> 'deleteMediaFileOutput',
+                'fields' => [
+                    'status' => Type::nonNull(Type::boolean()),
+                    'message'=> Type::string()
+                ]
+            ]),
+            'resolve'=> function($value, $args, Container $container, ResolveInfo $info) {
+                $targetPath = MEDIA_PATH . DS . "upload" . DS . $args['path'];
+                $fileSystem = new \Symfony\Component\Filesystem\Filesystem();
+                if(!$fileSystem->exists($targetPath))
+                    return [
+                        "status" => 0,
+                        "message" => "File is not existing"
+                    ];
+                if(is_dir($targetPath))
+                    return [
+                        "status" => 0,
+                        "message" => "Invalid file"
+                    ];
+                try {
+                    $fileSystem->remove($targetPath);
+                    return [
+                        "status" => 1
+                    ];
+                } catch (Exception $e) {
+                    return [
+                        "status" => 0,
+                        "message" => $e->getMessage()
+                    ];
+                }
             }
         ];
 
@@ -264,8 +393,8 @@ $eventDispatcher->addListener(
                 $data['setting'] = json_encode($data['setting'], JSON_NUMERIC_CHECK);
                 $data['display_setting'] = json_encode($data['display_setting'], JSON_NUMERIC_CHECK);
                 if(isset($data['id']) and $data['id']) {
-                    $page = $conn->getTable('cms_widget')->load($data['id']);
-                    if(!$page)
+                    $widget = $conn->getTable('cms_widget')->load($data['id']);
+                    if(!$widget)
                         return ['status'=> false, 'widget' => null, 'message' => 'Requested widget does not exist'];
                     $conn->getTable('cms_widget')->where('cms_widget_id', '=', $data['id'])->update($data);
                     return [
@@ -324,6 +453,8 @@ $eventDispatcher->addListener(
     function ($types) {
         $types[] = ['code' => 'text', 'name' => 'Text widget'];
         $types[] = ['code' => 'menu', 'name' => 'Menu widget'];
+        $types[] = ['code' => 'area', 'name' => 'Area'];
+        $types[] = ['code' => 'breadcrumbs', 'name' => 'Breadcrumbs'];
 
         return $types;
     },
@@ -333,11 +464,15 @@ $eventDispatcher->addListener(
 $eventDispatcher->addListener('register.widget.create.middleware', function(\Polavi\Services\MiddlewareManager $mm) {
     $mm->registerMiddleware(\Polavi\Module\Cms\Middleware\TextWidget\FormMiddleware::class, 0);
     $mm->registerMiddleware(\Polavi\Module\Cms\Middleware\MenuWidget\FormMiddleware::class, 0);
+    $mm->registerMiddleware(\Polavi\Module\Cms\Middleware\AreaWidget\FormMiddleware::class, 0);
+    $mm->registerMiddleware(\Polavi\Module\Cms\Middleware\BreadcrumbsWidget\FormMiddleware::class, 0);
 });
 
 $eventDispatcher->addListener('register.widget.edit.middleware', function(\Polavi\Services\MiddlewareManager $mm) {
     $mm->registerMiddleware(\Polavi\Module\Cms\Middleware\TextWidget\FormMiddleware::class, 0);
     $mm->registerMiddleware(\Polavi\Module\Cms\Middleware\MenuWidget\FormMiddleware::class, 0);
+    $mm->registerMiddleware(\Polavi\Module\Cms\Middleware\AreaWidget\FormMiddleware::class, 0);
+    $mm->registerMiddleware(\Polavi\Module\Cms\Middleware\BreadcrumbsWidget\FormMiddleware::class, 0);
 });
 
 $eventDispatcher->addListener('register.admin.graphql.api.middleware', function(\Polavi\Services\MiddlewareManager $mm) {
@@ -349,8 +484,43 @@ $eventDispatcher->addListener(
     function (\Polavi\Services\MiddlewareManager $middlewareManager) {
         $middlewareManager->registerMiddleware(\Polavi\Module\Cms\Middleware\TextWidget\TextWidgetMiddleware::class, 21);
         $middlewareManager->registerMiddleware(\Polavi\Module\Cms\Middleware\MenuWidget\MenuWidgetMiddleware::class, 21);
+        $middlewareManager->registerMiddleware(\Polavi\Module\Cms\Middleware\AreaWidget\AreaWidgetMiddleware::class, 21);
         $middlewareManager->registerMiddleware(\Polavi\Module\Cms\Middleware\Page\View\LogoMiddleware::class, 22);
         $middlewareManager->registerMiddlewareBefore(\Polavi\Middleware\ResponseMiddleware::class, \Polavi\Module\Cms\Middleware\Page\View\NotFoundPageMiddleware::class);
     },
     5
 );
+
+$eventDispatcher->addListener(
+    'register.core.middleware',
+    function (\Polavi\Services\MiddlewareManager $middlewareManager) {
+        $middlewareManager->registerMiddlewareAfter(\Polavi\Middleware\HandlerMiddleware::class, \Polavi\Module\Cms\Middleware\BreadcrumbsWidget\BreadcrumbsWidgetMiddleware::class);
+    },
+    5
+);
+
+$eventDispatcher->addListener('breadcrumbs_items', function(array $items) {
+    $container = \Polavi\the_container();
+    if(in_array($container->get(Request::class)->get("_matched_route"), ["page.view", "page.view.pretty"])) {
+        $page = MiddlewareManager::getDelegate(\Polavi\Module\Cms\Middleware\Page\View\ViewMiddleware::class, null);
+        if($page == null) {
+            $page = _mysql()->getTable('cms_page')
+                ->leftJoin('cms_page_description', null, [
+                    [
+                        'column'      => "cms_page_description.language_id",
+                        'operator'    => "=",
+                        'value'       => get_current_language_id(),
+                        'ao'          => 'and',
+                        'start_group' => null,
+                        'end_group'   => null
+                    ]
+                ])
+                ->where('cms_page.cms_page_id', '=', $container->get(Request::class)->attributes->get('id'))
+                ->fetchOneAssoc();
+        }
+
+        $items[] = ["sort_order"=> 1, "title"=> $page["name"], "link"=> null];
+    }
+
+    return $items;
+});

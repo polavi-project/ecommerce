@@ -11,6 +11,8 @@ export default function NewsletterWidget({ id, name, status, setting, displaySet
     const layout = _.find(displaySetting, { key: 'layout' }) !== undefined ? JSON.parse(_.get(_.find(displaySetting, { key: 'layout' }), 'value', [])) : [];
     const area = _.find(displaySetting, { key: 'area' }) !== undefined ? JSON.parse(_.get(_.find(displaySetting, { key: 'area' }), 'value', [])) : [];
 
+    const manualInputAreas = _.find(displaySetting, { key: 'area_manual_input' }) !== undefined ? _.get(_.find(displaySetting, { key: 'area_manual_input' }), 'value', "") : "";
+
     const dispatch = ReactRedux.useDispatch();
     const onComplete = response => {
         if (_.get(response, 'payload.data.createWidget.status') === true) {
@@ -83,6 +85,13 @@ export default function NewsletterWidget({ id, name, status, setting, displaySet
                             formId: "newsletter-form-widget-edit-form",
                             label: "Html after input"
                         }),
+                        React.createElement("input", { type: "text", name: "variables[widget][setting][3][key]", value: "wrapper_class", readOnly: true, style: { display: 'none' } }),
+                        React.createElement(Text, {
+                            name: "variables[widget][setting][3][value]",
+                            value: _.find(setting, { key: 'wrapper_class' }) !== undefined ? _.get(_.find(setting, { key: 'wrapper_class' }), 'value', '') : '',
+                            formId: "newsletter-form-widget-edit-form",
+                            label: "Wrapper class"
+                        }),
                         React.createElement(
                             "div",
                             { className: "mt-4 text-right" },
@@ -115,7 +124,7 @@ export default function NewsletterWidget({ id, name, status, setting, displaySet
                             { className: "sml-block-title" },
                             "Select area"
                         ),
-                        React.createElement(AreaList, { formId: "newsletter-form-widget-edit-form", selectedAreas: area }),
+                        React.createElement(AreaList, { formId: "text-widget-edit-form", selectedAreas: area, manualInputAreas: manualInputAreas }),
                         React.createElement(Text, {
                             name: "variables[widget][sort_order]",
                             value: sort_order,

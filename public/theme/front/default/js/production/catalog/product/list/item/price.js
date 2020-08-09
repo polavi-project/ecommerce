@@ -6,27 +6,27 @@ const Price = ({ price, salePrice }) => {
     return React.createElement(
         'div',
         { className: 'product-price-listing' },
-        parseFloat(salePrice) < parseFloat(price) && React.createElement(
-            'div',
-            null,
-            React.createElement(
-                'span',
-                { className: 'regular-price' },
-                _price
-            ),
-            ' ',
-            React.createElement(
-                'span',
-                { className: 'sale-price' },
-                _salePrice
-            )
-        ),
         parseFloat(salePrice) === parseFloat(price) && React.createElement(
             'div',
             null,
             React.createElement(
                 'span',
                 { className: 'sale-price' },
+                _price
+            )
+        ),
+        parseFloat(salePrice) < parseFloat(price) && React.createElement(
+            'div',
+            null,
+            React.createElement(
+                'span',
+                { className: 'sale-price' },
+                _salePrice
+            ),
+            ' ',
+            React.createElement(
+                'span',
+                { className: 'regular-price' },
                 _price
             )
         )

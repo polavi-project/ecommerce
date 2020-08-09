@@ -3,13 +3,13 @@ import PaymentMethods from "./payment_methods.js";
 import {BillingAddressBlock} from "./billing_address.js";
 
 function Title() {
-    return <h3>Payment</h3>
+    return <h4 className="mb-4">Payment</h4>
 }
 
 function Payment() {
     return <Area
         id={"checkout_payment"}
-        className="uk-width-1-3@m"
+        className="col-4"
         coreWidgets={[
             {
                 'component': Title,

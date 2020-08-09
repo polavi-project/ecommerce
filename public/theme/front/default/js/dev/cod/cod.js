@@ -36,7 +36,7 @@ export default function Cod(props) {
                 onChange={(e) => onChange(e)}
                 checked={paymentMethod === 'cod'}
             />
-             {label}
+             <span className="pl-2">{label}</span>
         </label>
     </div>
 }

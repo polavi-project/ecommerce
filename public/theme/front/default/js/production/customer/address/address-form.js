@@ -133,22 +133,22 @@ export default function AddressForm(props) {
                 'sort_order': 70,
                 'id': 'city'
             }, {
-                'component': Province,
-                'props': {
-                    selectedCountry: selectedCountry,
-                    selectedProvince: _.get(props, 'address.province', '')
-                },
-                'sort_order': 80,
-                'id': 'province'
-            }, {
                 'component': Country,
                 'props': {
                     country: _.get(props, 'address.country', ''),
                     countries: _.get(props, 'countries'),
                     setCountry: setSelectedCountry
                 },
-                'sort_order': 90,
+                'sort_order': 80,
                 'id': 'country'
+            }, {
+                'component': Province,
+                'props': {
+                    selectedCountry: selectedCountry,
+                    selectedProvince: _.get(props, 'address.province', '')
+                },
+                'sort_order': 90,
+                'id': 'province'
             }]
         })
     );

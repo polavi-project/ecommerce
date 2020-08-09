@@ -20,7 +20,7 @@ export default function FlatRate(props) {
         return <div className="shipping-method flat-rate">
             <label htmlFor={"free-shipping"}>
                 <input type={"radio"} className="uk-radio" checked={shippingMethod === 'flat_rate'} onChange={(e)=>onChange(e)}/>
-                 {_.get(props, 'label', 'Flat rate')} - {_.get(props, 'fee')}
+                <span className="pl-2">{_.get(props, 'label', 'Flat rate')} - {_.get(props, 'fee')}</span>
             </label>
         </div>;
     } else

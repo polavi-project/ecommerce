@@ -4,8 +4,8 @@ import { BillingAddressBlock } from "./billing_address.js";
 
 function Title() {
     return React.createElement(
-        "h3",
-        null,
+        "h4",
+        { className: "mb-4" },
         "Payment"
     );
 }
@@ -13,7 +13,7 @@ function Title() {
 function Payment() {
     return React.createElement(Area, {
         id: "checkout_payment",
-        className: "uk-width-1-3@m",
+        className: "col-4",
         coreWidgets: [{
             'component': Title,
             'props': {},

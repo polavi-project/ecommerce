@@ -24,7 +24,7 @@ export default function Newsletter({subscribeUrl, unsubscribeUrl, email, custome
         });
     };
 
-    return <div>
+    return <div className="col-12 col-md-6">
         <h2>Newsletter</h2>
         {subStatus == "subscribed" && <div>
             <p>You are subscribed to our newsletter</p>

@@ -46,7 +46,7 @@ class GeneralInfoMiddleware extends MiddlewareAbstract
                 if(isset($result->data['general_info']) and $result->data['general_info']) {
                     $response->addWidget(
                         'category_view_general',
-                        'content',
+                        'content_top',
                         10,
                         get_js_file_url("production/catalog/category/view/general.js", false),
                         $result->data['general_info']

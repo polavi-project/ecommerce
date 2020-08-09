@@ -4,8 +4,8 @@ import { CartSummary } from "./cart.js";
 
 function Title() {
     return React.createElement(
-        "h3",
-        null,
+        "h4",
+        { className: "mb-4" },
         "Order summary"
     );
 }
@@ -13,7 +13,7 @@ function Title() {
 function Summary() {
     return React.createElement(Area, {
         id: "checkout_summary",
-        className: "uk-width-1-3@m",
+        className: "col-4",
         coreWidgets: [{
             'component': Title,
             'props': {},

@@ -4,7 +4,7 @@ import { Fetch } from "../../../../../../js/production/fetch.js";
 function OrderInfo(props) {
     return React.createElement(
         "div",
-        { className: "uk-width-1-1" },
+        { className: "" },
         React.createElement(
             "div",
             null,
@@ -64,7 +64,7 @@ function Summary({ tax_amount, discount_amount, coupon, grand_total }) {
             ),
             React.createElement(
                 "table",
-                { className: "uk-table uk-table-small" },
+                { className: "table" },
                 React.createElement(
                     "tbody",
                     null,
@@ -151,7 +151,7 @@ function Summary({ tax_amount, discount_amount, coupon, grand_total }) {
 function Items({ items }) {
     return React.createElement(
         "table",
-        { className: "uk-table uk-table-small" },
+        { className: "table" },
         React.createElement(
             "thead",
             null,
@@ -266,26 +266,39 @@ function Items({ items }) {
 function Order({ index, order }) {
     let date = new Date(order.created_at);
     return React.createElement(
-        "li",
-        { className: index === 0 ? "uk-open" : "" },
+        "div",
+        { className: "card" },
         React.createElement(
-            "a",
-            { className: "uk-accordion-title", href: "#" },
-            "#",
-            order.order_number,
-            " ",
+            "div",
+            { className: "card-header", id: "heading" + index },
             React.createElement(
-                "i",
-                null,
-                date.toDateString()
+                "button",
+                { className: "btn btn-link btn-block text-left", type: "button", "data-toggle": "collapse",
+                    "data-target": "#collapse" + index, "aria-expanded": "true", "aria-controls": "collapse" + index },
+                React.createElement(
+                    "span",
+                    null,
+                    "#",
+                    order.order_number
+                ),
+                " ",
+                React.createElement(
+                    "i",
+                    null,
+                    date.toDateString()
+                )
             )
         ),
         React.createElement(
             "div",
-            { className: "uk-accordion-content" },
-            React.createElement(OrderInfo, order),
-            React.createElement(Items, { items: order.items }),
-            React.createElement(Summary, order)
+            { id: "collapse" + index, className: index === 0 ? "collapse show" : "collapse", "aria-labelledby": "heading" + index, "data-parent": "#my-account-orders" },
+            React.createElement(
+                "div",
+                { className: "card-body" },
+                React.createElement(OrderInfo, order),
+                React.createElement(Items, { items: order.items }),
+                React.createElement(Summary, order)
+            )
         )
     );
 }
@@ -293,7 +306,7 @@ function Order({ index, order }) {
 function Loader() {
     return React.createElement(
         "ul",
-        { "uk-accordion": "1" },
+        { className: "list-basic" },
         React.createElement(
             "li",
             null,
@@ -362,7 +375,7 @@ export default function Orders({ query }) {
     }, []);
     return React.createElement(
         "div",
-        { className: "uk-margin-medium-top my-orders" },
+        { className: "col-12 col-md-6 mt-4" },
         React.createElement(
             "h2",
             null,
@@ -370,8 +383,8 @@ export default function Orders({ query }) {
         ),
         loading === true && React.createElement(Loader, null),
         loading === false && React.createElement(
-            "ul",
-            { "uk-accordion": "1" },
+            "div",
+            { className: "accordion", id: "my-account-orders" },
             orders.map((o, i) => {
                 return React.createElement(Order, { index: i, key: i, order: o });
             })

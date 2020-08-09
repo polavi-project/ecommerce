@@ -150,6 +150,8 @@ export default function MenuWidget({ id, name, status, setting, displaySetting, 
     const layout = _.find(displaySetting, { key: 'layout' }) !== undefined ? JSON.parse(_.get(_.find(displaySetting, { key: 'layout' }), 'value', [])) : [];
     const area = _.find(displaySetting, { key: 'area' }) !== undefined ? JSON.parse(_.get(_.find(displaySetting, { key: 'area' }), 'value', [])) : [];
 
+    const manualInputAreas = _.find(displaySetting, { key: 'area_manual_input' }) !== undefined ? _.get(_.find(displaySetting, { key: 'area_manual_input' }), 'value', "") : "";
+
     const dispatch = ReactRedux.useDispatch();
     const onComplete = response => {
         if (_.get(response, 'payload.data.createWidget.status') === true) {
@@ -266,7 +268,7 @@ export default function MenuWidget({ id, name, status, setting, displaySetting, 
                             { className: "sml-block-title" },
                             "Select area"
                         ),
-                        React.createElement(AreaList, { formId: "text-widget-edit-form", selectedAreas: area }),
+                        React.createElement(AreaList, { formId: "text-widget-edit-form", selectedAreas: area, manualInputAreas: manualInputAreas }),
                         React.createElement(Text, {
                             name: "variables[widget][sort_order]",
                             value: sort_order,

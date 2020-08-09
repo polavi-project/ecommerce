@@ -24,8 +24,8 @@ class HeaderIconMiddleware extends MiddlewareAbstract
 
         $response->addWidget(
             'customer_header_greeting',
-            'header',
-            20,
+            'header_right',
+            10,
             get_js_file_url("production/customer/header_block.js", false),
             [
                 'fullName' => $request->getCustomer()->getData('full_name'),

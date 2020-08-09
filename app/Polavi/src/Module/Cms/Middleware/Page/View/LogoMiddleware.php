@@ -30,7 +30,7 @@ class LogoMiddleware extends MiddlewareAbstract
 
         $response->addWidget(
             'site_logo',
-            'header',
+            'header_center',
             10,
             get_js_file_url("production/cms/page/logo.js", false),
             [

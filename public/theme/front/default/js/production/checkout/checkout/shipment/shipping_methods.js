@@ -38,7 +38,7 @@ export default function ShippingMethods() {
     const [noMethod, setNoMethod] = React.useState(true);
     return React.createElement(Area, {
         id: "checkout_shipping_method_block",
-        className: "uk-width-1-1 checkout-shipping-methods",
+        className: "checkout-shipping-methods",
         noMethod: noMethod,
         setNoMethod: setNoMethod,
         coreWidgets: [{

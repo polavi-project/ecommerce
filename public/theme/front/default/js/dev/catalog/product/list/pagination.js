@@ -54,16 +54,16 @@ export default function Pagination({total, limit, currentPage}) {
         Fetch(buildFilterToQuery(currentUrl, [...filters, ...[{key: "page", operator: "=", value: Math.ceil(total/limit)}]]), true, "GET");
     };
 
-    return <div className="products-pagination uk-flex uk-flex-center">
-        <ul className="uk-pagination">
-            {currentPage > 1 && <li className="prev"><a href={"#"} onClick={(e) => onPrev(e)}><span>Previous</span></a></li>}
-            <li className="first"><a href="#" onClick={(e) => onFirst(e)}>1</a></li>
-            <li className="current">
-                {isOnEdit === false && <a className="pagination-input-fake uk-input uk-form-small" href="#" onClick={(e) => {e.preventDefault(); setIsOnEdit(true)}}>{currentPage}</a>}
-                {isOnEdit === true && <input className="uk-input uk-form-small" value={inputVal} onChange={(e) => setInPutVal(e.target.value)} type="text" onKeyPress={(e)=> onKeyPress(e)} />}
+    return <div className="products-pagination">
+        <ul className="pagination">
+            {currentPage > 1 && <li className="page-item prev"><a className={"page-link"} href={"#"} onClick={(e) => onPrev(e)}><span>Previous</span></a></li>}
+            <li className="page-item first"><a className={"page-link"} href="#" onClick={(e) => onFirst(e)}>1</a></li>
+            <li className="page-item current">
+                {isOnEdit === false && <a className="page-link pagination-input-fake uk-input uk-form-small" href="#" onClick={(e) => {e.preventDefault(); setIsOnEdit(true)}}>{currentPage}</a>}
+                {isOnEdit === true && <input className="page-link uk-input uk-form-small" value={inputVal} onChange={(e) => setInPutVal(e.target.value)} type="text" onKeyPress={(e)=> onKeyPress(e)} />}
             </li>
-            <li className="last"><a href="#" onClick={(e) => onLast(e)}>{Math.ceil(total/limit)}</a></li>
-            {(currentPage * limit) < total && <li className="next"><a href={"#"} onClick={(e) => onNext(e)}><span>Next</span></a></li>}
+            <li className="page-item last"><a className={"page-link"} href="#" onClick={(e) => onLast(e)}>{Math.ceil(total/limit)}</a></li>
+            {(currentPage * limit) < total && <li className="page-item next"><a className={"page-link"} href={"#"} onClick={(e) => onNext(e)}><span>Next</span></a></li>}
         </ul>
     </div>
 }

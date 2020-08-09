@@ -1,7 +1,7 @@
 import Area from "../../../../../../../../js/production/area.js";
 import Text from "../../../../../../../../js/production/form/fields/text.js";
 import Select from "../../../../../../../../js/production/form/fields/select.js";
-import Tinycme from "../../../../../../../../js/production/form/fields/tinycme.js";
+import Tinycme from "../../../../../../../../js/production/form/fields/ckeditor.js";
 import Switch from "../../../../../../../../js/production/form/fields/switch.js";
 
 let fields = [

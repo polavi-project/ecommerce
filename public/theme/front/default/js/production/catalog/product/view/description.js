@@ -1,18 +1,9 @@
-const Description = ({ description }) => {
-    return React.createElement(
-        "li",
-        null,
-        React.createElement(
-            "a",
-            { className: "uk-accordion-title", href: "#" },
-            "Description"
-        ),
-        React.createElement(
-            "div",
-            { className: "uk-accordion-content" },
-            description
-        )
-    );
+const Description = ({ description, areaProps }) => {
+    React.useEffect(() => {
+        areaProps.registerTab({ name: "Description", id: "description" });
+    }, []);
+
+    return areaProps.currentTab == "description" ? React.createElement("div", { className: "product-description", dangerouslySetInnerHTML: { __html: description } }) : null;
 };
 
 export default Description;

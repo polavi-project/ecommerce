@@ -3,13 +3,13 @@ import {Items} from "./items.js";
 import {CartSummary} from "./cart.js";
 
 function Title() {
-    return <h3>Order summary</h3>
+    return <h4 className="mb-4">Order summary</h4>
 }
 
 function Summary() {
     return <Area
         id={"checkout_summary"}
-        className="uk-width-1-3@m"
+        className="col-4"
         coreWidgets={[
             {
                 'component': Title,

@@ -3,13 +3,13 @@ import ShippingMethods from "./shipping_methods.js";
 import {ShippingAddressBlock} from "./shipping_address.js";
 
 function Title() {
-    return <h3>Shipment</h3>
+    return <h4 className="mb-4">Shipment</h4>
 }
 
 function Shipment() {
     return <Area
         id={"checkout_shipment"}
-        className="uk-width-1-3@m"
+        className="col-4"
         coreWidgets={[
             {
                 'component': Title,

@@ -28,11 +28,11 @@ class LayoutMiddleware extends MiddlewareAbstract
         $this->getContainer()->get(Helmet::class)->setTitle("Account dashboard");
         $response->addWidget(
             'customer_dashboard_layout',
-            'content',
+            'content_center',
             10,
             get_js_file_url("production/area.js", false),
             [
-                'className'=> "uk-child-width-1-2@m uk-grid",
+                'className'=> "row",
                 'id'=> "customer_dashboard_layout"
             ]
         );

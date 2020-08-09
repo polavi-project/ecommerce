@@ -12,6 +12,8 @@ export default function ProductFilter({ id, name, status, setting = [], displayS
 
     const area = _.find(displaySetting, { key: 'area' }) !== undefined ? JSON.parse(_.get(_.find(displaySetting, { key: 'area' }), 'value', [])) : [];
 
+    const manualInputAreas = _.find(displaySetting, { key: 'area_manual_input' }) !== undefined ? _.get(_.find(displaySetting, { key: 'area_manual_input' }), 'value', "") : "";
+
     const dispatch = ReactRedux.useDispatch();
 
     const onComplete = response => {
@@ -74,23 +76,6 @@ export default function ProductFilter({ id, name, status, setting = [], displayS
                                 formId: "product-filter-widget-edit-form",
                                 validation_rules: ['notEmpty'],
                                 label: "Title"
-                            }),
-                            React.createElement("input", { type: "text", name: "variables[widget][setting][1][key]", value: "show_count", readOnly: true, style: { display: 'none' } }),
-                            React.createElement(
-                                "div",
-                                null,
-                                React.createElement(
-                                    "span",
-                                    null,
-                                    "Show product count?"
-                                )
-                            ),
-                            React.createElement(Radio, {
-                                name: "variables[widget][setting][1][value]",
-                                value: _.get(_.find(setting, { key: 'show_count' }), 'value', ''),
-                                formId: "product-filter-widget-edit-form",
-                                validation_rules: ['notEmpty'],
-                                options: [{ value: '1', text: 'Yes' }, { value: '0', text: 'No' }]
                             })
                         ),
                         React.createElement(
@@ -125,7 +110,7 @@ export default function ProductFilter({ id, name, status, setting = [], displayS
                             { className: "sml-block-title" },
                             "Select area"
                         ),
-                        React.createElement(AreaList, { formId: "text-widget-edit-form", selectedAreas: area }),
+                        React.createElement(AreaList, { formId: "text-widget-edit-form", selectedAreas: area, manualInputAreas: manualInputAreas }),
                         React.createElement(Text, {
                             name: "variables[widget][sort_order]",
                             value: sortOrder,

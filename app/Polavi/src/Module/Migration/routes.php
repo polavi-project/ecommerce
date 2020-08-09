@@ -7,7 +7,7 @@
 declare(strict_types=1);
 /** @var \Polavi\Services\Routing\Router $router */
 
-$router->addSiteRoute('migration.install.form', 'GET', '/install', [
+$router->addSiteRoute('migration.install.form', ["GET"], '/install', [
     \Polavi\Module\Migration\Middleware\Form\FormMiddleware::class
 ]);
 

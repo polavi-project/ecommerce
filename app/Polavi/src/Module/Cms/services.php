@@ -17,10 +17,6 @@ $container[\Polavi\Module\Cms\Services\Type\CmsPageType::class] =  function() us
     return new \Polavi\Module\Cms\Services\Type\CmsPageType($container);
 };
 
-$container[\Polavi\Module\Cms\Services\Type\PageCollectionFilterType::class] = function() use ($container){
-    return new \Polavi\Module\Cms\Services\Type\PageCollectionFilterType($container);
-};
-
 $container[\Polavi\Module\Cms\Services\Type\PageCollectionType::class] = function() use ($container){
     return new \Polavi\Module\Cms\Services\Type\PageCollectionType($container);
 };
@@ -31,10 +27,6 @@ $container[\Polavi\Module\Cms\Services\Type\CmsPageInputType::class] = function(
 
 $container[\Polavi\Module\Cms\Services\Type\WidgetType::class] =  function() use ($container) {
     return new \Polavi\Module\Cms\Services\Type\WidgetType($container);
-};
-
-$container[\Polavi\Module\Cms\Services\Type\WidgetCollectionFilterType::class] = function() use ($container){
-    return new \Polavi\Module\Cms\Services\Type\WidgetCollectionFilterType($container);
 };
 
 $container[\Polavi\Module\Cms\Services\Type\WidgetCollectionType::class] = function() use ($container){

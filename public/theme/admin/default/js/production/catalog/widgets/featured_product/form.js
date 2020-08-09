@@ -10,6 +10,7 @@ export default function FeaturedProductWidget({ id, name, status, setting, displ
     const layout = _.find(displaySetting, { key: 'layout' }) !== undefined ? JSON.parse(_.get(_.find(displaySetting, { key: 'layout' }), 'value', [])) : [];
 
     const area = _.find(displaySetting, { key: 'area' }) !== undefined ? JSON.parse(_.get(_.find(displaySetting, { key: 'area' }), 'value', [])) : [];
+    const manualInputAreas = _.find(displaySetting, { key: 'area_manual_input' }) !== undefined ? _.get(_.find(displaySetting, { key: 'area_manual_input' }), 'value', "") : "";
 
     const dispatch = ReactRedux.useDispatch();
 
@@ -68,7 +69,39 @@ export default function FeaturedProductWidget({ id, name, status, setting, displ
                                 formId: "text-widget-edit-form",
                                 label: "Status"
                             }),
-                            React.createElement("input", { type: "text", name: "variables[widget][setting][0][key]", value: "products", readOnly: true, style: { display: 'none' } }),
+                            React.createElement("input", { type: "text", name: "variables[widget][setting][0][key]", value: "product_number_per_row", readOnly: true, style: { display: 'none' } }),
+                            React.createElement(
+                                "div",
+                                null,
+                                React.createElement(
+                                    "span",
+                                    null,
+                                    "Number of product per row"
+                                )
+                            ),
+                            React.createElement(
+                                "div",
+                                { className: "form-field" },
+                                React.createElement(Text, {
+                                    className: "form-control",
+                                    name: "variables[widget][setting][0][value]",
+                                    value: _.get(_.find(setting, { key: 'product_number_per_row' }), 'value', 4),
+                                    type: "text",
+                                    defaultValue: "4",
+                                    si: true,
+                                    placeholder: "Number of product per row"
+                                }),
+                                React.createElement(
+                                    "div",
+                                    null,
+                                    React.createElement(
+                                        "i",
+                                        null,
+                                        "Support multiple sku, comma separated."
+                                    )
+                                )
+                            ),
+                            React.createElement("input", { type: "text", name: "variables[widget][setting][1][key]", value: "products", readOnly: true, style: { display: 'none' } }),
                             React.createElement(
                                 "div",
                                 null,
@@ -83,7 +116,7 @@ export default function FeaturedProductWidget({ id, name, status, setting, displ
                                 { className: "form-field" },
                                 React.createElement("input", {
                                     className: "form-control",
-                                    name: "variables[widget][setting][0][value]",
+                                    name: "variables[widget][setting][1][value]",
                                     value: products,
                                     type: "text", defaultValue: "",
                                     onChange: e => {
@@ -134,7 +167,7 @@ export default function FeaturedProductWidget({ id, name, status, setting, displ
                             { className: "sml-block-title" },
                             "Select area"
                         ),
-                        React.createElement(AreaList, { formId: "text-widget-edit-form", selectedAreas: area }),
+                        React.createElement(AreaList, { formId: "text-widget-edit-form", selectedAreas: area, manualInputAreas: manualInputAreas }),
                         React.createElement(Text, {
                             name: "variables[widget][sort_order]",
                             value: sortOrder,

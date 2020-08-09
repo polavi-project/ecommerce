@@ -34,10 +34,30 @@ class InitMiddleware extends MiddlewareAbstract
                 ->fetchOneAssoc();
             if($des)
                 $product = $conn->getTable('product')
+                    ->leftJoin('product_description', null, [
+                        [
+                            'column'      => "product_description.language_id",
+                            'operator'    => "=",
+                            'value'       => $request->get('language', get_default_language_Id()),
+                            'ao'          => 'and',
+                            'start_group' => null,
+                            'end_group'   => null
+                        ]
+                    ])
                     ->where('product_id', '=', $des['product_description_product_id'])
                     ->fetchOneAssoc();
         } else
             $product = $conn->getTable('product')
+                ->leftJoin('product_description', null, [
+                    [
+                        'column'      => "product_description.language_id",
+                        'operator'    => "=",
+                        'value'       => $request->get('language', get_default_language_Id()),
+                        'ao'          => 'and',
+                        'start_group' => null,
+                        'end_group'   => null
+                    ]
+                ])
                 ->where('product_id', '=', $request->attributes->get('id'))
                 ->fetchOneAssoc();
 

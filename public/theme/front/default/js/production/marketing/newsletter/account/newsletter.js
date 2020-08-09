@@ -24,7 +24,7 @@ export default function Newsletter({ subscribeUrl, unsubscribeUrl, email, custom
 
     return React.createElement(
         'div',
-        null,
+        { className: 'col-12 col-md-6' },
         React.createElement(
             'h2',
             null,

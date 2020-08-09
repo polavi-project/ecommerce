@@ -1,10 +1,14 @@
-const Attributes = ({attributes}) => {
-    return <li><a className={"uk-accordion-title"} href={"#"}>Specification</a>
-        <ul className={"uk-accordion-content"}>
+const Attributes = ({attributes, areaProps}) => {
+
+    React.useEffect(()=>{
+        areaProps.registerTab({name: "Specification", id: "specification"});
+    }, []);
+
+    return areaProps.currentTab == "specification" ? <div className="specification"><ul className="list-basic">
             {attributes.map((attribute, index)=>{
                 return <li key={index}><strong>{attribute.attribute_name} : </strong> <span>{attribute.attribute_value_text}</span></li>
             })}
         </ul>
-    </li>
+    </div> : (null);
 };
 export default Attributes;

@@ -1,7 +1,7 @@
 import Area from "../../../../../../../js/production/area.js";
 
 function Title() {
-    return <div className="uk-width-1-1">
+    return <div className="mb-4 col-12">
         <h1 className="uk-text-center">Shopping cart</h1>
     </div>
 }
@@ -9,7 +9,7 @@ function Title() {
 function ShoppingCart() {
     return <Area
         id="shopping-cart-page"
-        className="uk-grid uk-grid-small"
+        className="row"
         coreWidgets={[
             {
                 component: Title,

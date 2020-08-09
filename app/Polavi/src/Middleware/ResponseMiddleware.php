@@ -48,7 +48,8 @@ class ResponseMiddleware extends MiddlewareAbstract
                 $this
                     ->getContainer()
                     ->get(Helmet::class)
-                    ->addScript(['src'=> get_js_file_url('production/tinymce/tinymce.min.js')], 1)
+                    ->addScript(['src'=> get_js_file_url('production/ckeditor4/ckeditor.js')], 1)
+                    ->addScript(['src'=> get_js_file_url('production/ckeditor4/config.js')], 1)
                     ->addScript(['src'=> get_js_file_url('production/flatpickr.js')], 1)
                     ->addLink(['rel'=>'stylesheet', 'href'=> get_css_file_url('flatpickr.min.css', $request->isAdmin())]);
             }
@@ -70,10 +71,11 @@ class ResponseMiddleware extends MiddlewareAbstract
                     ->get(Helmet::class)
                     ->addScript(['src'=> get_js_file_url('production/uikit.min.js'), 'type'=>'text/javascript', 'defer'=> "true"], 9)
                     ->addScript(['src'=> get_js_file_url('production/uikit-icons.min.js'), 'type'=>'text/javascript', 'defer'=> "true"], 10)
+                    ->addScript(['src'=> get_js_file_url('production/bootstrap/bootstrap.min.js'), 'type'=>'text/javascript', 'defer'=> "true"], 15)
                     ->addLink(['rel'=>'stylesheet', 'href'=> get_css_file_url('animate.min.css', $request->isAdmin())])
+                    ->addLink(['rel'=>'stylesheet', 'href'=> get_css_file_url('fontawesome/css/all.min.css', $request->isAdmin())])
                     ->addLink(['rel'=>'stylesheet', 'href'=> get_css_file_url('bootstrap.css', $request->isAdmin())])
-                    ->addLink(['rel'=>'stylesheet', 'href'=> get_css_file_url('style.css', $request->isAdmin())])
-                    ->addLink(['rel'=>'stylesheet', 'href'=> get_css_file_url('uikit.min.css', $request->isAdmin())]);
+                    ->addLink(['rel'=>'stylesheet', 'href'=> get_css_file_url('style.css', $request->isAdmin())]);
             else
                 $this
                     ->getContainer()

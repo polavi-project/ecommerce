@@ -5,26 +5,28 @@ const Name = ({name}) => {
 };
 
 const Description = ({description}) => {
-    return <div className="category-description">{description}</div>
+    return <div className="category-description" dangerouslySetInnerHTML={{__html: description}}></div>
 };
 
 export default function CategoryInfo(props) {
-    return <Area
-        id={"category-info"}
-        className="uk-width-1-1 category-general-info"
-        coreWidgets={[
-            {
-                component: Name,
-                props : {name: props.name},
-                sort_order: 10,
-                id: "category-name"
-            },
-            {
-                component: Description,
-                props : {description: props.description},
-                sort_order: 20,
-                id: "category-description"
-            }
-        ]}
-    />
+    return <div className="container">
+        <Area
+            id={"category-general-info"}
+            className="category-general-info"
+            coreWidgets={[
+                {
+                    component: Name,
+                    props : {name: props.name},
+                    sort_order: 10,
+                    id: "category-name"
+                },
+                {
+                    component: Description,
+                    props : {description: props.description},
+                    sort_order: 20,
+                    id: "category-description"
+                }
+            ]}
+        />
+    </div>
 }

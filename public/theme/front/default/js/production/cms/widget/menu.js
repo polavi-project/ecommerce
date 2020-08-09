@@ -5,23 +5,15 @@ export default function Menu({ items = [] }) {
         "div",
         { className: "main-menu" },
         React.createElement(
-            "nav",
-            { className: "uk-navbar-container uk-navbar-transparent uk-navbar" },
-            React.createElement(
-                "div",
-                { className: "uk-navbar-left" },
-                React.createElement(
-                    "ul",
-                    { className: "uk-navbar-nav" },
-                    items.map((i, k) => {
-                        return React.createElement(
-                            "li",
-                            { key: k },
-                            React.createElement(A, { url: i.url, text: i.label })
-                        );
-                    })
-                )
-            )
+            "ul",
+            { className: "nav justify-content-center" },
+            items.map((i, k) => {
+                return React.createElement(
+                    "li",
+                    { key: k, className: "nav-item" },
+                    React.createElement(A, { className: "nav-link", url: i.url, text: i.label })
+                );
+            })
         )
     );
 }

@@ -10,7 +10,7 @@ export default function NewsletterForm({title, html_before, html_after, subscrib
         <div className="newsletter-form">
             <div className="title"><span>{title}</span></div>
             <div className="html-before" dangerouslySetInnerHTML={{__html: html_before}}></div>
-            <Text name={"email"} value={""} validation_rules={["required", "email"]}/>
+            <Text name={"email"} value={""} validation_rules={["notEmpty", "email"]} formId={"newsletter-subscribe-form"} placeholder={"Email"}/>
             <div className="html-before" dangerouslySetInnerHTML={{__html: html_after}}></div>
         </div>
     </Form>
