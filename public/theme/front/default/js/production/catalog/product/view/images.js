@@ -1,3 +1,5 @@
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 function MainImage({ src, alt }) {
     return React.createElement(
         "div",
@@ -7,9 +9,10 @@ function MainImage({ src, alt }) {
 }
 
 export default function Images({ images, productName }) {
-    let mainImage = images.find(function (i) {
+    const [mainImage, setMainImage] = React.useState(images.find(function (i) {
         return i.isMain === true;
-    });
+    }));
+
     return React.createElement(
         "div",
         { className: "product-single-media" },
@@ -23,7 +26,9 @@ export default function Images({ images, productName }) {
                     { key: j },
                     React.createElement(
                         "a",
-                        { href: "#" },
+                        { href: "#", onClick: e => {
+                                e.preventDefault();setMainImage(_extends({}, i));
+                            } },
                         React.createElement("img", { src: i.thumb, alt: productName })
                     )
                 );
