@@ -118,10 +118,11 @@ class SaveVariantMiddleware extends MiddlewareAbstract
             }
 
             $variants = $variantGroup['variants'];
-            $productData = $request->request->all();
-            unset($productData["images"]);
 
             foreach ($variants as $variant) {
+                $productData = $request->request->all();
+                unset($productData["images"]);
+
                 if($variant['sku'] == $product['sku']) {
                     $conn->getTable("product")->where("product_id", "=", $productId)->update([
                         'variant_group_id' => $groupId,
@@ -139,7 +140,7 @@ class SaveVariantMiddleware extends MiddlewareAbstract
                     $productData['status'] = $variant['status'];
                     $productData['price'] = $variant['price'];
                     $productData['qty'] = $variant['qty'];
-                    $productData['seo_key'] = $productData['seo_key'] . "-" . str_replace(" ", "-", $variant['sku']);
+                    $productData['seo_key'] = $productData['seo_key'] . "-" . rand(1000, 9999);
                     $productData = create_mutable_var("variant_data_before_create", $productData, [$product, $variantGroup]);
                     $productMutator = new ProductMutator($conn);
                     $pId = $productMutator->createProduct($productData);
