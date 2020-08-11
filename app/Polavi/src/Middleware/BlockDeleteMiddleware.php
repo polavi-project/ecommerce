@@ -18,6 +18,9 @@ class BlockDeleteMiddleware extends MiddlewareAbstract
         if($request->isAdmin() == false)
             return $delegate;
 
+        if($request->getUser()->getId() == 1)
+            return $delegate;
+
         if(strpos($request->attributes->get("_matched_route"), "delete") !== false) {
             $response->addAlert("demo_block_delete", "error", "This is demo side. Please do not remove anything. Thanks");
             $response->notNewPage();
