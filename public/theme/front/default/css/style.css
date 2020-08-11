@@ -41,7 +41,7 @@ ul{margin: 10px 0 !important;}
 img{max-width: 100%}
 .debug-mode{border: 1px dotted red; padding: 10px}
 .col-expand{flex: 1; padding-left: 10px; padding-right: 10px}
-
+.jumbotron{background-color: transparent !important;}
 /* FORM */
 .group-wrapper{
     display: inline;
@@ -71,7 +71,9 @@ ul.list-basic li{padding: 10px 0}
 .footer{padding: 30px 0; background-color: #111; margin-top: 30px}
 .footer *{color: #fff}
 .footer-social i{font-size: 30px}
-/* PRODUCT LISTING PAGE */
+.main-menu .nav{margin-bottom: 0 !important}
+
+    /* PRODUCT LISTING PAGE */
 .category-general-info .category-name{margin-bottom: 20px}
 .category-general-info .category-description{margin-bottom: 30px}
 .product-sorting-inner{}
@@ -82,7 +84,7 @@ ul.list-basic li{padding: 10px 0}
     height: 100%;
     vertical-align: middle;
 }
-.product-thumbnail-listing{text-align: center; min-height: 220px; background-color: #e1e1e1}
+.product-thumbnail-listing{text-align: center; min-height: 220px; background-color: #efefef}
 .product-thumbnail-listing img {vertical-align: middle}
 .product-list-name{margin-top: 20px}
 .product-list-name a{font-weight: bold}
