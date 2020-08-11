@@ -465,7 +465,7 @@ class Cart
                 throw new \Exception("There is an error in shopping cart item");
 
         $autoIncrement = $conn
-            ->executeQuery("SELECT `AUTO_INCREMENT` FROM  INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = :database AND TABLE_NAME   = :table", ['database'=> DB_DATABASE, 'table'=>'order'])
+            ->executeQuery("SELECT `AUTO_INCREMENT` FROM  INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = :database AND TABLE_NAME   = :table", ['database'=> $conn->getConfiguration()->getDb(), 'table'=>'order'])
             ->fetch(\PDO::FETCH_ASSOC);
 
         $orderData = array_merge($this->toArray(), [

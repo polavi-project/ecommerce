@@ -261,6 +261,10 @@ class ProductCollection extends CollectionBuilder
                 while ($row = $stm->fetch()) {
                     $productIds[] = $row['product_id'];
                 }
+
+                if(!$productIds)
+                    $productIds = [-1];
+
                 $this->getCollection()->where('product.product_id', 'IN', $productIds);
             } else if($args['operator'] == "=") {
                 $stm = _mysql()
@@ -270,6 +274,10 @@ class ProductCollection extends CollectionBuilder
                 while ($row = $stm->fetch()) {
                     $productIds[] = $row['product_id'];
                 }
+
+                if(!$productIds)
+                    $productIds = [-1];
+
                 $this->getCollection()->where('product.product_id', 'IN', $productIds);
             }
         });

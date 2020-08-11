@@ -29,7 +29,7 @@ class ShoppingCartMiddleware extends MiddlewareAbstract
         $this->getContainer()->get(Helmet::class)->setTitle('Shopping cart');
         $response->addWidget(
             'shopping_cart_page',
-            'content',
+            'content_center',
             10,
             get_js_file_url("production/checkout/cart/shopping-cart.js"),
             [

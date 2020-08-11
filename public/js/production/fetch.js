@@ -73,6 +73,8 @@ const Fetch = (url, pushState = false, method = "GET", data = {}, onStart = null
             if (pushState === true) {
                 url.searchParams.delete('ajax');
                 history.pushState(null, "", url);
+                // Scroll window to the top
+                window.scrollTo({ top: 0, behavior: 'smooth' });
                 // Google analytics
                 if (window.gtag !== undefined) {
                     window.gtag('config', window.google_analytics_code, {

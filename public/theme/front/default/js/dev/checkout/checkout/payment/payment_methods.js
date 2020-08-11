@@ -7,7 +7,7 @@ function Title() {
 export default function PaymentMethods() {
     return <Area
         id="checkout_payment_method_block"
-        className="uk-width-1-1 checkout-payment-methods"
+        className="checkout-payment-methods"
         coreWidgets={[
             {
                 component: Title,

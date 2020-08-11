@@ -19,7 +19,7 @@ export default function CheckoutButton({ action, cartId }) {
                 { className: "checkout-button" },
                 React.createElement(
                     "a",
-                    { href: "#", onClick: e => onClick(e), className: "uk-button uk-button-small uk-button-primary" },
+                    { href: "#", onClick: e => onClick(e), className: "btn btn-success" },
                     React.createElement(
                         "span",
                         null,

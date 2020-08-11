@@ -44,9 +44,9 @@ function GrandTotal({grandTotal}) {
 
 function Summary(props) {
     const cart = ReactRedux.useSelector(state => _.get(state, 'appState.cart', {}));
-    return <div className="uk-width-1-4@m">
-        <p><span>Summary</span></p>
-        <table className={"uk-table"}>
+    return <div className="col-4">
+        <h4><span>Summary</span></h4>
+        <table className={"table"}>
             <tbody>
                 <Area
                     id="shopping-cart-summary"
@@ -81,9 +81,9 @@ function Summary(props) {
                 />
             </tbody>
         </table>
-        <p>
-            <A className={"uk-button uk-button-primary uk-button-small"} url={props.checkoutUrl} text={"Checkout"}/>
-        </p>
+        <div className="shopping-cart-checkout-btn">
+            <A className={"btn btn-primary"} url={props.checkoutUrl} text={"Checkout"}/>
+        </div>
     </div>
 }
 

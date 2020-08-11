@@ -32,11 +32,11 @@ export default function Sorting({sortingOptions = [], currentSortOrder, currentS
     if(sortingOptions.length === 0)
         return (null);
 
-    return <div className="product-sorting uk-clearfix uk-flex-right uk-flex">
-        <div className="product-sorting-inner uk-flex-right uk-flex">
+    return <div className="product-sorting">
+        <div className="product-sorting-inner d-flex justify-content-end">
             <div><span className="label">Sort By</span></div>
             <select
-                className="uk-select uk-form-small"
+                className="form-control"
                 onChange={(e)=>onChangeSort(e)}
                 ref={sortByRef}
             >
@@ -46,9 +46,19 @@ export default function Sorting({sortingOptions = [], currentSortOrder, currentS
                 })}
             </select>
             <div className="sort-direction">
-                <a onClick={(e)=>onChangeDirection(e)}><span uk-icon={
-                    currentSortOrder === "DESC" ? "icon: arrow-up; ratio: 1" : "icon: arrow-down; ratio: 1"
-                }></span></a>
+                <a onClick={(e)=>onChangeDirection(e)} href={"#"}>
+                    {currentSortOrder === "DESC" ? (<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none"
+                                                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                         className="feather feather-arrow-up">
+                        <line x1="12" y1="19" x2="12" y2="5"></line>
+                        <polyline points="5 12 12 5 19 12"></polyline>
+                    </svg>) : (
+                        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none"
+                             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                             className="feather feather-arrow-down">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <polyline points="19 12 12 19 5 12"></polyline>
+                        </svg>)}</a>
             </div>
         </div>
     </div>

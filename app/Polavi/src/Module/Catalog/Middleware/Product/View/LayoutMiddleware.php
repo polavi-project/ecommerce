@@ -26,7 +26,7 @@ class LayoutMiddleware extends MiddlewareAbstract
     {
         $response->addWidget(
             'product_page_layout',
-            'content',
+            'content_center',
             0,
             get_js_file_url("production/catalog/product/view/layout.js", false)
         );

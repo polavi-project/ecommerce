@@ -329,19 +329,18 @@ export default function WidgetGrid({ apiUrl, types, areaProps }) {
     };
 
     const buildQuery = () => {
-        let filterStr = "";
+        let filters = [];
         areaProps.filters.forEach((f, i) => {
-            filterStr += `${f.key} : {operator : "${f.operator}" value: "${f.value}"} `;
+            filters.push(`{key: "${f.key}" operator: "${f.operator}" value: "${f.value}"}`);
         });
-        filterStr = filterStr.trim();
-        if (filterStr) filterStr = `(filter : {${filterStr}})`;
+        let filterStr = filters.length > 0 ? `[${filters.join(",")}]` : "[]";
 
         let fieldStr = "";
         fields.forEach((f, i) => {
             fieldStr += `${f} `;
         });
 
-        return `{widgetCollection ${filterStr} {widgets {${fieldStr}} total currentFilter}}`;
+        return `{widgetCollection (filters : ${filterStr}) {widgets {${fieldStr}} total currentFilter}}`;
     };
 
     React.useEffect(() => {

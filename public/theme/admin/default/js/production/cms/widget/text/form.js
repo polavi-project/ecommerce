@@ -1,5 +1,5 @@
 import Text from "../../../../../../../../js/production/form/fields/text.js";
-import Tinycme from "../../../../../../../../js/production/form/fields/tinycme.js";
+import Tinycme from "../../../../../../../../js/production/form/fields/ckeditor.js";
 import { LayoutList } from "../../../../production/cms/widget/layout_list.js";
 import { AreaList } from "../../../../production/cms/widget/area_list.js";
 import { Form } from "../../../../../../../../js/production/form/form.js";
@@ -10,6 +10,7 @@ import Switch from "../../../../../../../../js/production/form/fields/switch.js"
 export default function TextWidget({ id, name, status, setting, displaySetting, sort_order, formAction, redirect, areaProps }) {
     const layout = _.find(displaySetting, { key: 'layout' }) !== undefined ? JSON.parse(_.get(_.find(displaySetting, { key: 'layout' }), 'value', [])) : [];
     const area = _.find(displaySetting, { key: 'area' }) !== undefined ? JSON.parse(_.get(_.find(displaySetting, { key: 'area' }), 'value', [])) : [];
+    const manualInputAreas = _.find(displaySetting, { key: 'area_manual_input' }) !== undefined ? _.get(_.find(displaySetting, { key: 'area_manual_input' }), 'value', "") : "";
 
     const dispatch = ReactRedux.useDispatch();
     const onComplete = response => {
@@ -109,7 +110,7 @@ export default function TextWidget({ id, name, status, setting, displaySetting, 
                             { className: "sml-block-title" },
                             "Select area"
                         ),
-                        React.createElement(AreaList, { formId: "text-widget-edit-form", selectedAreas: area }),
+                        React.createElement(AreaList, { formId: "text-widget-edit-form", selectedAreas: area, manualInputAreas: manualInputAreas }),
                         React.createElement(Text, {
                             name: "variables[widget][sort_order]",
                             value: sort_order,

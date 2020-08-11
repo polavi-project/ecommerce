@@ -14,6 +14,7 @@ use function Polavi\get_default_language_Id;
 use function Polavi\resize_image;
 use function Polavi\str_replace_last;
 use Polavi\Services\Db\Processor;
+use function Polavi\the_container;
 
 class ProductMutator
 {
@@ -23,7 +24,7 @@ class ProductMutator
     public function __construct(Processor $processor = null)
     {
         if($processor == null)
-            $this->processor = new Processor();
+            $this->processor = the_container()->get(Processor::class);
         else
             $this->processor = $processor;
     }
@@ -290,18 +291,18 @@ class ProductMutator
             try {
                 resize_image(
                     $path,
-                    (int) get_config('list_image_size_width', 240),
-                    (int) get_config('list_image_size_height', 300)
+                    (int) get_config('catalog_product_list_image_width', 250),
+                    (int) get_config('catalog_product_list_image_height', 250)
                 )->save(str_replace_last('.', '_list.', $path));
                 resize_image(
                     $path,
                     (int) get_config('thumb_image_size_width', 80),
-                    (int) get_config('thumb_image_size_height', 100)
+                    (int) get_config('thumb_image_size_height', 80)
                 )->save(str_replace_last('.', '_thumb.', $path));
                 resize_image(
                     $path,
-                    (int) get_config('main_image_size_width', 500),
-                    (int) get_config('main_image_size_height', 625)
+                    (int) get_config('catalog_product_detail_image_width', 500),
+                    (int) get_config('catalog_product_detail_image_height', 500)
                 )->save(str_replace_last('.', '_main.', $path));
 
             } catch (\Exception $e) {

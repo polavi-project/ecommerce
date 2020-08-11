@@ -12,6 +12,7 @@ namespace Polavi\Module\Order\Services;
 use function Polavi\dispatch_event;
 use Polavi\Services\Db\Processor;
 use Polavi\Services\Db\Table;
+use function Polavi\the_container;
 
 class OrderLoader extends Table
 {
@@ -19,7 +20,7 @@ class OrderLoader extends Table
 
     public function __construct()
     {
-        parent::__construct("order", new Processor());
+        parent::__construct("order", the_container()->get(Processor::class));
         parent::addFieldToSelect("order.*");
 
         dispatch_event("order_loader_init", [$this]);

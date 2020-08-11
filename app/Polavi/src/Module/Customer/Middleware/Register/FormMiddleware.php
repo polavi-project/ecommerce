@@ -31,7 +31,7 @@ class FormMiddleware extends MiddlewareAbstract
 
         $response->addWidget(
             'customer_registration_form',
-            'content',
+            'content_center',
             10,
             get_js_file_url("production/customer/registration_form.js", false),
             [

@@ -26,47 +26,52 @@ export default function RegistrationForm(props) {
     return React.createElement(
         Form,
         _extends({ id: "customer-register-form", onComplete: onComplete }, props),
-        React.createElement(Area, {
-            id: "customer-register-form-inner",
-            coreWidgets: [{
-                'component': Heading,
-                'props': {},
-                'sort_order': 10,
-                'id': 'register_form_heading'
-            }, {
-                'component': Text,
-                'props': {
-                    name: "variables[customer][full_name]",
-                    value: "",
-                    formId: "customer-register-form",
-                    label: "Full name",
-                    validation_rules: ['notEmpty']
-                },
-                'sort_order': 20,
-                'id': 'full_name'
-            }, {
-                'component': Text,
-                'props': {
-                    name: "variables[customer][email]",
-                    value: "",
-                    formId: "customer-register-form",
-                    label: "Email",
-                    validation_rules: ['notEmpty', 'email']
-                },
-                'sort_order': 40,
-                'id': 'email'
-            }, {
-                'component': Password,
-                'props': {
-                    name: "variables[customer][password]",
-                    value: "",
-                    formId: "customer-register-form",
-                    label: "Password",
-                    validation_rules: ['notEmpty']
-                },
-                'sort_order': 50,
-                'id': 'password'
-            }]
-        })
+        React.createElement(
+            "div",
+            { className: "row" },
+            React.createElement(Area, {
+                id: "customer-register-form-inner",
+                className: "col-4",
+                coreWidgets: [{
+                    'component': Heading,
+                    'props': {},
+                    'sort_order': 10,
+                    'id': 'register_form_heading'
+                }, {
+                    'component': Text,
+                    'props': {
+                        name: "variables[customer][full_name]",
+                        value: "",
+                        formId: "customer-register-form",
+                        label: "Full name",
+                        validation_rules: ['notEmpty']
+                    },
+                    'sort_order': 20,
+                    'id': 'full_name'
+                }, {
+                    'component': Text,
+                    'props': {
+                        name: "variables[customer][email]",
+                        value: "",
+                        formId: "customer-register-form",
+                        label: "Email",
+                        validation_rules: ['notEmpty', 'email']
+                    },
+                    'sort_order': 40,
+                    'id': 'email'
+                }, {
+                    'component': Password,
+                    'props': {
+                        name: "variables[customer][password]",
+                        value: "",
+                        formId: "customer-register-form",
+                        label: "Password",
+                        validation_rules: ['notEmpty']
+                    },
+                    'sort_order': 50,
+                    'id': 'password'
+                }]
+            })
+        )
     );
 }

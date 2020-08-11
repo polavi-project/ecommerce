@@ -1,7 +1,7 @@
 import Area from "../../../../../../../../js/production/area.js";
 import Text from "../../../../../../../../js/production/form/fields/text.js";
 import TextArea from "../../../../../../../../js/production/form/fields/textarea.js";
-import Tinycme from "../../../../../../../../js/production/form/fields/tinycme.js";
+import Tinycme from "../../../../../../../../js/production/form/fields/ckeditor.js";
 import Switch from "../../../../../../../../js/production/form/fields/switch.js";
 import {ADD_APP_STATE} from "../../../../../../../../js/production/event-types.js";
 
@@ -60,13 +60,13 @@ export default function General({data}) {
                 id: "price"
             },
             {
-                component: Tinycme,
+                component: TextArea,
                 props : {id : 'short_description', formId: "product-edit-form", name: "short_description", label: "Short description"},
                 sort_order: 60,
                 id: "short_description"
             },
             {
-                component: TextArea,
+                component: Tinycme,
                 props : {id : 'description', formId: "product-edit-form", name: "description", label: "Description"},
                 sort_order: 70,
                 id: "description"

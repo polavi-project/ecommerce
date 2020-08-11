@@ -62,12 +62,11 @@ export default function Addresses(props) {
         config.body.append('variables[customerId]', parseInt(props.customer_id));
     };
 
-    return <div className="">
+    return <div className="col-12 col-md-6 mt-4">
         <h2>Your address(s)</h2>
         {addresses.map((a,i)=> {
-            return <div key={i} className="border-block">
-                <AddressInfo address={a}/>
-                {a.editing && <AddressForm
+            return <div key={i} className="account-address-summary">
+                {a.editing !== true ? <AddressInfo address={a}/> : <AddressForm
                     address={a}
                     id={"customer-address-form-" + i}
                     onStart={(config) =>onStart(config, a)}

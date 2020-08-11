@@ -37,6 +37,10 @@ class Response extends \Symfony\Component\HttpFoundation\Response
         $this->addState('baseUrlAdmin', get_base_url(true));
     }
 
+    /**
+     * This will send Html response
+     * @return RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     */
     protected function sendHtml()
     {
         if($this->jsonData->has('redirectUrl')) {
@@ -49,6 +53,11 @@ class Response extends \Symfony\Component\HttpFoundation\Response
         }
     }
 
+    /**
+     * @param int $status
+     * @param bool $isApi
+     * @param array $headers
+     */
     protected function sendJson($status = 200, $isApi = false, $headers = []) {
         if($isApi == false)
             $jsonResponse = new JsonResponse($this->getData(), $status, $headers, false);
@@ -58,6 +67,13 @@ class Response extends \Symfony\Component\HttpFoundation\Response
         $jsonResponse->send();
     }
 
+    /**
+     * @param bool $isAjax
+     * @param int $status
+     * @param bool $isApi
+     * @param array $headers
+     * @return \Symfony\Component\HttpFoundation\Response|void
+     */
     public function send($isAjax = true, $status = 200, $isApi = false, $headers = [])
     {
         if($isAjax == true || $isApi == true)
@@ -66,6 +82,9 @@ class Response extends \Symfony\Component\HttpFoundation\Response
             $this->sendHtml();
     }
 
+    /**
+     * @return array
+     */
     public function getData()
     {
         if($this->widgets && $this->isNewPage())
@@ -78,11 +97,19 @@ class Response extends \Symfony\Component\HttpFoundation\Response
         return $this->jsonData->toArray();
     }
 
+    /**
+     * @return array
+     */
     public function getDataApi()
     {
         return $this->jsonData->toArray();
     }
 
+    /**
+     * @param $key
+     * @param $value
+     * @return $this
+     */
     public function addData($key, $value)
     {
         $this->jsonData->offsetSet($key, $value);
@@ -90,18 +117,35 @@ class Response extends \Symfony\Component\HttpFoundation\Response
         return $this;
     }
 
+    /**
+     * @param $key
+     * @return $this
+     */
     public function removeData($key)
     {
         $this->jsonData->offsetUnset($key);
         return $this;
     }
 
+    /**
+     * @param $key
+     * @return mixed|null
+     */
     public function findData($key)
     {
         return $this->jsonData->get($key);
     }
 
     // TODO: Change the way managing widget
+
+    /**
+     * @param string $id
+     * @param string $area
+     * @param int $sort_order
+     * @param string $template
+     * @param null $props
+     * @return $this
+     */
     public function addWidget(string $id, string $area, int $sort_order, string $template, $props = null) {
 //        dispatch_event('before_add_widget', [$id, $area, $sort_order, $template, $props]);
 //        if(!preg_match('/^[A-Za-z0-9_]+$/', $event->getArgument(0)))
@@ -136,6 +180,10 @@ class Response extends \Symfony\Component\HttpFoundation\Response
         return $this;
     }
 
+    /**
+     * @param $id
+     * @return bool
+     */
     public function hasWidget($id) {
         foreach ($this->widgets as $widget)
             if($widget['org_id'] == $id)
@@ -143,6 +191,11 @@ class Response extends \Symfony\Component\HttpFoundation\Response
         return false;
     }
 
+    /**
+     * @param $id
+     * @param $area
+     * @return mixed|null
+     */
     public function getWidget($id, $area) {
         foreach ($this->widgets as $widget)
             if($widget['org_id'] == $id . '_' . $area)
@@ -150,6 +203,10 @@ class Response extends \Symfony\Component\HttpFoundation\Response
         return null;
     }
 
+    /**
+     * @param $id
+     * @return $this
+     */
     public function removeWidget($id) {
         foreach ($this->widgets as $key=> $widget)
             if($widget['org_id'] == $id)
@@ -157,26 +214,49 @@ class Response extends \Symfony\Component\HttpFoundation\Response
         return $this;
     }
 
+    /**
+     * @param $key
+     * @param $value
+     * @return $this
+     */
     public function addState($key, $value) {
         $this->appState[$key] = $value;
 
         return $this;
     }
 
+    /**
+     * @param $key
+     * @return bool
+     */
     public function hasState($key) {
         return isset($this->appState[$key]);
     }
 
+    /**
+     * @param $key
+     * @return mixed|null
+     */
     public function getState($key) {
         return $this->appState[$key] ?? null;
     }
 
+    /**
+     * @param $key
+     * @return $this
+     */
     public function removeState($key) {
         if(isset($this->appState[$key]))
             unset($this->appState[$key]);
         return $this;
     }
 
+    /**
+     * @param $id
+     * @param $type
+     * @param $message
+     * @return $this
+     */
     public function addAlert($id, $type, $message) {
         $this->alerts[] = [
             'id'=>$id,
@@ -186,16 +266,27 @@ class Response extends \Symfony\Component\HttpFoundation\Response
         return $this;
     }
 
+    /**
+     * This request will not take user to new page
+     */
     public function notNewPage()
     {
         $this->isNewPage = false;
     }
 
+    /**
+     * Check if this request will take user to new page or not
+     */
     public function isNewPage()
     {
         return $this->isNewPage;
     }
 
+    /**
+     * @param $url
+     * @param int $status
+     * @return $this
+     */
     public function redirect($url, $status = 302)
     {
         $this->addData('redirectUrl', $url);

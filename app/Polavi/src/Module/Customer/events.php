@@ -233,3 +233,17 @@ $eventDispatcher->addListener(
     },
     0
 );
+
+$eventDispatcher->addListener('breadcrumbs_items', function(array $items) {
+    $container = \Polavi\the_container();
+    if($container->get(Request::class)->get("_matched_route") == "customer.register") {
+        $items[] = ["sort_order"=> 1, "title"=> "Register account", "link"=> null];
+    }
+    if($container->get(Request::class)->get("_matched_route") == "customer.login") {
+        $items[] = ["sort_order"=> 1, "title"=> "Login", "link"=> null];
+    }
+    if($container->get(Request::class)->get("_matched_route") == "customer.dashboard") {
+        $items[] = ["sort_order"=> 1, "title"=> "Account dashboard", "link"=> null];
+    }
+    return $items;
+});

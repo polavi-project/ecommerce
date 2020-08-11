@@ -13,6 +13,42 @@
     z-index: 1001;
 }
 
+/* LOADING ICON */
+.lds-ring {
+    display: inline-block;
+    position: relative;
+    width: 80px;
+    height: 80px;
+}
+.lds-ring div {
+    box-sizing: border-box;
+    display: block;
+    position: absolute;
+    width: 64px;
+    height: 64px;
+    margin: 8px;
+    border: 8px solid #e1e1e1;
+    border-radius: 50%;
+    animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+    border-color: #e1e1e1 transparent transparent transparent;
+}
+.lds-ring div:nth-child(1) {
+    animation-delay: -0.45s;
+}
+.lds-ring div:nth-child(2) {
+    animation-delay: -0.3s;
+}
+.lds-ring div:nth-child(3) {
+    animation-delay: -0.15s;
+}
+@keyframes lds-ring {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
 
 
 /******* GLOBAL *******/
@@ -115,3 +151,27 @@ table .form-group{margin-bottom: 0px}
 .admin-login h3.page-title{display: none}
 .login-logo img{max-width: 35px}
 .admin-login-form .polavi-form-button{display: flex; flex-direction: row-reverse}
+
+/************ WIDGET EDIT ************/
+.widget-edit-layouts{height: 300px; overflow-y: auto}
+
+/* FILE BROWSER */
+.file-browser{position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: #fff; z-index: 1000; padding: 20px}
+.file-browser .loading{position: absolute; top: 50%; left: 50%; margin-top: -40px; margin-left: -40px}
+.file-browser img{max-width: 100%}
+.file-browser .image-item .inner{padding: 3px; box-sizing: border-box; border: 1px solid #E1E1E1; position: relative}
+.file-browser .image-item .inner .select{position: absolute; bottom: 0; right: 0; font-size: 20px}
+.row-cols-9 > * {
+    flex: 0 0 11.1111111111%;
+    max-width: 11.1111111111%;
+}
+
+.area-widget-templates .item{margin-top: 20px; cursor: pointer}
+
+.area-widget-templates .item .unit{height: 20px}
+.area-widget-templates .item .unit1{background-color: #ff9a76}
+.area-widget-templates .item .unit2{background-color: #ffeadb}
+.area-widget-templates .item .unit3{background-color: #f7c5a8}
+.area-widget-templates .item .unit4{background-color: #679b9b}
+.area-widget-templates .item.selected{outline: 3px solid #0b0b0b}
+.area-columns-setting .item-inner{border: 1px solid #e1e1e1; padding: 10px; min-height: 145px}

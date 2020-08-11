@@ -12,30 +12,43 @@ use function Polavi\_unique_number;
 
 class Table
 {
+    /**@var Processor $processor*/
     protected $processor;
 
+    /**@var string $table*/
     protected $table;
 
+    /**@var string $primary*/
     protected $primary;
 
+    /**@var array $columns*/
     protected $columns = [];
 
+    /**@var array $data*/
     protected $data = [];
 
+    /**@var array $join*/
     protected $join = [];
 
+    /**@var array $where*/
     protected $where = [];
 
+    /**@var string $groupBy*/
     protected $groupBy;
 
+    /**@var array $having*/
     protected $having = [];
 
+    /**@var string $customWhereClause*/
     protected $customWhereClause;
 
+    /**@var array $binding*/
     protected $binding = [];
 
+    /**@var string $query*/
     protected $query = '';
 
+    /**@var array $selectFields*/
     protected $selectFields;
 
     protected $targetRow;
@@ -51,14 +64,18 @@ class Table
         return $this;
     }
 
+    /**
+     * This method describes a table, get column list and primary key.
+     * @return $this
+     */
     protected function describeTable()
     {
         $sql = "DESCRIBE `{$this->getTable()}`";
         $stmt = $this->processor->executeQuery($sql);
         $columns = [];
         if($stmt) {
-            $raw_column_data = $stmt->fetchAll(\Pdo::FETCH_ASSOC);
-            foreach($raw_column_data as $key => $column){
+            $rawColumnData = $stmt->fetchAll(\Pdo::FETCH_ASSOC);
+            foreach($rawColumnData as $key => $column){
                 if (strtoupper($column['Key']) == 'PRI')
                     $this->primary = $column['Field'];
                 else {
@@ -71,41 +88,66 @@ class Table
         return $this;
     }
 
+    /**
+     * @return Processor
+     */
     public function getProcessor()
     {
         return $this->processor;
     }
 
+    /**
+     * @return string
+     */
     public function getTable()
     {
         return $this->table;
     }
 
+    /**
+     * @return string
+     */
     public function getPrimary()
     {
         return $this->primary;
     }
 
+    /**
+     * @return array
+     */
     public function getColumns()
     {
         return $this->columns;
     }
 
+    /**
+     * @return string
+     */
     public function getQuery()
     {
         return $this->query;
     }
 
+    /**
+     * @return array
+     */
     public function getWhere()
     {
         return $this->where;
     }
 
+    /**
+     * @return array
+     */
     public function getBinding()
     {
         return $this->binding;
     }
 
+    /**
+     * @param array $data
+     * @return $this
+     */
     public function setData($data = [])
     {
         $this->data = $data;
@@ -113,11 +155,18 @@ class Table
         return $this;
     }
 
+    /**
+     * @return array
+     */
     public function getData()
     {
         return $this->data;
     }
 
+    /**
+     * @param array $data
+     * @return $this
+     */
     public function addData(array $data)
     {
         $this->data = array_merge($this->data, $data);
@@ -125,6 +174,10 @@ class Table
         return $this;
     }
 
+    /**
+     * @param $name
+     * @return mixed
+     */
     public function __get($name)
     {
         return $this->data[$name];
@@ -137,6 +190,11 @@ class Table
         return $this;
     }
 
+    /**
+     * @param string $field
+     * @param string|null $alias
+     * @return Table
+     */
     public function addFieldToSelect(string $field, string $alias = null) : Table
     {
         $this->selectFields[$field] = $alias ? $alias : null;
@@ -144,6 +202,11 @@ class Table
         return $this;
     }
 
+    /**
+     * @param string $field
+     * @param string|null $alias
+     * @return Table
+     */
     public function setFieldToSelect(string $field, string $alias = null) : Table
     {
         $this->selectFields = [$field => $alias];
@@ -151,11 +214,19 @@ class Table
         return $this;
     }
 
+    /**
+     * @return array
+     */
     public function getSelectFields()
     {
         return $this->selectFields;
     }
 
+    /**
+     * @param $column
+     * @param $operator
+     * @param $value
+     */
     protected function setBinding($column, $operator, $value)
     {
         $binding = [];
@@ -188,26 +259,57 @@ class Table
         $this->binding = array_merge($this->binding, $binding);
     }
 
+    /**
+     * @param $table
+     * @param null $alias
+     * @param array $extraCondition
+     * @return Table
+     */
     public function leftJoin($table, $alias = null, array $extraCondition = [])
     {
         return $this->join($table, 'LEFT JOIN', $alias, $extraCondition);
     }
 
+    /**
+     * @param $table
+     * @param null $alias
+     * @param array $extraCondition
+     * @return Table
+     */
     public function rightJoin($table, $alias = null, array $extraCondition = [])
     {
         return $this->join($table, 'RIGHT JOIN', $alias, $extraCondition);
     }
 
+    /**
+     * @param $table
+     * @param null $alias
+     * @param array $extraCondition
+     * @return Table
+     */
     public function innerJoin($table, $alias = null, array $extraCondition = [])
     {
         return $this->join($table, 'INNER JOIN', $alias, $extraCondition);
     }
 
+    /**
+     * @param $table
+     * @param null $alias
+     * @param array $extraCondition
+     * @return Table
+     */
     public function fullOuterJoin($table, $alias = null, array $extraCondition = [])
     {
         return $this->join($table, 'FULL OUTER JOIN', $alias, $extraCondition);
     }
 
+    /**
+     * @param $table
+     * @param string $joinType
+     * @param null $alias
+     * @param array $extraCondition
+     * @return $this
+     */
     public function join($table, string $joinType, $alias = null, array $extraCondition = [])
     {
         if(!in_array($joinType, ['LEFT JOIN', 'RIGHT JOIN', 'FULL OUTER JOIN', 'INNER JOIN']))
@@ -297,6 +399,14 @@ class Table
         return $this;
     }
 
+    /**
+     * @param $column
+     * @param $operator
+     * @param $value
+     * @param bool $startGroup
+     * @param bool $endGroup
+     * @return $this
+     */
     public function orWhere($column, $operator, $value, $startGroup = false, $endGroup = false)
     {
 //        if(strpos($column, '.') === false)
@@ -319,11 +429,18 @@ class Table
         return $this;
     }
 
+    /**
+     * @return array
+     */
     public function getJoin()
     {
         return count($this->join) > 0 ? $this->join : [];
     }
 
+    /**
+     * @param $table
+     * @return array
+     */
     protected function checkForJoin($table)
     {
         $query = '
@@ -344,11 +461,11 @@ class Table
 				AND information_schema.key_column_usage.referenced_table_name IS NOT NULL';
 
         $stmt = $this->processor->prepare($query);
-        $stmt->execute([':database' => DB_DATABASE, ':table' => $table, ':referenced_table' => $this->getTable()]);
+        $stmt->execute([':database' => $this->processor->getConfiguration()->getDb(), ':table' => $table, ':referenced_table' => $this->getTable()]);
         $result = $stmt->fetchAll();
         if(!$result) {
             $stmt = $this->processor->prepare($query);
-            $stmt->execute([':database' => DB_DATABASE, ':table' => $this->getTable(), ':referenced_table' => $table]);
+            $stmt->execute([':database' => $this->processor->getConfiguration()->getDb(), ':table' => $this->getTable(), ':referenced_table' => $table]);
             $result = $stmt->fetchAll();
             if(!$result)
                 throw new \RuntimeException("No relation between {$table} and {$this->getTable()}");
@@ -365,6 +482,10 @@ class Table
         return $relation;
     }
 
+    /**
+     * @param $id
+     * @return mixed
+     */
     public function load($id)
     {
         if($this->getWhere())
@@ -375,11 +496,19 @@ class Table
         return $this->fetchOneAssoc(['limit'=> 1]);
     }
 
+    /**
+     * @param $field
+     * @param $value
+     * @return mixed
+     */
     public function loadByField($field, $value)
     {
         return $this->where($field, '=', $value)->fetchOneAssoc(['select' => '*', 'limit'=> 1]);
     }
 
+    /**
+     * Delete a record, Where clause must be defined fist
+     */
     public function delete()
     {
         $this->processor->delete($this);
@@ -557,6 +686,14 @@ class Table
         return $this->having($column, $operator, $value, $startGroup, $endGroup);
     }
 
+    /**
+     * @param $column
+     * @param $operator
+     * @param $value
+     * @param bool $startGroup
+     * @param bool $endGroup
+     * @return $this
+     */
     public function orHaving($column, $operator, $value, $startGroup = false, $endGroup = false)
     {
         if(strpos($column, '.') === false)
@@ -588,7 +725,7 @@ class Table
     }
 
     /**
-     * @return string
+     * @return array
      */
     public function getHaving()
     {

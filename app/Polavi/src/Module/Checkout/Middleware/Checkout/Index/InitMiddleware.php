@@ -37,7 +37,7 @@ class InitMiddleware extends MiddlewareAbstract
 
         $response->addWidget(
             'checkout_page',
-            'content',
+            'content_center',
             20,
             get_js_file_url("production/checkout/checkout/checkout_page.js")
         );

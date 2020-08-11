@@ -26,6 +26,11 @@ class CollectionBuilder
     /**@var Table $collection*/
     protected $collection;
 
+    /**
+     * This collection builder requires a Table to be initialized.
+     * @param Table $table
+     * @return $this
+     */
     public function init(Table $table)
     {
         $this->collection = $table;
@@ -33,6 +38,9 @@ class CollectionBuilder
         return $this;
     }
 
+    /**
+     * @return array
+     */
     public function load()
     {
         $setting = [
@@ -131,12 +139,21 @@ class CollectionBuilder
         $this->sortOrder = $sortOrder;
     }
 
+    /**
+     * Loop through the filter callbacks and execute one by one
+     * @param $id
+     * @param array $args
+     */
     protected function applyFilter($id, $args = [])
     {
         if(isset($this->filters[$id]))
             $this->filters[$id]($args);
     }
 
+    /**
+     * Get total number of record, for pagination purpose.
+     * @return int
+     */
     protected function getTotal()
     {
         $collection = clone $this->collection;

@@ -32,7 +32,7 @@ function Guest({loginUrl, setContactUrl}) {
         setWantEdit(true);
     };
 
-    return <div className="uk-width-1-1">
+    return <div className="">
         <div>
             <strong>Contact information</strong> <a href="#" onClick={(e)=> onClickWantLogin(e)}>Login?</a>
         </div>
@@ -75,7 +75,7 @@ function Guest({loginUrl, setContactUrl}) {
 }
 export default function ContactInformationForm({loginUrl, setContactUrl}) {
     const email = ReactRedux.useSelector(state => _.get(state, 'appState.customer.email', null));
-    return <div className="uk-width-1-1 checkout-contact">
+    return <div className="col-12 checkout-contact">
         {email === null && <Guest loginUrl={loginUrl} setContactUrl={setContactUrl}/>}
         {email !== null && <LoggedInCustomer/>}
     </div>

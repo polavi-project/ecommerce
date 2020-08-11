@@ -12,16 +12,16 @@ function Coupon(props) {
         Fetch(props.action, false, "POST", {coupon: coupon});
     };
 
-    return <div className="shopping-cart-coupon uk-width-1-4">
-        <p><strong>Coupon code</strong></p>
-        <div className="uk-margin">
+    return <div className="shopping-cart-coupon col-4">
+        <h4><strong>Coupon code</strong></h4>
+        <div className="mb-4">
             <input
-                className={"uk-input uk-form-width-medium uk-form-small"}
+                className={"form-control"}
                 type="text" value={coupon}
                 onChange={(e) => onChange(e)}
                 placeholder={"Enter coupon code"}/>
         </div>
-        <button className={"uk-button uk-button-primary uk-button-small"} onClick={(e)=>submit(e)}>Submit</button>
+        <button className={"btn btn-primary"} onClick={(e)=>submit(e)}>Submit</button>
     </div>
 }
 

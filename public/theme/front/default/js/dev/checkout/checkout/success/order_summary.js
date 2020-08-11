@@ -1,6 +1,6 @@
 export default function OrderSummary({number, tax, discount, grandTotal}) {
     return <div className={"order-success-summary"}>
-        <table className="uk-table uk-table-divider">
+        <table className="table">
             <thead>
                 <tr>
                     <th><span>Order number</span></th>

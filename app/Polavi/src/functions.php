@@ -30,6 +30,28 @@ use Polavi\Services\Locale\Language;
 use Polavi\Services\Routing\Router;
 use Symfony\Component\HttpFoundation\Session\Session;
 
+define(
+    "CORE_MODULES",
+    [
+        "Catalog",
+        "Checkout",
+        "Cms",
+        "Cod",
+        "Customer",
+        "Discount",
+        "FlatRate",
+        "GoogleAnalytics",
+        "Graphql",
+        "Migration",
+        "Order",
+        "SendGrid",
+        "Setting",
+        "Tax",
+        "User",
+        "Marketing"
+    ]
+);
+
 function the_container(Container $start = null) : Container
 {
     static $container;
@@ -45,7 +67,7 @@ function the_container(Container $start = null) : Container
 
 function _mysql()
 {
-    return new Processor();
+    return the_container()->get(Processor::class);
 }
 
 function dispatch_event(string $eventName, array $args = []) {
@@ -452,6 +474,13 @@ function resize_image(string $path, int $width, int $height) {
     }
 }
 
+/**
+ * Find an element in an array and return default value if not found
+ * @param $array
+ * @param callable $callback
+ * @param null $default
+ * @return |null
+ */
 function array_find($array, callable $callback, $default = null) {
     if(!is_array($array))
         return $default;

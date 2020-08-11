@@ -98,12 +98,12 @@ EOT;
     $container->get(\Polavi\Services\PromiseWaiter::class)->addPromise('saveSettingToCache', $promise);
 }
 
-$eventDispatcher->addListener('after_insert_setting', function() use ($container) {
-    createConfigCache($container);
+$eventDispatcher->addListener('after_insert_setting', function() {
+    createConfigCache(\Polavi\the_container());
 });
-$eventDispatcher->addListener('after_update_setting',  function() use ($container) {
-    createConfigCache($container);
+$eventDispatcher->addListener('after_update_setting',  function() {
+    createConfigCache(\Polavi\the_container());
 });
-$eventDispatcher->addListener('after_insert_on_update_setting',  function() use ($container) {
-    createConfigCache($container);
+$eventDispatcher->addListener('after_insert_on_update_setting',  function() {
+    createConfigCache(\Polavi\the_container());
 });

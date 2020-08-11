@@ -1,10 +1,10 @@
 import A from "../../../../../../../js/production/a.js";
 
 function Empty({homeUrl}) {
-    return <div className="empty-shopping-cart uk-width-1-1">
-        <div className="uk-align-center uk-text-center">
-            <div><h3>Your cart is empty!</h3></div>
-            <A text="Home page" url={homeUrl} classes="uk-button uk-button-default uk-button-small"/>
+    return <div className="empty-shopping-cart w-100">
+        <div>
+            <div className="mb-4"><h4>Your cart is empty!</h4></div>
+            <A text="Home page" url={homeUrl} className="btn btn-primary"/>
         </div>
     </div>
 }
@@ -16,7 +16,7 @@ function ItemOptions({options = []}) {
     const language = ReactRedux.useSelector(state => _.get(state, 'appState.language[0]', 'en'));
 
     return <div className="cart-item-options">
-        <ul className="uk-list">
+        <ul className="list-basic">
             {options.map((o, i) => {
                 return <li key={i}>
                     <span className="option-name"><strong>{o.option_name} : </strong></span>
@@ -35,7 +35,7 @@ function ItemVariantOptions({options = []}) {
         return null;
 
     return <div className="cart-item-variant-options">
-        <ul className="uk-list">
+        <ul className="list-basic">
             {options.map((o, i) => {
                 return <li key={i}>
                     <span className="attribute-name"><strong>{o.attribute_name} : </strong></span>
@@ -54,8 +54,8 @@ function Items({items}) {
     if(items.length === 0)
         return <Empty homeUrl={baseUrl}/>;
     else
-        return <div id="shopping-cart-items" className="uk-width-3-4@m">
-            <table className="uk-table uk-table-divider">
+        return <div id="shopping-cart-items" className="col-8">
+            <table className="table">
                 <thead>
                     <tr>
                         <td><span>Product</span></td>
@@ -78,7 +78,7 @@ function Items({items}) {
                                     {!item.thumbnail && <span uk-icon="icon: image; ratio: 5"></span>}
                                 </div>
                                 <div className="cart-tem-info">
-                                    <A url={item.productUrl} text={item.product_name} classes="uk-link-muted"/>
+                                    <A url={item.productUrl} text={item.product_name} classes=""/>
                                     {
                                         item.error.map((e, i) => <div className="text-danger" key={i}>{e.message}</div>)
                                     }
@@ -96,7 +96,7 @@ function Items({items}) {
                             </td>
                             <td><span>{item.qty}</span></td>
                             <td><span>{_total}</span></td>
-                            <td><A url={item.removeUrl} text=""><span uk-icon="close"></span></A></td>
+                            <td><A url={item.removeUrl} text=""><span>x</span></A></td>
                         </tr>
                     })
                 }

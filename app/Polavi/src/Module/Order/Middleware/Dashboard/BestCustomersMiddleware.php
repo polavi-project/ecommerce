@@ -23,7 +23,7 @@ class BestCustomersMiddleware extends MiddlewareAbstract
 
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
-        $conn = new Processor();
+        $conn = $this->getContainer()->get(Processor::class);
         $customers = $conn->executeQuery("SELECT `customer`.customer_id, `customer`.full_name, COUNT(`order`.order_id) as orders, SUM(`order`.grand_total) as `total`
         FROM `customer`
         INNER JOIN `order`

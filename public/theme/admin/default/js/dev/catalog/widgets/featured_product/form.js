@@ -12,6 +12,7 @@ export default function FeaturedProductWidget({id, name, status, setting, displa
 
     const area = _.find(displaySetting, {key:'area'}) !== undefined ?
         JSON.parse(_.get(_.find(displaySetting, {key:'area'}), 'value', [])) : [];
+    const manualInputAreas = _.find(displaySetting, {key:'area_manual_input'}) !== undefined ? _.get(_.find(displaySetting, {key:'area_manual_input'}), 'value', "") : "";
 
     const dispatch = ReactRedux.useDispatch();
 
@@ -56,12 +57,26 @@ export default function FeaturedProductWidget({id, name, status, setting, displa
                                 formId="text-widget-edit-form"
                                 label="Status"
                             />
-                            <input type='text' name="variables[widget][setting][0][key]" value="products" readOnly style={{display:'none'}}/>
+                            <input type='text' name="variables[widget][setting][0][key]" value="product_number_per_row" readOnly style={{display:'none'}}/>
+                            <div><span>Number of product per row</span></div>
+                            <div className="form-field">
+                                <Text
+                                    className="form-control"
+                                    name="variables[widget][setting][0][value]"
+                                    value={_.get(_.find(setting, {key:'product_number_per_row'}), 'value', 4)}
+                                    type="text"
+                                    defaultValue="4"
+                                    si
+                                    placeholder={"Number of product per row"}
+                                />
+                                <div><i>Support multiple sku, comma separated.</i></div>
+                            </div>
+                            <input type='text' name="variables[widget][setting][1][key]" value="products" readOnly style={{display:'none'}}/>
                             <div><span>Products</span></div>
                             <div className="form-field">
                                 <input
                                     className="form-control"
-                                    name="variables[widget][setting][0][value]"
+                                    name="variables[widget][setting][1][value]"
                                     value={products}
                                     type="text" defaultValue=""
                                     onChange={(e)=>{ setProducts(e.target.value)}}
@@ -82,7 +97,7 @@ export default function FeaturedProductWidget({id, name, status, setting, displa
                     </div>
                     <div className="sml-block mt-4">
                         <div className="sml-block-title">Select area</div>
-                        <AreaList formId={"text-widget-edit-form"} selectedAreas={area}/>
+                        <AreaList formId={"text-widget-edit-form"} selectedAreas={area} manualInputAreas={manualInputAreas}/>
                         <Text
                             name="variables[widget][sort_order]"
                             value={sortOrder}

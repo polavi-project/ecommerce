@@ -1,10 +1,10 @@
 import ProductList from "../product/list/list.js";
 
-export default function FeaturedProducts({title, products, addItemApi}) {
+export default function FeaturedProducts({title, products, countPerRow, addItemApi}) {
     return <div className="">
-        <p className="uk-h1 uk-text-center">{title}</p>
-        <div className="">
-            <ProductList products={products} addItemApi={addItemApi}/>
+        <div className="h2">{title}</div>
+        <div className="mt-4">
+            <ProductList products={products} addItemApi={addItemApi} countPerRow={countPerRow ? countPerRow : 4}/>
         </div>
     </div>
 }

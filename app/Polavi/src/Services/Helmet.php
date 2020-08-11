@@ -40,6 +40,11 @@ class Helmet
         return $this;
     }
 
+    /**
+     * @param array $attributes
+     * @param int $sortOrder
+     * @return $this
+     */
     public function addMeta(array $attributes, $sortOrder = 0)
     {
         $this->metas[$sortOrder][] = $attributes;
@@ -47,6 +52,9 @@ class Helmet
         return $this;
     }
 
+    /**
+     * @return array
+     */
     public function getMetas()
     {
         $metas = [];
@@ -58,6 +66,11 @@ class Helmet
         return $metas;
     }
 
+    /**
+     * @param array $attributes
+     * @param int $sortOrder
+     * @return $this
+     */
     public function addLink(array $attributes, $sortOrder = 0)
     {
         $this->links[$sortOrder][] = $attributes;
@@ -65,6 +78,9 @@ class Helmet
         return $this;
     }
 
+    /**
+     * @return array
+     */
     public function getLinks()
     {
         $links = [];
@@ -76,6 +92,11 @@ class Helmet
         return $links;
     }
 
+    /**
+     * @param array $attributes
+     * @param int $sortOrder
+     * @return $this
+     */
     public function addScript(array $attributes, $sortOrder = 0)
     {
         $this->scripts[$sortOrder][] = $attributes;
@@ -83,6 +104,9 @@ class Helmet
         return $this;
     }
 
+    /**
+     * @return array
+     */
     public function getScripts()
     {
         $scripts = [];
@@ -94,6 +118,9 @@ class Helmet
         return $scripts;
     }
 
+    /**
+     * @return false|string
+     */
     public function render()
     {
         ob_start();
@@ -127,6 +154,9 @@ class Helmet
         return $output;
     }
 
+    /**
+     * @return array
+     */
     public function getData()
     {
         return [
@@ -137,6 +167,10 @@ class Helmet
         ];
     }
 
+    /**
+     * @param string $html
+     * @return $this
+     */
     public function addHtmlBeforeCloseHead(string $html)
     {
         $this->htmlBeforeCloseHead[] = $html;
