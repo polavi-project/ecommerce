@@ -39,9 +39,6 @@ class ResponseMiddleware extends MiddlewareAbstract
             $this
                 ->getContainer()
                 ->get(Helmet::class)
-                ->addLink(["rel"=>"apple-touch-icon", "sizes"=>"180x180", "href"=> get_admin_theme_url() . "/image/apple-touch-icon.png"])
-                ->addLink(["rel"=>"icon", "type"=>"image/png", "sizes"=>"32x32", "href"=> get_admin_theme_url() . "/image/favicon-32x32.png"])
-                ->addLink(["rel"=>"icon", "type"=>"image/png", "sizes"=>"16x16", "href"=> get_admin_theme_url() . "/image/favicon-16x16.png"])
                 ->addLink(["rel"=>"shortcut icon", "href"=> get_admin_theme_url() . "/image/favicon.ico"]);
 
             if($request->isAdmin()) {
