@@ -8,8 +8,10 @@ function Price({minPrice = 0, maxPrice = 0, price_max_step, price_min_range, are
         let steps = [];
         if(range / price_min_range <= price_max_step) {
             var next = minPrice;
-            while(next < maxPrice)
-                steps.push({from: next, to: next + price_min_range});
+            while(next < maxPrice) {
+                steps.push({from: next, to: Math.min(next + price_min_range, maxPrice)});
+                next += price_min_range;
+            }
         } else {
             let step = Math.round((parseFloat(maxPrice) - parseFloat(minPrice)) / price_max_step);
             let prev = minPrice;
@@ -21,9 +23,8 @@ function Price({minPrice = 0, maxPrice = 0, price_max_step, price_min_range, are
                     to = maxPrice;
                 steps.push({from: from, to: to});
             }
-
-            return steps;
         }
+        return steps;
     };
 
     const [steps, setSteps] = React.useState([]);
@@ -196,7 +197,7 @@ export default function Filter({title, price_max_step, price_min_range}) {
             },
             {
                 component: Price,
-                props : {minPrice: _.get(data, 'price.minPrice', ""), maxPrice: _.get(data, 'price.maxPrice', ""), price_min_range, price_max_step},
+                props : {minPrice: _.get(data, 'price.minPrice', ""), maxPrice: _.get(data, 'price.maxPrice', ""), price_min_range: parseInt(price_min_range), price_max_step: parseInt(price_max_step)},
                 sort_order: 10,
                 id: "filter-price"
             },
