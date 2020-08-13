@@ -17,11 +17,11 @@ export default function ProductPageLayout() {
                 { className: "row" },
                 React.createElement(Area, {
                     id: "product_page_middle_left",
-                    className: "col-5 product-page-middle-left"
+                    className: "col-12 col-md-5 product-page-middle-left"
                 }),
                 React.createElement(Area, {
                     id: "product_page_middle_right",
-                    className: "col-7 product-page-middle-right"
+                    className: "col-12 col-md-7 product-page-middle-right"
                 })
             )
         ),

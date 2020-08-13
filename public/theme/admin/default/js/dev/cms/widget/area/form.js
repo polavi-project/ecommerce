@@ -135,7 +135,7 @@ export default function AreaWidget({id, name, status, setting, displaySetting, s
              if(columns[i] !== undefined) {
                  tmpCols[i] = {...columns[i], number: c};
              } else {
-                 tmpCols[i] = {number: c, className: "col-" + c}
+                 tmpCols[i] = {number: c}
              }
         });
 

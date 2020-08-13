@@ -84,7 +84,7 @@ ul.list-basic li{padding: 10px 0}
     height: 100%;
     vertical-align: middle;
 }
-.product-thumbnail-listing{text-align: center; min-height: 220px; background-color: #efefef}
+.product-thumbnail-listing{text-align: center; background-color: #efefef}
 .product-thumbnail-listing img {vertical-align: middle}
 .product-list-name{margin-top: 20px}
 .product-list-name a{font-weight: bold}
@@ -122,8 +122,8 @@ ul.list-basic li{padding: 10px 0}
 /* NEWSLETTER */
 .newsletter-form .title{font-weight: 500; line-height: 1.2; font-size: 1.25rem; margin-bottom: 1.5rem}
 /* BREADCRUMBS */
-.breadcrumbs{max-width: 1140px; margin: 0 auto; margin-bottom: 20px}
-.breadcrumbs ul{list-style: none; padding-left: 10px}
+.breadcrumbs{margin: 0 auto; margin-bottom: 20px}
+.breadcrumbs ul{list-style: none; padding-left: 0px}
 .breadcrumbs ul li {display: inline-block}
 .breadcrumbs ul li:not(:last-child)::after {font-family: "Font Awesome 5 Free"; font-weight: 600; content: "\f105"; padding: 0 10px}
 /**
@@ -249,7 +249,7 @@ ul.list-basic li{padding: 10px 0}
 .add-to-cart input{max-width: 130px}
 .add-to-cart .button{margin-left: 10px}
 .product-view-price{margin-top: 35px}
-.product-single-media .product-single-page-image{min-width: 100%; min-height: 455px; background-color: #E1E1E1}
+.product-single-media .product-single-page-image{min-width: 100%; background-color: #E1E1E1}
 .more-view-thumbnail{list-style: none; padding-left: 0}
 .more-view-thumbnail li{display: inline-block; margin-right: 10px}
 .tier-price .list-basic li{padding: 5px 0}
@@ -264,3 +264,12 @@ ul.list-basic li{padding: 10px 0}
 
 /* CUSTOMER ACCOUNT */
 .account-address-summary{border-bottom: 1px solid #e1e1e1; padding-bottom: 20px; margin-bottom: 20px}
+
+@media (max-width: 991px) {
+    .left-column{position: fixed; left: -1000px; top: 0; bottom:0; z-index: 1000; background-color: #fff; padding-top: 20px}
+    .right-column{position: fixed; left: -1000px; top: 0; bottom:0; z-index: 1000; background-color: #fff; padding-top: 20px}
+    .left-column.open{left: 0px}
+    .right-column.open{right: 0px}
+}
+.column-opener{position: fixed;bottom: 20px;left: 20px;z-index: 1001;padding-top: 11px;width: 50px;height: 50px;border: 1px solid #111;border-radius: 100%; text-align: center;background-color: #fff}
+.column-opener.right-column-opener{right: 20px; left: auto}
