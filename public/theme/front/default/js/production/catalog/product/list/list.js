@@ -15,7 +15,7 @@ export default function ProductList({ products = [], countPerRow = 4 }) {
     );
     return React.createElement(
         "div",
-        { className: "product-list row " + "row-cols-" + countPerRow },
+        { className: "product-list row row-cols-1 row-cols-md-3 " + "row-cols-lg-" + countPerRow },
         products.map((p, index) => {
             return React.createElement(Area, {
                 id: "product_item",

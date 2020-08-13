@@ -105,8 +105,8 @@ class FrontLayoutMiddleware extends MiddlewareAbstract
             'left_column',
             'content_middle',
             10,
-            get_js_file_url("production/area.js"),
-            ["id"=> "left_column", "className"=> "col-3"]
+            get_js_file_url("production/cms/left_column.js"),
+            ["id"=> "left_column", "className"=> ""]
         );
 
         $response->addWidget(
@@ -114,15 +114,15 @@ class FrontLayoutMiddleware extends MiddlewareAbstract
             'content_middle',
             20,
             get_js_file_url("production/area.js"),
-            ["id"=>"content_center", "className"=>"col-expand"]
+            ["id"=>"content_center", "className"=>"col-12 col-expand center-column"]
         );
 
         $response->addWidget(
             'right_column',
             'content_middle',
             30,
-            get_js_file_url("production/area.js"),
-            ["id"=> "right_column", "className"=> "col-3"]
+            get_js_file_url("production/cms/right_column.js"),
+            ["id"=> "right_column", "className"=> ""]
         );
 
         /***** FOOTER ******/
