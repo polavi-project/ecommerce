@@ -4,7 +4,7 @@ export default function BreadcrumbsWidget({ id, items }) {
     items.sort((a, b) => parseInt(a.sort_order) - parseInt(b.sort_order));
     return React.createElement(
         "div",
-        { className: "breadcrumbs" },
+        { className: "breadcrumbs container" },
         React.createElement(
             "ul",
             null,

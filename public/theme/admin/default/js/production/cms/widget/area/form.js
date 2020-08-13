@@ -190,7 +190,7 @@ export default function AreaWidget({ id, name, status, setting, displaySetting, 
             if (columns[i] !== undefined) {
                 tmpCols[i] = _extends({}, columns[i], { number: c });
             } else {
-                tmpCols[i] = { number: c, className: "col-" + c };
+                tmpCols[i] = { number: c };
             }
         });
 

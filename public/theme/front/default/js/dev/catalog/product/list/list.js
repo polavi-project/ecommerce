@@ -6,7 +6,7 @@ import {Price} from "./item/price.js";
 export default function ProductList({products = [], countPerRow = 4}) {
     if(products.length === 0)
         return <div className="product-list"><div>There is no product to display</div></div>;
-    return <div className={"product-list row " + "row-cols-" + countPerRow}>
+    return <div className={"product-list row row-cols-1 row-cols-md-3 " + "row-cols-lg-" + countPerRow}>
         {
             products.map((p, index) => {
                 return <Area
