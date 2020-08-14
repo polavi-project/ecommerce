@@ -27,7 +27,7 @@ class FormMiddleware extends MiddlewareAbstract
         $this->getContainer()->get(Helmet::class)->setTitle('Polavi installation');
         $response->addWidget(
             'installation_form',
-            'content',
+            'content_center',
             0,
             get_js_file_url("production/migration/install/form/installation_form.js", true),
             [

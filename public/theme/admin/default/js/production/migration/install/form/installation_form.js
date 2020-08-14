@@ -7,7 +7,7 @@ import { Fetch } from "../../../../../../../../js/production/fetch.js";
 function DBInfo() {
     return React.createElement(
         "div",
-        { className: "uk-width-1-2" },
+        { className: "col-6" },
         React.createElement(
             "div",
             null,
@@ -59,7 +59,7 @@ function DBInfo() {
 function AdminUser() {
     return React.createElement(
         "div",
-        { className: "uk-width-1-2" },
+        { className: "col-6" },
         React.createElement(
             "div",
             null,
@@ -105,24 +105,24 @@ function Welcome() {
         null,
         React.createElement(
             "h2",
-            null,
+            { className: "text-center mb-4" },
             "Great. Let's start using Polavi"
         ),
         React.createElement(
             "div",
-            { className: "uk-text-center" },
+            { className: "text-center" },
             React.createElement(
                 "p",
                 null,
                 React.createElement(
                     "a",
-                    { href: admin, className: "uk-button uk-button-primary uk-button-small", target: "_blank" },
+                    { href: admin, className: "btn btn-primary", target: "_blank" },
                     "Admin"
                 )
             ),
             React.createElement(
                 "a",
-                { href: front, className: "uk-button uk-button-primary uk-button-small", target: "_blank" },
+                { href: front, className: "btn btn-primary", target: "_blank" },
                 "Front site"
             )
         )
@@ -241,10 +241,10 @@ export default function Installation({ action }) {
     });
     return React.createElement(
         "div",
-        { className: "uk-align-center" },
+        null,
         React.createElement(
             "div",
-            { className: "uk-text-center" },
+            { className: "text-center mb-5" },
             React.createElement(
                 "h3",
                 null,
@@ -268,14 +268,14 @@ export default function Installation({ action }) {
             },
             React.createElement(
                 "div",
-                { className: "uk-grid uk-grid-small" },
+                { className: "row" },
                 React.createElement(DBInfo, null),
                 React.createElement(AdminUser, null)
             )
         ),
         letsGo === true && React.createElement(
             "ul",
-            { className: "installation-stack uk-list" },
+            { className: "installation-stack list-basic text-center" },
             stack.map((s, i) => {
                 return React.createElement(
                     "li",

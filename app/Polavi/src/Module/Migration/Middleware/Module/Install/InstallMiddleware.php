@@ -54,6 +54,7 @@ class InstallMiddleware extends MiddlewareAbstract
             return $response;
         } catch (\Exception $e) {
             $conn->rollback();
+            $this->getContainer()->offsetUnset("moduleLoading");
             $response->addData('success', 0);
 
             if($request->getMethod() == "GET")
