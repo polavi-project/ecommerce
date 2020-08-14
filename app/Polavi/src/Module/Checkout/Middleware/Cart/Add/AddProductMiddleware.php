@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace Polavi\Module\Checkout\Middleware\Cart\Add;
 
-use function Polavi\get_default_language_Id;
 use Polavi\Module\Checkout\Services\Cart\Cart;
 use Polavi\Module\Checkout\Services\Cart\Item;
 use Polavi\Services\Http\Request;

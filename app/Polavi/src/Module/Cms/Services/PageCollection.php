@@ -11,7 +11,6 @@ namespace Polavi\Module\Cms\Services;
 
 use GraphQL\Type\Definition\ResolveInfo;
 use function Polavi\_mysql;
-use function Polavi\get_default_language_Id;
 use Polavi\Services\Di\Container;
 use Polavi\Services\Grid\CollectionBuilder;
 use Polavi\Services\Http\Request;
@@ -24,15 +23,7 @@ class PageCollection extends CollectionBuilder
     public function __construct(Container $container)
     {
         $this->container = $container;
-        $collection = _mysql()->getTable('cms_page')->leftJoin('cms_page_description', null, [
-            [
-                'column'      => "cms_page_description.language_id",
-                'operator'    => "=",
-                'value'       => get_default_language_Id(),
-                'ao'          => 'and',
-                'start_group' => null,
-                'end_group'   => null
-            ]]);
+        $collection = _mysql()->getTable('cms_page')->leftJoin('cms_page_description');
 
         $this->init(
             $collection

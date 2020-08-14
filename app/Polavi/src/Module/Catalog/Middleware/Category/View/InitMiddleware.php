@@ -9,7 +9,6 @@ declare(strict_types=1);
 namespace Polavi\Module\Catalog\Middleware\Category\View;
 
 use function Polavi\_mysql;
-use function Polavi\get_default_language_Id;
 use Polavi\Services\Helmet;
 use Polavi\Services\Http\Request;
 use Polavi\Services\Http\Response;
@@ -28,30 +27,12 @@ class InitMiddleware extends MiddlewareAbstract
     {
         if($request->attributes->get('slug'))
             $category = _mysql()->getTable('category')
-            ->leftJoin('category_description', null, [
-                [
-                    'column'      => "category_description.language_id",
-                    'operator'    => "=",
-                    'value'       => $request->get('language', get_default_language_Id()),
-                    'ao'          => 'and',
-                    'start_group' => null,
-                    'end_group'   => null
-                ]
-            ])
+            ->leftJoin('category_description')
             ->where('category_description.seo_key', '=', $request->attributes->get('slug'))
             ->fetchOneAssoc();
         else
             $category = _mysql()->getTable('category')
-                ->leftJoin('category_description', null, [
-                    [
-                        'column'      => "category_description.language_id",
-                        'operator'    => "=",
-                        'value'       => $request->get('language', get_default_language_Id()),
-                        'ao'          => 'and',
-                        'start_group' => null,
-                        'end_group'   => null
-                    ]
-                ])
+                ->leftJoin('category_description')
                 ->where('category.category_id', '=', $request->attributes->get('id'))
                 ->fetchOneAssoc();
 

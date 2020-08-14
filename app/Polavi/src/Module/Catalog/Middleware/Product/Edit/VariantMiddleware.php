@@ -9,8 +9,6 @@ declare(strict_types=1);
 namespace Polavi\Module\Catalog\Middleware\Product\Edit;
 
 use function Polavi\_mysql;
-use function Polavi\generate_url;
-use function Polavi\get_default_language_Id;
 use function Polavi\get_js_file_url;
 use Polavi\Module\Graphql\Services\GraphqlExecutor;
 use Polavi\Services\Http\Request;
@@ -35,7 +33,7 @@ class VariantMiddleware extends MiddlewareAbstract
             $this->getContainer()
                 ->get(GraphqlExecutor::class)
                 ->waitToExecute([
-                    "query"=>"{variants: product(id: {$request->get('id')} language:{$request->get('language', get_default_language_Id())}){
+                    "query"=>"{variants: product(id: {$request->get('id')}){
                         variant_group_id
                         sku
                         variants {

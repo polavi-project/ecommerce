@@ -26,9 +26,7 @@ use Imagine\Imagick\Imagine;
 use Polavi\Services\Db\Processor;
 use Polavi\Services\Di\Container;
 use Polavi\Services\Event\EventDispatcher;
-use Polavi\Services\Locale\Language;
 use Polavi\Services\Routing\Router;
-use Symfony\Component\HttpFoundation\Session\Session;
 
 define(
     "CORE_MODULES",
@@ -110,7 +108,7 @@ function generate_url($routerName, array $params = [], array $query = null)
  * @param int $languageId
  * @return mixed|null
  */
-function get_config(string $name, $defaultValue = null, int $languageId = 0)
+function get_config(string $name, $defaultValue = null)
 {
     if(!file_exists(CONFIG_PATH . DS . 'config.php'))
         return $defaultValue;
@@ -120,27 +118,15 @@ function get_config(string $name, $defaultValue = null, int $languageId = 0)
         $configCache = include_once (CACHE_PATH . DS . 'config_cache.php');
     }
 
-    if(isset($configCache[$languageId][$name]))
-        return $configCache[$languageId][$name];
-    else if(isset($configCache[0][$name]))
-        return $configCache[0][$name];
+    if(isset($configCache[$name]))
+        return $configCache[$name];
 
-    $config = _mysql()->getTable('setting')->where('name', '=', $name)
-        ->andWhere('language_id', '=', $languageId)
-        ->fetchOneAssoc();
+    $config = _mysql()->getTable('setting')->where('name', '=', $name)->fetchOneAssoc();
     if($config) {
-        $configCache[$languageId][$name] = $config['json'] == 1  ? json_decode($config['value'], true) : $config['value'];
-        return $configCache[$languageId][$name];
+        $configCache[$name] = $config['json'] == 1  ? json_decode($config['value'], true) : $config['value'];
+        return $configCache[$name];
     } else {
-        $config = _mysql()->getTable('setting')->where('name', '=', $name)
-            ->andWhere('language_id', '=', 0)
-            ->fetchOneAssoc();
-        if($config) {
-            $configCache[0][$name] = $config['json'] == 1  ? json_decode($config['value'], true) : $config['value'];
-            return $configCache[0][$name];
-        } else {
-            return $defaultValue;
-        }
+        return $defaultValue;
     }
 }
 
@@ -150,7 +136,7 @@ function get_config(string $name, $defaultValue = null, int $languageId = 0)
  */
 function get_base_url($isAdmin = false)
 {
-    $secure = get_config('general_https', 0, 0) == 0 ? false: true;
+    $secure = get_config('general_https', 0) == 0 ? false: true;
     if (isset($_SERVER['HTTP_HOST']) && preg_match('/^((\[[0-9a-f:]+\])|(\d{1,3}(\.\d{1,3}){3})|[a-z0-9\-\.]+)(:\d+)?$/i', $_SERVER['HTTP_HOST'])) {
         $baseUrl = (($secure == true) ? 'https' : 'http').'://'.$_SERVER['HTTP_HOST']
             .substr($_SERVER['SCRIPT_NAME'], 0, strpos($_SERVER['SCRIPT_NAME'], basename($_SERVER['SCRIPT_FILENAME'])));
@@ -247,51 +233,12 @@ function get_css_file_url(string $subPath, bool $isAdmin = false)
         throw new \RuntimeException(sprintf("Requested file %s does not exist", $subPath) );
 }
 
-/**
- * @return mixed|null
- */
-function get_default_language_Id() {
-    return get_config('general_default_language', 26);
-}
-
-/**
- * @return mixed
- */
-function get_default_language_code() {
-    return Language::listLanguagesV2()[get_default_language_Id()][0];
-}
-
-/**
- * @return int
- */
-function get_current_language_id() {
-    return (int)the_container()->get(Session::class)->get('languageId', get_default_language_Id());
-}
-
-/**
- * @return mixed|null
- */
-function get_display_languages() {
-    $languages = get_config('general_languages', []);
-    array_walk($languages, function(&$language_id) {
-        $language = [
-            'id'=>$language_id,
-            'code'=> Language::listLanguagesV2()[$language_id][0],
-            'name'=> Language::listLanguagesV2()[$language_id][1]
-        ];
-        $language_id = $language;
-    });
-
-    return $languages;
-}
-
 function flatten_array(array $array) {
     $result = array();
     array_walk_recursive($array, function($a) use (&$result) { $result[] = $a; });
 
     return $result;
 }
-
 
 /**
  * This function get all field in a type. Do not overuse it

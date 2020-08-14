@@ -8,8 +8,6 @@ declare(strict_types=1);
 
 namespace Polavi\Module\Catalog\Middleware\Product\Save;
 
-use function Polavi\_mysql;
-use function Polavi\get_default_language_Id;
 use Polavi\Module\Catalog\Services\ProductMutator;
 use Polavi\Services\Http\Request;
 use Polavi\Services\Http\Response;
@@ -35,7 +33,6 @@ class UpdateMiddleware extends MiddlewareAbstract
                 ->get(ProductMutator::class)
                 ->updateProduct(
                     (int) $request->attributes->get('id', null),
-                    (int) $request->query->get('language', get_default_language_Id()),
                     $data
                 );
 

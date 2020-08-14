@@ -11,11 +11,9 @@ namespace Polavi\Module\Catalog\Services\Type;
 
 use Exception;
 use GraphQL\Error\Error;
-use GraphQL\Language\AST\Node;
 use GraphQL\Language\AST\StringValueNode;
 use GraphQL\Type\Definition\ScalarType;
 use function Polavi\get_config;
-use function Polavi\get_default_language_code;
 
 class Price extends ScalarType
 {
@@ -28,7 +26,7 @@ class Price extends ScalarType
 
     public function parseValue($value)
     {
-        $formatter = new \NumberFormatter(get_default_language_code(), \NumberFormatter::CURRENCY);
+        $formatter = new \NumberFormatter(get_config('general_default_language', 'en'), \NumberFormatter::CURRENCY);
 
         return $formatter->parseCurrency($value, get_config('general_currency', 'USD'));
     }

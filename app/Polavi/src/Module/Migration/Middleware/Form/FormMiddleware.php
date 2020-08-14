@@ -21,10 +21,13 @@ class FormMiddleware extends MiddlewareAbstract
 
     public function __invoke(Request $request, Response $response)
     {
+        if(file_exists(CONFIG_PATH . DS . 'config.php'))
+            $response->redirect(generate_url('homepage'));
+
         $this->getContainer()->get(Helmet::class)->setTitle('Polavi installation');
         $response->addWidget(
             'installation_form',
-            'content',
+            'content_center',
             0,
             get_js_file_url("production/migration/install/form/installation_form.js", true),
             [

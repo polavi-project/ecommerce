@@ -10,7 +10,6 @@ namespace Polavi\Module\Catalog\Services;
 
 
 use function Polavi\get_config;
-use function Polavi\get_default_language_Id;
 use function Polavi\resize_image;
 use function Polavi\str_replace_last;
 use Polavi\Services\Db\Processor;
@@ -33,15 +32,10 @@ class ProductMutator
     {
         $this->processor->startTransaction();
         try {
-            $languages = get_config('general_languages', [26]);
-            array_push($languages, 0);
             $this->processor->getTable('product')->insert($data);
             $productId = (int) $this->processor->getLastID();
             $data['product_description_product_id'] = $productId;
-            foreach ($languages as $language) {
-                $data['language_id'] = $language;
-                $this->processor->getTable('product_description')->insert($data);
-            }
+            $this->processor->getTable('product_description')->insert($data);
             // Save advanced price
             if(isset($data['advance_price']))
                 $this->savePrices((int)$productId, $data['advance_price']);
@@ -69,7 +63,7 @@ class ProductMutator
         }
     }
 
-    public function updateProduct(int $id, int $languageId, array $data)
+    public function updateProduct(int $id, array $data)
     {
         $product = $this->processor->getTable('product')->load($id);
         if($product == false)
@@ -78,14 +72,9 @@ class ProductMutator
         try {
             $this->processor->getTable('product')->where('product_id', '=', $id)->update($data);
             $data['product_description_product_id'] = $id;
-            $data['language_id'] = $languageId;
+
             $this->processor->getTable('product_description')
                 ->insertOnUpdate($data);
-            if($languageId == get_default_language_Id()) {
-                $data['language_id'] = 0;
-                $this->processor->getTable('product_description')
-                    ->insertOnUpdate($data);
-            }
 
             // Save advanced price
             if(isset($data['advance_price']))
@@ -101,7 +90,7 @@ class ProductMutator
 
             // Save attribute
             if(isset($data['attribute']))
-                $this->saveAttribute((int)$id, $data['attribute'], $languageId);
+                $this->saveAttribute((int)$id, $data['attribute']);
 
             // Save custom option
             if(isset($data['options']))
@@ -190,14 +179,8 @@ class ProductMutator
         }
     }
 
-    protected function saveAttribute(int $productId, array $attributes, int $languageId = null)
+    protected function saveAttribute(int $productId, array $attributes)
     {
-        $languages = get_config('general_languages', [26]);
-        array_push($languages, 0);
-//        $this->processor->getTable('product_attribute_value_index')
-//            ->where('product_id', '=', $productId)
-//            ->andWhere('language_id', 'IS', null)
-//            ->delete();
         foreach ($attributes as $key=>$value) {
             $attribute = $this->processor->getTable('attribute')->loadByField('attribute_code', $key);
             if($attribute === false)
@@ -207,21 +190,19 @@ class ProductMutator
                 'attribute_id' => $attribute['attribute_id'],
             ];
             if($attribute['type'] == 'textarea' || $attribute['type'] == 'text') {
-                if($languageId == null)
-                    foreach ($languages as $language) {
-                        $this->processor->getTable('product_attribute_value_index')->insert(
-                            $attributeData + ['attribute_value_text'=> trim($value), 'language_id'=> $language]
-                        );
-                    }
+                $flag = $this->processor->getTable("product_attribute_value_index")
+                    ->where("product_id", "=", $productId)
+                    ->andWhere("attribute_id", "=", $attribute['attribute_id'])
+                    ->fetchOneAssoc();
+
+                if($flag)
+                    $this->processor->getTable('product_attribute_value_index')
+                        ->where("product_id", "=", $productId)
+                        ->andWhere("attribute_id", "=", $attribute['attribute_id'])
+                        ->update(['attribute_value_text'=> trim($value)]);
                 else {
-                    $this->processor->getTable('product_attribute_value_index')->insertOnUpdate(
-                        $attributeData + ['attribute_value_text'=> trim($value), 'language_id'=> $languageId]
-                    );
-                    if($languageId == get_default_language_Id()) {
-                        $this->processor->getTable('product_attribute_value_index')->insertOnUpdate(
-                            $attributeData + ['attribute_value_text'=> trim($value), 'language_id'=> 0]
-                        );
-                    }
+                    $this->processor->getTable('product_attribute_value_index')
+                        ->insert($attributeData + ['attribute_value_text'=> trim($value)]);
                 }
             } else if($attribute['type'] == 'multiselect') {
                 foreach ($value as $val) {
@@ -249,9 +230,6 @@ class ProductMutator
 
     protected function savePrices(int $productId, array $prices)
     {
-//        $this->processor->getTable('product_price')
-//            ->where('product_price_product_id', '=', $productId)
-//            ->delete();
         foreach ($prices as $key=>$price) {
             $price['product_price_product_id'] = $productId;
             $this->processor->getTable('product_price')

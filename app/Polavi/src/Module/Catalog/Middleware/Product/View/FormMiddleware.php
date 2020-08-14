@@ -9,7 +9,6 @@ declare(strict_types=1);
 namespace Polavi\Module\Catalog\Middleware\Product\View;
 
 use function Polavi\generate_url;
-use function Polavi\get_default_language_Id;
 use function Polavi\get_js_file_url;
 use Polavi\Module\Graphql\Services\GraphqlExecutor;
 use Polavi\Services\Http\Request;
@@ -34,7 +33,7 @@ class FormMiddleware extends MiddlewareAbstract
             ->get(GraphqlExecutor::class)
             ->waitToExecute([
                 "query"=>"{
-                    custom_options : product(id: {$request->attributes->get('id')} language:{$request->get('language', get_default_language_Id())})
+                    custom_options : product(id: {$request->attributes->get('id')})
                     {
                         options {
                             option_id: product_custom_option_id

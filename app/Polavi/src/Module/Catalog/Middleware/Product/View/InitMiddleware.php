@@ -9,7 +9,6 @@ declare(strict_types=1);
 namespace Polavi\Module\Catalog\Middleware\Product\View;
 
 use function Polavi\_mysql;
-use function Polavi\get_default_language_Id;
 use Polavi\Services\Http\Request;
 use Polavi\Services\Http\Response;
 use Polavi\Middleware\MiddlewareAbstract;
@@ -28,36 +27,13 @@ class InitMiddleware extends MiddlewareAbstract
         $conn = _mysql();
         $product = null;
         if($request->attributes->get('slug')) {
-            $des = $conn->getTable('product_description')
+            $product = $conn->getTable('product')
+                ->leftJoin('product_description')
                 ->where('seo_key', '=', $request->attributes->get('slug'))
-                ->andWhere('language_id', '=', get_default_language_Id())
                 ->fetchOneAssoc();
-            if($des)
-                $product = $conn->getTable('product')
-                    ->leftJoin('product_description', null, [
-                        [
-                            'column'      => "product_description.language_id",
-                            'operator'    => "=",
-                            'value'       => $request->get('language', get_default_language_Id()),
-                            'ao'          => 'and',
-                            'start_group' => null,
-                            'end_group'   => null
-                        ]
-                    ])
-                    ->where('product_id', '=', $des['product_description_product_id'])
-                    ->fetchOneAssoc();
         } else
             $product = $conn->getTable('product')
-                ->leftJoin('product_description', null, [
-                    [
-                        'column'      => "product_description.language_id",
-                        'operator'    => "=",
-                        'value'       => $request->get('language', get_default_language_Id()),
-                        'ao'          => 'and',
-                        'start_group' => null,
-                        'end_group'   => null
-                    ]
-                ])
+                ->leftJoin('product_description')
                 ->where('product_id', '=', $request->attributes->get('id'))
                 ->fetchOneAssoc();
 

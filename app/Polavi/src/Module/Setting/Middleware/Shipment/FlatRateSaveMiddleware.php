@@ -9,13 +9,12 @@ declare(strict_types=1);
 namespace Polavi\Module\Setting\Middleware\Shipment;
 
 use function Polavi\_mysql;
-use function Polavi\get_default_language_Id;
 use Polavi\Services\Http\Request;
 use Polavi\Services\Http\Response;
 use Polavi\Middleware\MiddlewareAbstract;
 use Polavi\Services\Routing\Router;
 use Symfony\Component\HttpFoundation\Session\Session;
-// TODO: move this middlewre to Flatrate module
+// TODO: move this middleware to Flatrate module
 class FlatRateSaveMiddleware extends MiddlewareAbstract
 {
     /**
@@ -31,8 +30,6 @@ class FlatRateSaveMiddleware extends MiddlewareAbstract
 
         $processor = _mysql();
         $processor->startTransaction();
-        $language = $request->attributes->get('language', get_default_language_Id());
-        $language = $language == get_default_language_Id() ? 0 : $language;
         try {
             $data = $request->request->all();
             if(!isset($data['shipment_flat_rate_countries']))
@@ -43,8 +40,7 @@ class FlatRateSaveMiddleware extends MiddlewareAbstract
                         ->insertOnUpdate([
                             'name'=>$name,
                             'value'=>json_encode($value, JSON_NUMERIC_CHECK),
-                            'json'=>1,
-                            'language_id'=>$language
+                            'json'=>1
                         ]);
                 else
                     $processor->getTable('setting')
@@ -52,8 +48,7 @@ class FlatRateSaveMiddleware extends MiddlewareAbstract
                             'name'=>$name,
                             'group'=>'general',
                             'value'=>$value,
-                            'json'=>0,
-                            'language_id'=>$language
+                            'json'=>0
                         ]);
             }
             $processor->commit();

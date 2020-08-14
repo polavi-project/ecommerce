@@ -22,7 +22,6 @@ use Polavi\Module\Catalog\Services\Type\AttributeGroupCollectionType;
 use Polavi\Module\Catalog\Services\Type\AttributeType;
 use Polavi\Module\Catalog\Services\Type\CategoryCollectionType;
 use Polavi\Module\Catalog\Services\Type\ProductCollectionType;
-use Polavi\Module\Catalog\Services\DataLoader;
 use Polavi\Module\Catalog\Services\Type\AttributeGroupType;
 use Polavi\Module\Catalog\Services\Type\CategoryType;
 use Polavi\Module\Catalog\Services\Type\ProductAttributeIndex;
@@ -30,6 +29,7 @@ use Polavi\Module\Catalog\Services\Type\ProductType;
 use Polavi\Module\Checkout\Services\Cart\Cart;
 use Polavi\Module\Checkout\Services\Type\CartType;
 use Polavi\Module\Tax\Services\Type\TaxClassType;
+use Polavi\Services\Db\Processor;
 use Polavi\Services\Di\Container;
 use Polavi\Services\Http\Request;
 
@@ -45,21 +45,11 @@ class QueryType extends ObjectType
                     'type' => $container->get(ProductType::class),
                     'description' => 'Return a product',
                     'args' => [
-                        'id' => Type::nonNull(Type::id()),
-                        'language' => Type::nonNull(Type::id())
+                        'id' => Type::nonNull(Type::id())
                     ],
                     'resolve' => function($product, $args, Container $container, ResolveInfo $info)  {
                         $productTable = _mysql()->getTable('product');
-                        $productTable->leftJoin('product_description', null, [
-                            [
-                                'column'      => "product_description.language_id",
-                                'operator'    => "=",
-                                'value'       => $args['language'],
-                                'ao'          => 'and',
-                                'start_group' => null,
-                                'end_group'   => null
-                            ]
-                        ]);
+                        $productTable->leftJoin('product_description');
                         $productTable->where('product.product_id', '=', $args['id']);
                         if($container->get(Request::class)->isAdmin() == false)
                             $productTable->andWhere('product.status', '=', 1);
@@ -74,31 +64,18 @@ class QueryType extends ObjectType
                         'filters' =>  Type::listOf($container->get(FilterFieldType::class))
                     ],
                     'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
-//                        if($container->get(Request::class)->isAdmin() == false)
-//                            return [];
-//                        else
-                            return $container->get(ProductCollection::class)->getData($rootValue, $args, $container, $info);
+                        return $container->get(ProductCollection::class)->getData($rootValue, $args, $container, $info);
                     }
                 ],
                 'category' => [
                     'type' => $container->get(CategoryType::class),
                     'description' => 'Return a category',
                     'args' => [
-                        'id' => Type::nonNull(Type::id()),
-                        'language' => Type::nonNull(Type::id())
+                        'id' => Type::nonNull(Type::id())
                     ],
                     'resolve' => function($value, $args, Container $container, ResolveInfo $info) {
                         $categoryTable = _mysql()->getTable('category');
-                        $categoryTable->leftJoin('category_description', null, [
-                            [
-                                'column'      => "category_description.language_id",
-                                'operator'    => "=",
-                                'value'       => $args['language'],
-                                'ao'          => 'and',
-                                'start_group' => null,
-                                'end_group'   => null
-                            ]
-                        ]);
+                        $categoryTable->leftJoin('category_description');
                         return $categoryTable->where('category.category_id', '=', $args['id'])->fetchOneAssoc();
                     }
                 ],
@@ -156,10 +133,14 @@ class QueryType extends ObjectType
                     'type' => Type::listOf($container->get(ProductAttributeIndex::class)),
                     'description' => 'Return attribute value of a specified product',
                     'args' => [
-                        'product_id' => Type::nonNull(Type::id()),
-                        'language' => Type::nonNull(Type::id())
+                        'product_id' => Type::nonNull(Type::id())
                     ],
-                    'resolve' => [$container->get(DataLoader::class), 'getProductAttributeIndex']
+                    'resolve' => function($value, $args, Container $container, ResolveInfo $info) {
+                        return $container->get(Processor::class)->getTable('product_attribute_value_index')
+                            ->leftJoin('attribute')
+                            ->where('product_id', '=', $args['product_id'])
+                            ->fetchAllAssoc();
+                    }
                 ],
                 'cart' => [
                     'type'=> $container->get(CartType::class),

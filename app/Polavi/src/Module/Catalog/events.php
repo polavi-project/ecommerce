@@ -12,9 +12,6 @@ use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
 use function Polavi\_mysql;
-use function Polavi\generate_url;
-use function Polavi\get_current_language_id;
-use function Polavi\get_default_language_Id;
 use Polavi\Module\Catalog\Services\ProductCollection;
 use Polavi\Module\Graphql\Services\FilterFieldType;
 use Polavi\Services\Di\Container;
@@ -104,7 +101,6 @@ $eventDispatcher->addListener(
                     $result['images'][] = ['path'=>$row['image']];
                 $productName = $conn->getTable('product_description')
                     ->where('product_description_product_id', '=', $args['productId'])
-                    ->andWhere('language_id', '=', get_default_language_Id())
                     ->fetchOneAssoc();
                 if($productName)
                     $result['productName'] = $productName['name'];
@@ -153,31 +149,13 @@ $eventDispatcher->addListener(
             'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
                 if(!$args['name'])
                     return _mysql()->getTable("product")
-                        ->leftJoin('product_description', null, [
-                            [
-                                "column"      => "product_description.language_id",
-                                "operator"    => "=",
-                                "value"       => get_current_language_id(),
-                                "ao"          => 'and',
-                                "start_group" => null,
-                                "end_group"   => null
-                            ]
-                        ])
+                        ->leftJoin('product_description')
                         ->where("product.group_id", "=", $args["attributeGroupId"])
                         ->andWhere("product.variant_group_id", "IS", null)
                         ->fetchAssoc(["limit" => 100]);
                 else
                     return _mysql()->getTable("product")
-                        ->leftJoin('product_description', null, [
-                            [
-                                "column"      => "product_description.language_id",
-                                "operator"    => "=",
-                                "value"       => get_current_language_id(),
-                                "ao"          => 'and',
-                                "start_group" => null,
-                                "end_group"   => null
-                            ]
-                        ])
+                        ->leftJoin('product_description')
                         ->where("product.group_id", "=", $args["attributeGroupId"])
                         ->andWhere("product.variant_group_id", "IS", null)
                         ->andWhere("product_description.name", "LIKE", "%{$args["name"]}%")
@@ -330,16 +308,7 @@ $eventDispatcher->addListener('breadcrumbs_items', function(array $items) {
         $category = MiddlewareManager::getDelegate(\Polavi\Module\Catalog\Middleware\Category\View\InitMiddleware::class, null);
         if($category == null) {
             $category = _mysql()->getTable('category')
-                ->leftJoin('category_description', null, [
-                    [
-                        'column'      => "category_description.language_id",
-                        'operator'    => "=",
-                        'value'       => $container->get(Request::class)->get('language', get_default_language_Id()),
-                        'ao'          => 'and',
-                        'start_group' => null,
-                        'end_group'   => null
-                    ]
-                ])
+                ->leftJoin('category_description')
                 ->where('category.category_id', '=', $container->get(Request::class)->attributes->get('id'))
                 ->fetchOneAssoc();
         }
@@ -352,16 +321,7 @@ $eventDispatcher->addListener('breadcrumbs_items', function(array $items) {
         $product = MiddlewareManager::getDelegate(\Polavi\Module\Catalog\Middleware\Product\View\InitMiddleware::class, null);
         if($product == null) {
             $product = _mysql()->getTable('product')
-                ->leftJoin('product_description', null, [
-                    [
-                        'column'      => "product_description.language_id",
-                        'operator'    => "=",
-                        'value'       => $container->get(Request::class)->get('language', get_default_language_Id()),
-                        'ao'          => 'and',
-                        'start_group' => null,
-                        'end_group'   => null
-                    ]
-                ])
+                ->leftJoin('product_description')
                 ->where('product.product_id', '=', $container->get(Request::class)->attributes->get('id'))
                 ->fetchOneAssoc();
         }

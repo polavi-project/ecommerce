@@ -12,7 +12,6 @@ namespace Polavi\Module\Customer\Services;
 use GraphQL\Type\Definition\ResolveInfo;
 use function Polavi\_mysql;
 use function Polavi\dispatch_event;
-use function Polavi\get_default_language_Id;
 use Polavi\Services\Di\Container;
 use Polavi\Services\Grid\CollectionBuilder;
 use Polavi\Services\Http\Request;

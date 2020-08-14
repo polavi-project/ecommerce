@@ -9,13 +9,12 @@ declare(strict_types=1);
 namespace Polavi\Module\Setting\Middleware\Payment;
 
 use function Polavi\_mysql;
-use function Polavi\get_default_language_Id;
 use Polavi\Services\Http\Request;
 use Polavi\Services\Http\Response;
 use Polavi\Middleware\MiddlewareAbstract;
 use Polavi\Services\Routing\Router;
 use Symfony\Component\HttpFoundation\Session\Session;
-// TODO: move this middlewre to COD module
+// TODO: move this middleware to COD module
 class CODSaveMiddleware extends MiddlewareAbstract
 {
     /**
@@ -31,8 +30,6 @@ class CODSaveMiddleware extends MiddlewareAbstract
 
         $processor = _mysql();
         $processor->startTransaction();
-        $language = $request->attributes->get('language', get_default_language_Id());
-        $language = $language == get_default_language_Id() ? 0 : $language;
         try {
             $data = $request->request->all();
             foreach ($data as $name=> $value) {
@@ -41,8 +38,7 @@ class CODSaveMiddleware extends MiddlewareAbstract
                         ->insertOnUpdate([
                             'name'=>$name,
                             'value'=>json_encode($value, JSON_NUMERIC_CHECK),
-                            'json'=>1,
-                            'language_id'=>$language
+                            'json'=>1
                         ]);
                 else
                     $processor->getTable('setting')
@@ -50,8 +46,7 @@ class CODSaveMiddleware extends MiddlewareAbstract
                             'name'=>$name,
                             'group'=>'general',
                             'value'=>$value,
-                            'json'=>0,
-                            'language_id'=>$language
+                            'json'=>0
                         ]);
             }
             $processor->commit();

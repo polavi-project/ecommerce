@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace Polavi\Module\Catalog\Middleware\Product\View;
 
-use function Polavi\get_default_language_Id;
 use function Polavi\get_js_file_url;
 use Polavi\Module\Graphql\Services\GraphqlExecutor;
 use Polavi\Services\Http\Request;
@@ -33,7 +32,7 @@ class AttributeMiddleware extends MiddlewareAbstract
             ->get(GraphqlExecutor::class)
             ->waitToExecute([
                 "query"=>"{
-                    productAttributeIndex(product_id: {$request->get('id')} language:{$request->get('language', get_default_language_Id())})
+                    productAttributeIndex(product_id: {$request->get('id')})
                     {
                         attribute_name
                         attribute_id

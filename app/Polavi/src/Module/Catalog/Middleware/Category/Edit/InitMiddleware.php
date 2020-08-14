@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace Polavi\Module\Catalog\Middleware\Category\Edit;
 
-use function Polavi\get_default_language_Id;
 use Polavi\Services\Db\Processor;
 use Polavi\Services\Helmet;
 use Polavi\Services\Http\Response;

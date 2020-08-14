@@ -8,10 +8,8 @@ declare(strict_types=1);
 
 namespace Polavi\Module\Catalog\Middleware\Product\View;
 
-use function Polavi\get_default_language_Id;
 use function Polavi\get_js_file_url;
 use Polavi\Module\Graphql\Services\GraphqlExecutor;
-use Polavi\Services\Helmet;
 use Polavi\Services\Http\Request;
 use Polavi\Services\Http\Response;
 use Polavi\Middleware\MiddlewareAbstract;
@@ -37,7 +35,7 @@ class DescriptionMiddleware extends MiddlewareAbstract
             ->get(GraphqlExecutor::class)
             ->waitToExecute([
                 "query"=>"{
-                    description: product(id: {$request->attributes->get('id')} language:{$request->get('language', get_default_language_Id())})
+                    description: product(id: {$request->attributes->get('id')})
                     {
                         description
                     }

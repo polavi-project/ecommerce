@@ -10,7 +10,6 @@ namespace Polavi\Module\Catalog\Middleware\Product\View;
 
 use function Polavi\_mysql;
 use function Polavi\array_find;
-use function Polavi\get_current_language_id;
 use Polavi\Services\Http\Request;
 use Polavi\Services\Http\Response;
 use Polavi\Middleware\MiddlewareAbstract;
@@ -89,16 +88,7 @@ class VariantDetectMiddleware extends MiddlewareAbstract
                 ->where("variant_group_id", "=", $product["variant_group_id"])
                 ->andWhere("status", "=", 1);
             foreach ($selectedOptions as $key=>$val) {
-                $tmp->leftJoin('product_attribute_value_index', "product_attribute_value_index".$key, [
-                    [
-                        "column"      => "product_attribute_value_index{$key}.language_id",
-                        "operator"    => "=",
-                        "value"       => 0,
-                        "ao"          => 'and',
-                        "start_group" => null,
-                        "end_group"   => null
-                    ]
-                ]);
+                $tmp->leftJoin('product_attribute_value_index', "product_attribute_value_index".$key);
                 $tmp->andWhere("product_attribute_value_index{$key}.attribute_id", "=", $val["attribute_id"])
                     ->andWhere("product_attribute_value_index{$key}.option_id", "=", $val["option_id"]);
             }

@@ -1,7 +1,7 @@
 <?php
 
-$version = "1.0.0";
-$description = "This is Marketing module. Polavi core";
+$version = "1.0.1";
+$description = "This is CMS module. Polavi core";
 $author = "Polavi team";
 
 return [
@@ -48,5 +48,27 @@ return [
               `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
               PRIMARY KEY (`cms_widget_id`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT 'Cms widget'");
+    },
+    "1.0.1" => function(\Polavi\Services\Db\Processor $processor) {
+        // Let's leave multi language later
+        $processor->executeQuery("SET FOREIGN_KEY_CHECKS=0");
+
+        $ps = $processor->getTable("cms_page_description")
+            ->addFieldToSelect("cms_page_description_cms_page_id")
+            ->addFieldToSelect("COUNT(`cms_page_description`.`cms_page_description_cms_page_id`)", "sm")
+            ->groupBy("cms_page_description_cms_page_id")
+            ->having("sm", ">", 1)
+            ->fetchAllAssoc();
+        foreach ($ps as $p) {
+            $limit = $p['sm'] - 1;
+            $processor->executeQuery("DELETE FROM `cms_page_description` where cms_page_description_cms_page_id = {$p['cms_page_description_cms_page_id']} LIMIT {$limit}");
+        }
+        $processor->executeQuery("ALTER TABLE cms_page_description DROP INDEX  UNQ_PAGE_LANGUAGE");
+        $processor->executeQuery("ALTER TABLE cms_page_description ADD CONSTRAINT `PAGE_ID_UNIQUE` UNIQUE (`cms_page_description_cms_page_id`)");
+        $processor->executeQuery("ALTER TABLE cms_page_description DROP COLUMN language_id");
+
+
+        $processor->executeQuery("ALTER TABLE cms_widget DROP COLUMN language_id");
+        $processor->executeQuery("SET FOREIGN_KEY_CHECKS=1");
     }
 ];

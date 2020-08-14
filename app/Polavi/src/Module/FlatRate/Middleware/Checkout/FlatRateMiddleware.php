@@ -37,7 +37,7 @@ class FlatRateMiddleware extends MiddlewareAbstract
             (int) get_config('shipment_flat_rate_sort_order', 10),
             get_js_file_url("production/flat_rate/flat_rate.js"),
             [
-                "label" => get_config("shipment_flat_rate_title", "Flat rate", $request->getSession()->get('language', 0)),
+                "label" => get_config("shipment_flat_rate_title", "Flat rate"),
                 "fee" => get_config("shipment_flat_rate_fee", 0),
                 "countries" => get_config("shipment_flat_rate_countries", []),
                 "apiUrl" => generate_url("checkout.set.shipment")

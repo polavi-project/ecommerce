@@ -1,6 +1,6 @@
 <?php
 
-$version = "1.0.0";
+$version = "1.0.1";
 
 return [
     "1.0.0" => function(\Polavi\Services\Db\Processor $conn) {
@@ -292,5 +292,53 @@ return [
                         DELETE FROM `variant_group` WHERE `variant_group`.`attribute_group_id` = OLD.group_id AND (`variant_group`.`attribute_one` = OLD.attribute_id OR `variant_group`.`attribute_two` = OLD.attribute_id OR `variant_group`.`attribute_three` = OLD.attribute_id OR `variant_group`.`attribute_four` = OLD.attribute_id OR `variant_group`.`attribute_five` = OLD.attribute_id);
                     END;"
         );
+    },
+    "1.0.1" => function(\Polavi\Services\Db\Processor $processor) {
+        // Let's leave multi language later
+        $processor->executeQuery("SET FOREIGN_KEY_CHECKS=0");
+        $ps = $processor->getTable("product_description")
+            ->addFieldToSelect("product_description_product_id")
+            ->addFieldToSelect("COUNT(`product_description`.`product_description_product_id`)", "sm")
+            ->groupBy("product_description_product_id")
+            ->having("sm", ">", 1)
+            ->fetchAllAssoc();
+        foreach ($ps as $p) {
+            $limit = $p['sm'] - 1;
+            $processor->executeQuery("DELETE FROM `product_description` where product_description_product_id = {$p['product_description_product_id']} LIMIT {$limit}");
+        }
+        $processor->executeQuery("ALTER TABLE product_description DROP INDEX  FK_PRODUCT_DESCRIPTION_LANGUAGE");
+        $processor->executeQuery("ALTER TABLE product_description DROP INDEX  UNIQUE_PRODUCT_LANGUAGE");
+        $processor->executeQuery("ALTER TABLE product_description ADD CONSTRAINT `PRODUCT_ID_UNIQUE` UNIQUE (`product_description_product_id`)");
+        $processor->executeQuery("ALTER TABLE product_description DROP COLUMN language_id");
+
+        $cs = $processor->getTable("category_description")
+            ->addFieldToSelect("category_description_category_id")
+            ->addFieldToSelect("COUNT(`category_description`.`category_description_category_id`)", "sm")
+            ->groupBy("category_description_category_id")
+            ->having("sm", ">", 1)
+            ->fetchAllAssoc();
+        foreach ($cs as $c) {
+            $limit = $c['sm'] - 1;
+            $processor->executeQuery("DELETE FROM `category_description` where category_description_category_id = {$c['category_description_category_id']} LIMIT {$limit}");
+        }
+        $processor->executeQuery("ALTER TABLE category_description DROP INDEX CATEGORY_DESCRIPTION_LANGUAGE_UNIQUE");
+        $processor->executeQuery("ALTER TABLE category_description ADD CONSTRAINT `CATEGORY_ID_UNIQUE` UNIQUE (`category_description_category_id`)");
+        $processor->executeQuery("ALTER TABLE category_description DROP COLUMN language_id");
+
+        $as = $processor->getTable("product_attribute_value_index")
+            ->addFieldToSelect("attribute_id")
+            ->addFieldToSelect("product_id")
+            ->addFieldToSelect("COUNT(`product_attribute_value_index`.`attribute_id`)", "sm")
+            ->groupBy("`attribute_id`, `product_id`")
+            ->having("sm", ">", 1)
+            ->fetchAllAssoc();
+        foreach ($as as $a) {
+            $limit = $a['sm'] - 1;
+            $processor->executeQuery("DELETE FROM `product_attribute_value_index` where attribute_id = {$a['attribute_id']} AND product_id={$a["product_id"]} LIMIT {$limit}");
+        }
+        $processor->executeQuery("ALTER TABLE product_attribute_value_index DROP INDEX  UNIQUE_TEXT_VALUE");
+        $processor->executeQuery("ALTER TABLE product_attribute_value_index DROP COLUMN language_id");
+
+        $processor->executeQuery("SET FOREIGN_KEY_CHECKS=1");
     }
 ];
