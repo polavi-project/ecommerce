@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace Polavi\Module\Catalog\Middleware\Product\Edit;
 
-use function Polavi\get_default_language_Id;
 use function Polavi\get_js_file_url;
 use Polavi\Module\Graphql\Services\GraphqlExecutor;
 use Polavi\Services\Http\Request;
@@ -78,12 +77,12 @@ QUERY
             ->waitToExecute([
                 "query"=> <<< QUERY
                     {
-                        productAttributeIndex (product_id: {$request->get('id', 0)} language:{$request->get('language', get_default_language_Id())}) {
+                        productAttributeIndex (product_id: {$request->get('id', 0)}) {
                             attribute_id
                             option_id
                             attribute_value_text
                         }
-                        selected_group : product (id: {$request->get('id', 0)} language:{$request->get('language', get_default_language_Id())}) {
+                        selected_group : product (id: {$request->get('id', 0)}) {
                             id : group_id
                         }
                     }

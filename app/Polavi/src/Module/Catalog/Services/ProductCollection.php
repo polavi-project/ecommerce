@@ -13,7 +13,6 @@ use GraphQL\Type\Definition\ResolveInfo;
 use function Polavi\_mysql;
 use function Polavi\dispatch_event;
 use function Polavi\get_config;
-use function Polavi\get_current_language_id;
 use Polavi\Services\Di\Container;
 use Polavi\Services\Grid\CollectionBuilder;
 use Polavi\Services\Http\Request;
@@ -30,16 +29,7 @@ class ProductCollection extends CollectionBuilder
         $collection = _mysql()->getTable('product')
             ->addFieldToSelect("product.*")
             ->addFieldToSelect("product_description.*")
-            ->leftJoin('product_description', null, [
-                [
-                    "column"      => "product_description.language_id",
-                    "operator"    => "=",
-                    "value"       => get_current_language_id(),
-                    "ao"          => 'and',
-                    "start_group" => null,
-                    "end_group"   => null
-                ]
-            ]);
+            ->leftJoin('product_description');
 
         // Display out of stock or not
         if(!$container->get(Request::class)->isAdmin()) {

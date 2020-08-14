@@ -12,7 +12,6 @@ use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\ResolveInfo;
 use function Polavi\_mysql;
 use function Polavi\dispatch_event;
-use function Polavi\get_current_language_id;
 use Polavi\Module\Catalog\Services\ProductCollection;
 use Polavi\Services\Di\Container;
 use Polavi\Services\Db\Processor;
@@ -73,16 +72,7 @@ class ProductType extends ObjectType
                                 return null;
                              //Problem is here, DataLoader?
                             $categoryTable = new Table('category', $container->get(Processor::class));
-                            $categoryTable->leftJoin('category_description', null, [
-                                [
-                                    'column'      => "category_description.language_id",
-                                    'operator'    => "=",
-                                    'value'       => $product['language_id'],
-                                    'ao'          => 'and',
-                                    'start_group' => null,
-                                    'end_group'   => null
-                                ]
-                            ]);
+                            $categoryTable->leftJoin('category_description');
                             return $categoryTable->where('category.category_id', 'IN', $categoryIds)->fetchAllAssoc();
                         }
                     ],
@@ -183,9 +173,7 @@ class ProductType extends ObjectType
                         'resolve' => function($product, $args, Container $container, ResolveInfo $info) {
                             return _mysql()->getTable('product_attribute_value_index')
                                 ->leftJoin('attribute')
-                                ->where('product_id', '=', $product['product_id'])
-                                ->andWhere('language_id', '=', $product['language_id'] ?? get_current_language_id(), '(')
-                                ->orWhere('language_id', '=', '0', false, ')')->fetchAllAssoc();
+                                ->where('product_id', '=', $product['product_id'])->fetchAllAssoc();
                         }
                     ],
                     'variants' => [

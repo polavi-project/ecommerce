@@ -17,7 +17,6 @@ use function Polavi\_mysql;
 use function Polavi\array_find;
 use function Polavi\dispatch_event;
 use function Polavi\get_base_url_scheme_less;
-use function Polavi\get_current_language_id;
 use Polavi\Module\Checkout\Services\PriceHelper;
 use Polavi\Services\Routing\Router;
 use function Polavi\str_replace_last;
@@ -57,16 +56,7 @@ class Item
                     $conn = _mysql();
                     $product = $conn->getTable('product')
                         ->where("product.status", '=', 1)
-                        ->leftJoin('product_description', null, [
-                            [
-                                'column'      => "product_description.language_id",
-                                'operator'    => "=",
-                                'value'       => get_current_language_id(),
-                                'ao'          => 'and',
-                                'start_group' => null,
-                                'end_group'   => null
-                            ]
-                        ])
+                        ->leftJoin('product_description')
                         ->load($item->getDataSource()['product_id']);
                     if(!$product) {
                         $item->setError("product_id", "Requested product is not available");
@@ -262,16 +252,7 @@ class Item
                         ->where("variant_group_id", "=", $item->getData("variant_group_id"))
                         ->andWhere("status", "=", 1);
                     foreach ($selectedOptions as $key=>$val) {
-                        $tmp->leftJoin('product_attribute_value_index', "product_attribute_value_index".$key, [
-                            [
-                                "column"      => "product_attribute_value_index{$key}.language_id",
-                                "operator"    => "=",
-                                "value"       => 0,
-                                "ao"          => 'and',
-                                "start_group" => null,
-                                "end_group"   => null
-                            ]
-                        ]);
+                        $tmp->leftJoin('product_attribute_value_index', "product_attribute_value_index".$key);
                         $tmp->andWhere("product_attribute_value_index{$key}.attribute_id", "=", $val["attribute_id"])
                             ->andWhere("product_attribute_value_index{$key}.option_id", "=", $val["option_id"]);
                     }
@@ -289,7 +270,6 @@ class Item
                         ->addFieldToSelect("attribute.attribute_code")
                         ->leftJoin("attribute")
                         ->where("product_attribute_value_index.product_id", "=", $item->getData("product_id"))
-                        ->andWhere("product_attribute_value_index.language_id", "=", 0)
                         ->andWhere("product_attribute_value_index.attribute_id", "IN", $attrIds)
                         ->fetchAllAssoc();
                 },

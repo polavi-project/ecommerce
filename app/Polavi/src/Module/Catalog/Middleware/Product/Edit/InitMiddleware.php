@@ -9,7 +9,6 @@ declare(strict_types=1);
 namespace Polavi\Module\Catalog\Middleware\Product\Edit;
 
 use function Polavi\_mysql;
-use function Polavi\get_default_language_Id;
 use Polavi\Services\Helmet;
 use Polavi\Services\Http\Response;
 use Polavi\Services\Http\Request;

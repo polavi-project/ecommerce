@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace Polavi\Module\Catalog\Middleware\Product\Edit;
 
-use function Polavi\get_default_language_Id;
 use function Polavi\get_js_file_url;
 use Polavi\Module\Graphql\Services\GraphqlExecutor;
 use Polavi\Services\Http\Request;
@@ -57,7 +56,7 @@ class GeneralInfoMiddleware extends MiddlewareAbstract
                 ->get(GraphqlExecutor::class)
                 ->waitToExecute([
                     "query"=>"{
-                        general_info: product(id: {$request->get('id')} language:{$request->get('language', get_default_language_Id())})
+                        general_info: product(id: {$request->get('id')})
                         {
                             name
                             price

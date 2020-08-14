@@ -9,12 +9,7 @@ declare(strict_types=1);
 namespace Polavi\Module\Cms\Middleware\Page\View;
 
 use function Polavi\_mysql;
-use function Polavi\generate_url;
-use function Polavi\get_config;
-use function Polavi\get_current_language_id;
-use function Polavi\get_default_language_Id;
 use function Polavi\get_js_file_url;
-use Polavi\Module\Graphql\Services\GraphqlExecutor;
 use Polavi\Services\Helmet;
 use Polavi\Services\Http\Response;
 use Polavi\Services\Http\Request;
@@ -35,30 +30,12 @@ class ViewMiddleware extends MiddlewareAbstract
 
         if($request->attributes->get('slug'))
             $page = _mysql()->getTable('cms_page')
-                ->leftJoin('cms_page_description', null, [
-                    [
-                        'column'      => "cms_page_description.language_id",
-                        'operator'    => "=",
-                        'value'       => get_current_language_id(),
-                        'ao'          => 'and',
-                        'start_group' => null,
-                        'end_group'   => null
-                    ]
-                ])
+                ->leftJoin('cms_page_description')
                 ->where('cms_page_description.url_key', '=', $request->attributes->get('slug'))
                 ->fetchOneAssoc();
         else
             $page = _mysql()->getTable('cms_page')
-                ->leftJoin('cms_page_description', null, [
-                    [
-                        'column'      => "cms_page_description.language_id",
-                        'operator'    => "=",
-                        'value'       => get_current_language_id(),
-                        'ao'          => 'and',
-                        'start_group' => null,
-                        'end_group'   => null
-                    ]
-                ])
+                ->leftJoin('cms_page_description')
                 ->where('cms_page.cms_page_id', '=', $request->attributes->get('id'))
                 ->fetchOneAssoc();
 

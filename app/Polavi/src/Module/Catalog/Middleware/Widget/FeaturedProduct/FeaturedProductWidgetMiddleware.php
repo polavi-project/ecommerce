@@ -12,13 +12,11 @@ namespace Polavi\Module\Catalog\Middleware\Widget\FeaturedProduct;
 use function Polavi\_mysql;
 use function Polavi\array_find;
 use function Polavi\generate_url;
-use function Polavi\get_default_language_Id;
 use function Polavi\get_js_file_url;
 use Polavi\Middleware\MiddlewareAbstract;
 use Polavi\Module\Graphql\Services\GraphqlExecutor;
 use Polavi\Services\Http\Request;
 use Polavi\Services\Http\Response;
-use Polavi\Services\Routing\Router;
 
 class FeaturedProductWidgetMiddleware extends MiddlewareAbstract
 {

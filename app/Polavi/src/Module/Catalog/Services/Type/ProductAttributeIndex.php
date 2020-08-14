@@ -42,9 +42,6 @@ class ProductAttributeIndex extends ObjectType
                     ],
                     'attribute_value_text' => [
                         'type' => Type::string()
-                    ],
-                    'language_id' => [
-                        'type' => Type::nonNull(Type::int())
                     ]
                 ];
 

@@ -9,13 +9,12 @@ declare(strict_types=1);
 namespace Polavi\Middleware;
 
 use function Polavi\get_admin_theme_url;
+use function Polavi\get_config;
 use function Polavi\get_css_file_url;
-use function Polavi\get_current_language_id;
 use function Polavi\get_js_file_url;
 use Polavi\Services\Helmet;
 use Polavi\Services\Http\Request;
 use Polavi\Services\Http\Response;
-use Polavi\Services\Locale\Language;
 
 class ResponseMiddleware extends MiddlewareAbstract
 {
@@ -100,7 +99,7 @@ class ResponseMiddleware extends MiddlewareAbstract
 
     protected function renderHtml(Response $response)
     {
-        $language = substr(Language::listLanguagesV2()[get_current_language_id()][0], 0, -3);
+        $language = get_config('general_default_language', "en");
         $data = $response->getData();
         unset($data['isNewPage']);
         $payload = json_encode($data, 15);

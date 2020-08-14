@@ -14,7 +14,6 @@ use GraphQL\Type\Definition\Type;
 use function Polavi\_mysql;
 use function Polavi\dispatch_event;
 use Polavi\Services\Di\Container;
-use Polavi\Module\Catalog\Services\DataLoader;
 use Polavi\Services\Http\Request;
 use Polavi\Services\Routing\Router;
 

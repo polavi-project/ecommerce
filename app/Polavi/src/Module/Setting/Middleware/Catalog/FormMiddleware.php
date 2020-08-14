@@ -11,7 +11,6 @@ namespace Polavi\Module\Setting\Middleware\Catalog;
 use function Polavi\_mysql;
 use function Polavi\create_mutable_var;
 use function Polavi\generate_url;
-use function Polavi\get_default_language_Id;
 use function Polavi\get_js_file_url;
 use Polavi\Services\Helmet;
 use Polavi\Services\Http\Request;
@@ -28,14 +27,7 @@ class FormMiddleware extends MiddlewareAbstract
 
         $this->getContainer()->get(Helmet::class)->setTitle('Catalog setting');
         $stm = _mysql()
-            ->executeQuery("SELECT * FROM `setting`
-WHERE language_id = :language
-AND `name` LIKE 'catalog_%'
-UNION 
-SELECT * FROM `setting`
-WHERE `name` NOT IN (SELECT `name` FROM `setting` WHERE language_id = :language AND `name` LIKE 'catalog_%') 
-AND language_id = 0
-AND `name` LIKE 'catalog_%'", ['language' => $request->attributes->get('language', get_default_language_Id())!= get_default_language_Id() ? $request->attributes->get('language', get_default_language_Id()) : 0]);
+            ->executeQuery("SELECT * FROM `setting` WHERE `name` LIKE 'catalog_%'");
 
         $data = [];
         while ($row = $stm->fetch()) {

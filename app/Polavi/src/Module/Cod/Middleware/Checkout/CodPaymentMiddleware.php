@@ -40,7 +40,7 @@ class CodPaymentMiddleware extends MiddlewareAbstract
             (int) get_config('payment_cod_sort_order', 10),
             get_js_file_url("production/cod/cod.js"),
             [
-                "label"=>get_config('payment_cod_name', "Cash on delivery", $request->getSession()->get('language', 0)),
+                "label"=>get_config('payment_cod_name', "Cash on delivery"),
                 "status"=>get_config('payment_cod_status', 1),
                 "minTotal"=>get_config('payment_cod_minimum', 0),
                 "maxTotal"=>get_config('payment_cod_maximum'),

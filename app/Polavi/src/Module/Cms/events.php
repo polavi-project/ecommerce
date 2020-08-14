@@ -12,8 +12,6 @@ use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
 use function Polavi\_mysql;
-use function Polavi\get_current_language_id;
-use function Polavi\get_default_language_Id;
 use Polavi\Module\Graphql\Services\FilterFieldType;
 use Polavi\Services\Di\Container;
 use Polavi\Services\Http\Request;
@@ -28,8 +26,7 @@ $eventDispatcher->addListener(
                     'type' => \Polavi\the_container()->get(\Polavi\Module\Cms\Services\Type\CmsPageType::class),
                     'description' => 'Return a cms page',
                     'args' => [
-                        'id' => Type::nonNull(Type::id()),
-                        'language' => Type::nonNull(Type::id())
+                        'id' => Type::nonNull(Type::id())
                     ],
                     'resolve' => function($value, $args, \Polavi\Services\Di\Container $container, ResolveInfo $info) {
                         $cmsWidgetTable = $container->get(\Polavi\Services\Db\Processor::class)
@@ -37,16 +34,7 @@ $eventDispatcher->addListener(
                             ->where('cms_page_id', '=', $args['id']);
                         if($container->get(\Polavi\Services\Http\Request::class)->isAdmin() === false)
                             $cmsWidgetTable->andWhere('status', '=', 1);
-                        $cmsWidgetTable->leftJoin('cms_page_description', null, [
-                            [
-                                'column'      => "cms_page_description.language_id",
-                                'operator'    => "=",
-                                'value'       => $args['language'],
-                                'ao'          => 'and',
-                                'start_group' => null,
-                                'end_group'   => null
-                            ]
-                        ]);
+                        $cmsWidgetTable->leftJoin('cms_page_description');
 
                         return $cmsWidgetTable->fetchOneAssoc();
                     }
@@ -337,34 +325,18 @@ $eventDispatcher->addListener(
                             return ['status'=> false, 'page' => null, 'message' => 'Requested page does not exist'];
                         $conn->getTable('cms_page')->where('cms_page_id', '=', $data['id'])->update($data);
                         $conn->getTable('cms_page_description')
-                            ->insertOnUpdate(array_merge($data, ['cms_page_description_cms_page_id' => $data['id'], 'language_id' =>get_default_language_Id()]));
+                            ->insertOnUpdate(array_merge($data, ['cms_page_description_cms_page_id' => $data['id']]));
                         return [
                             'status'=> true,
-                            'page' =>$conn->getTable('cms_page')->leftJoin('cms_page_description', null, [
-                                [
-                                    'column'      => "cms_page_description.language_id",
-                                    'operator'    => "=",
-                                    'value'       => get_default_language_Id(),
-                                    'ao'          => 'and',
-                                    'start_group' => null,
-                                    'end_group'   => null
-                                ]])->load($data['id'])
+                            'page' =>$conn->getTable('cms_page')->leftJoin('cms_page_description')->load($data['id'])
                         ];
                     } else {
                         $conn->getTable('cms_page')->insert($data);
                         $id = $conn->getLastID();
-                        $conn->getTable('cms_page_description')->insert(array_merge($data, ['cms_page_description_cms_page_id' => $id, 'language_id' =>get_default_language_Id()]));
+                        $conn->getTable('cms_page_description')->insert(array_merge($data, ['cms_page_description_cms_page_id' => $id]));
                         return [
                             'status'=> true,
-                            'page' =>$conn->getTable('cms_page')->leftJoin('cms_page_description', null, [
-                                [
-                                    'column'      => "cms_page_description.language_id",
-                                    'operator'    => "=",
-                                    'value'       => get_default_language_Id(),
-                                    'ao'          => 'and',
-                                    'start_group' => null,
-                                    'end_group'   => null
-                                ]])->load($id)
+                            'page' =>$conn->getTable('cms_page')->leftJoin('cms_page_description')->load($id)
                         ];
                     }
                 }
@@ -505,16 +477,7 @@ $eventDispatcher->addListener('breadcrumbs_items', function(array $items) {
         $page = MiddlewareManager::getDelegate(\Polavi\Module\Cms\Middleware\Page\View\ViewMiddleware::class, null);
         if($page == null) {
             $page = _mysql()->getTable('cms_page')
-                ->leftJoin('cms_page_description', null, [
-                    [
-                        'column'      => "cms_page_description.language_id",
-                        'operator'    => "=",
-                        'value'       => get_current_language_id(),
-                        'ao'          => 'and',
-                        'start_group' => null,
-                        'end_group'   => null
-                    ]
-                ])
+                ->leftJoin('cms_page_description', null)
                 ->where('cms_page.cms_page_id', '=', $container->get(Request::class)->attributes->get('id'))
                 ->fetchOneAssoc();
         }

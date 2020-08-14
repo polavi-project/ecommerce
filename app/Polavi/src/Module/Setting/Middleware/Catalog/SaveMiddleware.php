@@ -9,7 +9,6 @@ declare(strict_types=1);
 namespace Polavi\Module\Setting\Middleware\Catalog;
 
 use function Polavi\_mysql;
-use function Polavi\get_default_language_Id;
 use Polavi\Services\Http\Request;
 use Polavi\Services\Http\Response;
 use Polavi\Middleware\MiddlewareAbstract;
@@ -30,9 +29,6 @@ class SaveMiddleware extends MiddlewareAbstract
 
         $processor = _mysql();
         $processor->startTransaction();
-        $language = $request->attributes->get('language', get_default_language_Id());
-        $language = $language == get_default_language_Id() ? 0 : $language;
-        //$availableLanguages = get_config('catalog_languages', []);
         try {
             $data = $request->request->all();
             foreach ($data as $name=> $value) {
@@ -41,27 +37,17 @@ class SaveMiddleware extends MiddlewareAbstract
                         ->insertOnUpdate([
                             'name'=>$name,
                             'value'=>json_encode($value, JSON_NUMERIC_CHECK),
-                            'json'=>1,
-                            'language_id'=>$language
+                            'json'=>1
                         ]);
                 else
                     $processor->getTable('setting')
                         ->insertOnUpdate([
                             'name'=>$name,
                             'value'=>$value,
-                            'json'=>0,
-                            'language_id'=>$language
+                            'json'=>0
                         ]);
             }
 
-            // Language update
-//            $languages = $data['catalog_languages'];
-//            $newLanguages = array_diff($languages, $availableLanguages);
-//            if($newLanguages) {
-//                $this->copyProductDescription($newLanguages, $processor);
-//                $this->copyCategoryDescription($newLanguages, $processor);
-//                $this->copyAttributeTextValue($newLanguages, $processor);
-//            }
             $processor->commit();
             $response->addAlert('catalog_setting_update_success', 'success', 'Setting saved successfully');
             $response->redirect($this->getContainer()->get(Router::class)->generateUrl('setting.catalog'));

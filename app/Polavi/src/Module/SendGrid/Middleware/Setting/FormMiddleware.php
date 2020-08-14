@@ -10,7 +10,6 @@ namespace Polavi\Module\SendGrid\Middleware\Setting;
 
 use function Polavi\_mysql;
 use function Polavi\generate_url;
-use function Polavi\get_default_language_Id;
 use function Polavi\get_js_file_url;
 use Polavi\Services\Helmet;
 use Polavi\Services\Http\Request;
@@ -28,13 +27,12 @@ class FormMiddleware extends MiddlewareAbstract
         $this->getContainer()->get(Helmet::class)->setTitle("SendGrid email setting");
         $stm = _mysql()
             ->executeQuery("SELECT * FROM `setting`
-WHERE language_id = :language
-AND `name` LIKE 'sendgrid_%'
+WHERE `name` LIKE 'sendgrid_%'
 UNION
 SELECT * FROM `setting`
 WHERE `name` NOT IN (SELECT `name` FROM `setting` WHERE language_id = :language AND `name` LIKE 'sendgrid_%')
 AND language_id = 0
-AND `name` LIKE 'sendgrid_%'", ['language' => $request->attributes->get('language', get_default_language_Id())!= get_default_language_Id() ? $request->attributes->get('language', get_default_language_Id()) : 0]);
+AND `name` LIKE 'sendgrid_%'");
 
         $setting = [];
         while ($row = $stm->fetch()) {

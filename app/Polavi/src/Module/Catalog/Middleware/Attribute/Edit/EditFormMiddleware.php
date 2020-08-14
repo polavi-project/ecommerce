@@ -10,7 +10,6 @@ namespace Polavi\Module\Catalog\Middleware\Attribute\Edit;
 
 use function Polavi\create_mutable_var;
 use function Polavi\generate_url;
-use function Polavi\get_default_language_Id;
 use function Polavi\get_js_file_url;
 use Polavi\Module\Graphql\Services\GraphqlExecutor;
 use Polavi\Services\Http\Request;

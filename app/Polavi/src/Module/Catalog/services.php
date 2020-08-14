@@ -28,10 +28,6 @@ $container[\Polavi\Module\Catalog\Services\Type\ProductImageType::class] =  func
     return new \Polavi\Module\Catalog\Services\Type\ProductImageType($container);
 };
 
-$container[\Polavi\Module\Catalog\Services\DataLoader::class] =  function() {
-    return new \Polavi\Module\Catalog\Services\DataLoader();
-};
-
 $container[\Polavi\Module\Catalog\Services\Type\AttributeGroupType::class] =  function() use ($container) {
     return new \Polavi\Module\Catalog\Services\Type\AttributeGroupType($container);
 };

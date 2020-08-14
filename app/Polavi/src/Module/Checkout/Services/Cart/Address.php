@@ -11,8 +11,6 @@ namespace Polavi\Module\Checkout\Services\Cart;
 
 use MJS\TopSort\Implementations\ArraySort;
 use function Polavi\dispatch_event;
-use function Polavi\get_config;
-use function Polavi\get_default_language_Id;
 
 class Address
 {

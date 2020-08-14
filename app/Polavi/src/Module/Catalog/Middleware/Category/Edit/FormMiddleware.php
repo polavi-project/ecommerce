@@ -9,9 +9,6 @@ declare(strict_types=1);
 namespace Polavi\Module\Catalog\Middleware\Category\Edit;
 
 use function Polavi\generate_url;
-use function Polavi\get_config;
-use function Polavi\get_default_language_Id;
-use function Polavi\get_display_languages;
 use function Polavi\get_js_file_url;
 use Polavi\Services\Http\Request;
 use Polavi\Services\Http\Response;
@@ -36,8 +33,6 @@ class FormMiddleware extends MiddlewareAbstract
             [
                 "id"=> 'category-edit-form',
                 "action" => $this->getContainer()->get(Router::class)->generateUrl("category.save", ['id'=>$request->attributes->get('id', null)], $request->query->get('language', null) != null ? ['language' => $request->query->get('language')] : null),
-                "defaultLanguage" => get_default_language_Id(),
-                "currentLanguage" => $request->query->get('language') != null ? $request->query->get('language') : get_default_language_Id(),
                 "listUrl" => generate_url('category.grid'),
                 "cancelUrl" => $request->attributes->get('id') ? generate_url('category.edit', ['id' => $request->attributes->get('id')]) : generate_url('category.create')
             ]

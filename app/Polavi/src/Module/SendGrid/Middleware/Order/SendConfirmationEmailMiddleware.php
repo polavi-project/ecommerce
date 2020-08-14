@@ -12,12 +12,10 @@ namespace Polavi\Module\SendGrid\Middleware\Order;
 use GuzzleHttp\Promise\Promise;
 use function Polavi\_mysql;
 use function Polavi\get_config;
-use function Polavi\get_current_language_id;
 use Polavi\Middleware\MiddlewareAbstract;
 use Polavi\Module\SendGrid\Services\SendGrid;
 use Polavi\Services\Http\Request;
 use Polavi\Services\Http\Response;
-use Polavi\Services\Locale\Language;
 
 class SendConfirmationEmailMiddleware extends MiddlewareAbstract
 {
@@ -30,7 +28,7 @@ class SendConfirmationEmailMiddleware extends MiddlewareAbstract
             $templateId = get_config('sendgrid_order_confirmation_email');
             $conn = _mysql();
             $order = $conn->getTable('order')->load($orderId);
-            $languageCode = Language::listLanguagesV2()[get_current_language_id()][0] ?? 'en_US';
+            $languageCode = get_config('general_default_language', "en");
             $fmt = new \NumberFormatter( $languageCode, \NumberFormatter::CURRENCY );
 
             array_walk($order, function(&$field, $key) use($fmt, $order) {

@@ -11,7 +11,6 @@ namespace Polavi\Module\Cms\Middleware\MenuWidget;
 
 use function Polavi\_mysql;
 use function Polavi\array_find;
-use function Polavi\get_current_language_id;
 use function Polavi\get_js_file_url;
 use Polavi\Middleware\MiddlewareAbstract;
 use Polavi\Module\Graphql\Services\GraphqlExecutor;
@@ -60,16 +59,7 @@ class MenuWidgetMiddleware extends MiddlewareAbstract
                         }, []);
                         foreach ($category as $c) {
                             $cat = $conn->getTable('category')
-                                ->leftJoin('category_description', null, [
-                                    [
-                                        'column'      => "category_description.language_id",
-                                        'operator'    => "=",
-                                        'value'       => get_current_language_id(),
-                                        'ao'          => 'and',
-                                        'start_group' => null,
-                                        'end_group'   => null
-                                    ]
-                                ])
+                                ->leftJoin('category_description')
                                 ->where('category_id', '=', $c['id'])
                                 ->andWhere('status', '=', 1)
                                 ->fetchOneAssoc();
@@ -93,16 +83,7 @@ class MenuWidgetMiddleware extends MiddlewareAbstract
 
                         foreach ($page as $p) {
                             $pg= $conn->getTable('cms_page')
-                                ->leftJoin('cms_page_description', null, [
-                                    [
-                                        'column'      => "cms_page_description.language_id",
-                                        'operator'    => "=",
-                                        'value'       => get_current_language_id(),
-                                        'ao'          => 'and',
-                                        'start_group' => null,
-                                        'end_group'   => null
-                                    ]
-                                ])
+                                ->leftJoin('cms_page_description')
                                 ->where('cms_page_id', '=', $p['id'])
                                 ->andWhere('status', '=', 1)
                                 ->fetchOneAssoc();

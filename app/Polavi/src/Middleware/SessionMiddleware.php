@@ -8,10 +8,8 @@ declare(strict_types=1);
 
 namespace Polavi\Middleware;
 
-use function Polavi\get_current_language_id;
 use Polavi\Services\Http\Request;
 use Polavi\Services\Http\Response;
-use Polavi\Services\Locale\Language;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 class SessionMiddleware extends MiddlewareAbstract
@@ -23,7 +21,6 @@ class SessionMiddleware extends MiddlewareAbstract
         // TODO: Set lifetime for session
         $this->getContainer()->get(Session::class)->start();
         $request->setSession($this->getContainer()->get(Session::class));
-        $response->addState('language', Language::listLanguagesV2()[get_current_language_id()]);
 
         return $delegate;
     }

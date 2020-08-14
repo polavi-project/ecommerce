@@ -9,7 +9,6 @@ declare(strict_types=1);
 namespace Polavi\Module\Cms\Middleware\Page\Edit;
 
 use function Polavi\generate_url;
-use function Polavi\get_default_language_Id;
 use function Polavi\get_js_file_url;
 use Polavi\Module\Graphql\Services\GraphqlExecutor;
 use Polavi\Services\Http\Request;
@@ -31,7 +30,7 @@ class FormMiddleware extends MiddlewareAbstract
                 ->get(GraphqlExecutor::class)
                 ->waitToExecute([
                     "query"=>"{
-                        cmsPage(id: {$request->get('id')} language:{$request->get('language', get_default_language_Id())})
+                        cmsPage(id: {$request->get('id')})
                         {
                             name
                             status

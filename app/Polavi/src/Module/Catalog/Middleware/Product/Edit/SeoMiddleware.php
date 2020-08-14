@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace Polavi\Module\Catalog\Middleware\Product\Edit;
 
-use function Polavi\get_default_language_Id;
 use function Polavi\get_js_file_url;
 use Polavi\Module\Graphql\Services\GraphqlExecutor;
 use Polavi\Services\Http\Request;
@@ -33,7 +32,7 @@ class SeoMiddleware extends MiddlewareAbstract
             $this->getContainer()
                 ->get(GraphqlExecutor::class)
                 ->waitToExecute([
-                    "query"=>"{seoInfo: product(id: {$request->get('id')} language:{$request->get('language', get_default_language_Id())}){seo_key meta_title meta_description meta_keywords}}"
+                    "query"=>"{seoInfo: product(id: {$request->get('id')}){seo_key meta_title meta_description meta_keywords}}"
                 ])->then(function($result) use (&$fields, $response) {
                     /**@var \GraphQL\Executor\ExecutionResult $result */
                     if(isset($result->data['seoInfo'])) {

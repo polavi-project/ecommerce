@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace Polavi\Module\Catalog\Middleware\Product\Edit;
 
-use function Polavi\get_default_language_Id;
 use function Polavi\get_js_file_url;
 use Polavi\Module\Graphql\Services\GraphqlExecutor;
 use Polavi\Services\Http\Request;
@@ -31,7 +30,7 @@ class CategoryMiddleware extends MiddlewareAbstract
         if($request->attributes->get('_matched_route') == 'product.edit')
             $query = <<< QUERY
                     {
-                        assignedCategories: product (id: {$request->get('id', 0)} language:{$request->get('language', get_default_language_Id())}) {
+                        assignedCategories: product (id: {$request->get('id', 0)}) {
                             categories {
                                 category_id
                             }

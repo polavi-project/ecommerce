@@ -14,7 +14,6 @@ use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
 use function Polavi\_mysql;
 use function Polavi\dispatch_event;
-use function Polavi\get_default_language_Id;
 use Polavi\Module\Catalog\Services\Type\Price;
 use Polavi\Services\Di\Container;
 use Polavi\Services\Routing\Router;
@@ -83,7 +82,6 @@ class CartItemType extends ObjectType
                         'resolve' => function($item, $args, Container $container, ResolveInfo $info) {
                             $des = _mysql()->getTable('product_description')
                                 ->where('product_description_product_id', '=', $item['product_id'])
-                                ->andWhere('language_id', '=', get_default_language_Id())
                                 ->fetchOneAssoc();
                             if(!preg_match('/^[\.a-zA-Z0-9\-_+]+$/', $des['seo_key']))
                                 return $container->get(Router::class)->generateUrl('product.view', ["id"=>$item['product_id']]);
