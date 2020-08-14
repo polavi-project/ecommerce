@@ -10,6 +10,7 @@ namespace Polavi\Module\Migration\Middleware\Module\Install;
 
 
 use function Polavi\_mysql;
+use function Polavi\generate_url;
 use Polavi\Middleware\MiddlewareAbstract;
 use Polavi\Services\Http\Request;
 use Polavi\Services\Http\Response;
@@ -34,6 +35,7 @@ class ValidateMiddleware extends MiddlewareAbstract
 
             return $delegate;
         } catch (\Exception $e) {
+            $response->redirect(generate_url('extensions.grid'));
             $response->addAlert("module_install_error", "error", $e->getMessage())->notNewPage();
             return $response;
         }
