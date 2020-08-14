@@ -1,6 +1,6 @@
 <?php
 
-$version = "1.0.0";
+$version = "1.0.1";
 
 return [
     "1.0.0" => function(\Polavi\Services\Db\Processor $conn) {
@@ -40,5 +40,9 @@ return [
                         'language_id'=>0
                     ]);
         }
+    },
+    "1.0.1" => function(\Polavi\Services\Db\Processor $processor) {
+        // Let's leave multi language later
+        $processor->executeQuery("ALTER TABLE setting DROP COLUMN language_id");
     }
 ];
