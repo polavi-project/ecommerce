@@ -306,8 +306,8 @@ return [
             $limit = $p['sm'] - 1;
             $processor->executeQuery("DELETE FROM `product_description` where product_description_product_id = {$p['product_description_product_id']} LIMIT {$limit}");
         }
-        $processor->executeQuery("ALTER TABLE `product_description` DROP INDEX  `FK_PRODUCT_DESCRIPTION_LANGUAGE`");
-        $processor->executeQuery("ALTER TABLE `product_description` DROP INDEX  `UNIQUE_PRODUCT_LANGUAGE`");
+        $processor->executeQuery("ALTER TABLE product_description DROP INDEX  FK_PRODUCT_DESCRIPTION_LANGUAGE");
+        $processor->executeQuery("ALTER TABLE product_description DROP INDEX  UNIQUE_PRODUCT_LANGUAGE");
         $processor->executeQuery("ALTER TABLE product_description ADD CONSTRAINT `PRODUCT_ID_UNIQUE` UNIQUE (`product_description_product_id`)");
         $processor->executeQuery("ALTER TABLE product_description DROP COLUMN language_id");
 
@@ -321,7 +321,7 @@ return [
             $limit = $c['sm'] - 1;
             $processor->executeQuery("DELETE FROM `category_description` where category_description_category_id = {$c['category_description_category_id']} LIMIT {$limit}");
         }
-        $processor->executeQuery("ALTER TABLE `category_description` DROP INDEX  `CATEGORY_DESCRIPTION_LANGUAGE_UNIQUE`");
+        $processor->executeQuery("ALTER TABLE category_description DROP INDEX CATEGORY_DESCRIPTION_LANGUAGE_UNIQUE");
         $processor->executeQuery("ALTER TABLE category_description ADD CONSTRAINT `CATEGORY_ID_UNIQUE` UNIQUE (`category_description_category_id`)");
         $processor->executeQuery("ALTER TABLE category_description DROP COLUMN language_id");
 
@@ -336,7 +336,7 @@ return [
             $limit = $a['sm'] - 1;
             $processor->executeQuery("DELETE FROM `product_attribute_value_index` where attribute_id = {$a['attribute_id']} AND product_id={$a["product_id"]} LIMIT {$limit}");
         }
-        $processor->executeQuery("ALTER TABLE `product_attribute_value_index` DROP INDEX  `UNIQUE_TEXT_VALUE`");
+        $processor->executeQuery("ALTER TABLE product_attribute_value_index DROP INDEX  UNIQUE_TEXT_VALUE");
         $processor->executeQuery("ALTER TABLE product_attribute_value_index DROP COLUMN language_id");
 
         $processor->executeQuery("SET FOREIGN_KEY_CHECKS=1");
