@@ -9,12 +9,12 @@ export default function BestSellers({products, listUrl}) {
         </div>
         <table className="table table-bordered">
             <thead>
-            <tr>
-                <th>Product name</th>
-                <th>Sku</th>
-                <th>Price</th>
-                <th>Sold Quantity</th>
-            </tr>
+                <tr>
+                    <th>Product name</th>
+                    <th>Sku</th>
+                    <th>Price</th>
+                    <th>Sold Quantity</th>
+                </tr>
             </thead>
             <tbody>
             {products.map((p, i) => {
