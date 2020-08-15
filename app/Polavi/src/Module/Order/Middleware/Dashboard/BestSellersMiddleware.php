@@ -26,7 +26,7 @@ class BestSellersMiddleware extends MiddlewareAbstract
             ->get(GraphqlExecutor::class)
             ->waitToExecute([
                 "query"=>"{
-                        bestSellers(language: 0 limit: 10){
+                        bestSellers(limit: 10){
                             name
                             sku
                             price
