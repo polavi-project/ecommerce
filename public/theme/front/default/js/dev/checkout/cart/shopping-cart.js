@@ -2,7 +2,7 @@ import Area from "../../../../../../../js/production/area.js";
 
 function Title() {
     return <div className="mb-4 col-12">
-        <h1 className="uk-text-center">Shopping cart</h1>
+        <h1 className="shopping-cart-title">Shopping cart</h1>
     </div>
 }
 

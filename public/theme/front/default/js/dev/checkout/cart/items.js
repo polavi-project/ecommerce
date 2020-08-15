@@ -54,7 +54,7 @@ function Items({items}) {
     if(items.length === 0)
         return <Empty homeUrl={baseUrl}/>;
     else
-        return <div id="shopping-cart-items" className="col-8">
+        return <div id="shopping-cart-items" className="col-12 col-md-8">
             <table className="table">
                 <thead>
                     <tr>

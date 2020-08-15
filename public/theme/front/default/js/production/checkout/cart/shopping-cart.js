@@ -6,7 +6,7 @@ function Title() {
         { className: "mb-4 col-12" },
         React.createElement(
             "h1",
-            { className: "uk-text-center" },
+            { className: "shopping-cart-title" },
             "Shopping cart"
         )
     );

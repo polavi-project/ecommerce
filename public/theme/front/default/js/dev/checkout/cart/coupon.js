@@ -12,7 +12,7 @@ function Coupon(props) {
         Fetch(props.action, false, "POST", {coupon: coupon});
     };
 
-    return <div className="shopping-cart-coupon col-4">
+    return <div className="shopping-cart-coupon col-12 col-md-4">
         <h4><strong>Coupon code</strong></h4>
         <div className="mb-4">
             <input
