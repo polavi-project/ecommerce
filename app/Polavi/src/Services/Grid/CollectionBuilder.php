@@ -68,10 +68,12 @@ class CollectionBuilder
      */
     public function addFilter(string $key, callable $callBack): self
     {
-        if(isset($this->filters[$key]))
+        if (isset($this->filters[$key])) {
             return $this;
+        }
 
         $this->filters[$key] = $callBack;
+
         return $this;
     }
 
@@ -146,8 +148,9 @@ class CollectionBuilder
      */
     protected function applyFilter($id, $args = [])
     {
-        if(isset($this->filters[$id]))
+        if (isset($this->filters[$id])) {
             $this->filters[$id]($args);
+        }
     }
 
     /**
@@ -158,6 +161,7 @@ class CollectionBuilder
     {
         $collection = clone $this->collection;
         $row = $collection->setFieldToSelect("COUNT(*)", "total")->fetchOneAssoc();
+
         return $row["total"] ?? 0;
     }
 }

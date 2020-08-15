@@ -28,11 +28,13 @@ class Request extends \Symfony\Component\HttpFoundation\Request
      */
     public static function createFromGlobals()
     {
-        if (self::$instance !== null)
+        if (self::$instance !== null) {
             throw new \Exception("You only can initialize Request object one time");
+        }
         
         $request = parent::createFromGlobals();
         self::$instance = $request;
+
         return self::$instance;
     }
 
@@ -43,9 +45,11 @@ class Request extends \Symfony\Component\HttpFoundation\Request
      */
     public function setUser($user)
     {
-        if($this->user)
+        if ($this->user) {
             throw new \RuntimeException('You can not set user twice');
+        }
         $this->user = $user;
+
         return $this;
     }
 
@@ -99,10 +103,11 @@ class Request extends \Symfony\Component\HttpFoundation\Request
      */
     public function isAjax() : bool
     {
-        if((int)$this->query->get('ajax') === 1)
+        if ((int)$this->query->get('ajax') === 1) {
             return true;
-        else
+        } else {
             return $this->isXmlHttpRequest();
+        }
     }
 
     /**
@@ -110,9 +115,10 @@ class Request extends \Symfony\Component\HttpFoundation\Request
      */
     public function isAdmin() : bool
     {
-        if(preg_match("/^\/" . ADMIN_PATH . "/", $this->getPathInfo()))
+        if (preg_match("/^\/" . ADMIN_PATH . "/", $this->getPathInfo())) {
             return true;
-        else
+        } else {
             return false;
+        }
     }
 }

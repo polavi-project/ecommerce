@@ -19,14 +19,16 @@ class SaveCartMiddleware extends MiddlewareAbstract
 {
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
-        if($request->isAdmin() == true)
+        if ($request->isAdmin() == true) {
             return $delegate;
+        }
         $conn = _mysql();
         $cart = $this->getContainer()->get(Cart::class);
-        if($cart->isEmpty()) {
-            if($cart->getData('cart_id'))
+        if ($cart->isEmpty()) {
+            if ($cart->getData('cart_id')) {
                 $conn->getTable('cart')->where('cart_id', '=', $cart->getData('cart_id'))->delete();
-            if($cart->getPromises()) {
+            }
+            if ($cart->getPromises()) {
                 $promise = settle($cart->getPromises());
                 $promise->wait();
             }
@@ -37,7 +39,7 @@ class SaveCartMiddleware extends MiddlewareAbstract
         $conn->startTransaction();
 
         try {
-            if(!$cart->getData('cart_id')) {
+            if (!$cart->getData('cart_id')) {
                 $conn->getTable('cart')->insert($cart->toArray());
                 $cartId = $conn->getLastID();
             } else {
@@ -50,21 +52,24 @@ class SaveCartMiddleware extends MiddlewareAbstract
             foreach ($oldItems as $item) {
                 $flag = false;
                 foreach ($items as $i) {
-                    if($item['cart_item_id'] == $i->getData('cart_item_id')) {
+                    if ($item['cart_item_id'] == $i->getData('cart_item_id')) {
                         $flag = true;
                         break;
                     }
                 }
 
-                if($flag == false)
+                if ($flag == false) {
                     $conn->getTable('cart_item')->where('cart_item_id', '=', $item['cart_item_id'])->delete();
+                }
             }
 
             foreach ($items as $item) {
-                if(!$conn->getTable('cart_item')->load($item->getData('cart_item_id'))) {
+                if (!$conn->getTable('cart_item')->load($item->getData('cart_item_id'))) {
                     $conn->getTable('cart_item')->insert(array_merge($item->toArray(), ['cart_id'=>$cartId]));
                 } else {
-                    $conn->getTable('cart_item')->where('cart_item_id', '=', $item->getData('cart_item_id'))->update(array_merge($item->toArray(), ['cart_id'=>$cartId]));
+                    $conn->getTable('cart_item')
+                        ->where('cart_item_id', '=', $item->getData('cart_item_id'))
+                        ->update(array_merge($item->toArray(), ['cart_id'=>$cartId]));
                 }
             }
 
@@ -100,8 +105,9 @@ class SaveCartMiddleware extends MiddlewareAbstract
             $response->addAlert('cart_save_error', 'error', $e->getMessage());
         }
 
-        if($response->isRedirect())
+        if ($response->isRedirect()) {
             return $response;
+        }
 
         return $delegate;
     }

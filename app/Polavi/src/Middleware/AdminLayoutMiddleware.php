@@ -16,17 +16,22 @@ class AdminLayoutMiddleware extends MiddlewareAbstract
 {
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
-        if(!$request->isAdmin())
+        if (!$request->isAdmin()) {
             return $delegate;
-        if(!$response->isNewPage())
+        }
+        if (!$response->isNewPage()) {
             return $delegate;
+        }
 
         $response->addWidget(
             'container',
             'wrapper',
             0,
             get_js_file_url("production/area.js"),
-            ["id"=> "container", "className" => "container-fluid " . str_replace(".", "-", $request->attributes->get("_matched_route"))]
+            [
+                "id" => "container",
+                "className" => "container-fluid " . str_replace(".", "-", $request->attributes->get("_matched_route"))
+            ]
         );
 
         $response->addWidget(

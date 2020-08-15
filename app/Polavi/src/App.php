@@ -60,53 +60,54 @@ class App
      */
     public function registerDefaultService()
     {
-        the_container($this->container)->set(Router::class, function($c) {
+        the_container($this->container)->set(Router::class, function ($c) {
             return new Router($c[Request::class], new RouteParser());
         });
 
-        the_container()->set(Processor::class,  $this->container->factory(function() {
+        the_container()->set(Processor::class, $this->container->factory(function () {
             return new Processor(
                 $this->container->get(Configuration::class),
                 $this->container->get(EventDispatcher::class)
             );
         }));
 
-        the_container()[Session::class] = function($c) {
+        the_container()[Session::class] = function ($c) {
             return new Session(new NativeSessionStorage([], new NativeFileSessionHandler()));
         };
 
-        the_container()[Request::class] = function($c) {
+        the_container()[Request::class] = function ($c) {
             return Request::createFromGlobals();
         };
 
-        the_container()[Helmet::class] = function($c) {
+        the_container()[Helmet::class] = function ($c) {
             return new Helmet();
         };
 
-        the_container()[Response::class] = function($c) {
+        the_container()[Response::class] = function ($c) {
             return new Response();
         };
 
-        the_container()[EventDispatcher::class] = function($c) {
+        the_container()[EventDispatcher::class] = function ($c) {
             return new EventDispatcher();
         };
 
-        the_container()[ExecutionPromise::class] = function(Container $c) {
-            $promise = new Promise(function() use (&$promise, $c) {
-                if($c->offsetExists(ExecutionResult::class))
+        the_container()[ExecutionPromise::class] = function (Container $c) {
+            $promise = new Promise(function () use (&$promise, $c) {
+                if ($c->offsetExists(ExecutionResult::class)) {
                     $promise->resolve($c->get(ExecutionResult::class));
-                else
+                } else {
                     $promise->reject('Graphql execution result is not defined');
+                }
             });
 
             return $promise;
         };
 
-        the_container()[PromiseWaiter::class] = function($c) {
-            $promise = new PromiseWaiter(function() use(&$promise) {
+        the_container()[PromiseWaiter::class] = function ($c) {
+            $promise = new PromiseWaiter(function () use (&$promise) {
                 $p = settle($promise->getPromises());
                 $p->wait();
-                $p->then(function($result) use (&$promise) {
+                $p->then(function ($result) use (&$promise) {
                     $promise->resolve($result);
                 });
             });
@@ -114,7 +115,7 @@ class App
             return $promise;
         };
         // Log
-        the_container()[Logger::class] = function($c) {
+        the_container()[Logger::class] = function ($c) {
             $logger = new Logger('system');
             $logger->pushHandler(new StreamHandler(LOG_PATH . '/system.log', Logger::DEBUG));
 
@@ -126,11 +127,19 @@ class App
     {
         $modules = [];
 
-        if(file_exists(CONFIG_PATH . DS . 'config.php')) {
+        if (file_exists(CONFIG_PATH . DS . 'config.php')) {
             $conn = _mysql();
             // This is for the one who installed the app
-            $migrationTable = $conn->executeQuery("SELECT TABLE_NAME FROM information_schema.tables WHERE table_schema = :dbName AND TABLE_NAME = \"migration\" LIMIT 0,1", ['dbName'=> $conn->getConfiguration()->getDb()])->fetch(\PDO::FETCH_ASSOC);
-            if($migrationTable == false) {
+            $migrationTable = $conn
+                ->executeQuery(
+                    "SELECT TABLE_NAME FROM information_schema.tables 
+                    WHERE table_schema = :dbName 
+                    AND TABLE_NAME = \"migration\" LIMIT 0,1",
+                    [
+                        'dbName'=> $conn->getConfiguration()->getDb()
+                    ]
+                )->fetch(\PDO::FETCH_ASSOC);
+            if ($migrationTable == false) {
                 $conn->executeQuery("CREATE TABLE `migration` (
                   `migration_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
                   `module` char(255) NOT NULL,
@@ -167,32 +176,38 @@ class App
         $router = $this->container->get(Router::class);
         $container = $this->container;
         $container->set("moduleLoading", true);
-        foreach($modules as $key => $module) {
-            if(in_array($module["m"], CORE_MODULES))
+        foreach ($modules as $key => $module) {
+            if (in_array($module["m"], CORE_MODULES)) {
                 $path = MODULE_PATH . DS . $module["m"];
-            else
+            } else {
                 $path = COMMUNITY_MODULE_PATH . DS . $module["m"];
-            if(!file_exists($path))
-                continue;
+            }
 
-            if(file_exists( $path . DS . 'services.php'))
-                (function() use ($path, $container) {
+            if (!file_exists($path)) {
+                continue;
+            }
+
+            if (file_exists($path . DS . 'services.php')) {
+                (function () use ($path, $container) {
                     include $path . DS . 'services.php';
                 })();
+            }
 
-            if(file_exists( $path . DS . 'events.php'))
-                (function() use ($path, $eventDispatcher) {
+            if (file_exists($path . DS . 'events.php')) {
+                (function () use ($path, $eventDispatcher) {
                     include $path . DS . 'events.php';
                 })();
+            }
 
-            if(file_exists( $path . DS . 'routes.php'))
-                (function() use ($path, $router) {
+            if (file_exists($path . DS . 'routes.php')) {
+                (function () use ($path, $router) {
                     include $path . DS . 'routes.php';
                 })();
+            }
 
-            if(file_exists( $path . DS . 'migration.php')) {
+            if (file_exists($path . DS . 'migration.php')) {
                 $v= null;
-                $modules[$key]["migrateCallbacks"] = (function() use (&$v, $path) {
+                $modules[$key]["migrateCallbacks"] = (function () use (&$v, $path) {
                     $callbacks = include $path . DS . 'migration.php';
                     $v = $version;
                     return $callbacks;
@@ -207,9 +222,9 @@ class App
 
     protected function prepareToStart()
     {
-        if(file_exists(CONFIG_PATH . DS . 'config.php')) {
+        if (file_exists(CONFIG_PATH . DS . 'config.php')) {
             $configuration = require_once './config/config.php';
-            $this->container->set(Configuration::class, function() use($configuration) {
+            $this->container->set(Configuration::class, function () use ($configuration) {
                 return new Configuration(
                     $configuration["database"],
                     $configuration["driver"],
@@ -218,9 +233,9 @@ class App
                     $configuration["password"]
                 );
             });
-        } else if(file_exists(CONFIG_PATH . DS . 'config.tmp.php')) {
+        } elseif (file_exists(CONFIG_PATH . DS . 'config.tmp.php')) {
             $configuration = require_once './config/config.tmp.php';
-            $this->container->set(Configuration::class, function() use($configuration) {
+            $this->container->set(Configuration::class, function () use ($configuration) {
                 return new Configuration(
                     $configuration["database"],
                     $configuration["driver"],
@@ -231,7 +246,7 @@ class App
             });
         }
 
-        if(!strpos($_SERVER['REQUEST_URI'], 'install') and !file_exists(CONFIG_PATH . DS . 'config.php')) {
+        if (!strpos($_SERVER['REQUEST_URI'], 'install') and !file_exists(CONFIG_PATH . DS . 'config.php')) {
             $redirect = new \Symfony\Component\HttpFoundation\RedirectResponse(\Polavi\get_base_url() . '/install');
             return $redirect->send();
         }
@@ -247,17 +262,18 @@ class App
         $conn = _mysql();
         foreach (CORE_MODULES as $module) {
             $check = $conn->getTable("migration")->loadByField("module", $module);
-            if(!$check) {
+            if (!$check) {
                 // This core extension is not installed
-                (function() use($module, &$conn) {
+                (function () use ($module, &$conn) {
                     $callbacks = require MODULE_PATH . DS . $module . DS . "migration.php";
-                    if(!is_array($callbacks))
+                    if (!is_array($callbacks)) {
                         $callbacks = [];
-                    $callbacks = array_filter($callbacks, function($v, $k) {
+                    }
+                    $callbacks = array_filter($callbacks, function ($v, $k) {
                         return preg_match("/^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)/", $k);
                     }, ARRAY_FILTER_USE_BOTH);
 
-                    uksort($callbacks, function($a, $b) {
+                    uksort($callbacks, function ($a, $b) {
                         return version_compare($a, $b) >= 0;
                     });
 
@@ -281,28 +297,36 @@ class App
     protected function upgradeModules(array $modules)
     {
         foreach ($modules as $k => $module) {
-            if(isset($module["nv"]) and version_compare($module["v"], $module["nv"]) == -1) {
+            if (isset($module["nv"]) and version_compare($module["v"], $module["nv"]) == -1) {
                 $callbacks = $module["migrateCallbacks"];
-                if(!is_array($callbacks))
+                if (!is_array($callbacks)) {
                     $callbacks = [];
-                $callbacks = array_filter($callbacks, function($version) use($module) {
-                    return preg_match("/^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)/", $version) && version_compare($module["v"], $version) == -1;
+                }
+
+                $callbacks = array_filter($callbacks, function ($version) use ($module) {
+                    return preg_match("/^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)/", $version)
+                        && version_compare($module["v"], $version) == -1;
                 }, ARRAY_FILTER_USE_KEY);
 
-                uksort($callbacks, function($a, $b) {
+                uksort($callbacks, function ($a, $b) {
                     return version_compare($a, $b) >= 0;
                 });
 
                 $conn = $this->container->get(Processor::class);
                 $conn->startTransaction();
                 try {
-                    foreach ($callbacks as $callback)
+                    foreach ($callbacks as $callback) {
                         $callback($conn);
-                    $conn->getTable("migration")->where("module", "=", $module["m"])->update(["version" => $module["nv"]]);
+                    }
+                    $conn->getTable("migration")
+                        ->where("module", "=", $module["m"])
+                        ->update(["version" => $module["nv"]]);
                     $conn->commit();
                 } catch (\Exception $e) {
                     $conn->rollback();
-                    $this->container->get(Logger::class)->error(sprintf("Could not upgrade module %s. Error: %s", $module["m"], $e->getMessage()));
+                    $this->container
+                        ->get(Logger::class)
+                        ->error(sprintf("Could not upgrade module %s. Error: %s", $module["m"], $e->getMessage()));
                 }
             }
         }
@@ -316,7 +340,7 @@ class App
         $this->prepareToStart();
         $modules = $this->loadModule();
         $this->upgradeModules($modules);
-        if(file_exists(CONFIG_PATH . DS . 'config.php'))
+        if (file_exists(CONFIG_PATH . DS . 'config.php')) {
             $middleware = [
                 0 => ConfigMiddleware::class,
                 10 => SessionMiddleware::class,
@@ -333,7 +357,7 @@ class App
                 110 => AlertMiddleware::class,
                 120 => ResponseMiddleware::class
             ];
-        else
+        } else {
             $middleware = [
                 SessionMiddleware::class,
                 RoutingMiddleware::class,
@@ -341,6 +365,7 @@ class App
                 FrontLayoutMiddleware::class,
                 ResponseMiddleware::class
             ];
+        }
 
         $mm = new MiddlewareManager($this->container, $middleware);
         dispatch_event('register.core.middleware', [$mm]);

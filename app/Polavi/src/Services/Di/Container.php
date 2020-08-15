@@ -28,8 +28,10 @@ class Container extends \Pimple\Container
      */
     public function get($id)
     {
-        if($this->offsetExists("moduleLoading"))
+        if ($this->offsetExists("moduleLoading")) {
             return null;
+        }
+
         return parent::offsetGet($id);
     }
 
@@ -38,9 +40,12 @@ class Container extends \Pimple\Container
      * @param $id
      * @return mixed|null
      */
-    public function offsetGet($id) {
-        if($this->offsetExists("moduleLoading"))
+    public function offsetGet($id)
+    {
+        if ($this->offsetExists("moduleLoading")) {
             return null;
+        }
+
         return parent::offsetGet($id);
     }
 }

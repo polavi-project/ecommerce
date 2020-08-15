@@ -120,19 +120,20 @@ class Processor extends \PDO
         $table_name = $this->configuration->getPrefix() . $table->getTable();
         $query = "SELECT ";
         $fields = $table->getSelectFields();
-        if($fields == null)
+        if ($fields == null) {
             $query .= "*";
-        else {
-            foreach ($fields as $field=>$alias) {
-                if($field == "*") {
+        } else {
+            foreach ($fields as $field => $alias) {
+                if ($field == "*") {
                     $query .= " {$field},";
                     continue;
                 }
-                if(strpos($field, "(") !== false) {
-                    if($alias == null)
+                if (strpos($field, "(") !== false) {
+                    if ($alias == null) {
                         $query .= " {$field},";
-                    else
+                    } else {
                         $query .= " {$field} AS `{$alias}`,";
+                    }
                     continue;
                 }
                 if (strpos($field, '.') !== false) {
@@ -140,17 +141,19 @@ class Processor extends \PDO
                 } else {
                     $field = '`'. $field . '`';
                 }
-                if($alias == null)
+                if ($alias == null) {
                     $query .= " {$field},";
-                else
+                } else {
                     $query .= " {$field} AS `{$alias}`,";
+                }
             }
         }
         $query = rtrim($query, ',');
-        if($table->getJoin())
+        if ($table->getJoin()) {
             $query .= " FROM `{$table_name}` AS `{$table->getTable()}`";
-        else
+        } else {
             $query .= " FROM `{$table_name}`";
+        }
 
         return $query;
     }
@@ -162,21 +165,23 @@ class Processor extends \PDO
      */
     protected function buildJoin(Table $table)
     {
-        if(!$table->getJoin())
+        if (!$table->getJoin()) {
             return '';
+        }
         $joinClause = '';
-        foreach($table->getJoin() as $join) {
-            if(isset($join['alias']) and $join['alias'])
+        foreach ($table->getJoin() as $join) {
+            if (isset($join['alias']) and $join['alias']) {
                 $alias = $join['alias'];
-            else
+            } else {
                 $alias = $join['table'];
+            }
             $joinClause .= "{$join['type']} `" . $this->configuration->getPrefix() . $join['table'] . "` AS `" . $alias . "` ON {$join['on']} ";
             $joinClause = rtrim($joinClause, 'AND');
             $where = "";
-            if(isset($join['where'])) {
+            if (isset($join['where'])) {
                 $where = $this->buildWhere($join['where']);
             }
-            $joinClause .= str_replace("WHERE "," AND ",$where);
+            $joinClause .= str_replace("WHERE ", " AND ", $where);
         }
         return $joinClause;
     }
@@ -189,19 +194,22 @@ class Processor extends \PDO
      */
     protected function buildWhere(array $where, &$binding = null)
     {
-        if(count($where) == 0)
+        if (count($where) == 0) {
             return null;
+        }
         $whereClause = '';
-        foreach($where as $key=>$condition) {
-            if($key != 0)
+        foreach ($where as $key => $condition) {
+            if ($key != 0) {
                 $whereClause .= ' ' . strtoupper($condition['ao']) . ' ';
-            if($condition['start_group'])
+            }
+            if ($condition['start_group']) {
                 $whereClause .= ' ' . $condition['start_group'] . ' ';
-            if(isset($condition['isValueAColumn']) and $condition['isValueAColumn'] == true) {
+            }
+            if (isset($condition['isValueAColumn']) and $condition['isValueAColumn'] == true) {
                 $whereClause .= "{$condition['column']} {$condition['operator']} {$condition['value']} ";
             } else {
                 $placeholder = str_ireplace(["`", "'", "."], ['', '', "_"], $condition['column']) . '_' . $key;
-                switch($condition['operator']) {
+                switch ($condition['operator']) {
                     case '=':
                     case '>':
                     case '>=':
@@ -225,7 +233,7 @@ class Processor extends \PDO
                         // Value must be an array
                         $whereClause .= "{$condition['column']} {$condition['operator']} ";
                         $in = '(';
-                        foreach($condition['value'] as $k=>$value) {
+                        foreach ($condition['value'] as $k => $value) {
                             $in .= ':in' . $k . ', ';
                             $binding[':in' . $k] = $value;
                         }
@@ -235,8 +243,9 @@ class Processor extends \PDO
                 }
             }
 
-            if($condition['end_group'])
+            if ($condition['end_group']) {
                 $whereClause .= ' ' . $condition['end_group'] . ' ';
+            }
         }
         $whereClause = 'WHERE ' . $whereClause;
 
@@ -256,10 +265,11 @@ class Processor extends \PDO
         $whereClause = $this->buildWhere($table->getWhere());
         $query = $query . " {$whereClause} ";
 
-        if($table->getGroupBy())
+        if ($table->getGroupBy()) {
             $query = $query . ' GROUP BY ' . $table->getGroupBy();
+        }
 
-        if($table->getHaving()) {
+        if ($table->getHaving()) {
             $having = str_replace("WHERE", "HAVING", $this->buildWhere($table->getHaving()));
             $query = $query . ' ' . $having;
         }
@@ -267,9 +277,9 @@ class Processor extends \PDO
         $sortBy = "ORDER BY {$setting['sort_by']}";
         $sortOrder = "{$setting['sort_order']}";
         $limit = $setting['limit'];
-        if($limit == null)
+        if ($limit == null) {
             $limit = '';
-        else {
+        } else {
             $offset = (int)$setting['page'] > 1 ? ((int)$setting['page']-1) * $limit : 0;
             $limit = ((int)$limit == 1 && $offset == 0) ? "LIMIT 1" : "LIMIT {$offset},{$limit}";
         }
@@ -282,7 +292,7 @@ class Processor extends \PDO
             $stmt->execute($table->getBinding());
             return $stmt;
         } catch (\PDOException $e) {
-            if($e->getCode() == '42S22')
+            if ($e->getCode() == '42S22') {
                 try {
                     $stmt = $this->prepare($noSortByQuery);
                     $stmt->execute($table->getBinding());
@@ -291,6 +301,7 @@ class Processor extends \PDO
                     $this->commit = false;
                     throw $e;
                 }
+            }
             $this->commit = false;
             throw $e;
         }
@@ -310,27 +321,35 @@ class Processor extends \PDO
         $binding = [];
         $insertColumns = [];
         foreach ($table->getColumns() as $column) {
-            if(isset($data[$column['Field']]) and is_array($data[$column['Field']]))
+            if (isset($data[$column['Field']]) and is_array($data[$column['Field']])) {
                 $data[$column['Field']] = json_encode($data[$column['Field']], JSON_NUMERIC_CHECK);
-            if($column['Type'] == 'timestamp' and $column['Default'] == 'CURRENT_TIMESTAMP')
+            }
+            if ($column['Type'] == 'timestamp' and $column['Default'] == 'CURRENT_TIMESTAMP') {
                 continue;
-            if((!isset($data[$column['Field']]) or trim($data[$column['Field']])=='')) {
-                if($column['Extra'] == 'auto_increment')
+            }
+            if ((!isset($data[$column['Field']]) or trim($data[$column['Field']])=='')) {
+                if ($column['Extra'] == 'auto_increment') {
                     continue;
-                if($column['Null'] == 'NO' and $column['Default'] != NULL)
-                    continue;
+                }
 
-                if($column['Null'] == 'NO' and $column['Default'] == NULL)
+                if ($column['Null'] == 'NO' and $column['Default'] != null) {
+                    continue;
+                }
+
+                if ($column['Null'] == 'NO' and $column['Default'] == null) {
                     throw new \InvalidArgumentException("{$column['Field']} can not be empty");
+                }
 
-                if($column['Null'] == 'YES' and in_array($column['Type'], ['date', 'datetime', 'timestamp']))
+                if ($column['Null'] == 'YES' and in_array($column['Type'], ['date', 'datetime', 'timestamp'])) {
                     continue;
+                }
             }
             $insertColumns[] = $column['Field'];
-            $binding[':'.$column['Field']] = isset($data[$column['Field']]) ? $data[$column['Field']] : NULL;
+            $binding[':'.$column['Field']] = isset($data[$column['Field']]) ? $data[$column['Field']] : null;
         }
-        if(count($insertColumns)==0)
+        if (count($insertColumns)==0) {
             throw new \RuntimeException("Something wrong, can not save data");
+        }
         $query = "INSERT INTO `" . $this->configuration->getPrefix() . $table->getTable() . "` (`" . implode('`, `', $insertColumns) . "`) VALUES (:" . implode(', :', $insertColumns) . ")";
         try {
             $stmt = $this->prepare($query);
@@ -357,25 +376,32 @@ class Processor extends \PDO
         $prepare = '';
         $binding = [];
         foreach ($table->getColumns() as $column) {
-            if($column['Type'] == 'timestamp' and $column['Default'] == 'CURRENT_TIMESTAMP')
+            if ($column['Type'] == 'timestamp' and $column['Default'] == 'CURRENT_TIMESTAMP') {
                 continue;
-            if(!array_key_exists($column['Field'], $data))
+            }
+            if (!array_key_exists($column['Field'], $data)) {
                 continue;
-            if(is_array($data[$column['Field']]))
+            }
+            if (is_array($data[$column['Field']])) {
                 $data[$column['Field']] = json_encode($data[$column['Field']], JSON_NUMERIC_CHECK);
-            if(trim($data[$column['Field']]) == '') {
-                if($column['Null'] == 'NO' and $column['Default'] != NULL)
+            }
+            if (trim($data[$column['Field']]) == '') {
+                if ($column['Null'] == 'NO' and $column['Default'] != null) {
                     continue;
-                if($column['Null'] == 'NO' and $column['Default'] == NULL)
+                }
+                if ($column['Null'] == 'NO' and $column['Default'] == null) {
                     throw new \InvalidArgumentException("{$column['Field']} can not be empty");
-                if($column['Null'] == 'YES' and in_array($column['Type'], ['date', 'datetime', 'timestamp']))
+                }
+                if ($column['Null'] == 'YES' and in_array($column['Type'], ['date', 'datetime', 'timestamp'])) {
                     continue;
+                }
             }
             $prepare .= "`" . $column['Field'] . "` = :" . $column['Field'] . ",";
-            $binding[':'.$column['Field']] = isset($data[$column['Field']]) ? $data[$column['Field']] : NULL;
+            $binding[':'.$column['Field']] = isset($data[$column['Field']]) ? $data[$column['Field']] : null;
         }
-        if($prepare == '')
+        if ($prepare == '') {
             throw new \RuntimeException('You are trying to update no column');
+        }
         $prepare = trim($prepare, ',');
         $whereClause = $this->buildWhere($table->getWhere(), $binding);
         $query = "UPDATE `" . $this->configuration->getPrefix() . $table->getTable() . "` SET " . $prepare . " {$whereClause}";
@@ -402,20 +428,26 @@ class Processor extends \PDO
         $binding = [];
         $insertColumns = [];
         foreach ($table->getColumns() as $column) {
-            if(!array_key_exists($column['Field'], $data))
+            if (!array_key_exists($column['Field'], $data)) {
                 continue;
-            if(is_array($data[$column['Field']]))
+            }
+            if (is_array($data[$column['Field']])) {
                 $data[$column['Field']] = json_encode($data[$column['Field']], JSON_NUMERIC_CHECK);
-            if((!isset($data[$column['Field']]) or trim($data[$column['Field']])=='')) {
-                if($column['Null'] == 'NO' and $column['Default'] != NULL)
+            }
+            if ((!isset($data[$column['Field']]) or trim($data[$column['Field']])=='')) {
+                if ($column['Null'] == 'NO' and $column['Default'] != null) {
                     continue;
-                if($column['Extra'] == 'auto_increment')
+                }
+                if ($column['Extra'] == 'auto_increment') {
                     continue;
-                if($column['Null']=='NO' and $column['Default']== NULL)
+                }
+                if ($column['Null']=='NO' and $column['Default']== null) {
                     throw new \InvalidArgumentException("{$column['Field']} can not be empty");
+                }
 
-                if($column['Null'] == 'YES' and in_array($column['Type'], ['date', 'datetime', 'timestamp']))
+                if ($column['Null'] == 'YES' and in_array($column['Type'], ['date', 'datetime', 'timestamp'])) {
                     continue;
+                }
             }
             $insertColumns[] = $column['Field'];
             $binding[':'.$column['Field']] = isset($data[$column['Field']]) ? $data[$column['Field']] : null;
@@ -481,10 +513,13 @@ class Processor extends \PDO
             'limit'=> null
         ];
 
-        $setting = array_filter($setting, function($value){return !is_null($value);});
+        $setting = array_filter($setting, function ($value) {
+            return !is_null($value);
+        });
 
-        if(isset($setting['sort_order']))
+        if (isset($setting['sort_order'])) {
             $setting['sort_order'] = (in_array(strtoupper($setting['sort_order']), ['ASC', 'DESC'])) ? strtoupper($setting['sort_order']) : 'ASC';
+        }
 
         $setting = array_merge($defaultSetting, $setting);
 
@@ -505,7 +540,7 @@ class Processor extends \PDO
      */
     protected function validate(Table $table, array $data = [])
     {
-        foreach($table->getColumns() as $column) {
+        foreach ($table->getColumns() as $column) {
             $this->validateField($column, $data);
         }
     }
@@ -518,8 +553,9 @@ class Processor extends \PDO
     {
         $sql = 'DESCRIBE ' . $table;
         $stmt = $this->prepare($sql);
-        if($stmt->execute())
+        if ($stmt->execute()) {
             return $stmt->fetchAll(\Pdo::FETCH_ASSOC);
+        }
         return false;
     }
 
@@ -529,20 +565,23 @@ class Processor extends \PDO
      */
     protected function validateField($field, array &$data = [])
     {
-        if($field['Null']=='NO' and (!isset($data[$field['Field']]) or trim($data[$field['Field']])==''))
-            if($field['Default']!= NULL)
+        if ($field['Null'] == 'NO' and (!isset($data[$field['Field']]) or trim($data[$field['Field']]) == '')) {
+            if ($field['Default']!= null) {
                 $data[$field['Field']] = $field['Default'];
-            else
+            } else {
                 throw new \InvalidArgumentException("{$field['Field']} can not be empty");
+            }
+        }
         $type = preg_replace('/\([0-9]\)/', '', $field['Type']);
-        switch($type) {
+        switch ($type) {
             case 'tinyint':
             case 'smallint':
             case 'int':
             case 'mediumint':
             case 'bigint':
-                if(isset($data[$field['Field']]) and !preg_match('/^[0-9]*$/', $data[$field['Field']]))
+                if (isset($data[$field['Field']]) and !preg_match('/^[0-9]*$/', $data[$field['Field']])) {
                     throw new \InvalidArgumentException("{$field['Field']} must be a number");
+                }
         }
     }
 
