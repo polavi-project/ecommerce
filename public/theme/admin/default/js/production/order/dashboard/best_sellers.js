@@ -1,6 +1,7 @@
 import A from "../../../../../../../js/production/a.js";
 
 export default function BestSellers({ products, listUrl }) {
+    const currency = ReactRedux.useSelector(state => _.get(state, 'appState.currency'));
     return React.createElement(
         "div",
         { className: "sml-block mt-4" },
@@ -57,6 +58,7 @@ export default function BestSellers({ products, listUrl }) {
                 "tbody",
                 null,
                 products.map((p, i) => {
+                    const _price = new Intl.NumberFormat('en', { style: 'currency', currency: currency }).format(p.price);
                     return React.createElement(
                         "tr",
                         { key: i },
@@ -77,7 +79,7 @@ export default function BestSellers({ products, listUrl }) {
                         React.createElement(
                             "td",
                             null,
-                            p.price
+                            _price
                         ),
                         React.createElement(
                             "td",
