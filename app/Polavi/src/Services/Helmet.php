@@ -60,8 +60,9 @@ class Helmet
         $metas = [];
         ksort($this->metas);
         foreach ($this->metas as $meta) {
-            foreach ($meta as $m)
+            foreach ($meta as $m) {
                 $metas[] = $m;
+            }
         }
         return $metas;
     }
@@ -86,8 +87,9 @@ class Helmet
         $links = [];
         ksort($this->links);
         foreach ($this->links as $link) {
-            foreach ($link as $l)
+            foreach ($link as $l) {
                 $links[] = $l;
+            }
         }
         return $links;
     }
@@ -112,8 +114,9 @@ class Helmet
         $scripts = [];
         ksort($this->scripts);
         foreach ($this->scripts as $script) {
-            foreach ($script as $s)
+            foreach ($script as $s) {
                 $scripts[] = $s;
+            }
         }
         return $scripts;
     }
@@ -128,24 +131,27 @@ class Helmet
         $metas = $this->getMetas();
         foreach ($metas as $meta) {
             $m = "<meta ";
-            foreach ($meta as $key=>$value)
+            foreach ($meta as $key => $value) {
                 $m .= "{$key}=\"{$value}\" ";
+            }
             $m .= "/>";
             echo $m;
         }
         $links = $this->getLinks();
         foreach ($links as $link) {
             $l = "<link ";
-            foreach ($link as $key=>$value)
+            foreach ($link as $key => $value) {
                 $l .= "{$key}=\"{$value}\" ";
+            }
             $l .= "/>";
             echo $l;
         }
         $scripts = $this->getScripts();
         foreach ($scripts as $script) {
             $s = "<script ";
-            foreach ($script as $key=>$value)
+            foreach ($script as $key => $value) {
                 $s .= "{$key}=\"{$value}\" ";
+            }
             $s .= "></script>";
             echo $s;
         }

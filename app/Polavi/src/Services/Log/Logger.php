@@ -10,8 +10,8 @@ namespace Polavi\Services\Log;
 
 class Logger
 {
-    protected static $_file = 'system.log';
-    protected static $_folder = 'log';
+    protected static $file = 'system.log';
+    protected static $folder = 'log';
 
     protected static function checkLogConfig()
     {
@@ -20,12 +20,12 @@ class Logger
 
     public static function write($message, $file = null, $line = null)
     {
-        if(self::checkLogConfig())
+        if (self::checkLogConfig())
         {
             try {
                 $logDir  = CACHE_PATH . DS . 'mysql' . DS . 'log';
-                if($file == null)
-                    $logFile = $logDir . DS . self::$_file;
+                if ($file == null)
+                    $logFile = $logDir . DS . self::$file;
                 else
                     $logFile = $logDir . DS . $file;
                 if (!is_dir($logDir)) {
@@ -38,7 +38,7 @@ class Logger
                     chmod($logFile, 0777);
                 }
 
-                if(is_array($message)) {
+                if (is_array($message)) {
                     $message = date("Y-m-d H:i:s") . print_r($message, true);
                     $message .= "\n";
                 } else {

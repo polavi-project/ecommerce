@@ -40,13 +40,15 @@ class Router
      */
     public function addAdminRoute(string $id, $method, string $pattern, array $middleware)
     {
-        if(isset($this->adminRoutes[$id]))
+        if (isset($this->adminRoutes[$id])) {
             throw new \Error("{$id} route already existed");
+        }
         $this->adminRoutes[$id] = [
             $method,
             $pattern == '/'? '/' . ADMIN_PATH : '/' . ADMIN_PATH . $pattern,
             $middleware
         ];
+
         return $this;
     }
 
@@ -59,13 +61,15 @@ class Router
      */
     public function addSiteRoute(string $id, $method, string $pattern, array $middleware)
     {
-        if(isset($this->siteRoutes[$id]))
+        if (isset($this->siteRoutes[$id])) {
             throw new \Error("{$id} route already existed");
+        }
         $this->siteRoutes[$id] = [
             $method,
             $pattern,
             $middleware
         ];
+
         return $this;
     }
 
@@ -74,15 +78,17 @@ class Router
      */
     protected function routeInit()
     {
-        if($this->request->isAdmin()) {
-            $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
-                foreach($this->adminRoutes as $name=>$route)
+        if ($this->request->isAdmin()) {
+            $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) {
+                foreach ($this->adminRoutes as $name => $route) {
                     $r->addRoute($route[0], $route[1], $name);
+                }
             });
         } else {
-            $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
-                foreach($this->siteRoutes as $name=>$route)
+            $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) {
+                foreach ($this->siteRoutes as $name => $route) {
                     $r->addRoute($route[0], $route[1], $name);
+                }
             });
         }
 
@@ -110,7 +116,8 @@ class Router
                     $this->request->attributes->set($key, $val);
                 }
                 $this->request->attributes->set('_matched_route', $routeInfo[1]);
-                $routedMiddleware = $this->request->isAdmin() ? $this->adminRoutes[$routeInfo[1]][2] : $this->siteRoutes[$routeInfo[1]][2];
+                $routedMiddleware = $this->request->isAdmin() ?
+                    $this->adminRoutes[$routeInfo[1]][2] : $this->siteRoutes[$routeInfo[1]][2];
                 $this->request->attributes->set('_routed_middleware', $routedMiddleware);
                 $this->request->attributes->set('_route_args', $routeInfo[2]);
                 return 200;
@@ -131,11 +138,12 @@ class Router
     {
         $route = $this->siteRoutes[$routeId] ?? $this->adminRoutes[$routeId] ?? null;
 
-        if($route == null)
+        if ($route == null) {
             throw new \RuntimeException(sprintf(
                 'Cannot generate URI for route "%s"; route not found',
                 $routeId
             ));
+        }
 
         $routes = $this->parser->parse($route[1]);
         $path = get_base_url();
@@ -146,8 +154,9 @@ class Router
                 continue;
             }
 
-            if(isset($part[2]) and (!isset($params[$part[0]]) or $params[$part[0]] === null))
+            if (isset($part[2]) and (!isset($params[$part[0]]) or $params[$part[0]] === null)) {
                 continue;
+            }
 
             if (! preg_match('~^' . $part[1] . '$~', (string) $params[$part[0]])) {
                 throw new \LogicException(sprintf(
@@ -160,11 +169,12 @@ class Router
             $path .= $params[$part[0]];
         }
 
-        if($query) {
+        if ($query) {
             $queryString = http_build_query($query);
             return trim($path, '/') . "?" . $queryString;
-        } else
+        } else {
             return trim($path, '/');
+        }
     }
 
     /**

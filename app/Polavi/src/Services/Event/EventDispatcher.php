@@ -23,7 +23,7 @@ class EventDispatcher
         $listeners = $this->getListeners($event);
 
         // For filter variable
-        if(!empty($listeners)) {
+        if (!empty($listeners)) {
             foreach ($listeners as $listener) {
                 $handler = $listener['handler'];
                 $handler(...$arguments);
@@ -70,8 +70,9 @@ class EventDispatcher
     protected function sortListener($listeners = [])
     {
         usort($listeners, function ($a, $b) {
-            if($a['priority'] == $b['priority'])
+            if ($a['priority'] == $b['priority']) {
                 return 0;
+            }
             return ($a['priority'] <= $b['priority']) ? -1 : 1;
         });
 

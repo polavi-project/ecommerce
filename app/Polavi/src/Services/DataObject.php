@@ -21,8 +21,9 @@ class DataObject implements \ArrayAccess
 
     public function offsetSet($key, $value)
     {
-        if(isset($this->data[$key]) and $this->data[$key] === $value)
+        if (isset($this->data[$key]) and $this->data[$key] === $value) {
             return $this;
+        }
         $this->data[$key] = $value;
         $this->isChanged = true;
 
@@ -31,8 +32,9 @@ class DataObject implements \ArrayAccess
 
     public function offsetUnset($key)
     {
-        if(!isset($this->data[$key]))
+        if (!isset($this->data[$key])) {
             return $this;
+        }
         unset($this->data[$key]);
         $this->isChanged = true;
 

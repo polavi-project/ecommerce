@@ -24,12 +24,12 @@ class UserAuthenticateMiddleware extends MiddlewareAbstract
      */
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
-        if(!$request->isAdmin())
+        if (!$request->isAdmin()) {
             return $delegate;
+        }
 
-        if($request->getSession()->get('user_id', null) == null) {
-            if(
-                $request->attributes->get('_matched_route') != 'admin.login' &&
+        if ($request->getSession()->get('user_id', null) == null) {
+            if ($request->attributes->get('_matched_route') != 'admin.login' &&
                 $request->attributes->get('_matched_route') != 'admin.authenticate'
             ) {
                 $response->redirect(generate_url('admin.login'));
@@ -53,9 +53,13 @@ class UserAuthenticateMiddleware extends MiddlewareAbstract
 
     protected function loadUser($id)
     {
-        $user = _mysql()->getTable('admin_user')->where('status', '=', 1)->andWhere('admin_user_id', '=', $id)->fetchOneAssoc();
-        if($user == false)
+        $user = _mysql()->getTable('admin_user')
+            ->where('status', '=', 1)
+            ->andWhere('admin_user_id', '=', $id)
+            ->fetchOneAssoc();
+        if ($user == false) {
             throw new \RuntimeException('User does not exist');
+        }
 
         return $user;
     }
