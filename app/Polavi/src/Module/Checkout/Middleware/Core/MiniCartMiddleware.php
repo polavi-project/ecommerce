@@ -19,7 +19,7 @@ class MiniCartMiddleware extends MiddlewareAbstract
 {
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
-        if($request->isAdmin() == true || $request->attributes->get('_matched_route') == 'graphql.api')
+        if ($request->isAdmin() == true || $request->attributes->get('_matched_route') == 'graphql.api')
             return $delegate;
 
         $response->addWidget(

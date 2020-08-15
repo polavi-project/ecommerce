@@ -63,7 +63,7 @@ $eventDispatcher->addListener("register_cart_item_field", function(array &$field
         "resolver" => function(Item $item) {
             $conn = _mysql();
             $shippingAddress = $conn->getTable('cart_address')->load($this->cart->getData('shipping_address_id'));
-            if($shippingAddress) {
+            if ($shippingAddress) {
                 TaxCalculator::setCountry($shippingAddress['country']);
                 TaxCalculator::setProvince($shippingAddress['province']);
                 TaxCalculator::setPostcode($shippingAddress['postcode']);

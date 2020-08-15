@@ -26,7 +26,7 @@ class CreateMiddleware extends MiddlewareAbstract
     public function __invoke(Request $request, Response $response, $data = [])
     {
         try {
-            if($request->get('id', null) != null)
+            if ($request->get('id', null) != null)
                 return $data;
             $this->getContainer()->get(CategoryMutator::class)->createCategory($data);
             $this->getContainer()->get(Session::class)->getFlashBag()->add('success', 'Category has been saved');

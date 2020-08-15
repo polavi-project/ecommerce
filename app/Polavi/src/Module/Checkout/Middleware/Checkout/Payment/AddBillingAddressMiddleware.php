@@ -25,7 +25,7 @@ class AddBillingAddressMiddleware extends MiddlewareAbstract
         $outPut = dirty_output_query($this->getContainer()->get(Schema::class), 'CustomerAddress');
         $variables = $request->request->get("variables");
 
-        if(!isset($variables['address']) or !$variables['address'])
+        if (!isset($variables['address']) or !$variables['address'])
             $variables['address'] = null;
 
         $promise = $this->getContainer()

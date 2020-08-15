@@ -66,7 +66,7 @@ class ItemsMiddleware extends MiddlewareAbstract
             ])
             ->then(function($result) use ($response) {
                 /**@var \GraphQL\Executor\ExecutionResult $result */
-                if(isset($result->data['items'])) {
+                if (isset($result->data['items'])) {
                     $response->addWidget(
                         'shopping_cart_items',
                         'shopping-cart-page',

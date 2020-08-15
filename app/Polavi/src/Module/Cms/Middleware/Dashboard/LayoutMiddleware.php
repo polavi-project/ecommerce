@@ -19,7 +19,7 @@ class LayoutMiddleware extends MiddlewareAbstract
 
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
-        if($response->hasWidget('dashboard_layout'))
+        if ($response->hasWidget('dashboard_layout'))
             return $delegate;
 
         $response->addWidget(

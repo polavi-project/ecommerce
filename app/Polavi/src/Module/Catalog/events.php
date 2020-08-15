@@ -91,7 +91,7 @@ $eventDispatcher->addListener(
                 $conn = _mysql();
                 $mainImage = $conn->getTable('product')->addFieldToSelect('image')->where('product_id', '=', $args['productId'])->fetchOneAssoc();
                 $result['images'] = [];
-                if($mainImage['image'])
+                if ($mainImage['image'])
                     $result['images'][] = ['path' => $mainImage['image'], 'isMain'=> true];
                 $stm = $conn->getTable('product_image')
                     ->addFieldToSelect('image')
@@ -102,7 +102,7 @@ $eventDispatcher->addListener(
                 $productName = $conn->getTable('product_description')
                     ->where('product_description_product_id', '=', $args['productId'])
                     ->fetchOneAssoc();
-                if($productName)
+                if ($productName)
                     $result['productName'] = $productName['name'];
 
                 return $result;
@@ -120,7 +120,7 @@ $eventDispatcher->addListener(
                 $query = _mysql()->getTable('product_price')
                     ->where('product_price_product_id', '=', $args['productId']);
                 $query->andWhere('customer_group_id', '<', 1000);
-                if(!$container->get(Request::class)->isAdmin()) {
+                if (!$container->get(Request::class)->isAdmin()) {
                     $query->andWhere('active_from', 'IS', null, '((')
                         ->orWhere('active_from', '<', date("Y-m-d H:i:s"), null, ')')
                         ->andWhere('active_to', 'IS', null, '(')
@@ -130,7 +130,7 @@ $eventDispatcher->addListener(
                     $query->andWhere('customer_group_id', '=', $customerGroupId);
                 }
 
-                if(isset($args['qty']))
+                if (isset($args['qty']))
                     $query->andWhere('qty', '>=', $args['qty']);
                 else
                     $query->andWhere('qty', '>=', 1);
@@ -147,7 +147,7 @@ $eventDispatcher->addListener(
                 'name' => Type::string()
             ],
             'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
-                if(!$args['name'])
+                if (!$args['name'])
                     return _mysql()->getTable("product")
                         ->leftJoin('product_description')
                         ->where("product.group_id", "=", $args["attributeGroupId"])
@@ -224,7 +224,7 @@ $eventDispatcher->addListener(
 
 $eventDispatcher->addListener('before_delete_attribute_group', function($rows) {
    foreach ($rows as $row) {
-       if($row['attribute_group_id'] == 1)
+       if ($row['attribute_group_id'] == 1)
            throw new Exception("Can not delete 'Default' attribute group");
    }
 });
@@ -246,13 +246,13 @@ $eventDispatcher->addListener(
             ]),
             'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
                 $conn = _mysql();
-                if(
+                if (
                     $container->get(Request::class)->isAdmin() == false
                 )
                     return ['status'=> false, 'message' => 'Permission denied'];
                 $product = $conn->getTable("product")->load($args['productId']);
 
-                if(!$product)
+                if (!$product)
                     return ['status'=> true, 'message' => 'Product does not exist'];
 
                 $conn->getTable("product")->where("product_id", "=", $args["productId"])->update(["variant_group_id"=> null, "visibility" => null]);
@@ -291,7 +291,7 @@ $eventDispatcher->addListener('after_delete_attribute_option',  function($affect
         while ($row = $stm->fetch()) {
             $groupIds[] = $row['variant_group_id'];
         }
-        if(!$groupIds || !$productIds)
+        if (!$groupIds || !$productIds)
             return true;
         $processor->getTable("product")
             ->where("variant_group_id", "IN", $groupIds)
@@ -304,9 +304,9 @@ $eventDispatcher->addListener('after_delete_attribute_option',  function($affect
 
 $eventDispatcher->addListener('breadcrumbs_items', function(array $items) {
     $container = \Polavi\the_container();
-    if(in_array($container->get(Request::class)->get("_matched_route"), ["category.view", "category.view.pretty"])) {
+    if (in_array($container->get(Request::class)->get("_matched_route"), ["category.view", "category.view.pretty"])) {
         $category = MiddlewareManager::getDelegate(\Polavi\Module\Catalog\Middleware\Category\View\InitMiddleware::class, null);
-        if($category == null) {
+        if ($category == null) {
             $category = _mysql()->getTable('category')
                 ->leftJoin('category_description')
                 ->where('category.category_id', '=', $container->get(Request::class)->attributes->get('id'))
@@ -317,9 +317,9 @@ $eventDispatcher->addListener('breadcrumbs_items', function(array $items) {
 
     }
 
-    if(in_array($container->get(Request::class)->get("_matched_route"), ["product.view", "product.view.pretty"])) {
+    if (in_array($container->get(Request::class)->get("_matched_route"), ["product.view", "product.view.pretty"])) {
         $product = MiddlewareManager::getDelegate(\Polavi\Module\Catalog\Middleware\Product\View\InitMiddleware::class, null);
-        if($product == null) {
+        if ($product == null) {
             $product = _mysql()->getTable('product')
                 ->leftJoin('product_description')
                 ->where('product.product_id', '=', $container->get(Request::class)->attributes->get('id'))

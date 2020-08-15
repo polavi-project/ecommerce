@@ -24,18 +24,18 @@ class SeoMiddleware extends MiddlewareAbstract
      */
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
-        if($response->hasWidget('product_edit_seo'))
+        if ($response->hasWidget('product_edit_seo'))
             return $delegate;
 
 //        // Loading data by using GraphQL
-        if($request->attributes->get('_matched_route') == 'product.edit')
+        if ($request->attributes->get('_matched_route') == 'product.edit')
             $this->getContainer()
                 ->get(GraphqlExecutor::class)
                 ->waitToExecute([
                     "query"=>"{seoInfo: product(id: {$request->get('id')}){seo_key meta_title meta_description meta_keywords}}"
                 ])->then(function($result) use (&$fields, $response) {
                     /**@var \GraphQL\Executor\ExecutionResult $result */
-                    if(isset($result->data['seoInfo'])) {
+                    if (isset($result->data['seoInfo'])) {
                         $response->addWidget(
                             'product_edit_seo',
                             'admin_product_edit_inner_left',

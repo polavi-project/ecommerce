@@ -28,7 +28,7 @@ class FormMiddleware extends MiddlewareAbstract
      */
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
-        if($request->attributes->get('_matched_route') == 'coupon.edit') {
+        if ($request->attributes->get('_matched_route') == 'coupon.edit') {
             $this->getContainer()->get(Helmet::class)->setTitle("Edit coupon");
             $this->getContainer()
                 ->get(GraphqlExecutor::class)

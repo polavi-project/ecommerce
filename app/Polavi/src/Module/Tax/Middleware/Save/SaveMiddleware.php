@@ -31,7 +31,7 @@ class SaveMiddleware extends MiddlewareAbstract
         try {
             $data = $request->request->all();
             $id = $request->request->get('id');
-            if($id)
+            if ($id)
                 $conn->getTable('tax_class')->where('tax_class_id', '=', $id)->update($data);
             else {
                 $conn->getTable('tax_class')->insert($data);

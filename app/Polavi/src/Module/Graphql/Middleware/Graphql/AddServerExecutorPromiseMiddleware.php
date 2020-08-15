@@ -20,7 +20,7 @@ class AddServerExecutorPromiseMiddleware extends MiddlewareAbstract
 
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
-        if($this->getContainer()->get(GraphqlExecutor::class)->getOperationParams() and
+        if ($this->getContainer()->get(GraphqlExecutor::class)->getOperationParams() and
             $request->attributes->get('_matched_route') != 'graphql.api' and
             $request->attributes->get('_matched_route') != 'admin.graphql.api'
         ) {

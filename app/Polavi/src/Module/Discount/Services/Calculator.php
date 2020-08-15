@@ -39,7 +39,7 @@ class Calculator
     protected function defaultDiscountCalculator()
     {
         $this->addDiscountCalculator('percentage_discount_to_entire_order', function(array $coupon, Cart $cart) {
-            if($coupon['discount_type'] != "percentage_discount_to_entire_order")
+            if ($coupon['discount_type'] != "percentage_discount_to_entire_order")
                 return false;
 
             $discountPercent = abs(floatval($coupon['discount_amount'])) > 100 ? 100 : abs(floatval($coupon['discount_amount']));
@@ -58,13 +58,13 @@ class Calculator
             $items = $cart->getItems();
             foreach ($items as $item) {
                 $i ++;
-                if($i == count($items)) {
+                if ($i == count($items)) {
                     $sharedDiscount = $cartDiscountAmount - $distributedAmount;
                 } else {
                     $rowTotal = $item->getData('final_price') * $item->getData('qty');
                     $sharedDiscount = round($rowTotal * $cartDiscountAmount / $this->getCartTotalBeforeDiscount($cart), 0);
                 }
-                if(!isset($this->discounts[$item->getId()]) or $this->discounts[$item->getId()] != $sharedDiscount) {
+                if (!isset($this->discounts[$item->getId()]) or $this->discounts[$item->getId()] != $sharedDiscount) {
                     $this->discounts[$item->getId()] = $sharedDiscount;
                 }
 
@@ -75,7 +75,7 @@ class Calculator
         });
 
         $this->addDiscountCalculator('fixed_discount_to_entire_order', function(array $coupon, Cart $cart) {
-            if($coupon['discount_type'] != "fixed_discount_to_entire_order")
+            if ($coupon['discount_type'] != "fixed_discount_to_entire_order")
                 return false;
 
             $cartDiscountAmount = floatval($coupon['discount_amount']);
@@ -93,13 +93,13 @@ class Calculator
             $items = $cart->getItems();
             foreach ($items as $item) {
                 $i ++;
-                if($i == count($items)) {
+                if ($i == count($items)) {
                     $sharedDiscount = $cartDiscountAmount - $distributedAmount;
                 } else {
                     $rowTotal = $item->getData('final_price') * $item->getData('qty');
                     $sharedDiscount = round($rowTotal * $cartDiscountAmount / $this->getCartTotalBeforeDiscount($cart), 0);
                 }
-                if(!isset($this->discounts[$item->getId()]) or $this->discounts[$item->getId()] != $sharedDiscount) {
+                if (!isset($this->discounts[$item->getId()]) or $this->discounts[$item->getId()] != $sharedDiscount) {
                     $this->discounts[$item->getId()] = $sharedDiscount;
                 }
 
@@ -110,7 +110,7 @@ class Calculator
         });
 
         $this->addDiscountCalculator('discount_to_specific_products', function(array $coupon, Cart $cart) {
-            if(!in_array($coupon['discount_type'], ["fixed_discount_to_specific_products", "percentage_discount_to_specific_products"]))
+            if (!in_array($coupon['discount_type'], ["fixed_discount_to_specific_products", "percentage_discount_to_specific_products"]))
                 return true;
 
             $targetProducts = json_decode(trim($coupon['target_products']), true);
@@ -121,9 +121,9 @@ class Calculator
             $targetItems = $this->validator->getTargetProducts();
 
             foreach ($targetItems as $i) {
-                if($coupon['discount_type'] == "fixed_discount_to_specific_products") {
+                if ($coupon['discount_type'] == "fixed_discount_to_specific_products") {
                     $discountAmount = abs(floatval($coupon['discount_amount']));
-                    if($discountAmount > $i->getData("final_price"))
+                    if ($discountAmount > $i->getData("final_price"))
                         $discountAmount = $i->getData("final_price");
                     $discounts[$i->getId()] = ($maxQty == null || $maxQty > $i->getData("qty")) ? $discountAmount * $i->getData("qty") : $discountAmount * $maxQty;
                 } else {
@@ -149,7 +149,7 @@ class Calculator
         });
 
         $this->addDiscountCalculator('buy_x_get_y', function(array $coupon, Cart $cart) {
-            if($coupon['discount_type'] != "buy_x_get_y")
+            if ($coupon['discount_type'] != "buy_x_get_y")
                 return true;
 
             $configs = json_decode($coupon['buyx_gety'], true);
@@ -163,19 +163,19 @@ class Calculator
                 $maxY = isset($row['max_y']) ? (int) $row['max_y'] : 1000000;
                 $discount = isset($row['discount']) ? floatval($row['discount']) : 0;
 
-                if(!$sku || !$buyQty || !$getQty || $buyQty == null || $getQty == null || $discount < 0 || $discount > 100)
+                if (!$sku || !$buyQty || !$getQty || $buyQty == null || $getQty == null || $discount < 0 || $discount > 100)
                     return;
 
                 foreach ($items as $item) {
-                    if($item->getData("product_sku") == trim($sku) && $item->getData("qty") >= $buyQty + $getQty) {
+                    if ($item->getData("product_sku") == trim($sku) && $item->getData("qty") >= $buyQty + $getQty) {
                         $discountPerUnit = $discount * $item->getData("final_price") / 100;
                         $discountAbleUnits = floor($item->getData("qty") / $buyQty) * $getQty;
-                        if($discountAbleUnits < $maxY)
+                        if ($discountAbleUnits < $maxY)
                             $discountAmount = $discountAbleUnits * $discountPerUnit;
                         else
                             $discountAmount = $discountPerUnit * $maxY;
 
-                        if(!isset($this->discounts[$item->getData('cart_item_id')]) or $this->discounts[$item->getData('cart_item_id')] != $discountAmount) {
+                        if (!isset($this->discounts[$item->getData('cart_item_id')]) or $this->discounts[$item->getData('cart_item_id')] != $discountAmount) {
                             $this->discounts[$item->getData('cart_item_id')] = $discountAmount;
                             $item->setData('discount_amount', $discountAmount);
                         }
@@ -201,20 +201,20 @@ class Calculator
 
 
     protected function parseValue($value) {
-        if(is_int($value) or is_float($value))
+        if (is_int($value) or is_float($value))
             return $value;
         $value = trim($value);
-        if(!$value)
+        if (!$value)
             return null;
         $arr = str_getcsv($value);
-        if(count($arr) == 1)
+        if (count($arr) == 1)
             return $arr[0];
         return $arr;
     }
 
     public function calculate(Cart $cart, array $coupon = null)
     {
-        if(!$coupon) {
+        if (!$coupon) {
             $this->discounts = [];
             return [];
         }

@@ -53,7 +53,7 @@ class PaymentMiddleware extends MiddlewareAbstract
             ])
             ->then(function($result) use ($request, $response) {
                 /**@var \GraphQL\Executor\ExecutionResult $result */
-                if(isset($result->data['payment'])) {
+                if (isset($result->data['payment'])) {
                     $response->addWidget(
                         'order_payment',
                         'order_edit_left',

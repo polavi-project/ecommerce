@@ -27,7 +27,7 @@ class CreateMiddleware extends MiddlewareAbstract
      */
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
-        if($request->attributes->get('id', null) != null)
+        if ($request->attributes->get('id', null) != null)
             return $delegate;
 
         $this->conn = _mysql();
@@ -37,9 +37,9 @@ class CreateMiddleware extends MiddlewareAbstract
                 ->insert($request->request->all());
             $id = $conn->getLastID();
 
-            if($attributes = $request->request->get('attributes'))
+            if ($attributes = $request->request->get('attributes'))
                 foreach ($attributes as $attribute) {
-                    if($conn->getTable('attribute')->load($attribute))
+                    if ($conn->getTable('attribute')->load($attribute))
                         $conn->getTable('attribute_group_link')->insert(['attribute_id'=>$attribute, 'group_id'=>$id]);
                 }
 

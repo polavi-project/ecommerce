@@ -78,7 +78,7 @@ EOT;
 
             $settingTable = \Polavi\_mysql()->getTable('setting');
             while ($row = $settingTable->fetch()) {
-                if($row['json'] == 1)
+                if ($row['json'] == 1)
                     $configuration[$row['name']] = json_decode($row['value'], true);
                 else
                     $configuration[$row['name']] = $row['value'];

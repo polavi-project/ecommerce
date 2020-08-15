@@ -72,7 +72,7 @@ class OrderItemType extends ObjectType
                     'options' => [
                         'type' => Type::listOf($container->get(ItemCustomOptionType::class)),
                         'resolve' => function($item, $args, Container $container, ResolveInfo $info) {
-                            if($item['product_custom_options'])
+                            if ($item['product_custom_options'])
                                 return json_decode($item['product_custom_options'], true);
                             else
                                 return [];
@@ -85,7 +85,7 @@ class OrderItemType extends ObjectType
                         'type' => Type::string(),
                         'resolve' => function($item, $args, Container $container, ResolveInfo $info) {
                             $productSeo = _mysql()->getTable('product_description')->where('product_description_product_id', '=', $item['product_id']);
-                            if(!$productSeo or !preg_match('/^[\.a-zA-Z0-9\-_+]+$/', $productSeo['seo_key']))
+                            if (!$productSeo or !preg_match('/^[\.a-zA-Z0-9\-_+]+$/', $productSeo['seo_key']))
                                 return $container->get(Router::class)->generateUrl('product.view', ["id"=>$item['product_id']]);
                             else
                                 return $container->get(Router::class)->generateUrl('product.view.pretty', ["slug"=>$productSeo['seo_key']]);

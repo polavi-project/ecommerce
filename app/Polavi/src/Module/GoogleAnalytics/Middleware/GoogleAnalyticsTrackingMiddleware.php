@@ -20,7 +20,7 @@ class GoogleAnalyticsTrackingMiddleware extends MiddlewareAbstract
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
         $code = get_config('general_google_analytics', null);
-        if(
+        if (
             !$request->isAjax() &&
             $request->attributes->get('_matched_route') != 'graphql.api' &&
             $request->attributes->get('_matched_route') != 'admin.graphql.api' &&

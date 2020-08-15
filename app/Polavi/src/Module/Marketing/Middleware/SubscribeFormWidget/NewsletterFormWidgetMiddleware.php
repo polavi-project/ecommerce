@@ -21,7 +21,7 @@ class NewsletterFormWidgetMiddleware extends MiddlewareAbstract
 {
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
-        if($request->isAdmin() == true)
+        if ($request->isAdmin() == true)
             return $delegate;
 
         $this->getContainer()
@@ -30,19 +30,19 @@ class NewsletterFormWidgetMiddleware extends MiddlewareAbstract
                 "query"=>"{newsletterFormWidgets : widgetCollection (filters : [{key: \"type\" operator : \"=\" value: \"newsletter_form\"}]) {widgets { cms_widget_id name setting {key value} displaySetting {key value} sort_order }}}"
             ])->then(function($result) use ($request, $response) {
                 /**@var \GraphQL\Executor\ExecutionResult $result */
-                if(isset($result->data['newsletterFormWidgets'])) {
+                if (isset($result->data['newsletterFormWidgets'])) {
                     $matchedRoute = $request->attributes->get('_matched_route');
                     $widgets = array_filter($result->data['newsletterFormWidgets']['widgets'], function($v) use($matchedRoute) {
                         $layouts = array_find($v['displaySetting'], function($value, $key) {
-                            if($value['key'] == 'layout')
+                            if ($value['key'] == 'layout')
                                 return json_decode($value['value'], true);
                             return null;
                         }, []);
-                        if(empty($layouts))
+                        if (empty($layouts))
                             return true;
                         $match = false;
                         foreach ($layouts as $layout) {
-                            if($matchedRoute == $layout || $layout == "all") {
+                            if ($matchedRoute == $layout || $layout == "all") {
                                 $match = true;
                                 break;
                             }
@@ -51,28 +51,28 @@ class NewsletterFormWidgetMiddleware extends MiddlewareAbstract
                     }, ARRAY_FILTER_USE_BOTH);
                     foreach ($widgets as $widget) {
                         $title = array_find($widget['setting'], function($value, $key) {
-                            if($value['key'] == 'title')
+                            if ($value['key'] == 'title')
                                 return $value['value'];
                             return null;
                         });
 
                         $htmlBefore = array_find($widget['setting'], function($value, $key) {
-                            if($value['key'] == 'html_before')
+                            if ($value['key'] == 'html_before')
                                 return $value['value'];
                             return null;
                         });
 
                         $htmlAfter = array_find($widget['setting'], function($value, $key) {
-                            if($value['key'] == 'html_after')
+                            if ($value['key'] == 'html_after')
                                 return $value['value'];
                             return null;
                         });
 
                         $areas = [];
                         foreach ($widget['displaySetting'] as $key => $value) {
-                            if($value['key'] == 'area')
+                            if ($value['key'] == 'area')
                                 $areas = array_merge($areas, json_decode($value['value'], true));
-                            if($value['key'] == 'area_manual_input')
+                            if ($value['key'] == 'area_manual_input')
                                 $areas = array_merge($areas, explode(",", $value['value']));
                         }
 

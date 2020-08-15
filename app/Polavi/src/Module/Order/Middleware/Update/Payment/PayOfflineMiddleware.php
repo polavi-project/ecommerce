@@ -23,7 +23,7 @@ class PayOfflineMiddleware extends MiddlewareAbstract
 
             $conn = _mysql();
             $order = $conn->getTable('order')->load($id);
-            if($order['payment_status'] == "paid")
+            if ($order['payment_status'] == "paid")
                 throw new \Exception("Customer paid");
             $conn->getTable('order')->where('order_id', '=', $id)->update(['payment_status'=>'paid']);
 

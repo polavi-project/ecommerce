@@ -58,7 +58,7 @@ class Item
                         ->where("product.status", '=', 1)
                         ->leftJoin('product_description')
                         ->load($item->getDataSource()['product_id']);
-                    if(!$product) {
+                    if (!$product) {
                         $item->setError("product_id", "Requested product is not available");
                         return null;
                     }
@@ -75,9 +75,9 @@ class Item
             'product_thumbnail' => [
                 'resolver' => function(Item $item) {
                     $fileSystem = new Filesystem();
-                    if(!isset($item->getDataSource()['product']['image']) or $item->getDataSource()['product']['image'] == null)
+                    if (!isset($item->getDataSource()['product']['image']) or $item->getDataSource()['product']['image'] == null)
                         return null;
-                    if($fileSystem->exists(MEDIA_PATH . DS . str_replace_last('.', '_thumb.', $item->getDataSource()['product']['image'])))
+                    if ($fileSystem->exists(MEDIA_PATH . DS . str_replace_last('.', '_thumb.', $item->getDataSource()['product']['image'])))
                         return get_base_url_scheme_less(false) . "/public/media/" . str_replace_last('.', '_thumb.', $item->getDataSource()['product']['image']);
                     else
                         return null;
@@ -92,7 +92,7 @@ class Item
             ],
             'product_url' => [
                 'resolver' => function(Item $item) {
-                    if(!preg_match('/^[\.a-zA-Z0-9\-_+]+$/', $item->getData('product_url_key')))
+                    if (!preg_match('/^[\.a-zA-Z0-9\-_+]+$/', $item->getData('product_url_key')))
                         return the_container()->get(Router::class)->generateUrl('product.view', ["id"=>$item->getData('product_id')]);
                     else
                         return the_container()->get(Router::class)->generateUrl('product.view.pretty', ["slug"=>$item->getData('product_url_key')]);
@@ -122,15 +122,15 @@ class Item
                     $items = $this->cart->getItems();
                     $addedQty = 0;
                     foreach ($items as $key=>$i)
-                        if($i->getData('product_sku') == $this->dataSource['product']['sku'] && $i->getId() !== $item->getId())
+                        if ($i->getData('product_sku') == $this->dataSource['product']['sku'] && $i->getId() !== $item->getId())
                             $addedQty = $i->getData('qty');
 
-                    if(!isset($item->getDataSource()['qty']) || $item->getDataSource()['qty'] <= 0) {
+                    if (!isset($item->getDataSource()['qty']) || $item->getDataSource()['qty'] <= 0) {
                         $item->setError("qty", "Not enough stock");
                         return null;
                     }
 
-                    if(($this->dataSource['product']['qty'] - $addedQty < $item->getDataSource()['qty'] || $item->getDataSource()['product']['stock_availability'] == 0) && $this->dataSource['product']['manage_stock'] == 1)  {
+                    if (($this->dataSource['product']['qty'] - $addedQty < $item->getDataSource()['qty'] || $item->getDataSource()['product']['stock_availability'] == 0) && $this->dataSource['product']['manage_stock'] == 1)  {
                         $item->setError("qty", "Not enough stock");
                         return null;
                     }
@@ -163,7 +163,7 @@ class Item
             'product_custom_options' => [
                 'resolver' => function(Item $item) {
                     $selectedOptions = $item->dataSource['product_custom_options'] ?? [];
-                    if(is_string($selectedOptions)) { // this item is loaded from cart_item table
+                    if (is_string($selectedOptions)) { // this item is loaded from cart_item table
                         $selectedOptions = json_decode($selectedOptions, true); // Custom option is json string in database
                         $selectedOptions = array_map(function($o) {
                             return array_keys($o['values'] ?? []);
@@ -193,7 +193,7 @@ class Item
                         $values = [];
                         $value = (array) $value;
                         foreach ($value as $val) {
-                            if(in_array((int) $val, array_keys($availableOptions[$id]['values'])))
+                            if (in_array((int) $val, array_keys($availableOptions[$id]['values'])))
                                 $values[(int) $val] = [
                                     'value_id' => (int) $val,
                                     'value_text' => $availableOptions[$id]['values'][(int) $val]['value'],
@@ -206,7 +206,7 @@ class Item
                     foreach ($availableOptions as $id => $option)
                         if ((int)$option['is_required'] == 1 and (!in_array($id, array_keys($validatedOptions)) || empty($validatedOptions[$id]['values'])))
                             $flag = false;
-                    if($flag == false)
+                    if ($flag == false)
                         $item->setError("product_custom_options", "You need to select some required option to purchase this product");
 
                     return $validatedOptions;
@@ -220,10 +220,10 @@ class Item
             ],
             'variant_options' => [
                 'resolver' => function(Item $item) {
-                    if(!$item->getData("variant_group_id"))
+                    if (!$item->getData("variant_group_id"))
                         return null;
                     $selectedOptions = $item->dataSource['variant_options'] ?? [];
-                    if(is_string($selectedOptions)) { // this item is loaded from cart_item table
+                    if (is_string($selectedOptions)) { // this item is loaded from cart_item table
                         $selectedOptions = json_decode($selectedOptions, true);
                     }
                     $conn = _mysql();
@@ -238,8 +238,8 @@ class Item
                         return $a != null;
                     });
                     foreach ($attrIds as $id) {
-                        if(!array_find($selectedOptions, function($a) use($id) {
-                            if(isset($a["attribute_id"]) && $a["attribute_id"] == $id)
+                        if (!array_find($selectedOptions, function($a) use($id) {
+                            if (isset($a["attribute_id"]) && $a["attribute_id"] == $id)
                                 return $id;
                             return false;
                         })) {
@@ -258,7 +258,7 @@ class Item
                     }
 
                     $p = $tmp->fetchOneAssoc();
-                    if(!$p || $p["product_id"] != $item->getData("product_id")) {
+                    if (!$p || $p["product_id"] != $item->getData("product_id")) {
                         $item->setError("product_custom_options", "You need to select some required option to purchase this product");
                         return null;
                     }
@@ -311,14 +311,14 @@ class Item
 
     public function setData($key, $value)
     {
-        if($this->isRunning == true)
+        if ($this->isRunning == true)
             return new RejectedPromise("Can not set value when resolves are running");
 
         $this->dataSource[$key] = $value;
 
-        if(isset($this->fields[$key]) and !empty($this->fields[$key]['dependencies'])) {
+        if (isset($this->fields[$key]) and !empty($this->fields[$key]['dependencies'])) {
             $promise = new \GuzzleHttp\Promise\Promise(function() use (&$promise, $key, $value) {
-                if($this->getData($key) == $value) {
+                if ($this->getData($key) == $value) {
                     $promise->resolve($value);
                 } else
                     $promise->reject("Can not change {$key} field to {$value}");
@@ -331,10 +331,10 @@ class Item
             $previous = $this->fields[$key]['value'] ?? null;
             $resolver = \Closure::bind($this->fields[$key]["resolver"], $this, get_class($this));
             $_value = $resolver($this);
-            if($value != $_value) {
+            if ($value != $_value) {
                 $this->fields[$key]['value'] = $_value;
                 return new RejectedPromise("Field resolver returns different value");
-            } else if($previous == $_value) {
+            } else if ($previous == $_value) {
                 return new FulfilledPromise($value);
             } else {
                 $this->fields[$key]['value'] = $value;
@@ -360,17 +360,17 @@ class Item
 
     protected function onChange($trigger)
     {
-        if($this->isRunning == false) {
+        if ($this->isRunning == false) {
             $this->isRunning = true;
             //$this->error = null;
             foreach ($this->fields as $key=>$value) {
-                if($key != $trigger) {
+                if ($key != $trigger) {
                     $resolver = \Closure::bind($this->fields[$key]["resolver"], $this, get_class($this));
                     $this->fields[$key]['value'] = $resolver($this);
                 }
             }
             $this->isRunning = false;
-            if($this->setDataPromise)
+            if ($this->setDataPromise)
                 $this->setDataPromise->wait();
             dispatch_event('cart_item_updated', [$this, $trigger]);
         }

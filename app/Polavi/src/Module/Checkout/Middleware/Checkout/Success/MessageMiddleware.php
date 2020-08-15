@@ -21,13 +21,13 @@ class MessageMiddleware extends MiddlewareAbstract
 {
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
-        if(!$request->getSession()->get('orderId')) {
+        if (!$request->getSession()->get('orderId')) {
             $response->redirect($this->getContainer()->get(Router::class)->generateUrl('homepage'));
 
             return $response;
         };
 
-        if($request->isAjax())
+        if ($request->isAjax())
             $request->getSession()->remove('orderId');
 
         $this->getContainer()->get(Helmet::class)->setTitle("Checkout success");

@@ -75,7 +75,7 @@ $eventDispatcher->addListener(
                 ],
                 'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
                     // Authentication example
-                    if($container->get(Request::class)->isAdmin() == false)
+                    if ($container->get(Request::class)->isAdmin() == false)
                         return null;
                     else
                         return $container->get(\Polavi\Module\Order\Services\OrderLoader::class)->load($args['id']);
@@ -90,7 +90,7 @@ $eventDispatcher->addListener(
                     ]
                 ],
                 'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
-                    if($container->get(Request::class)->isAdmin() == false)
+                    if ($container->get(Request::class)->isAdmin() == false)
                         return [];
                     else
                         return $container->get(OrderCollection::class)->getData($rootValue, $args, $container, $info);
@@ -135,18 +135,18 @@ $eventDispatcher->addListener(
                     while($i >= 0) {
                         $result[$i]['to'] = $end->format('Y-m-d') . ' 23:59:59';
 
-                        if($args['period'] == 'daily') {
+                        if ($args['period'] == 'daily') {
                             $result[$i]['from'] = $end->format('Y-m-d') . " 00:00:00";
                             $end->modify('-1 day');
                             $end = new DateTime($end->format('Y-m-d') . ' 23:59:59');
                         }
-                        if($args['period'] == 'weekly')  {
+                        if ($args['period'] == 'weekly')  {
                             $end->modify('+1 day');
                             $result[$i]['from'] = date('Y-m-d', strtotime('previous monday', strtotime($end->format('Y-m-d')))) . ' 00:00:00';
                             $end->modify('-1 day');
                             $end->modify('previous sunday');
                         }
-                        if($args['period'] == 'monthly')  {
+                        if ($args['period'] == 'monthly')  {
                             $end->modify('first day of this month');
                             $result[$i]['from'] = $end->format('Y-m-d') . ' 00:00:00';
                             $end->modify('-1 day');

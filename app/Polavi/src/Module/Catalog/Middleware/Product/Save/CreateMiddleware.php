@@ -27,7 +27,7 @@ class CreateMiddleware extends MiddlewareAbstract
     {
         $data = $request->request->all();
         try {
-            if($request->get('id', null) != null)
+            if ($request->get('id', null) != null)
                 return null;
             $id = $this->getContainer()->get(ProductMutator::class)->createProduct($data);
             $this->getContainer()->get(Session::class)->getFlashBag()->add('success', 'Product has been saved');

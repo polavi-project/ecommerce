@@ -18,7 +18,7 @@ class LogoutMiddleware extends MiddlewareAbstract
 {
     public function __invoke(Request $request, Response $response)
     {
-        if($request->getUser()) {
+        if ($request->getUser()) {
             $request->getSession()->set('user_id', null);
         }
 

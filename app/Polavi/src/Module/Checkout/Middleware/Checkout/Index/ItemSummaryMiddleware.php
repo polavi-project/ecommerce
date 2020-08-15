@@ -38,7 +38,7 @@ class ItemSummaryMiddleware extends MiddlewareAbstract
             ])
             ->then(function($result) use ($response) {
                 /**@var \GraphQL\Executor\ExecutionResult $result */
-                if(isset($result->data['items'])) {
+                if (isset($result->data['items'])) {
                     $response->addWidget(
                         'checkout_summary_items',
                         'checkout_summary',

@@ -30,12 +30,12 @@ class ProductFilterToolType extends ObjectType
                     'price' => [
                         'type' => $container->get(PriceFilterType::class),
                         'resolve' => function($value, $args, Container $container, ResolveInfo $info) {
-                            if(!$value)
+                            if (!$value)
                                 return [
                                     'minPrice' => 0,
                                     'maxPrice' => 0
                                 ];
-                            if($container->get(Request::class)->getCustomer()->isLoggedIn())
+                            if ($container->get(Request::class)->getCustomer()->isLoggedIn())
                                 $customerGroupId = $container->get(Request::class)->getCustomer()->getData('group_id') ?? 1;
                             else
                                 $customerGroupId = 999;
@@ -196,7 +196,7 @@ class ProductFilterToolType extends ObjectType
                                 ->fetchAllAssoc();
                             $result = [];
                             foreach ($attributeData as $key=>$attr) {
-                                if(!isset($result[$attr['attribute_id']]))
+                                if (!isset($result[$attr['attribute_id']]))
                                     $result[$attr['attribute_id']] = [
                                         'attribute_name' => $attr['attribute_name'],
                                         'attribute_id' => $attr['attribute_id'],

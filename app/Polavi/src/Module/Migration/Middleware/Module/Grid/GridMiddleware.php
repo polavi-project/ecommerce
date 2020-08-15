@@ -25,7 +25,7 @@ class GridMiddleware extends MiddlewareAbstract
      */
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
-        if($response->hasWidget('extension-grid'))
+        if ($response->hasWidget('extension-grid'))
             return $delegate;
 
         $this->getContainer()->get(Helmet::class)->setTitle("Extensions");
@@ -33,9 +33,9 @@ class GridMiddleware extends MiddlewareAbstract
 
         $extensions = [];
         foreach ($directories as $directory) {
-            if(!is_dir(COMMUNITY_MODULE_PATH . DS . $directory))
+            if (!is_dir(COMMUNITY_MODULE_PATH . DS . $directory))
                 continue;
-            if(!file_exists(COMMUNITY_MODULE_PATH . DS . $directory . DS . "migration.php"))
+            if (!file_exists(COMMUNITY_MODULE_PATH . DS . $directory . DS . "migration.php"))
                 continue;
             $v = $des = $aut = $autUrl = null;
             (function() use (&$v, &$des, &$aut, &$autUrl, $directory) {
@@ -61,7 +61,7 @@ class GridMiddleware extends MiddlewareAbstract
         $conn = _mysql();
         array_walk($extensions, function(&$e) use($conn) {
             $ext = $conn->getTable("migration")->loadByField("module", $e["name"]);
-            if(!$ext)
+            if (!$ext)
                 $e["status"] = null;
             else
                 $e["status"] = (int) $ext["status"];

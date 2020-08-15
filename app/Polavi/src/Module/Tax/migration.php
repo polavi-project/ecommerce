@@ -4,7 +4,7 @@ $version = "1.0.0";
 return [
     "1.0.0" => function(\Polavi\Services\Db\Processor $conn) {
         $taxClassTable = $conn->executeQuery("SELECT TABLE_NAME FROM information_schema.tables WHERE table_schema = :dbName AND TABLE_NAME = \"tax_class\" LIMIT 0,1", ['dbName'=> $conn->getConfiguration()->getDb()])->fetch(\PDO::FETCH_ASSOC);
-        if($taxClassTable !== false)
+        if ($taxClassTable !== false)
             return;
         //Create tax_class table
         $conn->executeQuery("CREATE TABLE `tax_class` (

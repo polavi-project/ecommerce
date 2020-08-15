@@ -27,7 +27,7 @@ class CreateMiddleware extends MiddlewareAbstract
      */
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
-        if($request->attributes->get('id', null) != null)
+        if ($request->attributes->get('id', null) != null)
             return $delegate;
 
         $this->conn = _mysql();
@@ -37,7 +37,7 @@ class CreateMiddleware extends MiddlewareAbstract
                 ->insert($request->request->all());
             $id = $conn->getLastID();
 
-            if(in_array($request->request->get('type'), ['select', 'multiselect']))
+            if (in_array($request->request->get('type'), ['select', 'multiselect']))
                 $this->saveOptions((int) $id, $request->request->get('attribute_code'), $request->request->get('options'));
 
             $response->addAlert('attribute_save_success', 'success', 'Attribute saved')

@@ -64,7 +64,7 @@ class GraphqlExecutor extends Promise
         $id = count($this->operationParams) - 1;
         $promise = new Promise(function() use (&$promise, $id) {
             $result = $this->results[$id];
-            if(!$result->errors)
+            if (!$result->errors)
                 $promise->resolve($result);
             else
                 $promise->reject($result->errors);

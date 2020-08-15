@@ -28,13 +28,13 @@ class InstallMiddleware extends MiddlewareAbstract
             $path = file_exists(MODULE_PATH . DS . $module) ? MODULE_PATH . DS . $module : COMMUNITY_MODULE_PATH . DS . $module;
             $this->getContainer()->set("moduleLoading", true);
             (function() use($path, $module, &$conn) {
-                if(!file_exists($path . DS . "migration.php"))
+                if (!file_exists($path . DS . "migration.php"))
                     throw new \Exception("migration.php file was not found");
                 $migrations = require_once $path . DS . "migration.php";
-                if(!isset($version) or !preg_match("/^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)/", $version))
+                if (!isset($version) or !preg_match("/^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)/", $version))
                     throw new \Exception("Version variable is either not defined or invalid");
 
-                if(is_array($migrations))
+                if (is_array($migrations))
                     $this->runMigration($migrations, $conn);
 
                 $conn->getTable("migration")->insert([
@@ -46,7 +46,7 @@ class InstallMiddleware extends MiddlewareAbstract
             $this->getContainer()->offsetUnset("moduleLoading");
             $response->addData('success', 1)->addData('message', 'Done');
 
-            if($request->getMethod() == "GET")
+            if ($request->getMethod() == "GET")
                 $response->addAlert("module_install_success", "success", sprintf("Module %s is installed successfully", $module))
                     ->redirect(generate_url("extensions.grid"));
 
@@ -57,7 +57,7 @@ class InstallMiddleware extends MiddlewareAbstract
             $this->getContainer()->offsetUnset("moduleLoading");
             $response->addData('success', 0);
 
-            if($request->getMethod() == "GET")
+            if ($request->getMethod() == "GET")
                 $response->addAlert("module_install_error", "error", $e->getMessage())->notNewPage();
             return $response;
         }

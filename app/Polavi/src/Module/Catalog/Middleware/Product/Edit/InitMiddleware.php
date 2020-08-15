@@ -26,9 +26,9 @@ class InitMiddleware extends MiddlewareAbstract
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
         $id = (int) $request->attributes->get('id');
-        if($id) {
+        if ($id) {
             $product = _mysql()->getTable('product')->load($id);
-            if($product === false) {
+            if ($product === false) {
                 $response->addData('success', 0);
                 $response->addData('message', 'Requested product does not exist');
 

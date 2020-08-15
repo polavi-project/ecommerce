@@ -29,7 +29,7 @@ class RemoveItemMiddleware extends MiddlewareAbstract
             (int) $request->attributes->get('id')
         );
         $promise->then(function(Item $item) use ($response) {
-            if(!$item instanceof Item)
+            if (!$item instanceof Item)
                 $response->addAlert('cart_add_error', 'error', "Something wrong, please try again");
             else {
                 $response->addAlert('cart_remove_success', 'success', "{$item->getData('product_name')} was removed from shopping cart successfully");

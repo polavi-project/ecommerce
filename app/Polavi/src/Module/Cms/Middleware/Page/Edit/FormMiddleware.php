@@ -25,7 +25,7 @@ class FormMiddleware extends MiddlewareAbstract
      */
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
-        if($request->attributes->get('_matched_route') == 'page.edit')
+        if ($request->attributes->get('_matched_route') == 'page.edit')
             $this->getContainer()
                 ->get(GraphqlExecutor::class)
                 ->waitToExecute([
@@ -44,7 +44,7 @@ class FormMiddleware extends MiddlewareAbstract
                     }"
                 ])->then(function($result) use ($request, $response) {
                     /**@var \GraphQL\Executor\ExecutionResult $result */
-                    if(isset($result->data['cmsPage'])) {
+                    if (isset($result->data['cmsPage'])) {
                         $response->addWidget(
                             'page-edit-form',
                             'content',

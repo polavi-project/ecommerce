@@ -24,11 +24,11 @@ class GeneralInfoMiddleware extends MiddlewareAbstract
      */
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
-        if($response->hasWidget('category_edit_general'))
+        if ($response->hasWidget('category_edit_general'))
             return $delegate;
 
         // Loading data by using GraphQL
-        if($request->attributes->get('_matched_route') == 'category.edit')
+        if ($request->attributes->get('_matched_route') == 'category.edit')
             $this->getContainer()
             ->get(GraphqlExecutor::class)
             ->waitToExecute([
@@ -36,7 +36,7 @@ class GeneralInfoMiddleware extends MiddlewareAbstract
             ])
             ->then(function($result) use ($response) {
                 /**@var \GraphQL\Executor\ExecutionResult $result */
-                if(isset($result->data['generalInfo'])) {
+                if (isset($result->data['generalInfo'])) {
                     $response->addWidget(
                         'category_edit_general',
                         'admin_category_edit_inner_left',

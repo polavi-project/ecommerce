@@ -21,7 +21,7 @@ class EditMiddleware extends MiddlewareAbstract
 
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
-        if($request->attributes->get('id')) {
+        if ($request->attributes->get('id')) {
             $this->getContainer()->get(Helmet::class)->setTitle("Edit a widget");
         } else {
             $this->getContainer()->get(Helmet::class)->setTitle("Create a widget");

@@ -20,7 +20,7 @@ class FinishMiddleware extends MiddlewareAbstract
 {
     public function __invoke(Request $request, Response $response)
     {
-        if(!file_exists(CONFIG_PATH . DS . 'config.tmp.php')) {
+        if (!file_exists(CONFIG_PATH . DS . 'config.tmp.php')) {
             $redirect = new RedirectResponse($this->getContainer()->get(Router::class)->generateUrl('homepage'));
             return $redirect->send();
         }

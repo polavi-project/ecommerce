@@ -25,11 +25,11 @@ class VariantDetectMiddleware extends MiddlewareAbstract
      */
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
-        if($response->getStatusCode() == 404)
+        if ($response->getStatusCode() == 404)
             return $delegate;
 
         $product = $this->getDelegate(InitMiddleware::class);
-        if($product["variant_group_id"] == null)
+        if ($product["variant_group_id"] == null)
             return $delegate;
 
         $queries = $request->query->all();
@@ -49,7 +49,7 @@ class VariantDetectMiddleware extends MiddlewareAbstract
         $selectedOptionsCode = [];
         foreach ($queries as $key=>$value) {
             $a = array_find($attributes, function($a) use($key) { return $a["attribute_code"] == $key ? $a : null;});
-            if($a && is_numeric($value)) {
+            if ($a && is_numeric($value)) {
                 $selectedOptions[] = [
                     "attribute_id" => $a["attribute_id"],
                     "option_id" => $value
@@ -58,8 +58,8 @@ class VariantDetectMiddleware extends MiddlewareAbstract
             }
         }
 
-        if(!$selectedOptions) {
-            if($product["status"] == 1) {
+        if (!$selectedOptions) {
+            if ($product["status"] == 1) {
                 // Reset the variant filter
                 $response->addState("variantFilters", []);
                 return $delegate;
@@ -94,7 +94,7 @@ class VariantDetectMiddleware extends MiddlewareAbstract
             }
 
             $p = $tmp->fetchOneAssoc();
-            if(!$p) {
+            if (!$p) {
                 return $delegate;
             } else {
                 $request->attributes->set("id", $p["product_id"]);

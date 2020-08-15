@@ -21,7 +21,7 @@ class AddCouponMiddleware extends MiddlewareAbstract
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
         $coupon = $request->request->get('coupon');
-        if(!$coupon)
+        if (!$coupon)
             $promise = new RejectedPromise("Invalid coupon");
         else {
             $cart = $this->getContainer()->get(Cart::class);

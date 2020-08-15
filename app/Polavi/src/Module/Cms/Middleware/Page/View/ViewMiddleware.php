@@ -25,10 +25,10 @@ class ViewMiddleware extends MiddlewareAbstract
      */
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
-        if($response->hasWidget('cms_page_view'))
+        if ($response->hasWidget('cms_page_view'))
             return $delegate;
 
-        if($request->attributes->get('slug'))
+        if ($request->attributes->get('slug'))
             $page = _mysql()->getTable('cms_page')
                 ->leftJoin('cms_page_description')
                 ->where('cms_page_description.url_key', '=', $request->attributes->get('slug'))
@@ -39,7 +39,7 @@ class ViewMiddleware extends MiddlewareAbstract
                 ->where('cms_page.cms_page_id', '=', $request->attributes->get('id'))
                 ->fetchOneAssoc();
 
-        if(!$page) {
+        if (!$page) {
             $request->attributes->set('_matched_route', 'not.found');
             $response->setStatusCode(404);
             return $response;

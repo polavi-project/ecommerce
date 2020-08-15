@@ -26,10 +26,10 @@ class GeneralInfoMiddleware extends MiddlewareAbstract
      */
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
-        if($response->getStatusCode() == 404)
+        if ($response->getStatusCode() == 404)
             return $delegate;
 
-        if($response->hasWidget('product_view_general_info'))
+        if ($response->hasWidget('product_view_general_info'))
             return $delegate;
 
         $this->getContainer()
@@ -48,7 +48,7 @@ class GeneralInfoMiddleware extends MiddlewareAbstract
             ])
             ->then(function($result) use ($response) {
                 /**@var \GraphQL\Executor\ExecutionResult $result */
-                if(isset($result->data['product_view_general_info']) and $result->data['product_view_general_info']) {
+                if (isset($result->data['product_view_general_info']) and $result->data['product_view_general_info']) {
                     $response->addWidget(
                         'product_view_general',
                         'product_page_middle_right',

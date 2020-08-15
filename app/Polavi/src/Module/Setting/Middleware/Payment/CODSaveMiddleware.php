@@ -25,7 +25,7 @@ class CODSaveMiddleware extends MiddlewareAbstract
      */
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
-        if($request->getMethod() != 'POST' or $request->attributes->get('method') != 'cod')
+        if ($request->getMethod() != 'POST' or $request->attributes->get('method') != 'cod')
             return $delegate;
 
         $processor = _mysql();
@@ -33,7 +33,7 @@ class CODSaveMiddleware extends MiddlewareAbstract
         try {
             $data = $request->request->all();
             foreach ($data as $name=> $value) {
-                if(is_array($value))
+                if (is_array($value))
                     $processor->getTable('setting')
                         ->insertOnUpdate([
                             'name'=>$name,

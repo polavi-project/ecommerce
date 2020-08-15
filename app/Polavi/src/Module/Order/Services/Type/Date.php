@@ -28,7 +28,7 @@ class Date extends ScalarType
     public function parseValue($value)
     {
         $d = \DateTime::createFromFormat('Y-m-d', $value);
-        if($d && $d->format('Y-m-d') === $value)
+        if ($d && $d->format('Y-m-d') === $value)
             return $value;
         else
             throw new InvariantViolation("Could not serialize following value as date: " . Utils::printSafe($value));
@@ -49,7 +49,7 @@ class Date extends ScalarType
             throw new Error('Query error: Can only parse strings got: ' . $valueNode->kind, [$valueNode]);
         }
         $d = \DateTime::createFromFormat('Y-m-d', $valueNode->value);
-        if($d && $d->format('Y-m-d') === $valueNode->value)
+        if ($d && $d->format('Y-m-d') === $valueNode->value)
             return $valueNode->value;
         else
             throw new Error("Not a valid price", [$valueNode]);

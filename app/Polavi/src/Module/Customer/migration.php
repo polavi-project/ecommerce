@@ -4,7 +4,7 @@ $version = "1.0.0";
 return [
     "1.0.0" => function(\Polavi\Services\Db\Processor $conn) {
         $customerTable = $conn->executeQuery("SELECT TABLE_NAME FROM information_schema.tables WHERE table_schema = :dbName AND TABLE_NAME = \"customer\" LIMIT 0,1", ['dbName'=> $conn->getConfiguration()->getDb()])->fetch(\PDO::FETCH_ASSOC);
-        if($customerTable !== false)
+        if ($customerTable !== false)
             return;
         //Create customer_group table
         $conn->executeQuery("CREATE TABLE `customer_group` (

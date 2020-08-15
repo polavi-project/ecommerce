@@ -19,7 +19,7 @@ class TitleMiddleware extends MiddlewareAbstract
 
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
-        if($response->hasWidget('dashboard_title'))
+        if ($response->hasWidget('dashboard_title'))
             return $delegate;
 
         $this->getContainer()->get(Helmet::class)->setTitle("Dashboard");

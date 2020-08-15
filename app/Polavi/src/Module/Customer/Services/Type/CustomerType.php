@@ -45,7 +45,7 @@ class CustomerType extends ObjectType
                     'editUrl' => [
                         'type' => Type::string(),
                         'resolve' => function($page, $args, Container $container, ResolveInfo $info) {
-                            if($container->get(Request::class)->isAdmin() == false)
+                            if ($container->get(Request::class)->isAdmin() == false)
                                 return null;
                             return $container->get(Router::class)->generateUrl('customer.edit', ["id"=>$page['customer_id']]);
                         }

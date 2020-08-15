@@ -26,7 +26,7 @@ class UpdateMiddleware extends MiddlewareAbstract
     public function __invoke(Request $request, Response $response, array $data = null)
     {
         try {
-            if($request->get('id', null) == null)
+            if ($request->get('id', null) == null)
                 return $data;
             $this->getContainer()
                 ->get(CategoryMutator::class)

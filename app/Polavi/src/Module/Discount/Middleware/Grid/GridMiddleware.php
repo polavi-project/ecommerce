@@ -24,7 +24,7 @@ class GridMiddleware extends MiddlewareAbstract
      */
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
-        if($response->hasWidget('coupon-grid'))
+        if ($response->hasWidget('coupon-grid'))
             return $delegate;
 
         $this->getContainer()->get(Helmet::class)->setTitle("Coupons");

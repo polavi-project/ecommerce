@@ -21,7 +21,7 @@ class CreatePaymentMiddleware extends MiddlewareAbstract
 {
     public function __invoke(Request $request, Response $response, callable $next, Delegate $delegate)
     {
-        if($delegate->getPaymentMethod() != 'paypal_express')
+        if ($delegate->getPaymentMethod() != 'paypal_express')
             return $next($request, $response, $delegate);
 
         $paypal = $delegate->getPaypalApiContext();

@@ -76,7 +76,7 @@ class TaxCalculator
         $province = self::$province ? self::$province : get_config('sale_default_tax_province', '*');
         $country = self::$country ? self::$country : get_config('sale_default_tax_country', 'US');
 
-        if(isset(self::$rates[$taxClassId][$country . $province . $postcode]))
+        if (isset(self::$rates[$taxClassId][$country . $province . $postcode]))
             return self::$rates[$taxClassId][$country . $province . $postcode];
 
         $conn = the_container()->get(Processor::class);
@@ -88,15 +88,15 @@ class TaxCalculator
         ]);
 
         foreach ($taxRates as $key=>$value) {
-            if($value['postcode'] != $postcode and $postcode != '*')
+            if ($value['postcode'] != $postcode and $postcode != '*')
                 unset($taxRates[$key]);
-            elseif($value['province'] != $province and $province != '*')
+            elseif ($value['province'] != $province and $province != '*')
                 unset($taxRates[$key]);
-            elseif($value['country'] != $country and $country != '*')
+            elseif ($value['country'] != $country and $country != '*')
                 unset($taxRates[$key]);
         }
 
-        if(empty($taxRates))
+        if (empty($taxRates))
             return [];
 
         $applicableRates = [];
@@ -105,40 +105,40 @@ class TaxCalculator
 
         foreach ($taxRates as $key=>$value) {
             $prev = end($applicableRates);
-            if($prev['priority']!=$value['priority']) {
+            if ($prev['priority']!=$value['priority']) {
                 $applicableRates[] = $value;
             } else {
-                if($prev['country']==$value['country'] and $prev['province']==$value['province'] and $prev['postcode']==$value['postcode']) {
+                if ($prev['country']==$value['country'] and $prev['province']==$value['province'] and $prev['postcode']==$value['postcode']) {
                     array_pop($applicableRates);
                     $applicableRates[] = ($prev['tax_rate_id'] > $value['tax_rate_id']) ? $value : $prev;
                     continue;
                 }
 
-                if($prev['postcode']=='*' and $value['postcode']!='*') {
+                if ($prev['postcode']=='*' and $value['postcode']!='*') {
                     array_pop($applicableRates);
                     $applicableRates[] = $value;
                     continue;
-                } else if($prev['postcode']!='*' and $value['postcode']=='*') {
+                } else if ($prev['postcode']!='*' and $value['postcode']=='*') {
                     array_pop($applicableRates);
                     $applicableRates[] = $prev;
                     continue;
                 }
 
-                if($prev['province']=='*' and $value['province']!='*') {
+                if ($prev['province']=='*' and $value['province']!='*') {
                     array_pop($applicableRates);
                     $applicableRates[] = $value;
                     continue;
-                } else if($prev['province']!='*' and $value['province']=='*') {
+                } else if ($prev['province']!='*' and $value['province']=='*') {
                     array_pop($applicableRates);
                     $applicableRates[] = $prev;
                     continue;
                 }
 
-                if($prev['country']=='*' and $value['country']!='*') {
+                if ($prev['country']=='*' and $value['country']!='*') {
                     array_pop($applicableRates);
                     $applicableRates[] = $value;
                     continue;
-                } else if($prev['country']!='*' and $value['country']=='*') {
+                } else if ($prev['country']!='*' and $value['country']=='*') {
                     array_pop($applicableRates);
                     $applicableRates[] = $prev;
                     continue;
@@ -157,7 +157,7 @@ class TaxCalculator
 
         foreach ($rates as $key=>$rate) {
             $_rate = $rate['rate'] / 100;
-            if($rate['is_compound'] == 1) {
+            if ($rate['is_compound'] == 1) {
                 $taxPercent = $taxPercent + $_rate + $taxPercent * $_rate;
             } else {
                 $taxPercent = $taxPercent + $_rate;
@@ -169,14 +169,14 @@ class TaxCalculator
 
     public static function getTaxAmount($price, $taxPercent, $rounding = true)
     {
-        if($taxPercent == 0)
+        if ($taxPercent == 0)
             return 0;
-        if(get_config('sale_entered_price_tax', 0) == 0) {
+        if (get_config('sale_entered_price_tax', 0) == 0) {
             $taxAmount = $price * $taxPercent / 100;
         } else {
             $taxAmount = ($price * ($taxPercent/100)) / (1 + $taxPercent / 100);
         }
-        if($rounding == true) {
+        if ($rounding == true) {
             switch ((int)get_config('sale_tax_calculation_rounding', 0)) {
                 case 1:
                     $taxAmount = ceil($taxAmount);
@@ -192,7 +192,7 @@ class TaxCalculator
 
     public static function getTaxedPrice($price, $taxClass)
     {
-        if(get_config('sale_entered_price_tax', 0) == 0) {
+        if (get_config('sale_entered_price_tax', 0) == 0) {
             return [
                 'price_excl_tax' => $price,
                 'price_incl_tax' => $price + self::getTaxAmount($price, $taxClass)

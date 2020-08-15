@@ -27,7 +27,7 @@ class EditFormMiddleware extends MiddlewareAbstract
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
         // Loading data by using GraphQL
-        if($request->attributes->get('_matched_route') == 'attribute.group.edit')
+        if ($request->attributes->get('_matched_route') == 'attribute.group.edit')
             $this->getContainer()
             ->get(GraphqlExecutor::class)
             ->waitToExecute([
@@ -44,7 +44,7 @@ class EditFormMiddleware extends MiddlewareAbstract
             ])
             ->then(function($result) use ($response, $request) {
                 /**@var \GraphQL\Executor\ExecutionResult $result */
-                if(isset($result->data['attributeGroup'])) {
+                if (isset($result->data['attributeGroup'])) {
                     $response->addWidget(
                         'attribute_group_edit',
                         'content',
@@ -89,9 +89,9 @@ QUERY
             ])
             ->then(function($result) use ($response) {
                 /**@var \GraphQL\Executor\ExecutionResult $result */
-                if(isset($result->data['attributeCollection'])) {
+                if (isset($result->data['attributeCollection'])) {
                     $widget = $response->getWidget("attribute_group_edit", "content");
-                    if(!$widget)
+                    if (!$widget)
                         return;
 
                     $widget['props']['attributes'] = $result->data['attributeCollection']['attributes'];

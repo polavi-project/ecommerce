@@ -24,10 +24,10 @@ class ImagesMiddleware extends MiddlewareAbstract
      */
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
-        if($response->hasWidget('product_edit_images'))
+        if ($response->hasWidget('product_edit_images'))
             return $delegate;
 
-        if($request->attributes->get('_matched_route') == 'product.edit')
+        if ($request->attributes->get('_matched_route') == 'product.edit')
             $this->getContainer()
                 ->get(GraphqlExecutor::class)
                 ->waitToExecute([
@@ -45,7 +45,7 @@ class ImagesMiddleware extends MiddlewareAbstract
                 ->then(function($result) use ($response) {
                     /**@var \GraphQL\Executor\ExecutionResult $result */
                     //var_dump($result);
-                    if(isset($result->data['productImages']) and $result->data['productImages']) {
+                    if (isset($result->data['productImages']) and $result->data['productImages']) {
                         $response->addWidget(
                             'product_edit_images',
                             'admin_product_edit_inner_left',

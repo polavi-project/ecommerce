@@ -25,10 +25,10 @@ class ProductsMiddleware extends MiddlewareAbstract
      */
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
-        if($response->hasWidget('category_edit_products'))
+        if ($response->hasWidget('category_edit_products'))
             return $delegate;
 
-        if($request->attributes->get('_matched_route') == 'category.edit') {
+        if ($request->attributes->get('_matched_route') == 'category.edit') {
             $response->addWidget(
                 'product_grid_container',
                 'admin_category_edit_inner_right',

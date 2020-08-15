@@ -21,7 +21,7 @@ class FormMiddleware extends MiddlewareAbstract
 
     public function __invoke(Request $request, Response $response)
     {
-        if(file_exists(CONFIG_PATH . DS . 'config.php'))
+        if (file_exists(CONFIG_PATH . DS . 'config.php'))
             $response->redirect(generate_url('homepage'));
 
         $this->getContainer()->get(Helmet::class)->setTitle('Polavi installation');

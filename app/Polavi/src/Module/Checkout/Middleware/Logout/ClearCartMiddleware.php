@@ -19,7 +19,7 @@ class ClearCartMiddleware extends MiddlewareAbstract
 
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
-        if($request->getCustomer()->isLoggedIn() == true)
+        if ($request->getCustomer()->isLoggedIn() == true)
             return $delegate;
 
         $this->getContainer()->get(Cart::class)->destroy();

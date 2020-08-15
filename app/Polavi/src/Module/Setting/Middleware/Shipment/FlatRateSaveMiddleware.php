@@ -25,17 +25,17 @@ class FlatRateSaveMiddleware extends MiddlewareAbstract
      */
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
-        if($request->getMethod() != 'POST' or $request->attributes->get('method') != 'flat_rate')
+        if ($request->getMethod() != 'POST' or $request->attributes->get('method') != 'flat_rate')
             return $delegate;
 
         $processor = _mysql();
         $processor->startTransaction();
         try {
             $data = $request->request->all();
-            if(!isset($data['shipment_flat_rate_countries']))
+            if (!isset($data['shipment_flat_rate_countries']))
                 $data['shipment_flat_rate_countries'] = [];
             foreach ($data as $name=> $value) {
-                if(is_array($value))
+                if (is_array($value))
                     $processor->getTable('setting')
                         ->insertOnUpdate([
                             'name'=>$name,

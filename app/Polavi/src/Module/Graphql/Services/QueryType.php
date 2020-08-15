@@ -51,7 +51,7 @@ class QueryType extends ObjectType
                         $productTable = _mysql()->getTable('product');
                         $productTable->leftJoin('product_description');
                         $productTable->where('product.product_id', '=', $args['id']);
-                        if($container->get(Request::class)->isAdmin() == false)
+                        if ($container->get(Request::class)->isAdmin() == false)
                             $productTable->andWhere('product.status', '=', 1);
 
                         return $productTable->fetchOneAssoc();
@@ -157,7 +157,7 @@ class QueryType extends ObjectType
                     ],
                     'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
                         // Authentication example
-                        if($container->get(Request::class)->isAdmin() == false)
+                        if ($container->get(Request::class)->isAdmin() == false)
                             return null;
                         else
                             return _mysql()->getTable('tax_class')->load($args['id']);
@@ -168,7 +168,7 @@ class QueryType extends ObjectType
                     'description' => "Return all tax class",
                     'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
                         // Authentication example
-                        if($container->get(Request::class)->isAdmin() == false)
+                        if ($container->get(Request::class)->isAdmin() == false)
                             return [];
                         else
                             return _mysql()->getTable('tax_class')->fetchAllAssoc();

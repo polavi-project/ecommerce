@@ -26,7 +26,7 @@ class FlatRateMiddleware extends MiddlewareAbstract
      */
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
-        if(
+        if (
             get_config('shipment_flat_rate_status') != 1
         )
             return $delegate;

@@ -7,7 +7,7 @@ $author = "Polavi team";
 return [
     "1.0.0" => function(\Polavi\Services\Db\Processor $conn) {
         $pageTable = $conn->executeQuery("SELECT TABLE_NAME FROM information_schema.tables WHERE table_schema = :dbName AND TABLE_NAME = \"cms_page\" LIMIT 0,1", ['dbName'=> $conn->getConfiguration()->getDb()])->fetch(\PDO::FETCH_ASSOC);
-        if($pageTable !== false)
+        if ($pageTable !== false)
             return;
         $conn->executeQuery("CREATE TABLE `cms_page` (
               `cms_page_id` int(10) unsigned NOT NULL AUTO_INCREMENT,

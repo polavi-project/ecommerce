@@ -22,7 +22,7 @@ class FormMiddleware extends MiddlewareAbstract
 {
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
-        if($request->getMethod() == 'POST')
+        if ($request->getMethod() == 'POST')
             return $delegate;
 
         $this->getContainer()->get(Helmet::class)->setTitle('Catalog setting');
@@ -31,7 +31,7 @@ class FormMiddleware extends MiddlewareAbstract
 
         $data = [];
         while ($row = $stm->fetch()) {
-            if($row['json'] == 1)
+            if ($row['json'] == 1)
                 $data[$row['name']] = json_decode($row['value'], true);
             else
                 $data[$row['name']] = $row['value'];
