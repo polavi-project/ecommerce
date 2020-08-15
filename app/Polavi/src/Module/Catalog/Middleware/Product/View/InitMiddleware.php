@@ -26,7 +26,7 @@ class InitMiddleware extends MiddlewareAbstract
     {
         $conn = _mysql();
         $product = null;
-        if($request->attributes->get('slug')) {
+        if ($request->attributes->get('slug')) {
             $product = $conn->getTable('product')
                 ->leftJoin('product_description')
                 ->where('seo_key', '=', $request->attributes->get('slug'))
@@ -37,7 +37,7 @@ class InitMiddleware extends MiddlewareAbstract
                 ->where('product_id', '=', $request->attributes->get('id'))
                 ->fetchOneAssoc();
 
-        if(!$product) {
+        if (!$product) {
             $response->setStatusCode(404);
             $request->attributes->set('_matched_route', 'not.found');
             return $delegate;

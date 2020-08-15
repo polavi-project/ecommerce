@@ -25,7 +25,7 @@ class ImagesMiddleware extends MiddlewareAbstract
      */
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
-        if($response->getStatusCode() == 404)
+        if ($response->getStatusCode() == 404)
             return $delegate;
 
         $this->getContainer()
@@ -47,10 +47,10 @@ class ImagesMiddleware extends MiddlewareAbstract
             ->then(function($result) use ($response) {
                 /**@var \GraphQL\Executor\ExecutionResult $result */
                 //var_dump($result);
-                if(isset($result->data['productImages']) and $result->data['productImages']) {
+                if (isset($result->data['productImages']) and $result->data['productImages']) {
 //                    $mainImage = null;
 //                    foreach ($result->data['productImages']['images'] as $key => $val)
-//                        if($val['isMain'] == true) {
+//                        if ($val['isMain'] == true) {
 //                            $mainImage = $val;
 //                            unset($result->data['productImages']['images'][$key]);
 //                        }

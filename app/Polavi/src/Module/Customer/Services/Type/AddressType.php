@@ -57,7 +57,7 @@ class AddressType extends ObjectType
                     'update_url' => [
                         'type' => Type::string(),
                         'resolve' => function($value, $args, Container $container, ResolveInfo $info) {
-                            if(isset($value['customer_address_id']))
+                            if (isset($value['customer_address_id']))
                                 return $container->get(Router::class)->generateUrl('customer.address.update', ['id' => $value['customer_address_id']]);
                             else
                                 return null;

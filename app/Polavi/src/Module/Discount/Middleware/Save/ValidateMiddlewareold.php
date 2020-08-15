@@ -32,10 +32,10 @@ class ValidateMiddlewareold extends FormMiddlewareold
     public function __invoke(Request $request, Response $response, callable $next, Delegate $delegate)
     {
         $data = $request->request->all();
-        if($this->validate() == true) {
+        if ($this->validate() == true) {
             return $next($request, $response, $delegate);
         } else {
-            if($id = get_request_attribute('id'))
+            if ($id = get_request_attribute('id'))
                 $url = build_url('promotion/edit/' . $id, $data);
             else
                 $url = build_url('promotion/create', $data);

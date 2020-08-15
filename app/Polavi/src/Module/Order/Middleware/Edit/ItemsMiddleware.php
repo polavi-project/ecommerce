@@ -53,7 +53,7 @@ class ItemsMiddleware extends MiddlewareAbstract
             ])
             ->then(function($result) use ($response) {
                 /**@var \GraphQL\Executor\ExecutionResult $result */
-                if(empty($result->errors)) {
+                if (empty($result->errors)) {
                     $response->addWidget(
                         'order_items',
                         'order_edit_left',

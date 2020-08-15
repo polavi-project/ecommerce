@@ -55,7 +55,7 @@ class CmsPageType extends ObjectType
                     'url' => [
                         'type' => Type::string(),
                         'resolve' => function($page, $args, Container $container, ResolveInfo $info) {
-                            if(!preg_match('/^[\.a-zA-Z0-9\-_+]+$/', $page['url_key'] ?? ""))
+                            if (!preg_match('/^[\.a-zA-Z0-9\-_+]+$/', $page['url_key'] ?? ""))
                                 return $container->get(Router::class)->generateUrl('page.view', ["id"=>$page['cms_page_id']]);
                             else
                                 return $container->get(Router::class)->generateUrl('page.view.pretty', ["slug"=>$page['url_key']]);
@@ -64,7 +64,7 @@ class CmsPageType extends ObjectType
                     'editUrl' => [
                         'type' => Type::string(),
                         'resolve' => function($page, $args, Container $container, ResolveInfo $info) {
-                            if($container->get(Request::class)->isAdmin() == false)
+                            if ($container->get(Request::class)->isAdmin() == false)
                                 return null;
                             return $container->get(Router::class)->generateUrl('page.edit', ["id"=>$page['cms_page_id']]);
                         }
@@ -72,7 +72,7 @@ class CmsPageType extends ObjectType
                     'deleteUrl' => [
                         'type' => Type::string(),
                         'resolve' => function($page, $args, Container $container, ResolveInfo $info) {
-                            if($container->get(Request::class)->isAdmin() == false)
+                            if ($container->get(Request::class)->isAdmin() == false)
                                 return null;
                             return $container->get(Router::class)->generateUrl('page.delete', ["id"=>$page['cms_page_id']]);
                         }

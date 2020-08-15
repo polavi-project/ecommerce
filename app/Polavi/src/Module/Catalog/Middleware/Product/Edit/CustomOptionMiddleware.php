@@ -26,10 +26,10 @@ class CustomOptionMiddleware extends MiddlewareAbstract
      */
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
-        if($response->hasWidget('product_edit_custom_options'))
+        if ($response->hasWidget('product_edit_custom_options'))
             return $delegate;
         $props = ['formId'=> self::FORM_ID, 'options' => []];
-        if($request->attributes->get('_matched_route') == 'product.edit')
+        if ($request->attributes->get('_matched_route') == 'product.edit')
             $this->getContainer()
                 ->get(GraphqlExecutor::class)
                 ->waitToExecute([

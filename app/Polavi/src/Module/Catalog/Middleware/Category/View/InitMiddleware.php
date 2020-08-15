@@ -25,7 +25,7 @@ class InitMiddleware extends MiddlewareAbstract
      */
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
-        if($request->attributes->get('slug'))
+        if ($request->attributes->get('slug'))
             $category = _mysql()->getTable('category')
             ->leftJoin('category_description')
             ->where('category_description.seo_key', '=', $request->attributes->get('slug'))
@@ -36,7 +36,7 @@ class InitMiddleware extends MiddlewareAbstract
                 ->where('category.category_id', '=', $request->attributes->get('id'))
                 ->fetchOneAssoc();
 
-        if(!$category) {
+        if (!$category) {
             $request->attributes->set('_matched_route', 'not.found');
             $response->setStatusCode(404);
         } else

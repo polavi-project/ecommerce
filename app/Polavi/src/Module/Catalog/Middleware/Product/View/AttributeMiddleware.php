@@ -25,7 +25,7 @@ class AttributeMiddleware extends MiddlewareAbstract
      */
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
-        if($response->getStatusCode() == 404)
+        if ($response->getStatusCode() == 404)
             return $delegate;
 
         $promise = $this->getContainer()
@@ -44,7 +44,7 @@ class AttributeMiddleware extends MiddlewareAbstract
 
         $promise->then(function($result) use ($response) {
                 /**@var \GraphQL\Executor\ExecutionResult $result */
-                if(isset($result->data['productAttributeIndex']) and $result->data['productAttributeIndex']) {
+                if (isset($result->data['productAttributeIndex']) and $result->data['productAttributeIndex']) {
                     $response->addWidget(
                         'product_view_attribute',
                         'product_single_tabs',

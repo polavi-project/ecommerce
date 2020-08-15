@@ -23,7 +23,7 @@ class DeleteMiddleware extends MiddlewareAbstract
         try {
             $conn = _mysql();
             $product = $conn->getTable('product')->load($request->attributes->get('id'));
-            if($product == false)
+            if ($product == false)
                 throw new \Exception("Requested product does not exist");
             $conn->getTable('product')->where('product_id', '=', $request->attributes->get('id'))->delete();
             $response->addAlert("product_delete_success", "success", "Product deleted");

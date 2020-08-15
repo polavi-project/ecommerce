@@ -52,7 +52,7 @@ $eventDispatcher->addListener(
                     'filters' =>  Type::listOf($container->get(FilterFieldType::class))
                 ],
                 'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
-                    if($container->get(\Polavi\Services\Http\Request::class)->isAdmin() == false)
+                    if ($container->get(\Polavi\Services\Http\Request::class)->isAdmin() == false)
                         return [];
                     $collection = new \Polavi\Module\Marketing\Services\SubscriberCollection($container);
                     return $collection->getData($rootValue, $args, $container, $info);

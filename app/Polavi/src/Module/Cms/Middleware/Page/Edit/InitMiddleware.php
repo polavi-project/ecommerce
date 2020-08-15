@@ -25,9 +25,9 @@ class InitMiddleware extends MiddlewareAbstract
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
         $id = (int) $request->attributes->get('id');
-        if($id) {
+        if ($id) {
             $page = _mysql()->getTable('cms_page')->load($id);
-            if($page === false) {
+            if ($page === false) {
                 $response->addData('success', 0);
                 $response->addData('message', 'Requested page does not exist');
 

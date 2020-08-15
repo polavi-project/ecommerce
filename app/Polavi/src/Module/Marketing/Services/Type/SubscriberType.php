@@ -43,7 +43,7 @@ class SubscriberType extends ObjectType
                     'customerEditUrl' => [
                         'type' => Type::string(),
                         'resolve' => function($subscriber, $args, Container $container, ResolveInfo $info) {
-                            if($container->get(Request::class)->isAdmin() == false || !$subscriber["customer_id"])
+                            if ($container->get(Request::class)->isAdmin() == false || !$subscriber["customer_id"])
                                 return null;
                             return $container->get(Router::class)->generateUrl('customer.edit', ["id"=>$subscriber['customer_id']]);
                         }
@@ -51,7 +51,7 @@ class SubscriberType extends ObjectType
                     'subscribeUrl' => [
                         'type' => Type::string(),
                         'resolve' => function($subscriber, $args, Container $container, ResolveInfo $info) {
-                            if($container->get(Request::class)->isAdmin() == false)
+                            if ($container->get(Request::class)->isAdmin() == false)
                                 return null;
                             return $container->get(Router::class)->generateUrl('newsletter.subscribe');
                         }
@@ -59,7 +59,7 @@ class SubscriberType extends ObjectType
                     'unsubscribeUrl' => [
                         'type' => Type::string(),
                         'resolve' => function($subscriber, $args, Container $container, ResolveInfo $info) {
-                            if($container->get(Request::class)->isAdmin() == false)
+                            if ($container->get(Request::class)->isAdmin() == false)
                                 return null;
                             return $container->get(Router::class)->generateUrl('admin.newsletter.unsubscribe');
                         }

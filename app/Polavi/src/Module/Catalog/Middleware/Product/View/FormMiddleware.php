@@ -26,7 +26,7 @@ class FormMiddleware extends MiddlewareAbstract
      */
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
-        if($response->getStatusCode() == 404)
+        if ($response->getStatusCode() == 404)
             return $delegate;
 
         $this->getContainer()
@@ -52,7 +52,7 @@ class FormMiddleware extends MiddlewareAbstract
             ->then(function($result) use ($request, $response) {
                 /**@var \GraphQL\Executor\ExecutionResult $result */
                 $options = [];
-                if(isset($result->data['custom_options']) and $result->data['custom_options']) {
+                if (isset($result->data['custom_options']) and $result->data['custom_options']) {
                     $options = $result->data['custom_options']['options'];
                 }
                 $response->addWidget(

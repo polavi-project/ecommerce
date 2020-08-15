@@ -32,7 +32,7 @@ class ProductsMiddleware extends MiddlewareAbstract
      */
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
-        if($response->hasWidget('category_view_products'))
+        if ($response->hasWidget('category_view_products'))
             return $delegate;
 
         $query = create_mutable_var("product_list_query", <<< QUERY
@@ -71,7 +71,7 @@ QUERY
                         $fs = [];
                         $filters = json_decode($result->data['productCollection']['currentFilter'], true);
                         foreach ($filters as $filter) {
-                            if($this->getContainer()->get(Request::class)->query->has($filter["key"]))
+                            if ($this->getContainer()->get(Request::class)->query->has($filter["key"]))
                                 $fs[] = $filter;
                         }
                         return $fs;
@@ -87,7 +87,7 @@ QUERY
                                 $fs = [];
                                 $filters = json_decode($result->data['productCollection']['currentFilter'], true);
                                 foreach ($filters as $filter) {
-                                    if($this->getContainer()->get(Request::class)->query->has($filter["key"]))
+                                    if ($this->getContainer()->get(Request::class)->query->has($filter["key"]))
                                         $fs[] = $filter;
                                 }
                                 return json_encode($fs, JSON_NUMERIC_CHECK);
@@ -95,22 +95,22 @@ QUERY
                             "total" => $result->data['productCollection']['total'],
                             "limit" => (function() use($result) {
                                 $limit = array_find(json_decode($result->data['productCollection']['currentFilter'], true), function($f) {
-                                    if($f["key"] == "limit")
+                                    if ($f["key"] == "limit")
                                         return $f;
                                     return null;
                                 });
-                                if($limit == null)
+                                if ($limit == null)
                                     return get_config('catalog_product_list_limit', 20);
                                 return $limit["value"];
                             })(),
                             "countPerRow" => get_config("catalog_product_list_number_per_row", 3),
                             "currentPage" => (function() use($result) {
                                 $page = array_find(json_decode($result->data['productCollection']['currentFilter'], true), function($f) {
-                                    if($f["key"] == "page")
+                                    if ($f["key"] == "page")
                                         return $f;
                                     return null;
                                 });
-                                if($page == null)
+                                if ($page == null)
                                     return 1;
                                 return $page["value"];
                             })(),
@@ -121,22 +121,22 @@ QUERY
                             "sorting_options" => create_mutable_var("sorting_options", []),
                             "currentSortOrder" => (function() use($result) {
                                 $sortOrder = array_find(json_decode($result->data['productCollection']['currentFilter'], true), function($f) {
-                                    if($f["key"] == "sort-order")
+                                    if ($f["key"] == "sort-order")
                                         return $f;
                                     return null;
                                 });
-                                if($sortOrder == null)
+                                if ($sortOrder == null)
                                     return get_config('catalog_product_list_sort_order', 'DESC');
 
                                 return $sortOrder["value"];
                             })(),
                             "currentSortBy" => (function() use($result) {
                                 $sortBy = array_find(json_decode($result->data['productCollection']['currentFilter'], true), function($f) {
-                                    if($f["key"] == "sort-by")
+                                    if ($f["key"] == "sort-by")
                                         return $f;
                                     return null;
                                 });
-                                if($sortBy == null)
+                                if ($sortBy == null)
                                     return get_config('catalog_product_list_sort_by', 'product.created_at');
                                 return $sortBy["value"];
                             })(),

@@ -24,7 +24,7 @@ class GeneralInfoMiddleware extends MiddlewareAbstract
      */
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
-        if($response->hasWidget('category_view_general'))
+        if ($response->hasWidget('category_view_general'))
             return $delegate;
 
         // Loading data by using GraphQL
@@ -42,7 +42,7 @@ class GeneralInfoMiddleware extends MiddlewareAbstract
             ])
             ->then(function($result) use ($response) {
                 /**@var \GraphQL\Executor\ExecutionResult $result */
-                if(isset($result->data['general_info']) and $result->data['general_info']) {
+                if (isset($result->data['general_info']) and $result->data['general_info']) {
                     $response->addWidget(
                         'category_view_general',
                         'content_top',

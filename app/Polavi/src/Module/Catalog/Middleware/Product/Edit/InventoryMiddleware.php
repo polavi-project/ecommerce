@@ -24,11 +24,11 @@ class InventoryMiddleware extends MiddlewareAbstract
      */
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
-        if($response->hasWidget('product_edit_inventory'))
+        if ($response->hasWidget('product_edit_inventory'))
             return $delegate;
 
 //        // Loading data by using GraphQL
-        if($request->attributes->get('_matched_route') == 'product.edit')
+        if ($request->attributes->get('_matched_route') == 'product.edit')
             $this->getContainer()
                 ->get(GraphqlExecutor::class)
                 ->waitToExecute([
@@ -43,7 +43,7 @@ class InventoryMiddleware extends MiddlewareAbstract
                     }"
                 ])->then(function($result) use ($response) {
                     /**@var \GraphQL\Executor\ExecutionResult $result */
-                    if(isset($result->data['inventory'])) {
+                    if (isset($result->data['inventory'])) {
                         $response->addWidget(
                             'product_edit_inventory',
                             'admin_product_edit_inner_right',

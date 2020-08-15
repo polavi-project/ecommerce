@@ -38,20 +38,20 @@ class CouponHelper
 
         $conn = _mysql();
         $_coupon = $conn->getTable('coupon')->loadByField('coupon', $coupon);
-        if($_coupon == false)
+        if ($_coupon == false)
             $flag = false;
 
-        if($flag == true)
+        if ($flag == true)
             $flag = $this->validator->validate($_coupon, $this->cart);
 
-        if($flag == false) {
+        if ($flag == false) {
             $discounts = $this->calculator->calculate($this->cart, null);
         } else {
             $this->coupon = $_coupon;
             $discounts = $this->calculator->calculate($cart, $_coupon);
         }
 
-        if(!$discounts) {
+        if (!$discounts) {
             $items= $cart->getItems();
             foreach ($items as $item)
                 $item->setData('discount_amount', 0);
@@ -60,7 +60,7 @@ class CouponHelper
         } else {
             $items= $cart->getItems();
             foreach ($items as $item)
-                if(isset($discounts[$item->getId()]))
+                if (isset($discounts[$item->getId()]))
                     $item->setData('discount_amount', $discounts[$item->getId()]);
                 else
                     $item->setData('discount_amount', 0);

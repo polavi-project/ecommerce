@@ -32,7 +32,7 @@ class AddressBookMiddleware extends MiddlewareAbstract
             ])
             ->then(function($result) use ($response) {
                 /**@var \GraphQL\Executor\ExecutionResult $result */
-                if(isset($result->data['customerAddresses'])) {
+                if (isset($result->data['customerAddresses'])) {
                     $response->addWidget(
                         'shipping_address_book',
                         'checkout_shipping_address_block',

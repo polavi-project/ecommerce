@@ -24,7 +24,7 @@ class CreateMigrationTableMiddleware extends MiddlewareAbstract
         $conn->startTransaction();
         try {
             $migrationTable = $conn->executeQuery("SELECT TABLE_NAME FROM information_schema.tables WHERE table_schema = :dbName AND TABLE_NAME = \"migration\" LIMIT 0,1", ['dbName'=> $this->getContainer()->get(Configuration::class)->getDb()])->fetch(\PDO::FETCH_ASSOC);
-            if($migrationTable === false)
+            if ($migrationTable === false)
                 $conn->executeQuery("CREATE TABLE `migration` (
                   `migration_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
                   `module` char(255) NOT NULL,

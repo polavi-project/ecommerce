@@ -24,14 +24,14 @@ class SaveMiddleware extends MiddlewareAbstract
      */
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
-        if($request->getMethod() == 'GET')
+        if ($request->getMethod() == 'GET')
             return $delegate;
         $processor = _mysql();
         $processor->startTransaction();
         try {
             $data = $request->request->all();
             foreach ($data as $name=> $value) {
-                if(is_array($value))
+                if (is_array($value))
                     $processor->getTable('setting')
                         ->insertOnUpdate([
                             'name'=>$name,

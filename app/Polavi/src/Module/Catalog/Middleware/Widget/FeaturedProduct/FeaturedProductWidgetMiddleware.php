@@ -22,7 +22,7 @@ class FeaturedProductWidgetMiddleware extends MiddlewareAbstract
 {
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
-        if($request->isAdmin() == true)
+        if ($request->isAdmin() == true)
             return $delegate;
 
         $matchedRoute = $request->attributes->get('_matched_route');
@@ -36,7 +36,7 @@ class FeaturedProductWidgetMiddleware extends MiddlewareAbstract
         foreach ($widgets as $widget) {
             $setting = json_decode($widget['setting'], true);
             $products = array_find($setting, function($value, $key) {
-                if($value['key'] == 'products')
+                if ($value['key'] == 'products')
                     return $value['value'] ?? null;
                 return null;
             }, '');
@@ -44,9 +44,9 @@ class FeaturedProductWidgetMiddleware extends MiddlewareAbstract
             $displaySetting = json_decode($widget['display_setting'], true);
             $areas = [];
             foreach ($displaySetting as $key => $value) {
-                if($value['key'] == 'area')
+                if ($value['key'] == 'area')
                     $areas = array_merge($areas, json_decode($value['value'], true));
-                if($value['key'] == 'area_manual_input')
+                if ($value['key'] == 'area_manual_input')
                     $areas = array_merge($areas, explode(",", $value['value']));
             }
 
@@ -72,7 +72,7 @@ QUERY
                 ])->then(function($result) use ($request, $response, $areas, $widget, $setting) {
                     /**@var \GraphQL\Executor\ExecutionResult $result */
                     //var_dump($result->data['featuredProducts']['products']);
-                    if(isset($result->data['featuredProducts'])) {
+                    if (isset($result->data['featuredProducts'])) {
                         foreach ($areas as $area)
                             $response->addWidget(
                                 $widget['cms_widget_id'] . '-featured-products-widget',
@@ -82,7 +82,7 @@ QUERY
                                 [
                                     "title" => $widget['name'],
                                     "countPerRow" => array_find($setting, function($value, $key) {
-                                        if($value['key'] == 'product_number_per_row')
+                                        if ($value['key'] == 'product_number_per_row')
                                             return $value['value'];
                                         return 4;
                                     }),

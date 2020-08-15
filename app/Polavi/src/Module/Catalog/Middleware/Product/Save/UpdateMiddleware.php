@@ -27,7 +27,7 @@ class UpdateMiddleware extends MiddlewareAbstract
     {
         $data = $request->request->all();
         try {
-            if($request->attributes->get('id', null) == null)
+            if ($request->attributes->get('id', null) == null)
                 return $data;
             $id = $this->getContainer()
                 ->get(ProductMutator::class)

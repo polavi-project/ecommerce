@@ -29,11 +29,11 @@ class PaymentInitMiddleware extends MiddlewareAbstract
     {
         /** @var Cart $cart */
         $cart = the_cart();
-        if($cart->getCartId() == null || !$cart->getItems()) {
+        if ($cart->getCartId() == null || !$cart->getItems()) {
             add_flash_session('error', __('Your cart is empty'));
             $delegate->stopAndResponse(new RedirectResponse(build_url('checkout/cart')));
         }
-        if($delegate->getPaymentMethod() != null and $delegate->getPaymentMethod() != 'paypal_express')
+        if ($delegate->getPaymentMethod() != null and $delegate->getPaymentMethod() != 'paypal_express')
             return $next($request, $response, $delegate);
         $client_id = get_config('checkout_paypal_client_id', null);
         $secret = get_config('checkout_paypal_client_secret', null);
@@ -56,7 +56,7 @@ class PaymentInitMiddleware extends MiddlewareAbstract
         $payer->setPaymentMethod('paypal');
         $items = [];
         $cart_items = $cart->getItems();
-        foreach($cart_items as $item) {
+        foreach ($cart_items as $item) {
             $p_item = new Item();
             $p_item->setName($item->getProductName())
                 ->setSku($item->getProductSku())

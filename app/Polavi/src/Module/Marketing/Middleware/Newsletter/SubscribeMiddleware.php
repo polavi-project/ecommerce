@@ -21,12 +21,12 @@ class SubscribeMiddleware extends MiddlewareAbstract
     {
         $email = $request->request->get("email");
         try {
-            if(!filter_var($email, FILTER_VALIDATE_EMAIL))
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL))
                 throw new \Exception("Invalid email");
             // Look up for customer ID
             $conn = _mysql();
             $customer = $conn->getTable("customer")->loadByField("email", $email);
-            if(!$customer)
+            if (!$customer)
                 $conn->getTable("newsletter_subscriber")->insertOnUpdate(["email"=> $email, "status" => "subscribed"]);
             else
                 $conn->getTable("newsletter_subscriber")->insertOnUpdate(["email"=> $email, "status" => "subscribed", "customer_id" => $customer["customer_id"]]);

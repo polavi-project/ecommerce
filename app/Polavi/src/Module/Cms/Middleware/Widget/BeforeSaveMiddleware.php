@@ -17,11 +17,11 @@ class BeforeSaveMiddleware extends MiddlewareAbstract
 {
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
-        if($request->isAdmin() == false)
+        if ($request->isAdmin() == false)
             return $delegate;
 
         $data = $request->request->all();
-        if(!isset($data['variables']['widget']['type']))
+        if (!isset($data['variables']['widget']['type']))
             return $delegate;
 
         $variables = $request->request->get('variables');
@@ -38,7 +38,7 @@ class BeforeSaveMiddleware extends MiddlewareAbstract
 
         $setting = $variables['widget']['setting'] ?? [];
         $setting = array_map(function($val) {
-            if(is_array($val['value']))
+            if (is_array($val['value']))
                 return array_merge($val, ['value' => json_encode($val['value'], JSON_NUMERIC_CHECK)]);
             else
                 return $val;

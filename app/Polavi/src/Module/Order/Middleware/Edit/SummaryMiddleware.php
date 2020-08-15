@@ -44,7 +44,7 @@ class SummaryMiddleware extends MiddlewareAbstract
             ])
             ->then(function($result) use ($response) {
                 /**@var \GraphQL\Executor\ExecutionResult $result */
-                if(isset($result->data['summary'])) {
+                if (isset($result->data['summary'])) {
                     $response->addWidget(
                         'order_summary',
                         'order_edit_right',

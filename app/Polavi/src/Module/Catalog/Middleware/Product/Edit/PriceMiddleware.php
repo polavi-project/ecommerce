@@ -26,9 +26,9 @@ class PriceMiddleware extends MiddlewareAbstract
      */
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
-        if($response->hasWidget('product_edit_advanced_price'))
+        if ($response->hasWidget('product_edit_advanced_price'))
             return $delegate;
-        if($request->attributes->get('_matched_route') == 'product.edit')
+        if ($request->attributes->get('_matched_route') == 'product.edit')
             $query = <<< QUERY
                     {
                         productTierPrice (productId: {$request->attributes->getInt('id')}) {

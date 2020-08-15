@@ -22,10 +22,10 @@ class FormMiddleware extends MiddlewareAbstract
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
         $id = $request->attributes->get('id', null);
-        if($request->attributes->get('type', null) != "breadcrumbs" && $request->attributes->get('type', null) != null)
+        if ($request->attributes->get('type', null) != "breadcrumbs" && $request->attributes->get('type', null) != null)
             return $delegate;
 
-        if($id)
+        if ($id)
             $this->getContainer()
                 ->get(GraphqlExecutor::class)
                 ->waitToExecute([
@@ -48,7 +48,7 @@ class FormMiddleware extends MiddlewareAbstract
                         }"
                 ])->then(function($result) use (&$fields, $response) {
                     /**@var \GraphQL\Executor\ExecutionResult $result */
-                    if(isset($result->data['cmsWidget'])) {
+                    if (isset($result->data['cmsWidget'])) {
                         $response->addWidget(
                             'breadcrumbs_widget_edit_form',
                             'widget_edit_form',

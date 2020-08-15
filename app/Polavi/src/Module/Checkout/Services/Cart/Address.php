@@ -57,7 +57,7 @@ class Address
             'address_type' => [
                 'resolver' => function($dataSource) {
                     $type = $this->getData('address_type') ?? $dataSource['address_type'] ?? null;
-                    if(!in_array($type, ['shipping', 'billing']))
+                    if (!in_array($type, ['shipping', 'billing']))
                         $this->error = "Wrong address type";
 
                     return $type;
@@ -66,7 +66,7 @@ class Address
             'country' => [
                 'resolver' => function($dataSource) {
                     $country =  $dataSource['country'] ?? null;
-                    if(!$country)
+                    if (!$country)
                         $this->error = "{$this->data['address_type']} country could not be empty";
                     return $country;
                 }
@@ -74,7 +74,7 @@ class Address
             'province' => [
                 'resolver' => function($dataSource) {
                     $province =  $dataSource['province'] ?? null;
-//                    if(!$province)
+//                    if (!$province)
 //                        $this->error = "{$this->data['address_type']} province could not be empty";
                     return $province;
                 },
@@ -88,7 +88,7 @@ class Address
             'postcode' => [
                 'resolver' => function($dataSource) {
                     $postcode =  $dataSource['postcode'] ?? null;
-                    if(!$postcode)
+                    if (!$postcode)
                         $this->error = "{$this->data['address_type']} postcode could not be empty";
                     return $postcode;
                 },
@@ -97,7 +97,7 @@ class Address
             'address1' => [
                 'resolver' => function($dataSource) {
                     $address1 =  $dataSource['address1'] ?? null;
-                    if(!$address1)
+                    if (!$address1)
                         $this->error = "{$this->data['address_type']} address1 could not be empty";
                     return $address1;
                 }
@@ -110,7 +110,7 @@ class Address
             'telephone' => [
                 'resolver' => function($dataSource) {
                     $telephone =  $dataSource['telephone'] ?? null;
-                    if(!$telephone)
+                    if (!$telephone)
                         $this->error = "{$this->data['address_type']} telephone could not be empty";
                     return $telephone;
                 }
@@ -118,7 +118,7 @@ class Address
             'full_name' => [
                 'resolver' => function($dataSource) {
                     $fullName =  $dataSource['full_name'] ?? null;
-                    if(!$fullName)
+                    if (!$fullName)
                         $this->error = "{$this->data['address_type']} name could not be empty";
                     return $fullName;
                 }

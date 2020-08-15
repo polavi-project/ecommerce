@@ -23,7 +23,7 @@ class AttributeMiddleware extends MiddlewareAbstract
      */
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
-        if($response->hasWidget('product_edit_attributes'))
+        if ($response->hasWidget('product_edit_attributes'))
             return $delegate;
 
         $this->getContainer()
@@ -57,7 +57,7 @@ QUERY
             ->then(function($result) use ($response) {
                 $props = ['attributeGroups' => []];
                 /**@var \GraphQL\Executor\ExecutionResult $result */
-                if(!$result->errors) {
+                if (!$result->errors) {
                     if (isset($result->data['attributeGroupCollection'])) {
                         $props['attributeGroups'] = $result->data['attributeGroupCollection']['groups'];
                     }
@@ -71,7 +71,7 @@ QUERY
                 }
             });
 
-        if($request->attributes->get('_matched_route') == 'product.edit')
+        if ($request->attributes->get('_matched_route') == 'product.edit')
             $this->getContainer()
             ->get(GraphqlExecutor::class)
             ->waitToExecute([
@@ -92,9 +92,9 @@ QUERY
             ->then(function($result) use ($response) {
                 /**@var \GraphQL\Executor\ExecutionResult $result */
                 //var_dump($result);
-                if(!$result->errors) {
+                if (!$result->errors) {
                     $widget = $response->getWidget("product_edit_attributes", "admin_product_edit_inner_right");
-                    if(!$widget)
+                    if (!$widget)
                         return;
 
                     if (isset($result->data['selected_group']['id']) and $result->data['selected_group']['id']) {

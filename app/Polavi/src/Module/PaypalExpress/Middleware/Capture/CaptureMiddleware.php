@@ -25,7 +25,7 @@ class CaptureMiddleware extends Mysql extends MiddlewareAbstract
     public function __invoke(Request $request, Response $response, callable $next, Delegate $delegate)
     {
         $order = $delegate->getOrder();
-        if(get_request_param('online_capture') != 1 || $order['payment_method'] != 'paypal_express')
+        if (get_request_param('online_capture') != 1 || $order['payment_method'] != 'paypal_express')
             return $next($request, $response, $delegate);
         $client_id = get_config('checkout_paypal_client_id', null);
         $secret = get_config('checkout_paypal_client_secret', null);
@@ -47,7 +47,7 @@ class CaptureMiddleware extends Mysql extends MiddlewareAbstract
             ->where('payment_transaction_order_id', '=', $order_id)
             ->andWhere('payment_action', '=', 'authorize')
             ->fetchOneAssoc();
-        if($transaction == false) {
+        if ($transaction == false) {
             add_flash_session('error', __('No authorize transaction to capture'));
             $delegate->stopAndResponse(new RedirectResponse(build_url('order/edit/' . $order_id)));
             return $next($request, $response, $delegate);

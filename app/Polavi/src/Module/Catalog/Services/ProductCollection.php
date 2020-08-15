@@ -32,13 +32,13 @@ class ProductCollection extends CollectionBuilder
             ->leftJoin('product_description');
 
         // Display out of stock or not
-        if(!$container->get(Request::class)->isAdmin()) {
+        if (!$container->get(Request::class)->isAdmin()) {
             $setting = get_config('catalog_out_of_stock_display', 0);
-            if($setting == 0) {
+            if ($setting == 0) {
                 $collection->where('product.manage_stock', '=', 0, "(")->orWhere('product.qty', '>', 0, '(')->andWhere('product.stock_availability', '=', 1, null, '))');
             }
         }
-        if(!$container->get(Request::class)->isAdmin()) {
+        if (!$container->get(Request::class)->isAdmin()) {
             $customerGroupId = $container->get(Request::class)->getCustomer()->isLoggedIn() ? $container->get(Request::class)->getCustomer()->getData('group_id') ?? 1 : 999;
             $collection
                 ->addFieldToSelect("LEAST(product.`price`, IF(ppone.`tier_price` IS NULL, 1000000000, ppone.`tier_price`) , IF(pptwo.`tier_price` IS NULL, 1000000000, pptwo.`tier_price`))", "sale_price")
@@ -161,7 +161,7 @@ class ProductCollection extends CollectionBuilder
                 ]);
         }
 
-        if($this->container->get(Request::class)->isAdmin() == false) {
+        if ($this->container->get(Request::class)->isAdmin() == false) {
             $collection->andWhere('product.status', '=', 1);
         }
 
@@ -176,13 +176,13 @@ class ProductCollection extends CollectionBuilder
         $isAdmin = $this->container->get(Request::class)->isAdmin();
 
         $this->addFilter('id', function($args) use($isAdmin) {
-            if($isAdmin == true) {
-                if($args['operator'] == "BETWEEN") {
+            if ($isAdmin == true) {
+                if ($args['operator'] == "BETWEEN") {
                     $arr = explode("-", $args['value']);
                     $from = (float) trim($arr[0]);
                     $to = isset($arr[1]) ? (float) trim($arr[1]) : null;
                     $this->getCollection()->andWhere('product.product_id', '>=', $from);
-                    if($to)
+                    if ($to)
                         $this->getCollection()->andWhere('product.product_id', '<=', $to);
                 } else {
                     $this->getCollection()->andWhere('product.product_id', $args['operator'], $args['value']);
@@ -191,24 +191,24 @@ class ProductCollection extends CollectionBuilder
         });
 
         $this->addFilter('price', function($args) use($isAdmin) {
-            if($isAdmin == true) {
-                if($args['operator'] == "BETWEEN") {
+            if ($isAdmin == true) {
+                if ($args['operator'] == "BETWEEN") {
                     $arr = explode("-", $args['value']);
                     $from = (float) trim($arr[0]);
                     $to = isset($arr[1]) ? (float) trim($arr[1]) : null;
                     $this->getCollection()->andWhere('product.price', '>=', $from);
-                    if($to)
+                    if ($to)
                         $this->getCollection()->andWhere('product.price', '<=', $to);
                 } else {
                     $this->getCollection()->andWhere('product.price', $args['operator'], $args['value']);
                 }
             } else {
-                if($args['operator'] == "BETWEEN") {
+                if ($args['operator'] == "BETWEEN") {
                     $arr = explode("-", $args['value']);
                     $from = (float) trim($arr[0]);
                     $to = isset($arr[1]) ? (float) trim($arr[1]) : null;
                     $this->getCollection()->andHaving('sale_price', '>=', $from);
-                    if($to)
+                    if ($to)
                         $this->getCollection()->andHaving('sale_price', '<=', $to);
                 } else {
                     $this->getCollection()->andHaving('sale_price', $args['operator'], $args['value']);
@@ -217,14 +217,14 @@ class ProductCollection extends CollectionBuilder
         });
 
         $this->addFilter('qty', function($args) use ($isAdmin) {
-            if($isAdmin == false)
+            if ($isAdmin == false)
                 return;
-            if($args['operator'] == "BETWEEN") {
+            if ($args['operator'] == "BETWEEN") {
                 $arr = explode("-", $args['value']);
                 $from = (int) trim($arr[0]);
                 $to = isset($arr[1]) ? (int) trim($arr[1]) : null;
                 $this->getCollection()->andWhere('product.qty', '>=', $from);
-                if($to)
+                if ($to)
                     $this->getCollection()->andWhere('product.qty', '<=', $to);
             } else {
                 $this->getCollection()->andWhere('product.qty', $args['operator'], $args['value']);
@@ -236,13 +236,13 @@ class ProductCollection extends CollectionBuilder
         });
 
         $this->addFilter('status', function($args) use ($isAdmin) {
-            if($isAdmin == false)
+            if ($isAdmin == false)
                 return;
             $this->getCollection()->andWhere('product.status', $args['operator'], (int)$args['value']);
         });
 
         $this->addFilter('category', function($args) use ($isAdmin) {
-            if($args['operator'] == "IN") {
+            if ($args['operator'] == "IN") {
                 $ids = array_map('intval', explode(',', $args['value']));
                 $stm = _mysql()
                     ->getTable('product_category')
@@ -252,11 +252,11 @@ class ProductCollection extends CollectionBuilder
                     $productIds[] = $row['product_id'];
                 }
 
-                if(!$productIds)
+                if (!$productIds)
                     $productIds = [-1];
 
                 $this->getCollection()->where('product.product_id', 'IN', $productIds);
-            } else if($args['operator'] == "=") {
+            } else if ($args['operator'] == "=") {
                 $stm = _mysql()
                     ->getTable('product_category')
                     ->where('category_id', '=', $args['value']);
@@ -265,7 +265,7 @@ class ProductCollection extends CollectionBuilder
                     $productIds[] = $row['product_id'];
                 }
 
-                if(!$productIds)
+                if (!$productIds)
                     $productIds = [-1];
 
                 $this->getCollection()->where('product.product_id', 'IN', $productIds);
@@ -273,7 +273,7 @@ class ProductCollection extends CollectionBuilder
         });
 
         $this->addFilter('sku', function($args) use ($isAdmin) {
-            if($args['operator'] == "IN") {
+            if ($args['operator'] == "IN") {
                 $skus = explode(',', $args['value']);
                 $this->getCollection()->andWhere('product.sku', 'IN', $skus);
             } else {
@@ -288,7 +288,7 @@ class ProductCollection extends CollectionBuilder
             ->andWhere('is_filterable', '=', 1);
         while($row = $tmp->fetch()) {
             $this->addFilter($row['attribute_code'], function($args) use ($isAdmin, $conn) {
-                if($args['operator'] == "IN") {
+                if ($args['operator'] == "IN") {
                     $ids = array_map('intval', explode(',', $args['value']));
                     $stm = $conn->getTable('product_attribute_value_index')
                         ->addFieldToSelect('product_id')
@@ -312,25 +312,25 @@ class ProductCollection extends CollectionBuilder
         }
 
         $this->addFilter('page', function($args) use ($isAdmin) {
-            if($args['operator'] !== "=")
+            if ($args['operator'] !== "=")
                 return;
             $this->setPage((int)$args['value']);
         });
 
         $this->addFilter('limit', function($args) use ($isAdmin) {
-            if($args['operator'] !== "=")
+            if ($args['operator'] !== "=")
                 return;
             $this->setLimit((int)$args['value']);
         });
 
         $this->addFilter('sort-by', function($args) use ($isAdmin) {
-            if($args['operator'] !== "=")
+            if ($args['operator'] !== "=")
                 return;
             $this->setSortBy($args['value']);
         });
 
         $this->addFilter('sort-order', function($args) use ($isAdmin) {
-            if($args['operator'] !== "=")
+            if ($args['operator'] !== "=")
                 return;
             $this->setSortOrder($args['value']);
         });
@@ -360,14 +360,14 @@ class ProductCollection extends CollectionBuilder
         ];
 
         // Visibility (For variant purpose)
-        if(!$this->container->get(Request::class)->isAdmin()) {
+        if (!$this->container->get(Request::class)->isAdmin()) {
             $visibleGroups = _mysql()->getTable("variant_group")->addFieldToSelect("variant_group_id")->where("visibility", "=", 1)->fetchAllAssoc();
             $groups = [];
             foreach ($visibleGroups as $group) {
                 $groups[] = $group['variant_group_id'];
             }
             $copyCollection = clone $this->getCollection();
-            if($groups) {
+            if ($groups) {
                 $unvisibleIds = $copyCollection
                     ->addFieldToSelect("SUM(product.visibility)", "sumv")
                     ->andWhere("product.variant_group_id", "IN", $groups)
@@ -415,13 +415,13 @@ class ProductCollection extends CollectionBuilder
         ];
 
         // Visibility (For variant purpose)
-        if(!$this->container->get(Request::class)->isAdmin()) {
+        if (!$this->container->get(Request::class)->isAdmin()) {
             $visibleGroups = _mysql()->getTable("variant_group")->addFieldToSelect("variant_group_id")->where("visibility", "=", 1)->fetchAllAssoc();
             $groups = [];
             foreach ($visibleGroups as $group) {
                 $groups[] = $group['variant_group_id'];
             }
-            if($groups) {
+            if ($groups) {
                 $c = clone $this->collection;
                 $unvisibleIds = $c
                     ->addFieldToSelect("SUM(product.visibility)", "sumv")
@@ -467,13 +467,13 @@ class ProductCollection extends CollectionBuilder
         ];
 
         // Visibility (For variant purpose)
-        if(!$this->container->get(Request::class)->isAdmin()) {
+        if (!$this->container->get(Request::class)->isAdmin()) {
             $visibleGroups = _mysql()->getTable("variant_group")->addFieldToSelect("variant_group_id")->where("visibility", "=", 1)->fetchAllAssoc();
             $groups = [];
             foreach ($visibleGroups as $group) {
                 $groups[] = $group['variant_group_id'];
             }
-            if($groups) {
+            if ($groups) {
                 $c = clone $this->collection;
                 $unvisibleIds = $c
                     ->addFieldToSelect("SUM(product.visibility)", "sumv")

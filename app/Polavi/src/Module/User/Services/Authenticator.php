@@ -30,12 +30,12 @@ class Authenticator
      */
     public function login($email, $password)
     {
-        if($this->request->getSession()->get('user_id', null) != null)
+        if ($this->request->getSession()->get('user_id', null) != null)
             return true;
 
         $userTable = _mysql()->getTable("admin_user");
         $user = $userTable->where('email', '=', $email)->fetchOneAssoc();
-        if($user == false)
+        if ($user == false)
             throw new \RuntimeException("Email or password is invalid");
 
         if (password_verify($password, $user['password'])) {

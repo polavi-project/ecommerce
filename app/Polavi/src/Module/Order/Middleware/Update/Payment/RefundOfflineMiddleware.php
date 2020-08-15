@@ -24,7 +24,7 @@ class RefundOfflineMiddleware extends MiddlewareAbstract
 
             $conn = _mysql();
             $order = $conn->getTable('order')->load($id);
-            if($order['payment_status'] != "paid")
+            if ($order['payment_status'] != "paid")
                 throw new \Exception("Could not refund. Payment is either pending or refunded");
             $conn->getTable('order')->where('order_id', '=', $id)->update(['payment_status'=>'refunded']);
 

@@ -28,7 +28,7 @@ class CodPaymentMiddleware extends MiddlewareAbstract
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
         $cart = $this->getContainer()->get(Cart::class);
-        if(
+        if (
             get_config('payment_cod_status') != 1 ||
             $cart->getData('grand_total') == 0
         )

@@ -28,7 +28,7 @@ class SaveVariantMiddleware extends MiddlewareAbstract
     {
         $productId = $this->getDelegate(CreateMiddleware::class, $this->getDelegate(UpdateMiddleware::class, null));
         $variantG = $request->request->get('variant_group', null);
-        if(
+        if (
             $variantG == null
             || $productId == null
             || !isset($variantG["variants"])
@@ -43,7 +43,7 @@ class SaveVariantMiddleware extends MiddlewareAbstract
 
             $product = $conn->getTable("product")->load($productId);
             // Remove product from Variant group if attribute group was changed
-            if(
+            if (
                 $product["variant_group_id"] &&
                 !$conn->getTable("variant_group")
                     ->where("variant_group_id", "=", $product["variant_group_id"])
@@ -58,12 +58,12 @@ class SaveVariantMiddleware extends MiddlewareAbstract
 
             // Variant saving
             $variantGroup = $request->request->get("variant_group", []);
-            if(isset($variantGroup["variant_group_id"]) && $variantGroup["variant_group_id"])
-                if($product["variant_group_id"] != $variantGroup["variant_group_id"])
+            if (isset($variantGroup["variant_group_id"]) && $variantGroup["variant_group_id"])
+                if ($product["variant_group_id"] != $variantGroup["variant_group_id"])
                     return $delegate;
 
             $groupAttributes = $variantGroup['variant_group_attributes'];
-            if(count($groupAttributes) > 5)
+            if (count($groupAttributes) > 5)
                 throw new \Exception("We support maximum 5 attributes for variant group");
 
             $attrs = $conn->getTable("attribute")
@@ -72,7 +72,7 @@ class SaveVariantMiddleware extends MiddlewareAbstract
                 ->andWhere("type", "=", "select")
                 ->andWhere("attribute_group_link.group_id", "=", $product["group_id"])
                 ->fetchAllAssoc();
-            if(count($attrs) != count($groupAttributes))
+            if (count($attrs) != count($groupAttributes))
                 throw new \Exception("Variant attribute is either not existed or not a dropdown type");
 
             $variantGroupData = [
@@ -106,9 +106,9 @@ class SaveVariantMiddleware extends MiddlewareAbstract
                 "attribute_five" => null,
             ], $variantGroupData);
 
-            if(isset($variantGroup["variant_group_id"]) && $variantGroup["variant_group_id"]) {
+            if (isset($variantGroup["variant_group_id"]) && $variantGroup["variant_group_id"]) {
                 $group = $conn->getTable("variant_group")->load($variantGroup["variant_group_id"]);
-                if(!$group)
+                if (!$group)
                     throw new \Exception("Requested group does not exist");
                 $conn->getTable("variant_group")->where("variant_group_id", "=", $variantGroup["variant_group_id"])->update($variantGroupData);
                 $groupId = $variantGroup["variant_group_id"];
@@ -123,7 +123,7 @@ class SaveVariantMiddleware extends MiddlewareAbstract
                 $productData = $request->request->all();
                 unset($productData["images"]);
 
-                if($variant['sku'] == $product['sku']) {
+                if ($variant['sku'] == $product['sku']) {
                     $conn->getTable("product")->where("product_id", "=", $productId)->update([
                         'variant_group_id' => $groupId,
                         'visibility' => $variant['visibility'] ?? 0
@@ -132,7 +132,7 @@ class SaveVariantMiddleware extends MiddlewareAbstract
                 }
 
                 $p = $conn->getTable('product')->where('sku', '=', $variant['sku'])->fetchOneAssoc();
-                if(!$p) {
+                if (!$p) {
                     $productData['variant_group_id'] = $groupId;
                     $productData['visibility'] = $variant['visibility'] ?? 0;
                     $productData['sku'] = $variant['sku'];
@@ -146,7 +146,7 @@ class SaveVariantMiddleware extends MiddlewareAbstract
                     $pId = $productMutator->createProduct($productData);
                 } else {
                     $pId = $p["product_id"];
-                    if($p["group_id"] != $product["group_id"])
+                    if ($p["group_id"] != $product["group_id"])
                         throw new \Exception("{$p["sku"]} is not valid variant");
 
                     $updateData = create_mutable_var("variant_data_before_update", [

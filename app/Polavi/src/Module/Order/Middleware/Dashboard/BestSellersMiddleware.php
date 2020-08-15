@@ -37,7 +37,7 @@ class BestSellersMiddleware extends MiddlewareAbstract
             ]);
         $promise->then(function($result) use ($response) {
                 /**@var \GraphQL\Executor\ExecutionResult $result */
-                if(isset($result->data['bestSellers'])) {
+                if (isset($result->data['bestSellers'])) {
                     $response->addWidget(
                         'best_sellers',
                         'admin_dashboard_middle_left',

@@ -24,7 +24,7 @@ class GridMiddleware extends MiddlewareAbstract
      */
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
-        if($response->hasWidget('order_grid'))
+        if ($response->hasWidget('order_grid'))
             return $delegate;
 
         $this->getContainer()->get(Helmet::class)->setTitle("Orders");

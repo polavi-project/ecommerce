@@ -25,7 +25,7 @@ class CreateAdminUserMiddleware extends MiddlewareAbstract
         $conn->startTransaction();
         try {
             $adminUserTable = $conn->executeQuery("SELECT TABLE_NAME FROM information_schema.tables WHERE table_schema = :dbName AND TABLE_NAME = \"admin_user\" LIMIT 0,1", ['dbName'=> $this->getContainer()->get(Configuration::class)->getDb()])->fetch(\PDO::FETCH_ASSOC);
-            if($adminUserTable === false)
+            if ($adminUserTable === false)
                 $conn->executeQuery("CREATE TABLE `admin_user` (
                   `admin_user_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
                   `status` smallint(5) unsigned NOT NULL,

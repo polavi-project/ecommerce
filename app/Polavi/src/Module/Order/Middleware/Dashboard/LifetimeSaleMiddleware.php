@@ -31,10 +31,10 @@ class LifetimeSaleMiddleware extends MiddlewareAbstract
 
         foreach ($orders as $order) {
             $total += $order['grand_total'];
-            if($order['payment_status'] == 'paid' && $order['shipment_status'] == "delivered")
+            if ($order['payment_status'] == 'paid' && $order['shipment_status'] == "delivered")
                 $completed++;
 
-            if($order['payment_status'] == 'cancelled' && $order['shipment_status'] == "cancelled")
+            if ($order['payment_status'] == 'cancelled' && $order['shipment_status'] == "cancelled")
                 $cancelled++;
         }
 

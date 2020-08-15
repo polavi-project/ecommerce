@@ -67,20 +67,20 @@ $eventDispatcher->addListener(
                 $address = $args['address'];
                 $provinces = \Polavi\Services\Locale\Province::listStateV3();
                 // TODO: Verify allow countries
-                if($container->get(Polavi\Module\Checkout\Services\Cart\Cart::class)->isEmpty())
+                if ($container->get(Polavi\Module\Checkout\Services\Cart\Cart::class)->isEmpty())
                     return ['status'=> false, 'address' => null, 'message' => 'Your shopping cart is empty'];
 
-                if(
+                if (
                     $container->get(Request::class)->getSession()->get('cart_id') != $args['cartId']
                 )
                     return ['status'=> false, 'address' => null, 'message' => 'Permission denied'];
 
-                if(
+                if (
                     !isset($provinces[$address['country']]) ||
                     (
                         isset($address['province']) &&
                         !\Polavi\array_find($provinces[$address['country']], function ($value) use ($address) {
-                            if($value['value'] == $address['province'])
+                            if ($value['value'] == $address['province'])
                                 return $value;
                             else
                                 return null;
@@ -116,24 +116,24 @@ $eventDispatcher->addListener(
                 $address = $args['address'];
                 $provinces = \Polavi\Services\Locale\Province::listStateV3();
                 // TODO: Verify allow countries
-                if($container->get(Polavi\Module\Checkout\Services\Cart\Cart::class)->isEmpty())
+                if ($container->get(Polavi\Module\Checkout\Services\Cart\Cart::class)->isEmpty())
                     return ['status'=> false, 'address' => null, 'message' => 'Your shopping cart is empty'];
 
-                if(
+                if (
                     $container->get(Request::class)->getSession()->get('cart_id') != $args['cartId']
                 )
                     return ['status'=> false, 'address' => null, 'message' => 'Permission denied'];
 
-                if($address == null) {
+                if ($address == null) {
                     $container->get(\Polavi\Module\Checkout\Services\Cart\Cart::class)->setData('billing_address_id', null);
                     return ['status'=> true, 'address' => null];
                 }
-                if(
+                if (
                     !isset($provinces[$address['country']]) ||
                     (
                         isset($address['province']) &&
                         !\Polavi\array_find($provinces[$address['country']], function ($value) use ($address) {
-                            if($value['value'] == $address['province'])
+                            if ($value['value'] == $address['province'])
                                 return $value;
                             else
                                 return null;
@@ -155,10 +155,10 @@ $eventDispatcher->addListener(
 
 $eventDispatcher->addListener('breadcrumbs_items', function(array $items) {
     $container = \Polavi\the_container();
-    if(in_array($container->get(Request::class)->get("_matched_route"), ["checkout.cart"])) {
+    if (in_array($container->get(Request::class)->get("_matched_route"), ["checkout.cart"])) {
         $items[] = ["sort_order"=> 1, "title"=> "Shopping cart", "link"=> null];
     }
-    if(in_array($container->get(Request::class)->get("_matched_route"), ["checkout.index"])) {
+    if (in_array($container->get(Request::class)->get("_matched_route"), ["checkout.index"])) {
         $items[] = ["sort_order"=> 1, "title"=> "Checkout", "link"=> null];
     }
     return $items;

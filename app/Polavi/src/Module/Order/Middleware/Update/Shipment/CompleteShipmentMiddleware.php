@@ -24,7 +24,7 @@ class CompleteShipmentMiddleware extends MiddlewareAbstract
             $conn = _mysql();
             $id = $request->attributes->get('id');
             $order = $conn->getTable('order')->load($id);
-            if($order['shipment_status'] !== "delivering")
+            if ($order['shipment_status'] !== "delivering")
                 throw new \Exception("Shipment is either completed or not started yet");
             $conn->getTable('order')->where('order_id', '=', $id)->update(['shipment_status'=>'delivered']);
             $promise->resolve($id);
@@ -35,7 +35,7 @@ class CompleteShipmentMiddleware extends MiddlewareAbstract
         });
 
         $promise->otherwise(function($reason) use ($response){
-            if($reason instanceof \Exception)
+            if ($reason instanceof \Exception)
                 $response->addAlert("order_update", "error", $reason->getMessage())->notNewPage();
             else
                 $response->addAlert("order_update", "error", $reason)->notNewPage();

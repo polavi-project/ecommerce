@@ -21,7 +21,7 @@ class GreetingMiddleware extends MiddlewareAbstract
 {
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
-        if(
+        if (
             $response->hasWidget('admin_user_greeting') ||
             !$request->isAdmin() ||
             $request->attributes->get('_matched_route') == 'admin.login' ||

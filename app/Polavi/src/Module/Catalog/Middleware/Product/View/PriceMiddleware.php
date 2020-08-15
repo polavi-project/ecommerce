@@ -31,7 +31,7 @@ class PriceMiddleware extends MiddlewareAbstract
             ])
             ->then(function($result) use ($response) {
                 /**@var \GraphQL\Executor\ExecutionResult $result */
-                if(isset($result->data['productTierPrice'])) {
+                if (isset($result->data['productTierPrice'])) {
                     $response->addWidget(
                         'product_view_price',
                         'product_single_page_form',

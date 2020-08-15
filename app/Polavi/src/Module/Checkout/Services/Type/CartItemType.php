@@ -83,7 +83,7 @@ class CartItemType extends ObjectType
                             $des = _mysql()->getTable('product_description')
                                 ->where('product_description_product_id', '=', $item['product_id'])
                                 ->fetchOneAssoc();
-                            if(!preg_match('/^[\.a-zA-Z0-9\-_+]+$/', $des['seo_key']))
+                            if (!preg_match('/^[\.a-zA-Z0-9\-_+]+$/', $des['seo_key']))
                                 return $container->get(Router::class)->generateUrl('product.view', ["id"=>$item['product_id']]);
                             else
                                 return $container->get(Router::class)->generateUrl('product.view.pretty', ["slug"=>$des['seo_key']]);
@@ -104,7 +104,7 @@ class CartItemType extends ObjectType
                         ])),
                         'resolve' => function($item, $args, Container $container, ResolveInfo $info) {
                             $errors = [];
-                            if($item['error'])
+                            if ($item['error'])
                                 foreach ($item['error'] as $key => $val)
                                     $errors[] = ['field'=> $key, 'message'=> $val];
                             return $errors;

@@ -26,25 +26,25 @@ class VariantMiddleware extends MiddlewareAbstract
      */
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
-        if($response->getStatusCode() == 404)
+        if ($response->getStatusCode() == 404)
             return $delegate;
 
         $product = $this->getDelegate(InitMiddleware::class);
-        if(!$product)
+        if (!$product)
             return $delegate;
 
-        if($product["status"] == 0 && $product["variant_group_id"] == null) {
+        if ($product["status"] == 0 && $product["variant_group_id"] == null) {
             $response->setStatusCode(404);
             $request->attributes->set('_matched_route', 'not.found');
             return $delegate;
-        } else if($product["status"] == 1 && $product["variant_group_id"] == null) {
+        } else if ($product["status"] == 1 && $product["variant_group_id"] == null) {
             return $delegate;
         } else {
             $availableVariants = _mysql()->getTable("product")
                 ->where("variant_group_id", "=", $product["variant_group_id"])
                 ->andWhere("status", "=", 1)
                 ->fetchAllAssoc();
-            if(!$availableVariants) {
+            if (!$availableVariants) {
                 $response->setStatusCode(404);
                 $request->attributes->set('_matched_route', 'not.found');
                 return $delegate;
@@ -78,7 +78,7 @@ class VariantMiddleware extends MiddlewareAbstract
 
             $promise->then(function($result) use ($response) {
                 /**@var \GraphQL\Executor\ExecutionResult $result */
-                if(isset($result->data['variants']) and $result->data['variants']) {
+                if (isset($result->data['variants']) and $result->data['variants']) {
                     $conn = _mysql();
                     $group = $conn->getTable("variant_group")->load($result->data["variants"]["variant_group_id"]);
                     $attrIds = array_filter([

@@ -23,7 +23,7 @@ class NotFoundPageMiddleware extends MiddlewareAbstract
      */
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
-        if($response->getStatusCode()!== 404)
+        if ($response->getStatusCode()!== 404)
             return $delegate;
 
         $this->getContainer()->get(Helmet::class)->setTitle('Page not found');

@@ -40,7 +40,7 @@ class InfoMiddleware extends MiddlewareAbstract
             ])
             ->then(function($result) use ($response) {
                 /**@var \GraphQL\Executor\ExecutionResult $result */
-                if(isset($result->data['order_info'])) {
+                if (isset($result->data['order_info'])) {
                     $response->addWidget(
                         'order_info',
                         'order_edit_left',

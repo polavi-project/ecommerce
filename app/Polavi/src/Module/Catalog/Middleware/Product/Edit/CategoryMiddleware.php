@@ -24,10 +24,10 @@ class CategoryMiddleware extends MiddlewareAbstract
      */
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
-        if($response->hasWidget('product_edit_category'))
+        if ($response->hasWidget('product_edit_category'))
             return $delegate;
 
-        if($request->attributes->get('_matched_route') == 'product.edit')
+        if ($request->attributes->get('_matched_route') == 'product.edit')
             $query = <<< QUERY
                     {
                         assignedCategories: product (id: {$request->get('id', 0)}) {
@@ -64,7 +64,7 @@ QUERY;
                 $categories = [];
                 /**@var \GraphQL\Executor\ExecutionResult $result */
                 if (isset($result->data['assignedCategories']['categories'])) {
-                    foreach($result->data['assignedCategories']['categories'] as $cat)
+                    foreach ($result->data['assignedCategories']['categories'] as $cat)
                         $assignedCategories[] = $cat['category_id'];
                 }
                 if (isset($result->data['categoryCollection']['categories'])) {

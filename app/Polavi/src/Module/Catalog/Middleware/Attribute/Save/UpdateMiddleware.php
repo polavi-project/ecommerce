@@ -28,7 +28,7 @@ class UpdateMiddleware extends MiddlewareAbstract
      */
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
-        if($request->attributes->get('id', null) == null)
+        if ($request->attributes->get('id', null) == null)
             return $delegate;
 
         $this->conn = _mysql();
@@ -38,7 +38,7 @@ class UpdateMiddleware extends MiddlewareAbstract
                 ->where('attribute_id', '=', $request->attributes->get('id'))
                 ->update($request->request->all());
 
-            if(in_array($request->request->get('type'), ['select', 'multiselect']))
+            if (in_array($request->request->get('type'), ['select', 'multiselect']))
                 $this->saveOptions((int) $request->attributes->get('id'), $request->request->get('attribute_code'), $request->request->get('options'));
             else
                 $this->conn->getTable('attribute_option')->where('attribute_id', '=', $request->attributes->get('id'))->delete();
@@ -56,7 +56,7 @@ class UpdateMiddleware extends MiddlewareAbstract
 
     protected function saveOptions(int $attributeId, $attributeCode, array $options)
     {
-        if(empty($options)) {
+        if (empty($options)) {
             $this->conn->getTable('attribute_option')
                 ->where('attribute_id', '=', $attributeId)
                 ->delete();
@@ -69,7 +69,7 @@ class UpdateMiddleware extends MiddlewareAbstract
             $oldOptions[$row['attribute_option_id']] = $row['attribute_option_id'];
         }
         foreach ($oldOptions as $oId)
-            if(!array_key_exists($oId, $options))
+            if (!array_key_exists($oId, $options))
                 $this->conn->getTable('attribute_option')
                     ->where('attribute_option_id', '=', $oId)
                     ->delete();
@@ -79,7 +79,7 @@ class UpdateMiddleware extends MiddlewareAbstract
                 'attribute_code' => $attributeCode,
                 'option_text' => $option['option_text']
             ];
-            if(!array_key_exists($key, $oldOptions))
+            if (!array_key_exists($key, $oldOptions))
                 $this->conn->getTable('attribute_option')->insert($optionData);
             else {
                 $this->conn->getTable('attribute_option')

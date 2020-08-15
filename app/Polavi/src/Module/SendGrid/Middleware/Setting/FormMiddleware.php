@@ -21,7 +21,7 @@ class FormMiddleware extends MiddlewareAbstract
 {
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
-        if($request->getMethod() == 'POST')
+        if ($request->getMethod() == 'POST')
             return $delegate;
 
         $this->getContainer()->get(Helmet::class)->setTitle("SendGrid email setting");
@@ -36,7 +36,7 @@ AND `name` LIKE 'sendgrid_%'");
 
         $setting = [];
         while ($row = $stm->fetch()) {
-            if($row['json'] == 1)
+            if ($row['json'] == 1)
                 $setting[$row['name']] = json_decode($row['value'], true);
             else
                 $setting[$row['name']] = $row['value'];

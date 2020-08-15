@@ -39,7 +39,7 @@ $eventDispatcher->addListener(
                     'filters' =>  Type::listOf($container->get(FilterFieldType::class))
                 ],
                 'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
-                    if($container->get(\Polavi\Services\Http\Request::class)->isAdmin() == false)
+                    if ($container->get(\Polavi\Services\Http\Request::class)->isAdmin() == false)
                         return [];
                     $collection = new \Polavi\Module\Customer\Services\CustomerCollection($container);
                     return $collection->getData($rootValue, $args, $container, $info);
@@ -52,7 +52,7 @@ $eventDispatcher->addListener(
             'description' => "Return list of customer group",
             'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
                 // Authentication example
-                if($container->get(Request::class)->isAdmin() == false)
+                if ($container->get(Request::class)->isAdmin() == false)
                     return [];
                 else
                     return \Polavi\_mysql()->getTable('customer_group')->where('customer_group_id', '<', 999)->fetchAllAssoc();
@@ -67,12 +67,12 @@ $eventDispatcher->addListener(
             ],
             'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
                 // Authentication example
-                if(
+                if (
                     $container->get(Request::class)->isAdmin() == false &&
                     $args['id'] != $container->get(Request::class)->getCustomer()->getData('customer_id')
                 )
                     return null;
-                else if(
+                else if (
                     $container->get(Request::class)->isAdmin() == false &&
                     $args['id'] == $container->get(Request::class)->getCustomer()->getData('customer_id')
                 )
@@ -90,7 +90,7 @@ $eventDispatcher->addListener(
             ],
             'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
                 // Authentication example
-                if(
+                if (
                     $container->get(Request::class)->isAdmin() == false &&
                     $args['customerId'] != $container->get(Request::class)->getCustomer()->getData('customer_id')
                 )
@@ -123,12 +123,12 @@ $eventDispatcher->addListener(
             'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
                 $conn = _mysql();
                 $data = $args['address'];
-                if(
+                if (
                     $container->get(Request::class)->isAdmin() == false &&
                     !$container->get(Request::class)->getCustomer()->isLoggedIn()
                 )
                     return ['status'=> false, 'address' => null, 'message' => 'Permission denied'];
-                if(
+                if (
                     $container->get(Request::class)->isAdmin() == false &&
                     $container->get(Request::class)->getCustomer()->isLoggedIn()
                 ) {
@@ -136,7 +136,7 @@ $eventDispatcher->addListener(
                     $id = $conn->getLastID();
                     return ['status'=> true, 'address' => $conn->getTable('customer_address')->load($id)];
                 }
-                else if(!$args['customerId'])
+                else if (!$args['customerId'])
                     return ['status'=> false, 'address' => null, 'message' => 'customerId must be provided'];
                 else {
                     $conn->getTable('customer_address')->insert(array_merge($data, ['customer_id' => $args['customerId']]));
@@ -166,9 +166,9 @@ $eventDispatcher->addListener(
             'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
                 $conn = _mysql();
                 $address = $conn->getTable('customer_address')->load($args['id']);
-                if(!$address)
+                if (!$address)
                     return ['status'=> false, 'address' => null, 'message' => 'Address is not existed'];
-                if(
+                if (
                     $container->get(Request::class)->isAdmin() == false &&
                     $address['customer_id'] != $container->get(Request::class)->getCustomer()->getData('customer_id')
                 )
@@ -195,9 +195,9 @@ $eventDispatcher->addListener(
             'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
                 $conn = _mysql();
                 $address = $conn->getTable('customer_address')->load($args['id']);
-                if(!$address)
+                if (!$address)
                     return ['status'=> false, 'addressId' => null, 'message' => 'Address is not existed'];
-                if(
+                if (
                     $container->get(Request::class)->isAdmin() == false &&
                     $address['customer_id'] != $container->get(Request::class)->getCustomer()->getData('customer_id')
                 )
@@ -236,13 +236,13 @@ $eventDispatcher->addListener(
 
 $eventDispatcher->addListener('breadcrumbs_items', function(array $items) {
     $container = \Polavi\the_container();
-    if($container->get(Request::class)->get("_matched_route") == "customer.register") {
+    if ($container->get(Request::class)->get("_matched_route") == "customer.register") {
         $items[] = ["sort_order"=> 1, "title"=> "Register account", "link"=> null];
     }
-    if($container->get(Request::class)->get("_matched_route") == "customer.login") {
+    if ($container->get(Request::class)->get("_matched_route") == "customer.login") {
         $items[] = ["sort_order"=> 1, "title"=> "Login", "link"=> null];
     }
-    if($container->get(Request::class)->get("_matched_route") == "customer.dashboard") {
+    if ($container->get(Request::class)->get("_matched_route") == "customer.dashboard") {
         $items[] = ["sort_order"=> 1, "title"=> "Account dashboard", "link"=> null];
     }
     return $items;

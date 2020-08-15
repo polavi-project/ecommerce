@@ -28,11 +28,11 @@ class OrderLoader extends Table
 
     public function load($id)
     {
-        if(isset($this->loadedOrders[$id]))
+        if (isset($this->loadedOrders[$id]))
             return $this->loadedOrders[$id];
 
         $order = parent::load($id);
-        if($order)
+        if ($order)
             $this->loadedOrders[$id] = $order;
 
         return $order;

@@ -124,7 +124,7 @@ class SaleStatisticType extends ObjectType
                                 ->getTable('order_activity')
                                 ->where('order_activity_order_id', '=', $order['order_id']);
 
-                            if($container->get(Request::class)->isAdmin() == false)
+                            if ($container->get(Request::class)->isAdmin() == false)
                                 $activities->andWhere('customer_notified', '=', 1);
 
                             return $activities->fetchAllAssoc();
@@ -133,7 +133,7 @@ class SaleStatisticType extends ObjectType
                     'editUrl' => [
                         'type' => Type::string(),
                         'resolve' => function($order, $args, Container $container, ResolveInfo $info) {
-                            if($container->get(Request::class)->isAdmin() == false)
+                            if ($container->get(Request::class)->isAdmin() == false)
                                 return null;
                             return $container->get(Router::class)->generateUrl('order.edit', ["id"=>$order['order_id']]);
                         }

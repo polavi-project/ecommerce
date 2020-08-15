@@ -19,7 +19,7 @@ class ButtonMiddleware extends MiddlewareAbstract
 {
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
-        if($request->isAdmin() == false && $request->getMethod() == "GET")
+        if ($request->isAdmin() == false && $request->getMethod() == "GET")
             $response->addWidget(
                 'add_to_cart_button',
                 'product_item',
