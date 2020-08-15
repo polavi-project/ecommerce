@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace Polavi\Module\Catalog\Middleware\Category\Save;
 
-use function Polavi\get_default_language_Id;
 use Polavi\Module\Catalog\Services\CategoryMutator;
 use Polavi\Services\Http\Request;
 use Polavi\Services\Http\Response;
@@ -27,13 +26,12 @@ class UpdateMiddleware extends MiddlewareAbstract
     public function __invoke(Request $request, Response $response, array $data = null)
     {
         try {
-            if($request->get('id', null) == null)
+            if ($request->get('id', null) == null)
                 return $data;
             $this->getContainer()
                 ->get(CategoryMutator::class)
                 ->updateCategory(
                     (int) $request->get('id', null),
-                    (int) $request->query->get('language', get_default_language_Id()),
                     $data
                 );
             $this->getContainer()->get(Session::class)->getFlashBag()->add('success', 'Category has been saved');

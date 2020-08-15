@@ -19,13 +19,13 @@ class SaveMiddleware extends MiddlewareAbstract
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
         $data = $request->request->all();
-        if(isset($data['free_shipping']))
+        if (isset($data['free_shipping']))
             $data['free_shipping'] = 1;
         else
             $data['free_shipping'] = 0;
         try {
             $conn = _mysql();
-            if($request->attributes->get('id'))
+            if ($request->attributes->get('id'))
                 $conn->getTable('coupon')->where('coupon_id', '=', $request->attributes->get('id'))->update($data);
             else
                 $conn->getTable('coupon')->insert($data);

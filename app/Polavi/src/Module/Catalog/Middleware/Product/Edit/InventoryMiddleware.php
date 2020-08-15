@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace Polavi\Module\Catalog\Middleware\Product\Edit;
 
-use function Polavi\get_default_language_Id;
 use function Polavi\get_js_file_url;
 use Polavi\Module\Graphql\Services\GraphqlExecutor;
 use Polavi\Services\Http\Request;
@@ -25,16 +24,16 @@ class InventoryMiddleware extends MiddlewareAbstract
      */
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
-        if($response->hasWidget('product_edit_inventory'))
+        if ($response->hasWidget('product_edit_inventory'))
             return $delegate;
 
 //        // Loading data by using GraphQL
-        if($request->attributes->get('_matched_route') == 'product.edit')
+        if ($request->attributes->get('_matched_route') == 'product.edit')
             $this->getContainer()
                 ->get(GraphqlExecutor::class)
                 ->waitToExecute([
                     "query"=>"{
-                        inventory: product(id: {$request->get('id')} language:{$request->get('language', get_default_language_Id())})
+                        inventory: product(id: {$request->get('id')})
                         {
                             manage_stock
                             tax_class
@@ -44,7 +43,7 @@ class InventoryMiddleware extends MiddlewareAbstract
                     }"
                 ])->then(function($result) use ($response) {
                     /**@var \GraphQL\Executor\ExecutionResult $result */
-                    if(isset($result->data['inventory'])) {
+                    if (isset($result->data['inventory'])) {
                         $response->addWidget(
                             'product_edit_inventory',
                             'admin_product_edit_inner_right',

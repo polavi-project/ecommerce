@@ -53,7 +53,7 @@ class AttributeType extends ObjectType
                         'type'=> Type::listOf($container->get(AttributeOptionType::class)),
                         'description' => 'List option value for dropdown attribute',
                         'resolve' => function($attribute, $args, Container $container, ResolveInfo $info) {
-                            if(!in_array($attribute['type'], ['select', 'multiselect']))
+                            if (!in_array($attribute['type'], ['select', 'multiselect']))
                                 return [];
                             return $container->get(Processor::class)
                                 ->getTable('attribute_option')
@@ -64,14 +64,14 @@ class AttributeType extends ObjectType
                     'editUrl' => [
                         'type' => Type::string(),
                         'resolve' => function($attribute, $args, Container $container, ResolveInfo $info) {
-                            if($container->get(Request::class)->isAdmin() == false)
+                            if ($container->get(Request::class)->isAdmin() == false)
                                 return null;
                             return $container->get(Router::class)->generateUrl('attribute.edit', ["id"=>$attribute['attribute_id']]);                        }
                     ],
                     'deleteUrl' => [
                         'type' => Type::string(),
                         'resolve' => function($attribute, $args, Container $container, ResolveInfo $info) {
-                            if($container->get(Request::class)->isAdmin() == false)
+                            if ($container->get(Request::class)->isAdmin() == false)
                                 return null;
                             return $container->get(Router::class)->generateUrl('attribute.delete', ["id"=>$attribute['attribute_id']]);                        }
                     ]

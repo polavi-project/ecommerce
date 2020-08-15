@@ -11,7 +11,6 @@ namespace Polavi\Module\Cms\Services;
 
 use GraphQL\Type\Definition\ResolveInfo;
 use function Polavi\_mysql;
-use function Polavi\get_default_language_Id;
 use Polavi\Services\Di\Container;
 use Polavi\Services\Grid\CollectionBuilder;
 use Polavi\Services\Http\Request;
@@ -25,7 +24,7 @@ class WidgetCollection extends CollectionBuilder
     {
         $this->container = $container;
         $collection = _mysql()->getTable('cms_widget');
-        if($this->container->get(Request::class)->isAdmin() == false)
+        if ($this->container->get(Request::class)->isAdmin() == false)
             $collection->where('status', '=', 1);
         $this->init(
             $collection
@@ -49,25 +48,25 @@ class WidgetCollection extends CollectionBuilder
         });
 
         $this->addFilter('page', function($args) {
-            if($args['operator'] !== "=")
+            if ($args['operator'] !== "=")
                 return;
             $this->setPage((int)$args['value']);
         });
 
         $this->addFilter('limit', function($args) {
-            if($args['operator'] !== "=")
+            if ($args['operator'] !== "=")
                 return;
             $this->setLimit((int)$args['value']);
         });
 
         $this->addFilter('sortBy', function($args) {
-            if($args['operator'] !== "=")
+            if ($args['operator'] !== "=")
                 return;
             $this->setSortBy($args['value']);
         });
 
         $this->addFilter('sortOrder', function($args) {
-            if($args['operator'] !== "=")
+            if ($args['operator'] !== "=")
                 return;
             $this->setSortOrder($args['value']);
         });

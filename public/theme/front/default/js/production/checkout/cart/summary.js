@@ -86,7 +86,7 @@ function Summary(props) {
     const cart = ReactRedux.useSelector(state => _.get(state, 'appState.cart', {}));
     return React.createElement(
         "div",
-        { className: "col-4" },
+        { className: "col-12 col-md-4" },
         React.createElement(
             "h4",
             null,

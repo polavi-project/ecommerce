@@ -18,7 +18,10 @@ class PromiseWaiter extends Promise
 
     public function addPromise(string $key, Promise $promise)
     {
-        if($this->getState() == self::FULFILLED || $this->getState() == self::REJECTED || isset($this->promises[$key])) {
+        if ($this->getState() == self::FULFILLED
+            || $this->getState() == self::REJECTED
+            || isset($this->promises[$key])
+        ) {
             return $this;
         }
 

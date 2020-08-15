@@ -14,7 +14,6 @@ use GraphQL\Type\Definition\Type;
 use function Polavi\_mysql;
 use function Polavi\dispatch_event;
 use Polavi\Services\Di\Container;
-use Polavi\Module\Catalog\Services\DataLoader;
 use Polavi\Services\Http\Request;
 use Polavi\Services\Routing\Router;
 
@@ -48,14 +47,14 @@ class AttributeGroupType extends ObjectType
                     'editUrl' => [
                         'type' => Type::string(),
                         'resolve' => function($group, $args, Container $container, ResolveInfo $info) {
-                            if($container->get(Request::class)->isAdmin() == false)
+                            if ($container->get(Request::class)->isAdmin() == false)
                                 return null;
                             return $container->get(Router::class)->generateUrl('attribute.group.edit', ["id"=>$group['attribute_group_id']]);                        }
                     ],
                     'deleteUrl' => [
                         'type' => Type::string(),
                         'resolve' => function($group, $args, Container $container, ResolveInfo $info) {
-                            if($container->get(Request::class)->isAdmin() == false)
+                            if ($container->get(Request::class)->isAdmin() == false)
                                 return null;
                             return $container->get(Router::class)->generateUrl('attribute.group.delete', ["id"=>$group['attribute_group_id']]);                        }
                     ]

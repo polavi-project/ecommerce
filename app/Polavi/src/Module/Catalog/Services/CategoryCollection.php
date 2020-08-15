@@ -11,7 +11,6 @@ namespace Polavi\Module\Catalog\Services;
 
 use GraphQL\Type\Definition\ResolveInfo;
 use function Polavi\_mysql;
-use function Polavi\get_default_language_Id;
 use Polavi\Services\Di\Container;
 use Polavi\Services\Grid\CollectionBuilder;
 use Polavi\Services\Http\Request;
@@ -25,18 +24,9 @@ class CategoryCollection extends CollectionBuilder
     {
         $this->container = $container;
         $collection = _mysql()->getTable('category')
-            ->leftJoin('category_description', null, [
-                [
-                    'column'      => "category_description.language_id",
-                    'operator'    => "=",
-                    'value'       => get_default_language_Id(),
-                    'ao'          => 'and',
-                    'start_group' => null,
-                    'end_group'   => null
-                ]
-            ]);
+            ->leftJoin('category_description');
 
-        if($this->container->get(Request::class)->isAdmin() == false) {
+        if ($this->container->get(Request::class)->isAdmin() == false) {
             $collection->where('category.status', '=', 1);
         }
 
@@ -56,7 +46,7 @@ class CategoryCollection extends CollectionBuilder
         });
 
         $this->addFilter('status', function($args) use ($isAdmin) {
-            if($isAdmin == false)
+            if ($isAdmin == false)
                 return;
             $this->collection->andWhere('category.status', $args['operator'], (int)$args['value']);
         });
@@ -66,25 +56,25 @@ class CategoryCollection extends CollectionBuilder
         });
 
         $this->addFilter('page', function($args) use ($isAdmin) {
-            if($args['operator'] !== "=")
+            if ($args['operator'] !== "=")
                 return;
             $this->setPage((int)$args['value']);
         });
 
         $this->addFilter('limit', function($args) use ($isAdmin) {
-            if($args['operator'] !== "=")
+            if ($args['operator'] !== "=")
                 return;
             $this->setLimit((int)$args['value']);
         });
 
         $this->addFilter('sortBy', function($args) use ($isAdmin) {
-            if($args['operator'] !== "=")
+            if ($args['operator'] !== "=")
                 return;
             $this->setSortBy($args['value']);
         });
 
         $this->addFilter('sortOrder', function($args) use ($isAdmin) {
-            if($args['operator'] !== "=")
+            if ($args['operator'] !== "=")
                 return;
             $this->setSortOrder($args['value']);
         });

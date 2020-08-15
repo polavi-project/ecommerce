@@ -33,10 +33,10 @@ class UpdateAccountMiddleware extends MiddlewareAbstract
                 "variables" => $variables
             ]);
         $promise->then(function($result) use ($request, $response) {
-                if($result->errors)
+                if ($result->errors)
                     throw new \Exception($result->errors[0]->message);
 
-                if($result->data['updateCustomer']['status'] == false)
+                if ($result->data['updateCustomer']['status'] == false)
                     throw new \Exception($result->data['updateCustomer']['message']);
                 $response->addData('customerUpdate', ['status'=> true]);
                 $response->addState('customer', $result->data['updateCustomer']['customer'])->notNewPage();

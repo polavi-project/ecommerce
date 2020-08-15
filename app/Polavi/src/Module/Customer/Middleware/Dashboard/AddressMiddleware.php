@@ -46,7 +46,7 @@ class AddressMiddleware extends MiddlewareAbstract
             ])
             ->then(function($result) use ($request, $response) {
                 /**@var \GraphQL\Executor\ExecutionResult $result */
-                if(isset($result->data['customerAddresses'])) {
+                if (isset($result->data['customerAddresses'])) {
                     $response->addWidget(
                         'customer_adsdress',
                         'customer_dashboard_layout',

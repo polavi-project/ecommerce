@@ -31,7 +31,7 @@ class Customer implements UserInterface
     public function __construct($id)
     {
         $customer = get_mysql_table('customer')->load($id);
-        if($customer == false)
+        if ($customer == false)
             throw new \RuntimeException('Customer does not exist');
         foreach ($customer as $key=>$value)
             $this->$key = $value;

@@ -24,8 +24,8 @@ class InitMiddleware extends MiddlewareAbstract
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
         $id = (int) $request->attributes->get('id');
-        if($id) {
-            if($this->getContainer()->get(Processor::class)->getTable('attribute')->load($id) === false) {
+        if ($id) {
+            if ($this->getContainer()->get(Processor::class)->getTable('attribute')->load($id) === false) {
                 $response->addData('success', 0)
                         ->addData('message', 'Requested attribute does not exist')
                         ->setStatusCode(404);

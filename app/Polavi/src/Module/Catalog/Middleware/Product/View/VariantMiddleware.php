@@ -9,7 +9,6 @@ declare(strict_types=1);
 namespace Polavi\Module\Catalog\Middleware\Product\View;
 
 use function Polavi\_mysql;
-use function Polavi\get_default_language_Id;
 use function Polavi\get_js_file_url;
 use Polavi\Module\Graphql\Services\GraphqlExecutor;
 use Polavi\Services\Http\Request;
@@ -27,25 +26,25 @@ class VariantMiddleware extends MiddlewareAbstract
      */
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
-        if($response->getStatusCode() == 404)
+        if ($response->getStatusCode() == 404)
             return $delegate;
 
         $product = $this->getDelegate(InitMiddleware::class);
-        if(!$product)
+        if (!$product)
             return $delegate;
 
-        if($product["status"] == 0 && $product["variant_group_id"] == null) {
+        if ($product["status"] == 0 && $product["variant_group_id"] == null) {
             $response->setStatusCode(404);
             $request->attributes->set('_matched_route', 'not.found');
             return $delegate;
-        } else if($product["status"] == 1 && $product["variant_group_id"] == null) {
+        } else if ($product["status"] == 1 && $product["variant_group_id"] == null) {
             return $delegate;
         } else {
             $availableVariants = _mysql()->getTable("product")
                 ->where("variant_group_id", "=", $product["variant_group_id"])
                 ->andWhere("status", "=", 1)
                 ->fetchAllAssoc();
-            if(!$availableVariants) {
+            if (!$availableVariants) {
                 $response->setStatusCode(404);
                 $request->attributes->set('_matched_route', 'not.found');
                 return $delegate;
@@ -55,7 +54,7 @@ class VariantMiddleware extends MiddlewareAbstract
                 ->get(GraphqlExecutor::class)
                 ->waitToExecute([
                     "query"=>"{
-                    variants: product(id: {$request->get('id')} language:{$request->get('language', get_default_language_Id())})
+                    variants: product(id: {$request->get('id')})
                     {
                         name
                         variant_group_id
@@ -79,7 +78,7 @@ class VariantMiddleware extends MiddlewareAbstract
 
             $promise->then(function($result) use ($response) {
                 /**@var \GraphQL\Executor\ExecutionResult $result */
-                if(isset($result->data['variants']) and $result->data['variants']) {
+                if (isset($result->data['variants']) and $result->data['variants']) {
                     $conn = _mysql();
                     $group = $conn->getTable("variant_group")->load($result->data["variants"]["variant_group_id"]);
                     $attrIds = array_filter([

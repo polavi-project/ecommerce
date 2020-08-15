@@ -37,12 +37,12 @@ class PriceHelper
             ->orWhere('active_to', '>', date("Y-m-d H:i:s"), null, '))')
             ->fetchAllAssoc(['sort_by'=>'qty', 'sort_order'=>'ASC']);
 
-        if(!$tierPrice)
+        if (!$tierPrice)
             return $regularPrice;
         else {
             $tmpPrice = $regularPrice;
             foreach ($tierPrice as $price)
-                if($qty >= $price['qty']) {
+                if ($qty >= $price['qty']) {
                     $tmpPrice = $price['price'];
                 }
             return $tmpPrice;

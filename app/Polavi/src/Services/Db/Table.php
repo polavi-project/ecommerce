@@ -73,12 +73,12 @@ class Table
         $sql = "DESCRIBE `{$this->getTable()}`";
         $stmt = $this->processor->executeQuery($sql);
         $columns = [];
-        if($stmt) {
+        if ($stmt) {
             $rawColumnData = $stmt->fetchAll(\Pdo::FETCH_ASSOC);
-            foreach($rawColumnData as $key => $column){
-                if (strtoupper($column['Key']) == 'PRI')
+            foreach ($rawColumnData as $key => $column) {
+                if (strtoupper($column['Key']) == 'PRI') {
                     $this->primary = $column['Field'];
-                else {
+                } else {
                     $columns[] = $column;
                 }
             }
@@ -230,7 +230,7 @@ class Table
     protected function setBinding($column, $operator, $value)
     {
         $binding = [];
-        switch($operator) {
+        switch ($operator) {
             case '=':
             case '>':
             case '>=':
@@ -250,7 +250,7 @@ class Table
             case 'IN':
             case 'NOT IN':
                 // Value must be an array
-                foreach($value as $k=>$v) {
+                foreach ($value as $k => $v) {
                     $binding[':in' . $k] = $v;
                 }
                 break;
@@ -312,11 +312,13 @@ class Table
      */
     public function join($table, string $joinType, $alias = null, array $extraCondition = [])
     {
-        if(!in_array($joinType, ['LEFT JOIN', 'RIGHT JOIN', 'FULL OUTER JOIN', 'INNER JOIN']))
+        if (!in_array($joinType, ['LEFT JOIN', 'RIGHT JOIN', 'FULL OUTER JOIN', 'INNER JOIN'])) {
             throw new \RuntimeException("Invalid join");
+        }
         $relation = $this->checkForJoin($table);
-        if($alias == null)
+        if ($alias == null) {
             $alias = $table;
+        }
 
         $this->join[] = [
             'table' => $table,
@@ -325,9 +327,14 @@ class Table
             'on'    => "`{$this->getTable()}`.{$relation['to']} = `{$alias}`.{$relation['from']}",
             'where' => $extraCondition
         ];
-        foreach ($extraCondition as $key=>$condition) {
-            if(!isset($condition['isValueAColumn']) || $condition['isValueAColumn'] == false)
-                $this->setBinding(str_ireplace(["`", "'", "."], ['', '', "_"], $condition['column'] . '_' . $key), $condition['operator'], $condition['value']);
+        foreach ($extraCondition as $key => $condition) {
+            if (!isset($condition['isValueAColumn']) || $condition['isValueAColumn'] == false) {
+                $this->setBinding(
+                    str_ireplace(["`", "'", "."], ['', '', "_"], $condition['column'] . '_' . $key),
+                    $condition['operator'],
+                    $condition['value']
+                );
+            }
         }
 
         return $this;
@@ -343,15 +350,12 @@ class Table
      */
     public function where($column, $operator, $value, $startGroup = false, $endGroup = false)
     {
-        // reset where
-        //$this->where = [];
-//        if(strpos($column, '.') === false)
-//            $column = "`{$this->getTable()}`.{$column}";
-        if(is_array($value))
-            foreach($value as $key=>$val) {
+        if (is_array($value)) {
+            foreach ($value as $key => $val) {
                 $value['binding' . _unique_number()] = $val;
                 unset($value[$key]);
             }
+        }
         $this->where[] = [
             'column'      => $column,
             'operator'    => $operator,
@@ -360,9 +364,14 @@ class Table
             'start_group' => $startGroup,
             'end_group'   => $endGroup
         ];
-        $this->setBinding(str_ireplace(["`", "'", "."], ['', '', "_"], $column) . "_" . (count($this->where) - 1), $operator, $value);
-        if($column == "`{$this->getTable()}`." . $this->primary && trim($operator) == '=')
+        $this->setBinding(
+            str_ireplace(["`", "'", "."], ['', '', "_"], $column) . "_" . (count($this->where) - 1),
+            $operator,
+            $value
+        );
+        if ($column == "`{$this->getTable()}`." . $this->primary && trim($operator) == '=') {
             $this->targetRow = (int) $value;
+        }
 
         return $this;
     }
@@ -377,13 +386,12 @@ class Table
      */
     public function andWhere($column, $operator, $value, $startGroup = false, $endGroup = false)
     {
-//        if(strpos($column, '.') === false)
-//            $column = "`{$this->getTable()}`.{$column}";
-        if(is_array($value))
-            foreach($value as $key=>$val) {
+        if (is_array($value)) {
+            foreach ($value as $key => $val) {
                 $value['binding' . _unique_number()] = $val;
                 unset($value[$key]);
             }
+        }
         $this->where[] = [
             'column'      => $column,
             'operator'    => $operator,
@@ -392,9 +400,14 @@ class Table
             'start_group' => $startGroup,
             'end_group'   => $endGroup
         ];
-        $this->setBinding(str_ireplace(["`", "'", "."], ['', '', "_"], $column) . "_" . (count($this->where) - 1), $operator, $value);
-        if($column == "`{$this->getTable()}`." . $this->primary && trim($operator) == '=')
+        $this->setBinding(
+            str_ireplace(["`", "'", "."], ['', '', "_"], $column) . "_" . (count($this->where) - 1),
+            $operator,
+            $value
+        );
+        if ($column == "`{$this->getTable()}`." . $this->primary && trim($operator) == '=') {
             $this->targetRow = (int) $value;
+        }
 
         return $this;
     }
@@ -409,13 +422,12 @@ class Table
      */
     public function orWhere($column, $operator, $value, $startGroup = false, $endGroup = false)
     {
-//        if(strpos($column, '.') === false)
-//            $column = "`{$this->getTable()}`.{$column}";
-        if(is_array($value))
-            foreach($value as $key=>$val) {
+        if (is_array($value)) {
+            foreach ($value as $key => $val) {
                 $value['binding' . _unique_number()] = $val;
                 unset($value[$key]);
             }
+        }
         $this->where[] = [
             'column'      => $column,
             'operator'    => $operator,
@@ -424,7 +436,11 @@ class Table
             'start_group' => $startGroup,
             'end_group'   => $endGroup
         ];
-        $this->setBinding(str_ireplace(["`", "'", "."], ['', '', "_"], $column) . "_" . (count($this->where) - 1), $operator, $value);
+        $this->setBinding(
+            str_ireplace(["`", "'", "."], ['', '', "_"], $column) . "_" . (count($this->where) - 1),
+            $operator,
+            $value
+        );
 
         return $this;
     }
@@ -461,17 +477,28 @@ class Table
 				AND information_schema.key_column_usage.referenced_table_name IS NOT NULL';
 
         $stmt = $this->processor->prepare($query);
-        $stmt->execute([':database' => $this->processor->getConfiguration()->getDb(), ':table' => $table, ':referenced_table' => $this->getTable()]);
+        $stmt->execute(
+            [
+                ':database' => $this->processor->getConfiguration()->getDb(),
+                ':table' => $table, ':referenced_table' => $this->getTable()
+            ]
+        );
         $result = $stmt->fetchAll();
-        if(!$result) {
+        if (!$result) {
             $stmt = $this->processor->prepare($query);
-            $stmt->execute([':database' => $this->processor->getConfiguration()->getDb(), ':table' => $this->getTable(), ':referenced_table' => $table]);
+            $stmt->execute(
+                [
+                    ':database' => $this->processor->getConfiguration()->getDb(),
+                    ':table' => $this->getTable(), ':referenced_table' => $table
+                ]
+            );
             $result = $stmt->fetchAll();
-            if(!$result)
+            if (!$result) {
                 throw new \RuntimeException("No relation between {$table} and {$this->getTable()}");
+            }
         }
         $relation = [];
-        foreach ( $result as $fk ) {
+        foreach ($result as $fk) {
             $relation = [
                 'name'          => $fk['name'],
                 'from'          => $fk['from'],
@@ -488,10 +515,11 @@ class Table
      */
     public function load($id)
     {
-        if($this->getWhere())
+        if ($this->getWhere()) {
             $this->andWhere($this->getPrimary(), '=', (int) $id);
-        else
+        } else {
             $this->where($this->getPrimary(), '=', (int) $id);
+        }
 
         return $this->fetchOneAssoc(['limit'=> 1]);
     }
@@ -532,8 +560,9 @@ class Table
     {
         $stmt = $this->processor->select($this, $setting);
         $data = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-        if(!$data)
+        if (!$data) {
             return $data;
+        }
         $refined_data = [];
         foreach ($data as $value) {
             $primary = $value[$this->getPrimary()];
@@ -564,8 +593,9 @@ class Table
     {
         $stmt = $this->processor->select($this, $setting);
         $data = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-        if(!$data)
+        if (!$data) {
             return $data;
+        }
         $refined_data = [];
         foreach ($data as $value) {
             $primary = $value[$this->getPrimary()];
@@ -585,11 +615,13 @@ class Table
     }
 
     public function fetch(array $setting = []) {
-        if($this->fetchPdoStatement == null)
+        if ($this->fetchPdoStatement == null) {
             $this->fetchPdoStatement = $this->processor->select($this, $setting);
+        }
         $row = $this->fetchPdoStatement->fetch(\PDO::FETCH_ASSOC);
-        if($row == false)
+        if ($row == false) {
             $this->fetchPdoStatement = null;
+        }
 
         return $row;
     }
@@ -608,8 +640,9 @@ class Table
 
     public function update(array $data)
     {
-        if(count($this->getWhere()) == 0)
+        if (count($this->getWhere()) == 0) {
             throw new \RuntimeException("Where must be defined to update row");
+        }
 
         return $this->processor->update($this, $data);
     }
@@ -640,6 +673,7 @@ class Table
     public function groupBy($groupBy)
     {
         $this->groupBy = $groupBy;
+
         return $this;
     }
 
@@ -653,13 +687,12 @@ class Table
      */
     public function having($column, $operator, $value, $startGroup = false, $endGroup = false)
     {
-//        if(strpos($column, '.') === false)
-//            $column = "`{$this->getTable()}`.{$column}";
-        if(is_array($value))
-            foreach($value as $key=>$val) {
+        if (is_array($value)) {
+            foreach ($value as $key => $val) {
                 $value['binding' . _unique_number()] = $val;
                 unset($value[$key]);
             }
+        }
         $this->having[] = [
             'column'      => $column,
             'operator'    => $operator,
@@ -668,7 +701,11 @@ class Table
             'start_group' => $startGroup,
             'end_group'   => $endGroup
         ];
-        $this->setBinding(str_ireplace(["`", "'", "."], ['', '', "_"], $column) . "_" . (count($this->having) - 1), $operator, $value);
+        $this->setBinding(
+            str_ireplace(["`", "'", "."], ['', '', "_"], $column) . "_" . (count($this->having) - 1),
+            $operator,
+            $value
+        );
 
         return $this;
     }
@@ -696,13 +733,15 @@ class Table
      */
     public function orHaving($column, $operator, $value, $startGroup = false, $endGroup = false)
     {
-        if(strpos($column, '.') === false)
+        if (strpos($column, '.') === false) {
             $column = "`{$this->getTable()}`.{$column}";
-        if(is_array($value))
-            foreach($value as $key=>$val) {
+        }
+        if (is_array($value)) {
+            foreach ($value as $key => $val) {
                 $value['binding' . _unique_number()] = $val;
                 unset($value[$key]);
             }
+        }
         $this->having[] = [
             'column'      => $column,
             'operator'    => $operator,
@@ -711,7 +750,11 @@ class Table
             'start_group' => $startGroup,
             'end_group'   => $endGroup
         ];
-        $this->setBinding(str_ireplace(["`", "'", "."], ['', '', "_"], $column) . "_" . (count($this->where) - 1), $operator, $value);
+        $this->setBinding(
+            str_ireplace(["`", "'", "."], ['', '', "_"], $column) . "_" . (count($this->where) - 1),
+            $operator,
+            $value
+        );
 
         return $this;
     }

@@ -42,7 +42,7 @@ class SendGrid
 
     public function sendEmail(string $identity, $receiver, $templateId, array $data = [])
     {
-        if($this->enable == 0) {
+        if ($this->enable == 0) {
             $this->logger->addInfo('SendGrid transactional email is disabled from Admin');
             return;
         }
@@ -59,7 +59,7 @@ class SendGrid
             dispatch_event('sendGrid_before_send', [$email, $receiver, &$data]);
             dispatch_event('sendGrid_before_send_' . $identity, [$email, $receiver, &$data]);
             $response = $sendGrid->send($email);
-            if(get_config('sendgrid_log', 1) == 1) {
+            if (get_config('sendgrid_log', 1) == 1) {
                 $this->logger->addInfo($response->statusCode());
                 $this->logger->addInfo($response->body());
             }

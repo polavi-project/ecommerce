@@ -10,7 +10,6 @@ namespace Polavi\Module\Catalog\Middleware\Attribute\Edit;
 
 use function Polavi\create_mutable_var;
 use function Polavi\generate_url;
-use function Polavi\get_default_language_Id;
 use function Polavi\get_js_file_url;
 use Polavi\Module\Graphql\Services\GraphqlExecutor;
 use Polavi\Services\Http\Request;
@@ -28,7 +27,7 @@ class EditFormMiddleware extends MiddlewareAbstract
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
         // Loading data by using GraphQL
-        if($request->attributes->get('_matched_route') == 'attribute.edit')
+        if ($request->attributes->get('_matched_route') == 'attribute.edit')
             $this->getContainer()
             ->get(GraphqlExecutor::class)
             ->waitToExecute([
@@ -51,7 +50,7 @@ class EditFormMiddleware extends MiddlewareAbstract
             ])
             ->then(function($result) use ($response, $request) {
                 /**@var \GraphQL\Executor\ExecutionResult $result */
-                if(isset($result->data['attribute'])) {
+                if (isset($result->data['attribute'])) {
                     $response->addWidget(
                         'attribute_edit',
                         'content',

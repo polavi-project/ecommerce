@@ -40,7 +40,7 @@ class MutationType extends ObjectType
                         ]
                     ]),
                     'resolve'=> function($value, $args, Container $container, ResolveInfo $info) {
-                        if(!$container->get(Request::class)->isAdmin())
+                        if (!$container->get(Request::class)->isAdmin())
                             return ['status' => false, 'group'=> null];
                         else {
                             $conn = _mysql();
@@ -69,12 +69,12 @@ class MutationType extends ObjectType
                         ]
                     ]),
                     'resolve'=> function($value, $args, Container $container, ResolveInfo $info) {
-                        if(!$container->get(Request::class)->isAdmin())
+                        if (!$container->get(Request::class)->isAdmin())
                             return ['status' => false, 'group'=> null];
                         else {
                             $conn = _mysql();
                             $group = $conn->getTable('customer_group')->load($args['id']);
-                            if(!$group)
+                            if (!$group)
                                 return ['status' => false, 'group'=> null];
                             $conn->getTable('customer_group')->where('customer_group_id', '=', $args['id'])->update(['group_name'=>$args['name']]);
                             return ['status'=> true, 'group' => $conn->getTable('customer_group')->load($args['id'])];
@@ -93,14 +93,14 @@ class MutationType extends ObjectType
                         ]
                     ]),
                     'resolve'=> function($value, $args, Container $container, ResolveInfo $info) {
-                        if(in_array((int)$args['id'], [1, 999, 1000]))
+                        if (in_array((int)$args['id'], [1, 999, 1000]))
                             return ['status' => false];
-                        if(!$container->get(Request::class)->isAdmin())
+                        if (!$container->get(Request::class)->isAdmin())
                             return ['status' => false];
                         else {
                             $conn = _mysql();
                             $group = $conn->getTable('customer_group')->load($args['id']);
-                            if(!$group)
+                            if (!$group)
                                 return ['status' => false];
                             $conn->getTable('customer_group')->where('customer_group_id', '=', $args['id'])->delete();
 
@@ -125,9 +125,9 @@ class MutationType extends ObjectType
                     'resolve'=> function($value, $args, Container $container, ResolveInfo $info) {
                         $conn = _mysql();
                         $data = $args['customer'];
-                        if($conn->getTable('customer')->loadByField('email', $data['email']))
+                        if ($conn->getTable('customer')->loadByField('email', $data['email']))
                             return ['status'=> false, 'message'=> "Email is existed", 'customer'=>null];
-                        if(!$container->get(Request::class)->isAdmin())
+                        if (!$container->get(Request::class)->isAdmin())
                             $data['group_id'] = 1;
                         dispatch_event('before.insert.customer', [&$data, $container]);
                         $conn->getTable('customer')->insert(array_merge($data, ['password' => password_hash($data['password'], PASSWORD_DEFAULT)]));
@@ -152,25 +152,25 @@ class MutationType extends ObjectType
                     'resolve'=> function($value, $args, Container $container, ResolveInfo $info) {
                         $conn = _mysql();
                         $data = $args['customer'];
-                        if(
+                        if (
                             !$container->get(Request::class)->isAdmin() &&
                             $container->get(Request::class)->getCustomer()->getData('customer_id') != $data['customer_id']
                         )
                             return ['status'=> false, 'message'=> "Permission denied", 'customer'=>null];
-                        if(
+                        if (
                             $conn->getTable('customer')
                                 ->where('email', '=', $data['email'])
                                 ->andWhere('customer_id', '<>', $data['customer_id'])
                                 ->fetchOneAssoc()
                         )
                             return ['status'=> false, 'message'=> "Email is existed", 'customer'=>null];
-                        if(!$container->get(Request::class)->isAdmin()) {
+                        if (!$container->get(Request::class)->isAdmin()) {
                             unset($data['group_id']);
                             unset($data['status']);
                         }
                         dispatch_event('before_update_customer', [&$data, $container]);
 
-                        if(isset($data['password']) and $data['password'])
+                        if (isset($data['password']) and $data['password'])
                             $data = array_merge($data, ['password' => password_hash($data['password'], PASSWORD_DEFAULT)]);
                         else {
                             unset($data['password']);

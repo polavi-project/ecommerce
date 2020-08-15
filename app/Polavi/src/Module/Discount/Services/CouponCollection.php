@@ -54,25 +54,25 @@ class CouponCollection extends CollectionBuilder
 //            $this->collection->andWhere('coupon.end_date', $args['operator'], (int)$args['value']);
 //        });
         $this->addFilter('page', function($args) {
-            if($args['operator'] !== "=")
+            if ($args['operator'] !== "=")
                 return;
             $this->setPage((int)$args['value']);
         });
 
         $this->addFilter('limit', function($args) {
-            if($args['operator'] !== "=")
+            if ($args['operator'] !== "=")
                 return;
             $this->setLimit((int)$args['value']);
         });
 
         $this->addFilter('sortBy', function($args) {
-            if($args['operator'] !== "=")
+            if ($args['operator'] !== "=")
                 return;
             $this->setSortBy($args['value']);
         });
 
         $this->addFilter('sortOrder', function($args) {
-            if($args['operator'] !== "=")
+            if ($args['operator'] !== "=")
                 return;
             $this->setSortOrder($args['value']);
         });

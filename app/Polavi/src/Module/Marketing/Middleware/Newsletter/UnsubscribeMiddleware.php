@@ -23,9 +23,9 @@ class UnsubscribeMiddleware extends MiddlewareAbstract
         $customerEmail = $request->request->get("email");
         $conn = _mysql();
         try {
-            if($request->isAdmin() == false) {
+            if ($request->isAdmin() == false) {
                 $customer = $conn->getTable("customer")->where("email", "=", $customerEmail)->andWhere("customer_id", "=", $customerID)->fetchOneAssoc();
-                if(!$customer)
+                if (!$customer)
                     throw new \Exception("Permission denied");
                 $conn->getTable("newsletter_subscriber")->where("email", "=", $customerEmail)->andWhere("customer_id", "=", $customerID)->update(["status" => "unsubscribed"]);
             } else {

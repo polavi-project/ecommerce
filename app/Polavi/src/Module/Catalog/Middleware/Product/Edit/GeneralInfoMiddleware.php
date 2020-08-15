@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace Polavi\Module\Catalog\Middleware\Product\Edit;
 
-use function Polavi\get_default_language_Id;
 use function Polavi\get_js_file_url;
 use Polavi\Module\Graphql\Services\GraphqlExecutor;
 use Polavi\Services\Http\Request;
@@ -25,7 +24,7 @@ class GeneralInfoMiddleware extends MiddlewareAbstract
      */
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
-        if($response->hasWidget('product_edit_general_group'))
+        if ($response->hasWidget('product_edit_general_group'))
             return $delegate;
 
         $this->getContainer()
@@ -39,7 +38,7 @@ class GeneralInfoMiddleware extends MiddlewareAbstract
                     }"
             ])->then(function($result) use ($response) {
                 /**@var \GraphQL\Executor\ExecutionResult $result */
-                if(isset($result->data['taxClasses'])) {
+                if (isset($result->data['taxClasses'])) {
                     $response->addWidget(
                         'tax_class',
                         'product-edit-general',
@@ -52,12 +51,12 @@ class GeneralInfoMiddleware extends MiddlewareAbstract
             });
 
 //        // Loading data by using GraphQL
-        if($request->attributes->get('_matched_route') == 'product.edit')
+        if ($request->attributes->get('_matched_route') == 'product.edit')
             $this->getContainer()
                 ->get(GraphqlExecutor::class)
                 ->waitToExecute([
                     "query"=>"{
-                        general_info: product(id: {$request->get('id')} language:{$request->get('language', get_default_language_Id())})
+                        general_info: product(id: {$request->get('id')})
                         {
                             name
                             price
@@ -71,7 +70,7 @@ class GeneralInfoMiddleware extends MiddlewareAbstract
                     }"
                 ])->then(function($result) use ($response) {
                     /**@var \GraphQL\Executor\ExecutionResult $result */
-                    if(isset($result->data['general_info'])) {
+                    if (isset($result->data['general_info'])) {
                         $response->addWidget(
                             'product_edit_general',
                             'admin_product_edit_inner_left',

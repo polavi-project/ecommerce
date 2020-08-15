@@ -30,7 +30,7 @@ class InfoMiddleware extends MiddlewareAbstract
             ])
             ->then(function($result) use ($request, $response) {
                 /**@var \GraphQL\Executor\ExecutionResult $result */
-                if(isset($result->data['customer'])) {
+                if (isset($result->data['customer'])) {
                     $response->addWidget(
                         'customer_info',
                         'customer_dashboard_layout',

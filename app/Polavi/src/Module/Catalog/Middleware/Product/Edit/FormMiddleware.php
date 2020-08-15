@@ -9,7 +9,6 @@ declare(strict_types=1);
 namespace Polavi\Module\Catalog\Middleware\Product\Edit;
 
 use function Polavi\generate_url;
-use function Polavi\get_default_language_Id;
 use function Polavi\get_js_file_url;
 use Polavi\Services\Http\Request;
 use Polavi\Services\Http\Response;
@@ -33,8 +32,6 @@ class FormMiddleware extends MiddlewareAbstract
             [
                 "id"=> 'product-edit-form',
                 "action" => $this->getContainer()->get(Router::class)->generateUrl("product.save", ['id'=>$request->attributes->get('id', null)], $request->query->get('language', null) != null ? ['language' => $request->query->get('language')] : null),
-                "defaultLanguage" => get_default_language_Id(),
-                "currentLanguage" => $request->query->get('language') != null ? $request->query->get('language') : get_default_language_Id(),
                 "listUrl" => generate_url('product.grid'),
                 "cancelUrl" => $request->attributes->get('id') ? generate_url('product.edit', ['id' => $request->attributes->get('id')]) : generate_url('product.create')
             ]

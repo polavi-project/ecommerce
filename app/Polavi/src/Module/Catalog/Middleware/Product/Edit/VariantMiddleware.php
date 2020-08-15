@@ -9,8 +9,6 @@ declare(strict_types=1);
 namespace Polavi\Module\Catalog\Middleware\Product\Edit;
 
 use function Polavi\_mysql;
-use function Polavi\generate_url;
-use function Polavi\get_default_language_Id;
 use function Polavi\get_js_file_url;
 use Polavi\Module\Graphql\Services\GraphqlExecutor;
 use Polavi\Services\Http\Request;
@@ -27,15 +25,15 @@ class VariantMiddleware extends MiddlewareAbstract
      */
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
-        if($response->hasWidget('product_edit_variant'))
+        if ($response->hasWidget('product_edit_variant'))
             return $delegate;
 
 //        // Loading data by using GraphQL
-        if($request->attributes->get('_matched_route') == 'product.edit') {
+        if ($request->attributes->get('_matched_route') == 'product.edit') {
             $this->getContainer()
                 ->get(GraphqlExecutor::class)
                 ->waitToExecute([
-                    "query"=>"{variants: product(id: {$request->get('id')} language:{$request->get('language', get_default_language_Id())}){
+                    "query"=>"{variants: product(id: {$request->get('id')}){
                         variant_group_id
                         sku
                         variants {
@@ -60,10 +58,10 @@ class VariantMiddleware extends MiddlewareAbstract
                     }}"
                 ])->then(function($result) use (&$fields, $response) {
                     /**@var \GraphQL\Executor\ExecutionResult $result */
-                    if(isset($result->data['variants']) and $result->data['variants']) {
+                    if (isset($result->data['variants']) and $result->data['variants']) {
                         $conn = _mysql();
                         $group = $conn->getTable("variant_group")->load($result->data['variants']['variant_group_id']);
-                        if($group) {
+                        if ($group) {
                             $attributes = $conn->getTable("attribute")->where("attribute_id", "IN", [
                                 $group["attribute_one"],
                                 $group["attribute_two"],
@@ -81,7 +79,7 @@ class VariantMiddleware extends MiddlewareAbstract
                                     "variant_group_id" => $group["variant_group_id"],
                                     "attributes" => array_map(function ($a) { return $a["attribute_id"];}, $attributes),
                                     "variants" => array_map(function($v) use($result) {
-                                        if($v["sku"] == $result->data["variants"]["sku"])
+                                        if ($v["sku"] == $result->data["variants"]["sku"])
                                             $v["current"] = true;
 
                                         return $v;

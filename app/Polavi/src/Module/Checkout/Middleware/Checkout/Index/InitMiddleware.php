@@ -23,12 +23,12 @@ class InitMiddleware extends MiddlewareAbstract
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
         $cart = $this->getContainer()->get(Cart::class);
-        if($cart->isEmpty())
+        if ($cart->isEmpty())
             return $response->redirect($this->getContainer()->get(Router::class)->generateUrl('checkout.cart'));
 
         $items = $cart->getItems();
         foreach ($items as $item)
-            if($item->getError())
+            if ($item->getError())
                 return $response->redirect($this->getContainer()->get(Router::class)->generateUrl('checkout.cart'));
         $this->getContainer()->get(Helmet::class)->setTitle('Checkout page');
 

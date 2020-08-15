@@ -20,7 +20,7 @@ class TextWidgetMiddleware extends MiddlewareAbstract
 {
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
-        if($request->isAdmin() == true)
+        if ($request->isAdmin() == true)
             return $delegate;
 
         $this->getContainer()
@@ -29,18 +29,18 @@ class TextWidgetMiddleware extends MiddlewareAbstract
                 "query"=>"{textWidgets : widgetCollection (filters : [{key: \"type\" operator : \"=\" value: \"text\"}]) {widgets { cms_widget_id name setting {key value} displaySetting {key value} sort_order }}}"
             ])->then(function($result) use ($request, $response) {
                 /**@var \GraphQL\Executor\ExecutionResult $result */
-                if(isset($result->data['textWidgets'])) {
+                if (isset($result->data['textWidgets'])) {
                     $matchedRoute = $request->attributes->get('_matched_route');
                     $widgets = array_filter($result->data['textWidgets']['widgets'], function($v) use($matchedRoute) {
                         $layouts = array_find($v['displaySetting'], function($value, $key) {
-                            if($value['key'] == 'layout')
+                            if ($value['key'] == 'layout')
                                 return json_decode($value['value'], true);
                             return null;
                         }, []);
 
                         $match = false;
                         foreach ($layouts as $layout) {
-                            if($matchedRoute == $layout || $layout == "all") {
+                            if ($matchedRoute == $layout || $layout == "all") {
                                 $match = true;
                                 break;
                             }
@@ -49,22 +49,22 @@ class TextWidgetMiddleware extends MiddlewareAbstract
                     }, ARRAY_FILTER_USE_BOTH);
                     foreach ($widgets as $widget) {
                         $content = array_find($widget['setting'], function($value, $key) {
-                            if($value['key'] == 'content')
+                            if ($value['key'] == 'content')
                                 return $value['value'];
                             return null;
                         });
 
                         $containerClass = array_find($widget['setting'], function($value, $key) {
-                            if($value['key'] == 'container_class')
+                            if ($value['key'] == 'container_class')
                                 return $value['value'];
                             return null;
                         });
 
                         $areas = [];
                         foreach ($widget['displaySetting'] as $key => $value) {
-                            if($value['key'] == 'area')
+                            if ($value['key'] == 'area')
                                 $areas = array_merge($areas, json_decode($value['value'], true));
-                            if($value['key'] == 'area_manual_input')
+                            if ($value['key'] == 'area_manual_input')
                                 $areas = array_merge($areas, explode(",", $value['value']));
                         }
 

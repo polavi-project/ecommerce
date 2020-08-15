@@ -49,7 +49,7 @@ class TaxClassMiddleware extends MiddlewareAbstract
             ])
             ->then(function($result) use ($response) {
                 /**@var \GraphQL\Executor\ExecutionResult $result */
-                if(isset($result->data['taxClasses'])) {
+                if (isset($result->data['taxClasses'])) {
                     array_walk($result->data['taxClasses'], function(&$tax) {
                         $tax = array_merge($tax, [
                             'formId'=> 'tax_class_edit_' . $tax['tax_class_id']

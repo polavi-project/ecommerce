@@ -76,7 +76,7 @@ class CouponType extends ObjectType
                     'editUrl' => [
                         'type' => Type::string(),
                         'resolve' => function($coupon, $args, Container $container, ResolveInfo $info) {
-                            if($container->get(Request::class)->isAdmin() == false)
+                            if ($container->get(Request::class)->isAdmin() == false)
                                 return null;
                             return $container->get(Router::class)->generateUrl('coupon.edit', ["id"=>$coupon['coupon_id']]);
                         }
@@ -84,7 +84,7 @@ class CouponType extends ObjectType
                     'deleteUrl' => [
                         'type' => Type::string(),
                         'resolve' => function($coupon, $args, Container $container, ResolveInfo $info) {
-                            if($container->get(Request::class)->isAdmin() == false)
+                            if ($container->get(Request::class)->isAdmin() == false)
                                 return null;
                             return $container->get(Router::class)->generateUrl('coupon.delete', ["id"=>$coupon['coupon_id']]);
                         }

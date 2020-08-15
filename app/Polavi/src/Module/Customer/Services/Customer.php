@@ -25,7 +25,7 @@ class Customer
     {
         $this->session = $session;
         $user = _mysql()->getTable('customer')->load($session->get('customer_id'));
-        if(!$user or $user['status'] == 0) {
+        if (!$user or $user['status'] == 0) {
             $this->session->remove('customer_id');
             $this->session->save();
         } else {
@@ -53,11 +53,11 @@ class Customer
 
     public function login($email, $password)
     {
-        if($this->isLoggedIn == true)
+        if ($this->isLoggedIn == true)
             return $this;
 
         $user = _mysql()->getTable('customer')->where('email', '=', $email)->andWhere('status', '=', 1)->fetchOneAssoc();
-        if($user == false)
+        if ($user == false)
             throw new \RuntimeException("Email or password is invalid");
         if (password_verify($password, $user['password'])) {
             $this->session->set('customer_id', $user['customer_id']);
@@ -72,11 +72,11 @@ class Customer
 
     public function forceLogin($email)
     {
-        if($this->isLoggedIn == true)
+        if ($this->isLoggedIn == true)
             return $this;
 
         $user = _mysql()->getTable('customer')->where('email', '=', $email)->andWhere('status', '=', 1)->fetchOneAssoc();
-        if($user == false)
+        if ($user == false)
             throw new \RuntimeException("Email or password is invalid");
         $this->session->set('customer_id', $user['customer_id']);
         $this->session->save();
@@ -87,7 +87,7 @@ class Customer
 
     public function logOut()
     {
-        if(!$this->isLoggedIn)
+        if (!$this->isLoggedIn)
             return $this;
         $this->session->remove('customer_id');
         $this->session->save();

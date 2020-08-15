@@ -25,7 +25,7 @@ class LogoMiddleware extends MiddlewareAbstract
      */
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
-        if($response->hasWidget('site_logo') || $request->isAdmin())
+        if ($response->hasWidget('site_logo') || $request->isAdmin())
             return $delegate;
 
         $response->addWidget(

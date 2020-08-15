@@ -45,7 +45,7 @@ class RouteParser extends Std
             $routeData = $this->parsePlaceholders($currentRoute);
         }
 
-        if($n > 0) {
+        if ($n > 0) {
             $routeData[count($routeData)-1][] = 'optional';
         }
 
@@ -59,7 +59,9 @@ class RouteParser extends Std
     private function parsePlaceholders($route)
     {
         if (!preg_match_all(
-            '~' . self::VARIABLE_REGEX . '~x', $route, $matches,
+            '~' . self::VARIABLE_REGEX . '~x',
+            $route,
+            $matches,
             PREG_OFFSET_CAPTURE | PREG_SET_ORDER
         )) {
             return [$route];

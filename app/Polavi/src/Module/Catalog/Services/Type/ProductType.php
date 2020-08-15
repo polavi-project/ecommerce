@@ -12,7 +12,6 @@ use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\ResolveInfo;
 use function Polavi\_mysql;
 use function Polavi\dispatch_event;
-use function Polavi\get_current_language_id;
 use Polavi\Module\Catalog\Services\ProductCollection;
 use Polavi\Services\Di\Container;
 use Polavi\Services\Db\Processor;
@@ -47,7 +46,7 @@ class ProductType extends ObjectType
                     'salePrice' => [
                         'type' => Type::nonNull(Type::float()),
                         'resolve' => function($product, $args, Container $container, ResolveInfo $info) {
-                            if(isset($product['sale_price']))
+                            if (isset($product['sale_price']))
                                 return $product['sale_price'];
                             return $product['price'];
                         }
@@ -69,20 +68,11 @@ class ProductType extends ObjectType
                             while ($row = $stmt->fetch()) {
                                 $categoryIds[] = $row['category_id'];
                             }
-                            if(!$categoryIds)
+                            if (!$categoryIds)
                                 return null;
                              //Problem is here, DataLoader?
                             $categoryTable = new Table('category', $container->get(Processor::class));
-                            $categoryTable->leftJoin('category_description', null, [
-                                [
-                                    'column'      => "category_description.language_id",
-                                    'operator'    => "=",
-                                    'value'       => $product['language_id'],
-                                    'ao'          => 'and',
-                                    'start_group' => null,
-                                    'end_group'   => null
-                                ]
-                            ]);
+                            $categoryTable->leftJoin('category_description');
                             return $categoryTable->where('category.category_id', 'IN', $categoryIds)->fetchAllAssoc();
                         }
                     ],
@@ -92,7 +82,7 @@ class ProductType extends ObjectType
                     'qty' => [
                         'type' => Type::int(),
                         'resolve' => function($product, $args, Container $container, ResolveInfo $info) {
-                            if($container->get(Request::class)->isAdmin() == false)
+                            if ($container->get(Request::class)->isAdmin() == false)
                                 return null;
                             return $product['qty'];
                         }
@@ -100,7 +90,7 @@ class ProductType extends ObjectType
                     'manage_stock' => [
                         'type' => Type::int(),
                         'resolve' => function($product, $args, Container $container, ResolveInfo $info) {
-                            if($container->get(Request::class)->isAdmin() == false)
+                            if ($container->get(Request::class)->isAdmin() == false)
                                 return null;
                             return $product['manage_stock'];
                         }
@@ -135,7 +125,7 @@ class ProductType extends ObjectType
                     'url' => [
                         'type' => Type::string(),
                         'resolve' => function($product, $args, Container $container, ResolveInfo $info) {
-                            if(!preg_match('/^[\.a-zA-Z0-9\-_+]+$/', $product['seo_key']))
+                            if (!preg_match('/^[\.a-zA-Z0-9\-_+]+$/', $product['seo_key']))
                                 return $container->get(Router::class)->generateUrl('product.view', ["id"=>$product['product_id']]);
                             else
                                 return $container->get(Router::class)->generateUrl('product.view.pretty', ["slug"=>$product['seo_key']]);
@@ -144,14 +134,14 @@ class ProductType extends ObjectType
                     'editUrl' => [
                         'type' => Type::string(),
                         'resolve' => function($product, $args, Container $container, ResolveInfo $info) {
-                            if($container->get(Request::class)->isAdmin() == false)
+                            if ($container->get(Request::class)->isAdmin() == false)
                                 return null;
                             return $container->get(Router::class)->generateUrl('product.edit', ["id"=>$product['product_id']]);                        }
                     ],
                     'deleteUrl' => [
                         'type' => Type::string(),
                         'resolve' => function($product, $args, Container $container, ResolveInfo $info) {
-                            if($container->get(Request::class)->isAdmin() == false)
+                            if ($container->get(Request::class)->isAdmin() == false)
                                 return null;
                             return $container->get(Router::class)->generateUrl('product.delete', ["id"=>$product['product_id']]);                        }
                     ],
@@ -183,9 +173,7 @@ class ProductType extends ObjectType
                         'resolve' => function($product, $args, Container $container, ResolveInfo $info) {
                             return _mysql()->getTable('product_attribute_value_index')
                                 ->leftJoin('attribute')
-                                ->where('product_id', '=', $product['product_id'])
-                                ->andWhere('language_id', '=', $product['language_id'] ?? get_current_language_id(), '(')
-                                ->orWhere('language_id', '=', '0', false, ')')->fetchAllAssoc();
+                                ->where('product_id', '=', $product['product_id'])->fetchAllAssoc();
                         }
                     ],
                     'variants' => [
@@ -194,7 +182,7 @@ class ProductType extends ObjectType
                         'resolve' => function($product, $args, Container $container, ResolveInfo $info) {
                             $conn = _mysql();
                             $group = $conn->getTable("variant_group")->load($product["variant_group_id"]);
-                            if(!$group)
+                            if (!$group)
                                 return [];
 
                             $productCollection = new ProductCollection($container);

@@ -9,7 +9,6 @@ declare(strict_types=1);
 namespace Polavi\Module\Cms\Middleware\Page\Edit;
 
 use function Polavi\generate_url;
-use function Polavi\get_default_language_Id;
 use function Polavi\get_js_file_url;
 use Polavi\Module\Graphql\Services\GraphqlExecutor;
 use Polavi\Services\Http\Request;
@@ -26,12 +25,12 @@ class FormMiddleware extends MiddlewareAbstract
      */
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
-        if($request->attributes->get('_matched_route') == 'page.edit')
+        if ($request->attributes->get('_matched_route') == 'page.edit')
             $this->getContainer()
                 ->get(GraphqlExecutor::class)
                 ->waitToExecute([
                     "query"=>"{
-                        cmsPage(id: {$request->get('id')} language:{$request->get('language', get_default_language_Id())})
+                        cmsPage(id: {$request->get('id')})
                         {
                             name
                             status
@@ -45,7 +44,7 @@ class FormMiddleware extends MiddlewareAbstract
                     }"
                 ])->then(function($result) use ($request, $response) {
                     /**@var \GraphQL\Executor\ExecutionResult $result */
-                    if(isset($result->data['cmsPage'])) {
+                    if (isset($result->data['cmsPage'])) {
                         $response->addWidget(
                             'page-edit-form',
                             'content',

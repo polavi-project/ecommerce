@@ -273,7 +273,7 @@ class Language
     public static function getLanguageById($id)
     {
         $languages = self::listLanguagesV2();
-        if(isset($languages[$id]))
+        if (isset($languages[$id]))
             return $languages[$id];
         else
             return null;

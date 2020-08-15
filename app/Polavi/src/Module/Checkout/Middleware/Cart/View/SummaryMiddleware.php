@@ -25,7 +25,7 @@ class SummaryMiddleware extends MiddlewareAbstract
      */
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
-        if($this->getContainer()->get(Cart::class)->isEmpty())
+        if ($this->getContainer()->get(Cart::class)->isEmpty())
             return $delegate;
 
         $response->addWidget(

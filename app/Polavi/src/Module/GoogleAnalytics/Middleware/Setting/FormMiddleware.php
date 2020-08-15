@@ -17,7 +17,7 @@ class FormMiddleware extends MiddlewareAbstract
 {
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
-        if($request->getMethod() == 'POST')
+        if ($request->getMethod() == 'POST')
             return $delegate;
 
         $response->addWidget(

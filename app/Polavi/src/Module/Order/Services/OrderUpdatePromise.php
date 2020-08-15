@@ -20,7 +20,7 @@ class OrderUpdatePromise extends Promise
     {
         $conn = _mysql();
         $order = $conn->getTable('order')->load($orderId);
-        if($order == false)
+        if ($order == false)
             throw new \Exception('Order is not existed');
 
         parent::__construct(function() use ($order) {

@@ -20,8 +20,9 @@ class AdminNavigationMiddleware extends MiddlewareAbstract
 {
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
-        if(!$request->isAdmin() || $request->attributes->get('_matched_route') == 'admin.login')
+        if (!$request->isAdmin() || $request->attributes->get('_matched_route') == 'admin.login') {
             return $delegate;
+        }
 
         $response->addWidget(
             'admin_navigation',

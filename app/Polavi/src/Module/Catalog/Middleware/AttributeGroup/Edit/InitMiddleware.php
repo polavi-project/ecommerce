@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace Polavi\Module\Catalog\Middleware\AttributeGroup\Edit;
 
-use function Polavi\get_default_language_Id;
 use Polavi\Services\Db\Processor;
 use Polavi\Services\Helmet;
 use Polavi\Services\Http\Response;
@@ -25,8 +24,8 @@ class InitMiddleware extends MiddlewareAbstract
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
         $id = (int) $request->attributes->get('id');
-        if($id) {
-            if($this->getContainer()->get(Processor::class)->getTable('attribute_group')->load($id) === false) {
+        if ($id) {
+            if ($this->getContainer()->get(Processor::class)->getTable('attribute_group')->load($id) === false) {
                 $response->addData('success', 0)
                         ->addData('message', 'Requested group does not exist')
                         ->setStatusCode(404);

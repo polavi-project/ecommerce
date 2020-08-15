@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace Polavi\Module\Catalog\Middleware\Product\Edit;
 
-use function Polavi\get_default_language_Id;
 use function Polavi\get_js_file_url;
 use Polavi\Module\Graphql\Services\GraphqlExecutor;
 use Polavi\Services\Http\Request;
@@ -24,7 +23,7 @@ class AttributeMiddleware extends MiddlewareAbstract
      */
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
-        if($response->hasWidget('product_edit_attributes'))
+        if ($response->hasWidget('product_edit_attributes'))
             return $delegate;
 
         $this->getContainer()
@@ -58,7 +57,7 @@ QUERY
             ->then(function($result) use ($response) {
                 $props = ['attributeGroups' => []];
                 /**@var \GraphQL\Executor\ExecutionResult $result */
-                if(!$result->errors) {
+                if (!$result->errors) {
                     if (isset($result->data['attributeGroupCollection'])) {
                         $props['attributeGroups'] = $result->data['attributeGroupCollection']['groups'];
                     }
@@ -72,18 +71,18 @@ QUERY
                 }
             });
 
-        if($request->attributes->get('_matched_route') == 'product.edit')
+        if ($request->attributes->get('_matched_route') == 'product.edit')
             $this->getContainer()
             ->get(GraphqlExecutor::class)
             ->waitToExecute([
                 "query"=> <<< QUERY
                     {
-                        productAttributeIndex (product_id: {$request->get('id', 0)} language:{$request->get('language', get_default_language_Id())}) {
+                        productAttributeIndex (product_id: {$request->get('id', 0)}) {
                             attribute_id
                             option_id
                             attribute_value_text
                         }
-                        selected_group : product (id: {$request->get('id', 0)} language:{$request->get('language', get_default_language_Id())}) {
+                        selected_group : product (id: {$request->get('id', 0)}) {
                             id : group_id
                         }
                     }
@@ -93,9 +92,9 @@ QUERY
             ->then(function($result) use ($response) {
                 /**@var \GraphQL\Executor\ExecutionResult $result */
                 //var_dump($result);
-                if(!$result->errors) {
+                if (!$result->errors) {
                     $widget = $response->getWidget("product_edit_attributes", "admin_product_edit_inner_right");
-                    if(!$widget)
+                    if (!$widget)
                         return;
 
                     if (isset($result->data['selected_group']['id']) and $result->data['selected_group']['id']) {

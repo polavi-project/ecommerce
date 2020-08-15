@@ -117,7 +117,7 @@ function Items({ items }) {
 
     if (items.length === 0) return React.createElement(Empty, { homeUrl: baseUrl });else return React.createElement(
         "div",
-        { id: "shopping-cart-items", className: "col-8" },
+        { id: "shopping-cart-items", className: "col-12 col-md-8" },
         React.createElement(
             "table",
             { className: "table" },

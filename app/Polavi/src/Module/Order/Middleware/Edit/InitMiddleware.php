@@ -29,7 +29,7 @@ class InitMiddleware extends MiddlewareAbstract
     {
         $id = (int) $request->attributes->get('id');
         $order = $this->getContainer()->get(OrderLoader::class)->load($id);
-        if($order === false) {
+        if ($order === false) {
             $response->addData('success', 0);
             $response->addData('message', 'Requested order does not exist');
             $response->setStatusCode(404);

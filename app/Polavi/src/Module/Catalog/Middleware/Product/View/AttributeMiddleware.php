@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace Polavi\Module\Catalog\Middleware\Product\View;
 
-use function Polavi\get_default_language_Id;
 use function Polavi\get_js_file_url;
 use Polavi\Module\Graphql\Services\GraphqlExecutor;
 use Polavi\Services\Http\Request;
@@ -26,14 +25,14 @@ class AttributeMiddleware extends MiddlewareAbstract
      */
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
-        if($response->getStatusCode() == 404)
+        if ($response->getStatusCode() == 404)
             return $delegate;
 
         $promise = $this->getContainer()
             ->get(GraphqlExecutor::class)
             ->waitToExecute([
                 "query"=>"{
-                    productAttributeIndex(product_id: {$request->get('id')} language:{$request->get('language', get_default_language_Id())})
+                    productAttributeIndex(product_id: {$request->get('id')})
                     {
                         attribute_name
                         attribute_id
@@ -45,7 +44,7 @@ class AttributeMiddleware extends MiddlewareAbstract
 
         $promise->then(function($result) use ($response) {
                 /**@var \GraphQL\Executor\ExecutionResult $result */
-                if(isset($result->data['productAttributeIndex']) and $result->data['productAttributeIndex']) {
+                if (isset($result->data['productAttributeIndex']) and $result->data['productAttributeIndex']) {
                     $response->addWidget(
                         'product_view_attribute',
                         'product_single_tabs',

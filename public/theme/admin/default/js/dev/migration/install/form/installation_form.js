@@ -5,7 +5,7 @@ import {ADD_APP_STATE} from "../../../../../../../../js/dev/event-types.js";
 import {Fetch} from "../../../../../../../../js/production/fetch.js";
 
 function DBInfo() {
-    return <div className="uk-width-1-2">
+    return <div className="col-6">
         <div><strong>Database information</strong></div>
         <p>Please provide your database connection information.</p>
         <div>
@@ -41,7 +41,7 @@ function DBInfo() {
 }
 
 function AdminUser() {
-    return <div className="uk-width-1-2">
+    return <div className="col-6">
         <div><strong>Admin user information</strong></div>
         <div>
             <Text
@@ -73,10 +73,10 @@ function Welcome() {
     const admin = ReactRedux.useSelector(state => _.get(state, 'appState.baseUrlAdmin'));
     const front = ReactRedux.useSelector(state => _.get(state, 'appState.baseUrl'));
     return <div>
-        <h2>Great. Let's start using Polavi</h2>
-        <div className="uk-text-center">
-            <p><a href={admin} className="uk-button uk-button-primary uk-button-small" target='_blank'>Admin</a></p>
-            <a href={front} className="uk-button uk-button-primary uk-button-small" target='_blank'>Front site</a>
+        <h2 className={"text-center mb-4"}>Great. Let's start using Polavi</h2>
+        <div className="text-center">
+            <p><a href={admin} className="btn btn-primary" target='_blank'>Admin</a></p>
+            <a href={front} className="btn btn-primary" target='_blank'>Front site</a>
         </div>
     </div>
 }
@@ -216,8 +216,8 @@ export default function Installation({action}) {
             }
         }
     });
-    return <div className="uk-align-center">
-        <div className="uk-text-center"><h3>Welcome to Polavi</h3></div>
+    return <div>
+        <div className="text-center mb-5"><h3>Welcome to Polavi</h3></div>
         {(letsGo !== true && letsGo !== undefined) && <div className="text-danger">{letsGo}</div>}
         {letsGo !== true && <Form
             id = "installation-form"
@@ -230,12 +230,12 @@ export default function Installation({action}) {
                     dispatch({'type': ADD_APP_STATE, 'payload': {appState: {letsGo: _.get(response, 'message', 'Something wrong. Please check again information')}}});
             }}
         >
-            <div className="uk-grid uk-grid-small">
+            <div className="row">
                 <DBInfo/>
                 <AdminUser/>
             </div>
         </Form>}
-        {letsGo === true && <ul className="installation-stack uk-list">
+        {letsGo === true && <ul className="installation-stack list-basic text-center">
             {stack.map((s, i)=> {
                 return <li key={i}>
                     <span>{s.step} </span>

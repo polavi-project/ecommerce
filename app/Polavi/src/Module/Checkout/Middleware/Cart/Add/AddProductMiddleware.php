@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace Polavi\Module\Checkout\Middleware\Cart\Add;
 
-use function Polavi\get_default_language_Id;
 use Polavi\Module\Checkout\Services\Cart\Cart;
 use Polavi\Module\Checkout\Services\Cart\Item;
 use Polavi\Services\Http\Request;
@@ -35,7 +34,7 @@ class AddProductMiddleware extends MiddlewareAbstract
 
         $promise->otherwise(function($item) use ($request, $response) {
             $errors = $item->getError();
-            if(count($errors) == 1 and (isset($errors['product_custom_options']) || isset($errors['variant_options']))) {
+            if (count($errors) == 1 and (isset($errors['product_custom_options']) || isset($errors['variant_options']))) {
                 $request->getSession()->getFlashBag()->set('error', $errors['product_custom_options'] ?? $errors['variant_options']);
                 $response->redirect($item->getData('product_url'));
             } else

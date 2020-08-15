@@ -30,7 +30,7 @@ class QueryValidateMiddleware extends MiddlewareAbstract
         $queries = $request->query->all();
         unset($queries["ajax"]);
         $catId = $request->attributes->get('id');
-        if(!$queries) {
+        if (!$queries) {
             $request->attributes->set("filters", "[{key: \"category\", operator: \"=\", value: \"$catId\"}]");
             return $delegate;
         }
@@ -39,7 +39,7 @@ class QueryValidateMiddleware extends MiddlewareAbstract
         foreach ($queries as $key => $val) {
             if (strpos($val, ',') !== false) {
                 $filters[] = "{key: \"$key\", operator: \"IN\", value: \"$val\"}";
-            } else if(strpos($val, '-') !== false) {
+            } else if (strpos($val, '-') !== false) {
                 $filters[] = "{key: \"$key\", operator: \"BETWEEN\", value: \"$val\"}";
             } else {
                 $filters[] = "{key: \"$key\", operator: \"=\", value: \"$val\"}";
@@ -51,7 +51,7 @@ class QueryValidateMiddleware extends MiddlewareAbstract
         try {
             $documentNode = Parser::parse(new Source($query, 'GraphQL'));
             $errors = DocumentValidator::validate($this->getContainer()->get(Schema::class), $documentNode);
-            if(!empty($errors))
+            if (!empty($errors))
                 throw new \Exception("Query is invalid. Need to use the root one");
             $request->attributes->set("filters", $filters);
 

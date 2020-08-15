@@ -28,7 +28,7 @@ class ExecutePaymentMiddleware extends CreateOrderMiddleware extends MiddlewareA
         $transaction = $delegate->getTransaction();
         $payment_id = $request->get('paymentId', null);
         $payer_id = $request->get('PayerID', null);
-        if(
+        if (
             !$paypal or
             !$transaction or
             !$payment_id or

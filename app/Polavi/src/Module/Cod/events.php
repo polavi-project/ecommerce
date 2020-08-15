@@ -39,7 +39,7 @@ $eventDispatcher->addListener(
         $cart = $context[0];
         $requestingMethod = $cart->getDataSource()['payment_method'] ?? null;
         $subTotal = $cart->getData('sub_total');
-        if(
+        if (
             $requestingMethod == 'cod' and
             \Polavi\get_config('payment_cod_status') == 1 and
             (

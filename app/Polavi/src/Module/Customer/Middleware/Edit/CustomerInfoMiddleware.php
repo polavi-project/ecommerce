@@ -27,7 +27,7 @@ class CustomerInfoMiddleware extends MiddlewareAbstract
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
         // TODO: Use data loader to avoid loading same data twice
-        if(!_mysql()->getTable('customer')->load($request->attributes->get('id'))) {
+        if (!_mysql()->getTable('customer')->load($request->attributes->get('id'))) {
             $response->addAlert('customer_edit_error', 'error', 'Requested customer does not exist');
             return $response;
         }
@@ -53,7 +53,7 @@ class CustomerInfoMiddleware extends MiddlewareAbstract
             ])
             ->then(function($result) use ($request, $response) {
                 /**@var \GraphQL\Executor\ExecutionResult $result */
-                if(isset($result->data['customer'])) {
+                if (isset($result->data['customer'])) {
                     $response->addWidget(
                         'customer_info',
                         'content',

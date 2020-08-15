@@ -45,7 +45,7 @@ class ShipmentMiddleware extends MiddlewareAbstract
             ])
             ->then(function($result) use ($request, $response) {
                 /**@var \GraphQL\Executor\ExecutionResult $result */
-                if(isset($result->data['shipment'])) {
+                if (isset($result->data['shipment'])) {
                     $response->addWidget(
                         'order_shipment',
                         'order_edit_left',

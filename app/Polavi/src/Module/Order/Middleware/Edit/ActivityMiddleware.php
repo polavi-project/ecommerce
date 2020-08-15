@@ -42,7 +42,7 @@ class ActivityMiddleware extends MiddlewareAbstract
             ])
             ->then(function($result) use ($response) {
                 /**@var \GraphQL\Executor\ExecutionResult $result */
-                if(isset($result->data['order_activity'])) {
+                if (isset($result->data['order_activity'])) {
                     $response->addWidget(
                         'order_activity',
                         'order_edit_right',

@@ -12,7 +12,6 @@ namespace Polavi\Module\Customer\Services;
 use GraphQL\Type\Definition\ResolveInfo;
 use function Polavi\_mysql;
 use function Polavi\dispatch_event;
-use function Polavi\get_default_language_Id;
 use Polavi\Services\Di\Container;
 use Polavi\Services\Grid\CollectionBuilder;
 use Polavi\Services\Http\Request;
@@ -55,31 +54,31 @@ class CustomerCollection extends CollectionBuilder
         });
 
         $this->addFilter('status', function($args) use ($isAdmin) {
-            if($isAdmin == false)
+            if ($isAdmin == false)
                 return;
             $this->collection->andWhere('customer.status', $args['operator'], (int)$args['value']);
         });
 
         $this->addFilter('page', function($args) use ($isAdmin) {
-            if($args['operator'] !== "=")
+            if ($args['operator'] !== "=")
                 return;
             $this->setPage((int)$args['value']);
         });
 
         $this->addFilter('limit', function($args) use ($isAdmin) {
-            if($args['operator'] !== "=")
+            if ($args['operator'] !== "=")
                 return;
             $this->setLimit((int)$args['value']);
         });
 
         $this->addFilter('sortBy', function($args) use ($isAdmin) {
-            if($args['operator'] !== "=")
+            if ($args['operator'] !== "=")
                 return;
             $this->setSortBy($args['value']);
         });
 
         $this->addFilter('sortOrder', function($args) use ($isAdmin) {
-            if($args['operator'] !== "=")
+            if ($args['operator'] !== "=")
                 return;
             $this->setSortOrder($args['value']);
         });

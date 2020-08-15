@@ -12,8 +12,6 @@ use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
 use function Polavi\_mysql;
-use function Polavi\get_current_language_id;
-use function Polavi\get_default_language_Id;
 use Polavi\Module\Graphql\Services\FilterFieldType;
 use Polavi\Services\Di\Container;
 use Polavi\Services\Http\Request;
@@ -28,25 +26,15 @@ $eventDispatcher->addListener(
                     'type' => \Polavi\the_container()->get(\Polavi\Module\Cms\Services\Type\CmsPageType::class),
                     'description' => 'Return a cms page',
                     'args' => [
-                        'id' => Type::nonNull(Type::id()),
-                        'language' => Type::nonNull(Type::id())
+                        'id' => Type::nonNull(Type::id())
                     ],
                     'resolve' => function($value, $args, \Polavi\Services\Di\Container $container, ResolveInfo $info) {
                         $cmsWidgetTable = $container->get(\Polavi\Services\Db\Processor::class)
                             ->getTable('cms_page')
                             ->where('cms_page_id', '=', $args['id']);
-                        if($container->get(\Polavi\Services\Http\Request::class)->isAdmin() === false)
+                        if ($container->get(\Polavi\Services\Http\Request::class)->isAdmin() === false)
                             $cmsWidgetTable->andWhere('status', '=', 1);
-                        $cmsWidgetTable->leftJoin('cms_page_description', null, [
-                            [
-                                'column'      => "cms_page_description.language_id",
-                                'operator'    => "=",
-                                'value'       => $args['language'],
-                                'ao'          => 'and',
-                                'start_group' => null,
-                                'end_group'   => null
-                            ]
-                        ]);
+                        $cmsWidgetTable->leftJoin('cms_page_description');
 
                         return $cmsWidgetTable->fetchOneAssoc();
                     }
@@ -60,7 +48,7 @@ $eventDispatcher->addListener(
                         'filters' =>  Type::listOf(\Polavi\the_container()->get(FilterFieldType::class))
                     ],
                     'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
-                        if($container->get(\Polavi\Services\Http\Request::class)->isAdmin() == false)
+                        if ($container->get(\Polavi\Services\Http\Request::class)->isAdmin() == false)
                             return [];
                         $collection = new \Polavi\Module\Cms\Services\PageCollection($container);
                         return $collection->getData($rootValue, $args, $container, $info);
@@ -80,7 +68,7 @@ $eventDispatcher->addListener(
                         $cmsWidgetTable = _mysql()
                             ->getTable('cms_widget')
                             ->where('cms_widget_id', '=', $args['id']);
-                        if($container->get(\Polavi\Services\Http\Request::class)->isAdmin() === false)
+                        if ($container->get(\Polavi\Services\Http\Request::class)->isAdmin() === false)
                             $cmsWidgetTable->andWhere('status', '=', 1);
 
                         return $cmsWidgetTable->fetchOneAssoc();
@@ -121,21 +109,21 @@ $eventDispatcher->addListener(
                         try {
                             $fileSystem = new \Symfony\Component\Filesystem\Filesystem();
                             $uploadPath = MEDIA_PATH . DS . "upload";
-                            if(!file_exists($uploadPath))
+                            if (!file_exists($uploadPath))
                                 $fileSystem->mkdir($uploadPath);
                             $browserPath = $uploadPath . DS . $args["root"];
-                            if(!file_exists($browserPath) or !is_dir($browserPath))
+                            if (!file_exists($browserPath) or !is_dir($browserPath))
                                 throw new Exception("Invalid path");
 
                             $fs = array_diff(scandir($browserPath), ['..', '.']);
                             $folders = [];
                             $files = [];
                             foreach ($fs as $f) {
-                                if(is_dir($browserPath . DS . $f))
+                                if (is_dir($browserPath . DS . $f))
                                     $folders[] = $f;
                                 else {
                                     $file = new \Symfony\Component\HttpFoundation\File\File($browserPath . DS . $f);
-                                    if(in_array($file->getMimeType(), ["image/jpeg", "image/png", "image/gif"]))
+                                    if (in_array($file->getMimeType(), ["image/jpeg", "image/png", "image/gif"]))
                                         $files[] = [
                                             'name' => $file->getFilename(),
                                             'type' => $file->getMimeType(),
@@ -185,9 +173,9 @@ $eventDispatcher->addListener(
                 $request = $container->get(\Polavi\Services\Http\Request::class);
                 /**@var \Symfony\Component\HttpFoundation\File\UploadedFile[] $files */
                 $files = $request->files->all();
-                if(!$files)
+                if (!$files)
                     return null;
-                if($request->isAdmin() == false)
+                if ($request->isAdmin() == false)
                     return array_fill(0, count($files), [
                         'status' => false,
                         'message'=> 'Permission denied',
@@ -195,7 +183,7 @@ $eventDispatcher->addListener(
                     ]);
                 $targetPath = MEDIA_PATH . DS . $args['targetPath'];
                 $fileSystem = new \Symfony\Component\Filesystem\Filesystem();
-                if(!$fileSystem->exists($targetPath))
+                if (!$fileSystem->exists($targetPath))
                     $fileSystem->mkdir($targetPath);
                 $outPut = [];
                 foreach ($files as $file) {
@@ -206,7 +194,7 @@ $eventDispatcher->addListener(
                     }
 
                     try {
-                        if(!in_array($file->getMimeType(), $allowType))
+                        if (!in_array($file->getMimeType(), $allowType))
                             throw new Exception("Type of file is not allowed");
                         $file = $file->move($targetPath, $name);
                         $outPut[] = [
@@ -248,7 +236,7 @@ $eventDispatcher->addListener(
             'resolve'=> function($value, $args, Container $container, ResolveInfo $info) {
                 $targetPath = MEDIA_PATH . DS . "upload" . DS . $args['path'];
                 $fileSystem = new \Symfony\Component\Filesystem\Filesystem();
-                if($fileSystem->exists($targetPath))
+                if ($fileSystem->exists($targetPath))
                     return [
                         "status" => 0,
                         "message" => "Folder is already existed"
@@ -283,12 +271,12 @@ $eventDispatcher->addListener(
             'resolve'=> function($value, $args, Container $container, ResolveInfo $info) {
                 $targetPath = MEDIA_PATH . DS . "upload" . DS . $args['path'];
                 $fileSystem = new \Symfony\Component\Filesystem\Filesystem();
-                if(!$fileSystem->exists($targetPath))
+                if (!$fileSystem->exists($targetPath))
                     return [
                         "status" => 0,
                         "message" => "File is not existing"
                     ];
-                if(is_dir($targetPath))
+                if (is_dir($targetPath))
                     return [
                         "status" => 0,
                         "message" => "Invalid file"
@@ -326,45 +314,29 @@ $eventDispatcher->addListener(
                 $conn = _mysql();
                 $data = $args['page'];
 
-                if(
+                if (
                     $container->get(Request::class)->isAdmin() == false
                 )
                     return ['status'=> false, 'page' => null, 'message' => 'Permission denied'];
                 else {
-                    if(isset($data['id']) and $data['id']) {
+                    if (isset($data['id']) and $data['id']) {
                         $page = $conn->getTable('cms_page')->load($data['id']);
-                        if(!$page)
+                        if (!$page)
                             return ['status'=> false, 'page' => null, 'message' => 'Requested page does not exist'];
                         $conn->getTable('cms_page')->where('cms_page_id', '=', $data['id'])->update($data);
                         $conn->getTable('cms_page_description')
-                            ->insertOnUpdate(array_merge($data, ['cms_page_description_cms_page_id' => $data['id'], 'language_id' =>get_default_language_Id()]));
+                            ->insertOnUpdate(array_merge($data, ['cms_page_description_cms_page_id' => $data['id']]));
                         return [
                             'status'=> true,
-                            'page' =>$conn->getTable('cms_page')->leftJoin('cms_page_description', null, [
-                                [
-                                    'column'      => "cms_page_description.language_id",
-                                    'operator'    => "=",
-                                    'value'       => get_default_language_Id(),
-                                    'ao'          => 'and',
-                                    'start_group' => null,
-                                    'end_group'   => null
-                                ]])->load($data['id'])
+                            'page' =>$conn->getTable('cms_page')->leftJoin('cms_page_description')->load($data['id'])
                         ];
                     } else {
                         $conn->getTable('cms_page')->insert($data);
                         $id = $conn->getLastID();
-                        $conn->getTable('cms_page_description')->insert(array_merge($data, ['cms_page_description_cms_page_id' => $id, 'language_id' =>get_default_language_Id()]));
+                        $conn->getTable('cms_page_description')->insert(array_merge($data, ['cms_page_description_cms_page_id' => $id]));
                         return [
                             'status'=> true,
-                            'page' =>$conn->getTable('cms_page')->leftJoin('cms_page_description', null, [
-                                [
-                                    'column'      => "cms_page_description.language_id",
-                                    'operator'    => "=",
-                                    'value'       => get_default_language_Id(),
-                                    'ao'          => 'and',
-                                    'start_group' => null,
-                                    'end_group'   => null
-                                ]])->load($id)
+                            'page' =>$conn->getTable('cms_page')->leftJoin('cms_page_description')->load($id)
                         ];
                     }
                 }
@@ -392,9 +364,9 @@ $eventDispatcher->addListener(
                 $data['sort_order'] = (int)$data['sort_order'];
                 $data['setting'] = json_encode($data['setting'], JSON_NUMERIC_CHECK);
                 $data['display_setting'] = json_encode($data['display_setting'], JSON_NUMERIC_CHECK);
-                if(isset($data['id']) and $data['id']) {
+                if (isset($data['id']) and $data['id']) {
                     $widget = $conn->getTable('cms_widget')->load($data['id']);
-                    if(!$widget)
+                    if (!$widget)
                         return ['status'=> false, 'widget' => null, 'message' => 'Requested widget does not exist'];
                     $conn->getTable('cms_widget')->where('cms_widget_id', '=', $data['id'])->update($data);
                     return [
@@ -501,20 +473,11 @@ $eventDispatcher->addListener(
 
 $eventDispatcher->addListener('breadcrumbs_items', function(array $items) {
     $container = \Polavi\the_container();
-    if(in_array($container->get(Request::class)->get("_matched_route"), ["page.view", "page.view.pretty"])) {
+    if (in_array($container->get(Request::class)->get("_matched_route"), ["page.view", "page.view.pretty"])) {
         $page = MiddlewareManager::getDelegate(\Polavi\Module\Cms\Middleware\Page\View\ViewMiddleware::class, null);
-        if($page == null) {
+        if ($page == null) {
             $page = _mysql()->getTable('cms_page')
-                ->leftJoin('cms_page_description', null, [
-                    [
-                        'column'      => "cms_page_description.language_id",
-                        'operator'    => "=",
-                        'value'       => get_current_language_id(),
-                        'ao'          => 'and',
-                        'start_group' => null,
-                        'end_group'   => null
-                    ]
-                ])
+                ->leftJoin('cms_page_description', null)
                 ->where('cms_page.cms_page_id', '=', $container->get(Request::class)->attributes->get('id'))
                 ->fetchOneAssoc();
         }

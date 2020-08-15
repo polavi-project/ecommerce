@@ -71,7 +71,7 @@ class CategoryType extends ObjectType
                     'url' => [
                         'type' => Type::string(),
                         'resolve' => function($category, $args, Container $container, ResolveInfo $info) {
-                            if(!preg_match('/^[\.a-zA-Z0-9\-_+]+$/', $category['seo_key']))
+                            if (!preg_match('/^[\.a-zA-Z0-9\-_+]+$/', $category['seo_key']))
                                 return $container->get(Router::class)->generateUrl('category.view', ["id"=>$category['category_id']]);
                             else
                                 return $container->get(Router::class)->generateUrl('category.view.pretty', ["slug"=>$category['seo_key']]);
@@ -80,7 +80,7 @@ class CategoryType extends ObjectType
                     'editUrl' => [
                         'type' => Type::string(),
                         'resolve' => function($category, $args, Container $container, ResolveInfo $info) {
-                            if($container->get(Request::class)->isAdmin() == false)
+                            if ($container->get(Request::class)->isAdmin() == false)
                                 return null;
                             return $container->get(Router::class)->generateUrl('category.edit', ["id"=>$category['category_id']]);
                         }
@@ -88,7 +88,7 @@ class CategoryType extends ObjectType
                     'deleteUrl' => [
                         'type' => Type::string(),
                         'resolve' => function($category, $args, Container $container, ResolveInfo $info) {
-                            if($container->get(Request::class)->isAdmin() == false)
+                            if ($container->get(Request::class)->isAdmin() == false)
                                 return null;
                             return $container->get(Router::class)->generateUrl('category.delete', ["id"=>$category['category_id']]);
                         }

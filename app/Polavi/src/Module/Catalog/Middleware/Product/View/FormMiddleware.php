@@ -9,7 +9,6 @@ declare(strict_types=1);
 namespace Polavi\Module\Catalog\Middleware\Product\View;
 
 use function Polavi\generate_url;
-use function Polavi\get_default_language_Id;
 use function Polavi\get_js_file_url;
 use Polavi\Module\Graphql\Services\GraphqlExecutor;
 use Polavi\Services\Http\Request;
@@ -27,14 +26,14 @@ class FormMiddleware extends MiddlewareAbstract
      */
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
-        if($response->getStatusCode() == 404)
+        if ($response->getStatusCode() == 404)
             return $delegate;
 
         $this->getContainer()
             ->get(GraphqlExecutor::class)
             ->waitToExecute([
                 "query"=>"{
-                    custom_options : product(id: {$request->attributes->get('id')} language:{$request->get('language', get_default_language_Id())})
+                    custom_options : product(id: {$request->attributes->get('id')})
                     {
                         options {
                             option_id: product_custom_option_id
@@ -53,7 +52,7 @@ class FormMiddleware extends MiddlewareAbstract
             ->then(function($result) use ($request, $response) {
                 /**@var \GraphQL\Executor\ExecutionResult $result */
                 $options = [];
-                if(isset($result->data['custom_options']) and $result->data['custom_options']) {
+                if (isset($result->data['custom_options']) and $result->data['custom_options']) {
                     $options = $result->data['custom_options']['options'];
                 }
                 $response->addWidget(

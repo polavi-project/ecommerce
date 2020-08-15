@@ -8,10 +8,6 @@ declare(strict_types=1);
 
 namespace Polavi\Module\Cms\Middleware\Page\View;
 
-use function Polavi\get_config;
-use function Polavi\get_default_language_Id;
-use function Polavi\get_js_file_url;
-use Polavi\Module\Graphql\Services\GraphqlExecutor;
 use Polavi\Services\Helmet;
 use Polavi\Services\Http\Response;
 use Polavi\Services\Http\Request;
@@ -27,7 +23,7 @@ class NotFoundPageMiddleware extends MiddlewareAbstract
      */
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
-        if($response->getStatusCode()!== 404)
+        if ($response->getStatusCode()!== 404)
             return $delegate;
 
         $this->getContainer()->get(Helmet::class)->setTitle('Page not found');

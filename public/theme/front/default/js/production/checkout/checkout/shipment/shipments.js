@@ -13,7 +13,7 @@ function Title() {
 function Shipment() {
     return React.createElement(Area, {
         id: "checkout_shipment",
-        className: "col-4",
+        className: "col-12 col-md-4",
         coreWidgets: [{
             'component': Title,
             'props': {},

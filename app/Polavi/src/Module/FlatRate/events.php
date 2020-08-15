@@ -26,11 +26,11 @@ $eventDispatcher->addListener(
         /**@var Cart $cart*/
         $cart = $context[0];
         $requestingMethod = $cart->getDataSource()['shipping_method'] ?? null;
-        if($requestingMethod !== "flat_rate")
+        if ($requestingMethod !== "flat_rate")
             return $method;
 
         $shippingAddress = \Polavi\_mysql()->getTable('cart_address')->load($cart->getData('shipping_address_id'));
-        if(
+        if (
             $requestingMethod == 'flat_rate' and
             get_config('shipment_flat_rate_status') == 1 and
             (
@@ -50,10 +50,10 @@ $eventDispatcher->addListener(
     function ($value, array $context = []) {
         /**@var Cart $cart*/
         $cart = $context[0];
-        if($cart->getData('shipping_method') != 'flat_rate')
+        if ($cart->getData('shipping_method') != 'flat_rate')
             return $value;
         $coupon = \Polavi\the_container()->get(\Polavi\Module\Discount\Services\CouponHelper::class)->getCoupon();
-        if($coupon and $coupon['free_shipping'] == 1)
+        if ($coupon and $coupon['free_shipping'] == 1)
             return 0;
 
         return get_config('shipment_flat_rate_fee', 0);

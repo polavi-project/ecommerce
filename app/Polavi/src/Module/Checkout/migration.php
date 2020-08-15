@@ -4,7 +4,7 @@ $version = "1.0.0";
 return [
     "1.0.0" => function(\Polavi\Services\Db\Processor $conn) {
         $cartTable = $conn->executeQuery("SELECT TABLE_NAME FROM information_schema.tables WHERE table_schema = :dbName AND TABLE_NAME = \"cart\" LIMIT 0,1", ['dbName'=> $conn->getConfiguration()->getDb()])->fetch(\PDO::FETCH_ASSOC);
-        if($cartTable !== false)
+        if ($cartTable !== false)
             return;
         $conn->executeQuery("CREATE TABLE `cart` (
               `cart_id` int(10) unsigned NOT NULL AUTO_INCREMENT,

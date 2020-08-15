@@ -72,7 +72,7 @@ $eventDispatcher->addListener(
                 'id' => Type::nonNull(Type::id())
             ],
             'resolve' => function($value, $args, Container $container, ResolveInfo $info) {
-                if($container->get(Request::class)->isAdmin() == false)
+                if ($container->get(Request::class)->isAdmin() == false)
                     return false;
 
                 return _mysql()->getTable('coupon')->load($args['id']);
@@ -88,7 +88,7 @@ $eventDispatcher->addListener(
                 ]
             ],
             'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
-                if($container->get(Request::class)->isAdmin() == false)
+                if ($container->get(Request::class)->isAdmin() == false)
                     return [];
                 else
                     return $container->get(CouponCollection::class)->getData($rootValue, $args, $container, $info);

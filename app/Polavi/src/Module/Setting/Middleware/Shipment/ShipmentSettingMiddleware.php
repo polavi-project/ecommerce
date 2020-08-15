@@ -18,7 +18,7 @@ class ShipmentSettingMiddleware extends MiddlewareAbstract
 {
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
-        if($request->getMethod() == 'POST')
+        if ($request->getMethod() == 'POST')
             return $delegate;
         $this->getContainer()->get(Helmet::class)->setTitle('Shipment setting');
         $response->addWidget(

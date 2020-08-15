@@ -22,8 +22,9 @@ class CustomerAuthenticateMiddleware extends MiddlewareAbstract
      */
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
-        if($request->isAdmin())
+        if ($request->isAdmin()) {
             return $delegate;
+        }
 
         // Create customer object and let it do the authorization
         $customer = new Customer($request->getSession());

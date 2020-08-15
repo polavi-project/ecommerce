@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace Polavi\Module\Catalog\Middleware\Product\Edit;
 
-use function Polavi\get_default_language_Id;
 use function Polavi\get_js_file_url;
 use Polavi\Module\Graphql\Services\GraphqlExecutor;
 use Polavi\Services\Http\Request;
@@ -27,16 +26,16 @@ class CustomOptionMiddleware extends MiddlewareAbstract
      */
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
-        if($response->hasWidget('product_edit_custom_options'))
+        if ($response->hasWidget('product_edit_custom_options'))
             return $delegate;
         $props = ['formId'=> self::FORM_ID, 'options' => []];
-        if($request->attributes->get('_matched_route') == 'product.edit')
+        if ($request->attributes->get('_matched_route') == 'product.edit')
             $this->getContainer()
                 ->get(GraphqlExecutor::class)
                 ->waitToExecute([
                     "query"=> <<< QUERY
                         {
-                            customOptions : product (id: {$request->get('id', 0)} language: {$request->get('language', get_default_language_Id())}) {
+                            customOptions : product (id: {$request->get('id', 0)}) {
                                 options {
                                     option_id : product_custom_option_id
                                     option_name
