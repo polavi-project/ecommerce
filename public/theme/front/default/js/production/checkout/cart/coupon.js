@@ -14,7 +14,7 @@ function Coupon(props) {
 
     return React.createElement(
         "div",
-        { className: "shopping-cart-coupon col-4" },
+        { className: "shopping-cart-coupon col-12 col-md-4" },
         React.createElement(
             "h4",
             null,

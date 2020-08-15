@@ -44,7 +44,7 @@ function GrandTotal({grandTotal}) {
 
 function Summary(props) {
     const cart = ReactRedux.useSelector(state => _.get(state, 'appState.cart', {}));
-    return <div className="col-4">
+    return <div className="col-12 col-md-4">
         <h4><span>Summary</span></h4>
         <table className={"table"}>
             <tbody>

@@ -50,7 +50,7 @@ export default function FlatRateSettingForm(props) {
                         },
                         {
                             component: Switch,
-                            props : {id : 'shipment_flat_rate_status', value: _.get(props, 'shipment_flat_rate_status', ''), formId: "flat_rate-setting-form", name: "shipment_flat_rate_status", label: "Status", isTranslateAble:false},
+                            props : {id : 'shipment_flat_rate_status', value: _.get(props, 'shipment_flat_rate_status', 0), formId: "flat_rate-setting-form", name: "shipment_flat_rate_status", label: "Status", isTranslateAble:false},
                             sort_order: 30,
                             id: "shipment_flat_rate_status"
                         },
