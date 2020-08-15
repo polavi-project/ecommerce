@@ -17,6 +17,7 @@ use Polavi\Module\Order\Services\Type\OrderCollectionType;
 use Polavi\Module\Order\Services\Type\OrderType;
 use Polavi\Services\Di\Container;
 use Polavi\Services\Http\Request;
+use Polavi\Module\Catalog\Services\Type\ProductType;
 
 $eventDispatcher->addListener(
         "admin_menu",
@@ -73,12 +74,13 @@ $eventDispatcher->addListener(
                 'args' => [
                     'id' =>  Type::nonNull(Type::int())
                 ],
-                'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
+                'resolve' => function ($rootValue, $args, Container $container, ResolveInfo $info) {
                     // Authentication example
-                    if ($container->get(Request::class)->isAdmin() == false)
+                    if ($container->get(Request::class)->isAdmin() == false) {
                         return null;
-                    else
+                    } else {
                         return $container->get(\Polavi\Module\Order\Services\OrderLoader::class)->load($args['id']);
+                    }
                 }
             ],
             'orderCollection' => [
@@ -89,7 +91,7 @@ $eventDispatcher->addListener(
                         'type' => \Polavi\the_container()->get(OrderCollectionFilterType::class)
                     ]
                 ],
-                'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
+                'resolve' => function ($rootValue, $args, Container $container, ResolveInfo $info) {
                     if ($container->get(Request::class)->isAdmin() == false)
                         return [];
                     else
@@ -104,7 +106,7 @@ $eventDispatcher->addListener(
                         'count' => Type::nonNull(Type::int()),
                         'value'=> Type::nonNull(Type::float())
                     ],
-                    'resolveField' => function($value, $args, Container $container, ResolveInfo $info) {
+                    'resolveField' => function ($value, $args, Container $container, ResolveInfo $info) {
                         return isset($value[$info->fieldName]) ? $value[$info->fieldName] : null;
                     }
                 ])),
@@ -126,7 +128,7 @@ $eventDispatcher->addListener(
                         ]
                     ])
                 ],
-                'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
+                'resolve' => function ($rootValue, $args, Container $container, ResolveInfo $info) {
                     $now = new DateTime();
                     $now->setTimezone(new DateTimeZone('UTC'));
                     $end = $now;
@@ -140,13 +142,13 @@ $eventDispatcher->addListener(
                             $end->modify('-1 day');
                             $end = new DateTime($end->format('Y-m-d') . ' 23:59:59');
                         }
-                        if ($args['period'] == 'weekly')  {
+                        if ($args['period'] == 'weekly') {
                             $end->modify('+1 day');
                             $result[$i]['from'] = date('Y-m-d', strtotime('previous monday', strtotime($end->format('Y-m-d')))) . ' 00:00:00';
                             $end->modify('-1 day');
                             $end->modify('previous sunday');
                         }
-                        if ($args['period'] == 'monthly')  {
+                        if ($args['period'] == 'monthly') {
                             $end->modify('first day of this month');
                             $result[$i]['from'] = $end->format('Y-m-d') . ' 00:00:00';
                             $end->modify('-1 day');
@@ -171,38 +173,38 @@ $eventDispatcher->addListener(
                 }
             ],
             'bestSellers' => [
-                'type' => Type::listOf(\Polavi\the_container()->get(\Polavi\Module\Catalog\Services\Type\ProductType::class)),
+                'type' => Type::listOf(\Polavi\the_container()->get(ProductType::class)),
                 'description' => "Return list of best seller product",
                 'args' => [
-                    'limit' => Type::nonNull(Type::int()),
-                    'language' => Type::nonNull(Type::int())
+                    'limit' => Type::nonNull(Type::int())
                 ],
-                'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
-                    $p = \Polavi\_mysql()->getTable('product')
+                'resolve' => function ($rootValue, $args, Container $container, ResolveInfo $info) {
+                    $ps = \Polavi\_mysql()->getTable('product')
                         ->addFieldToSelect("*")
-                        ->addFieldToSelect("product.qty", "productQty")
-                        ->addFieldToSelect("COUNT(`order_item`.product_id)", "p.count")
-                        ->addFieldToSelect("SUM(`order_item`.qty)", "qty")
-                        ->leftJoin('product_description', null, [
+                        ->addFieldToSelect("SUM(`order_item`.qty)", "saleqty")
+                        ->leftJoin('product_description')
+                        ->leftJoin('order_item', null, [
                             [
-                                'column'      => "product_description.language_id",
-                                'operator'    => "=",
-                                'value'       => $args['language'],
+                                'column'      => "order_item.order_item_id",
+                                'operator'    => "IS NOT",
+                                'value'       => null,
                                 'ao'          => 'and',
                                 'start_group' => null,
                                 'end_group'   => null
                             ]
                         ])
-                        ->leftJoin('order_item')
-                        ->where('order_item.order_item_id', "IS NOT", null)
                         ->groupBy("`order_item`.product_id")
-                        ->fetchAllAssoc([
-                            "sort_by" => "`p.count`",
+                        ->fetchAssoc([
+                            "sort_by" => "saleqty",
                             "sort_order" => "DESC",
                             "limit" => $args["limit"]
                         ]);
+                    array_walk($ps, function (&$p) {
+                        $p["qty"] = $p["saleqty"];
+                        return $p;
+                    });
 
-                    return $p;
+                    return $ps;
                 }
             ]
         ];
