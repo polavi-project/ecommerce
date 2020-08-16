@@ -135,8 +135,10 @@ class Validator
             if (JSON_ERROR_NONE !== json_last_error())
                 return false;
 
-            $requiredProducts = empty($requiredProducts) ? [] : $requiredProducts["required_product"];
-
+            $requiredProducts = empty($requiredProducts) ? [] : $requiredProducts["required_product"] ?? [];
+            if (!$requiredProducts) {
+                return true;
+            }
             foreach ($requiredProducts as $condition) {
                 if ($condition['key'] == 'category') {
                     $requiredItems = [];
@@ -277,8 +279,10 @@ class Validator
             if (JSON_ERROR_NONE !== json_last_error())
                 return false;
 
-            $requiredProducts = empty($requiredProducts) ? [] : $requiredProducts["required_product"];
-
+            $requiredProducts = empty($requiredProducts) ? [] : $requiredProducts["required_product"] ?? [];
+            if (!$requiredProducts) {
+                return true;
+            }
             foreach ($requiredProducts as $condition) {
                 if ($condition['key'] == 'attribute_group') {
                     $requiredItems = [];
@@ -418,8 +422,10 @@ class Validator
             if (JSON_ERROR_NONE !== json_last_error())
                 return false;
 
-            $requiredProducts = empty($requiredProducts) ? [] : $requiredProducts["required_product"];
-
+            $requiredProducts = empty($requiredProducts) ? [] : $requiredProducts["required_product"] ?? [];
+            if (!$requiredProducts) {
+                return true;
+            }
             foreach ($requiredProducts as $condition) {
                 if ($condition['key'] == 'price') {
                     $requiredItems = [];
@@ -523,8 +529,10 @@ class Validator
             if (JSON_ERROR_NONE !== json_last_error())
                 return false;
 
-            $requiredProducts = empty($requiredProducts) ? [] : $requiredProducts["required_product"];
-
+            $requiredProducts = empty($requiredProducts) ? [] : $requiredProducts["required_product"] ?? [];
+            if (!$requiredProducts) {
+                return true;
+            }
             foreach ($requiredProducts as $condition) {
                 if ($condition['key'] == 'sku') {
                     $requiredItems = [];
