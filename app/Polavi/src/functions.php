@@ -74,8 +74,9 @@ function dispatch_event(string $eventName, array $args = []) {
 
 function create_mutable_var($name, $value, array $context = []) {
     $listeners = the_container()->get(EventDispatcher::class)->getListeners($name);
-    if(empty($listeners))
+    if (empty($listeners)) {
         return $value;
+    }
 
     foreach ($listeners as $listener) {
         $handler = $listener['handler'];
@@ -110,19 +111,21 @@ function generate_url($routerName, array $params = [], array $query = null)
  */
 function get_config(string $name, $defaultValue = null)
 {
-    if(!file_exists(CONFIG_PATH . DS . 'config.php'))
+    if (!file_exists(CONFIG_PATH . DS . 'config.php')) {
         return $defaultValue;
+    }
     static $configCache = [];
 
-    if(file_exists(CACHE_PATH . DS . 'config_cache.php') && empty($configCache)) {
+    if (file_exists(CACHE_PATH . DS . 'config_cache.php') && empty($configCache)) {
         $configCache = include_once (CACHE_PATH . DS . 'config_cache.php');
     }
 
-    if(isset($configCache[$name]))
+    if (isset($configCache[$name])) {
         return $configCache[$name];
+    }
 
     $config = _mysql()->getTable('setting')->where('name', '=', $name)->fetchOneAssoc();
-    if($config) {
+    if ($config) {
         $configCache[$name] = $config['json'] == 1  ? json_decode($config['value'], true) : $config['value'];
         return $configCache[$name];
     } else {
@@ -144,10 +147,11 @@ function get_base_url($isAdmin = false)
         $baseUrl = 'http://127.0.0.1/';
     }
 
-    if(!$isAdmin)
+    if (!$isAdmin) {
         return trim($baseUrl, '/');
-    else
+    } else {
         return trim($baseUrl, '/') . '/' . ADMIN_PATH;
+    }
 }
 
 /**
@@ -187,25 +191,28 @@ function get_js_file_url(string $subPath, bool $isAdmin = false)
 {
     $fileUrl = null;
 
-    if($isAdmin == true) {
-        if(file_exists(THEME_PATH . "/admin/default/js/" . $subPath))
+    if ($isAdmin == true) {
+        if (file_exists(THEME_PATH . "/admin/default/js/" . $subPath)) {
             $fileUrl = get_admin_theme_url() . "/js/" . $subPath;
-        else if(file_exists(JS_PATH . DS . $subPath))
+        } elseif (file_exists(JS_PATH . DS . $subPath)) {
             $fileUrl = get_base_url() . '/public/js/' . $subPath;
+        }
     } else {
         $themeName = get_config('general_theme', 'default');
-        if(file_exists(THEME_PATH . "/front/{$themeName}/js/" . $subPath))
+        if (file_exists(THEME_PATH . "/front/{$themeName}/js/" . $subPath)) {
             $fileUrl = get_base_url() .  '/public/theme/front/' . $themeName . "/js/" . $subPath;
-        else if(file_exists(THEME_PATH . "/front/default/js/" . $subPath))
+        } elseif (file_exists(THEME_PATH . "/front/default/js/" . $subPath)) {
             $fileUrl = get_base_url() .  '/public/theme/front/default' . "/js/" . $subPath;
-        else if(file_exists(JS_PATH . DS . $subPath))
+        } elseif (file_exists(JS_PATH . DS . $subPath)) {
             $fileUrl = get_base_url() . '/public/js/' . $subPath;
+        }
     }
 
-    if($fileUrl)
+    if ($fileUrl) {
         return str_replace(['http:', 'https:'], '', $fileUrl);
-    else
-        throw new \RuntimeException(sprintf("Requested file %s does not exist", $subPath) );
+    } else {
+        throw new \RuntimeException(sprintf("Requested file %s does not exist", $subPath));
+    }
 }
 
 /**
@@ -217,25 +224,33 @@ function get_css_file_url(string $subPath, bool $isAdmin = false)
 {
     $fileUrl = null;
 
-    if($isAdmin == true) {
+    if ($isAdmin == true) {
         $fileUrl = get_admin_theme_url() . "/css/" . $subPath;
     } else {
         $themeName = get_config('general_theme', 'default');
-        if(file_exists(THEME_PATH . "/front/{$themeName}/css/" . $subPath))
+        if (file_exists(THEME_PATH . "/front/{$themeName}/css/" . $subPath)) {
             $fileUrl = get_base_url() .  '/public/theme/front/' . $themeName . "/css/" . $subPath;
-        else if(file_exists(THEME_PATH . "/front/default/css/" . $subPath))
+        } elseif (file_exists(THEME_PATH . "/front/default/css/" . $subPath)) {
             $fileUrl = get_base_url() .  '/public/theme/front/default' . "/css/" . $subPath;
+        }
     }
 
-    if($fileUrl)
+    if ($fileUrl) {
         return str_replace(['http:', 'https:'], '', $fileUrl);
-    else
-        throw new \RuntimeException(sprintf("Requested file %s does not exist", $subPath) );
+    } else {
+        throw new \RuntimeException(sprintf("Requested file %s does not exist", $subPath));
+    }
 }
 
-function flatten_array(array $array) {
+function flatten_array(array $array)
+{
     $result = array();
-    array_walk_recursive($array, function($a) use (&$result) { $result[] = $a; });
+    array_walk_recursive(
+        $array,
+        function ($a) use (&$result) {
+            $result[] = $a;
+        }
+    );
 
     return $result;
 }
@@ -247,27 +262,33 @@ function flatten_array(array $array) {
  * @param string|null $fieldName
  * @return string
  */
-function dirty_output_query(Schema $schema, string $type, string $fieldName = null) {
+function dirty_output_query(Schema $schema, string $type, string $fieldName = null)
+{
     $query = '';
     $type = $schema->getType($type);
 
-    if(Type::isLeafType($type))
+    if (Type::isLeafType($type)) {
         return "{$fieldName} ";
-    if($type instanceof WrappingType)
+    }
+    if ($type instanceof WrappingType) {
         $type = $type->getWrappedType();
+    }
 
-    if($type instanceof ObjectType) {
+    if ($type instanceof ObjectType) {
         $query = "{$fieldName} { ";
         $fields = $type->getFields();
-        foreach ($fields as $name=> $field) {
+        foreach ($fields as $name => $field) {
             $type = $field->getType();
-            if($field->getType() instanceof WrappingType)
+            if ($field->getType() instanceof WrappingType) {
                 $type = $field->getType()->getWrappedType();
-            if($type instanceof LeafType)
+            }
+            if ($type instanceof LeafType) {
                 $query .= "{$name} ";
+            }
 
-            if($type instanceof ObjectType)
+            if ($type instanceof ObjectType) {
                 $query .= dirty_output_query($schema, $name, $type);
+            }
         }
     }
 
@@ -276,50 +297,68 @@ function dirty_output_query(Schema $schema, string $type, string $fieldName = nu
     return $query;
 }
 
-function buildInputQuery(InputObjectType $type, $data) {
+function buildInputQuery(InputObjectType $type, $data)
+{
     $query = "{";
     $fields = $type->getFields();
 
-    foreach ($fields as $name=>$field) {
-        if(isset($data[$name]))
-            if($field->type instanceof ListOfType) {
+    foreach ($fields as $name => $field) {
+        if (isset($data[$name])) {
+            if ($field->type instanceof ListOfType) {
                 $type = $field->type->getWrappedType();
-                if(isset($data[$name]) and is_array($data[$name])) {
+                if (isset($data[$name]) and is_array($data[$name])) {
                     $query .= " {$name}: [";
                     foreach ($data[$name] as $i) {
-                        if($type instanceof InputObjectType and is_array($i))
+                        if ($type instanceof InputObjectType and is_array($i)) {
                             $query .= buildInputQuery($type, $i);
-                        if($type instanceof ScalarType)
-                            if($type instanceof IntType || $type instanceof FloatType || $type instanceof BooleanType)
+                        }
+                        if ($type instanceof ScalarType) {
+                            if ($type instanceof IntType
+                                || $type instanceof FloatType
+                                || $type instanceof BooleanType
+                            ) {
                                 $query .= sprintf('%s: %s ', $name, $data[$name]);
-                            else{
-                                $query .= sprintf('%s: "%s" ', $name, preg_replace('/([^\\\\])\"/','$1\"', $data[$name]));
+                            } else {
+                                $query .= sprintf(
+                                    '%s: "%s" ',
+                                    $name,
+                                    preg_replace('/([^\\\\])\"/', '$1\"', $data[$name])
+                                );
                             }
+                        }
                     }
                     $query .= "]";
                 }
-            } else if($field->type instanceof NonNull) {
+            } elseif ($field->type instanceof NonNull) {
                 $type = $field->type->getWrappedType();
-                if($type instanceof InputObjectType and is_array($data[$name]))
+                if ($type instanceof InputObjectType and is_array($data[$name])) {
                     $query .= buildInputQuery($type, $data[$name]);
-                if($type instanceof ScalarType)
-                    if($type instanceof IntType || $type instanceof FloatType || $type instanceof BooleanType)
-                        $query .= sprintf('%s: %s ', $name, $data[$name]);
-                    else {
-                        $query .= sprintf('%s: "%s" ', $name, preg_replace('/([^\\\\])\"/','$1\"', $data[$name]));
-                    }
-            } else if($field->type instanceof ScalarType) {
-                if($field->type instanceof IntType || $field->type instanceof FloatType || $field->type instanceof BooleanType)
-                    $query .= sprintf('%s: %s ', $name, $data[$name]);
-                else{
-                    $query .= sprintf('%s: "%s" ', $name, preg_replace('/([^\\\\])\"/','$1\"', $data[$name]));
                 }
-            } else if($field->type instanceof InputObjectType) {
-                if(is_array($data[$name]))
+                if ($type instanceof ScalarType) {
+                    if ($type instanceof IntType || $type instanceof FloatType || $type instanceof BooleanType) {
+                        $query .= sprintf('%s: %s ', $name, $data[$name]);
+                    } else {
+                        $query .= sprintf('%s: "%s" ', $name, preg_replace('/([^\\\\])\"/', '$1\"', $data[$name]));
+                    }
+                }
+            } elseif ($field->type instanceof ScalarType) {
+                if ($field->type instanceof IntType
+                    || $field->type instanceof FloatType
+                    || $field->type instanceof BooleanType
+                ) {
+                    $query .= sprintf('%s: %s ', $name, $data[$name]);
+                } else {
+                    $query .= sprintf('%s: "%s" ', $name, preg_replace('/([^\\\\])\"/', '$1\"', $data[$name]));
+                }
+            } elseif ($field->type instanceof InputObjectType) {
+                if (is_array($data[$name])) {
                     $query .= buildInputQuery($type, $data[$name]);
+                }
             }
+        }
     }
     $query .="}";
+
     return $query;
 }
 
@@ -328,62 +367,83 @@ function buildInputQuery(InputObjectType $type, $data) {
  * @param $data
  * @return string
  */
-function buildQueryArgs(array $args, $data) {
+function buildQueryArgs(array $args, $data)
+{
     $query = "(";
 
     foreach ($args as $field) {
         $name = $field->name;
-        if(isset($data[$name]))
-            if($field->getType() instanceof ListOfType) {
+        if (isset($data[$name])) {
+            if ($field->getType() instanceof ListOfType) {
                 $type = $field->getType()->getWrappedType();
-                if(isset($data[$name]) and is_array($data[$name])) {
+                if (isset($data[$name]) and is_array($data[$name])) {
                     $query .= "{$name}: [";
                     foreach ($data[$name] as $i) {
-                        if($type instanceof InputObjectType and is_array($i))
+                        if ($type instanceof InputObjectType and is_array($i)) {
                             $query .= "{$name} : " . buildInputQuery($type, $i) . " ";
-                        if($type instanceof ScalarType)
-                            if($type instanceof IntType || $type instanceof FloatType || $type instanceof BooleanType)
+                        }
+                        if ($type instanceof ScalarType) {
+                            if ($type instanceof IntType
+                                || $type instanceof FloatType
+                                || $type instanceof BooleanType
+                            ) {
                                 $query .= "{$name}: {$data[$name]} ";
-                            else
+                            } else {
                                 $query .= "{$name}: \"{$data[$name]}\" ";
+                            }
+                        }
                     }
                     $query .= "]";
                 }
-            } else if($field->getType() instanceof NonNull) {
+            } elseif ($field->getType() instanceof NonNull) {
                 $type = $field->getType()->getWrappedType();
-                if($type instanceof InputObjectType and is_array($data[$name]))
+                if ($type instanceof InputObjectType and is_array($data[$name])) {
                     $query .= "{$name} : " . buildInputQuery($type, $data[$name]) . " ";
-                if($type instanceof ScalarType)
-                    if($type instanceof IntType || $type instanceof FloatType || $type instanceof BooleanType)
+                }
+                if ($type instanceof ScalarType) {
+                    if ($type instanceof IntType
+                        || $type instanceof FloatType
+                        || $type instanceof BooleanType
+                    ) {
                         $query .= "{$name}: {$data[$name]} ";
-                    else
+                    } else {
                         $query .= "{$name}: \"{$data[$name]}\" ";
-            } else if($field->getType() instanceof ScalarType) {
-                if($field->getType() instanceof IntType || $field->getType() instanceof FloatType || $field->getType() instanceof BooleanType)
+                    }
+                }
+            } elseif ($field->getType() instanceof ScalarType) {
+                if ($field->getType() instanceof IntType
+                    || $field->getType() instanceof FloatType
+                    || $field->getType() instanceof BooleanType
+                ) {
                     $query .= "{$name}: {$data[$name]} ";
-                else
+                } else {
                     $query .= "{$name}: \"{$data[$name]}\" ";
-            } else if($field->getType() instanceof InputObjectType) {
-                if(is_array($data[$name]))
+                }
+            } elseif ($field->getType() instanceof InputObjectType) {
+                if (is_array($data[$name])) {
                     $query .= "{$name} : " . buildInputQuery($field->getType(), $data[$name]) . " ";
+                }
             }
+        }
     }
     $query .=")";
-    if(str_replace(' ', '', $query) == "()")
+    if (str_replace(' ', '', $query) == "()") {
         return null;
+    }
+
     return $query;
 }
 
-function query_all_field_of_type(ObjectType $type, int $level) {
-
-}
-function str_replace_last( $search , $replace , $str ) {
-    if(!$str)
+function str_replace_last($search, $replace, $str)
+{
+    if (!$str) {
         return $str;
-    if( ( $pos = strrpos( $str , $search ) ) !== false ) {
-        $searchLength  = strlen( $search );
-        $str = substr_replace( $str , $replace , $pos , $searchLength );
     }
+    if (($pos = strrpos($str, $search)) !== false) {
+        $searchLength = strlen($search);
+        $str = substr_replace($str, $replace, $pos, $searchLength);
+    }
+
     return $str;
 }
 
@@ -393,10 +453,11 @@ function str_replace_last( $search , $replace , $str ) {
  * @param int $height
  * @return bool|\Imagine\Image\ImageInterface|object
  */
-function resize_image(string $path, int $width, int $height) {
-    if (extension_loaded('imagick')){
+function resize_image(string $path, int $width, int $height)
+{
+    if (extension_loaded('imagick')) {
         $imagine = new Imagine();
-    } else if (extension_loaded('gd')) {
+    } elseif (extension_loaded('gd')) {
         $imagine = new \Imagine\Gd\Imagine();
     } else {
         // TODO: Should log a message
@@ -406,12 +467,12 @@ function resize_image(string $path, int $width, int $height) {
     $image = $imagine->open($path);
     $imageW = $image->getSize()->getWidth();
     $imageH = $image->getSize()->getHeight();
-    if($imageW <= $width && $imageH <= $height) {
+    if ($imageW <= $width && $imageH <= $height) {
         return $image;
     } else {
         $wRatio = $imageW / $width;
         $hRatio = $imageH / $height;
-        if($wRatio > $hRatio) {
+        if ($wRatio > $hRatio) {
             $height = $imageH / $wRatio;
         } else {
             $width = $imageW / $hRatio;
@@ -428,9 +489,11 @@ function resize_image(string $path, int $width, int $height) {
  * @param null $default
  * @return |null
  */
-function array_find($array, callable $callback, $default = null) {
-    if(!is_array($array))
+function array_find($array, callable $callback, $default = null)
+{
+    if (!is_array($array)) {
         return $default;
+    }
     foreach ($array as $key => $value) {
         $result = $callback($value, $key);
         if ($result) {
