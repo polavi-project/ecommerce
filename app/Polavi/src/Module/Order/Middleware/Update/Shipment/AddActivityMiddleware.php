@@ -24,7 +24,7 @@ class AddActivityMiddleware extends MiddlewareAbstract
     {
         if (!$this->getContainer()->offsetExists(OrderUpdatePromise::class))
             return $delegate;
-        $this->getContainer()->get(OrderUpdatePromise::class)->then(function(array $result) use($request) {
+        $this->getContainer()->get(OrderUpdatePromise::class)->then(function (array $result) use ($request) {
             $conn = _mysql();
             $changes = $result['changes'];
             if (isset($changes['shipment_status']) and $changes['shipment_status'] == 'delivering')

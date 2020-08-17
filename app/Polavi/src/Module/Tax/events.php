@@ -31,17 +31,17 @@ $eventDispatcher->addListener(
 );
 
 
-$eventDispatcher->addListener("register_cart_field", function(&$fields) {
+$eventDispatcher->addListener("register_cart_field", function (&$fields) {
     // Register discount to cart
     $fields["shipping_fee_incl_tax"] = [
-        "resolver" => function(Cart $cart) {
+        "resolver" => function (Cart $cart) {
             return $cart->getData('shipping_fee_excl_tax'); // TODO: Adding tax
         },
         "dependencies" => ['shipping_fee_excl_tax']
     ];
 
     $fields["tax_amount"] = [
-        "resolver" => function(Cart $cart) {
+        "resolver" => function (Cart $cart) {
             $itemTax = 0;
             foreach ($cart->getItems() as $item)
                 $itemTax += $item->getData('tax_amount');
@@ -51,16 +51,16 @@ $eventDispatcher->addListener("register_cart_field", function(&$fields) {
     ];
 
     $fields["grand_total"] = [
-        "resolver" => function(Cart $cart) use ($fields){
+        "resolver" => function (Cart $cart) use ($fields){
             return $fields["grand_total"]["resolver"]($cart) + $cart->getData('tax_amount');
         },
         "dependencies" => array_merge($fields["grand_total"]["dependencies"], ["tax_amount"])
     ];
 });
 
-$eventDispatcher->addListener("register_cart_item_field", function(array &$fields) {
+$eventDispatcher->addListener("register_cart_item_field", function (array &$fields) {
     $fields["tax_percent"] = [
-        "resolver" => function(Item $item) {
+        "resolver" => function (Item $item) {
             $conn = _mysql();
             $shippingAddress = $conn->getTable('cart_address')->load($this->cart->getData('shipping_address_id'));
             if ($shippingAddress) {
@@ -73,7 +73,7 @@ $eventDispatcher->addListener("register_cart_item_field", function(array &$field
     ];
 
     $fields["tax_amount"] = [
-        "resolver" => function(Item $item) use ($fields){
+        "resolver" => function (Item $item) use ($fields){
             return TaxCalculator::getTaxAmount(
                 $item->getData('product_price') * $item->getData('qty'),
                 $item->getData('tax_percent')
@@ -83,7 +83,7 @@ $eventDispatcher->addListener("register_cart_item_field", function(array &$field
     ];
 
     $fields["product_price_incl_tax"] = [
-        "resolver" => function(Item $item) use ($fields){
+        "resolver" => function (Item $item) use ($fields){
             return TaxCalculator::getTaxAmount(
                     $item->getData('product_price'),
                     $item->getData('tax_percent')
@@ -93,7 +93,7 @@ $eventDispatcher->addListener("register_cart_item_field", function(array &$field
     ];
 
     $fields["final_price_incl_tax"] = [
-        "resolver" => function(Item $item) use ($fields){
+        "resolver" => function (Item $item) use ($fields){
             return TaxCalculator::getTaxAmount(
                     $item->getData('final_price'),
                     $item->getData('tax_percent')
@@ -103,7 +103,7 @@ $eventDispatcher->addListener("register_cart_item_field", function(array &$field
     ];
 
     $fields["total"] = [
-        "resolver" => function(Item $item) use ($fields){
+        "resolver" => function (Item $item) use ($fields){
             return $item->getData('final_price')
                 * $item->getData('qty')
                 + $item->getData('tax_amount');

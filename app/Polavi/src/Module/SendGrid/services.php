@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 use function Polavi\get_config;
 
-$container[\Polavi\Module\SendGrid\Services\SendGrid::class] = function() use ($container) {
+$container[\Polavi\Module\SendGrid\Services\SendGrid::class] = function () use ($container) {
     return new \Polavi\Module\SendGrid\Services\SendGrid(
         get_config('sendgrid_apiKey', null),
         get_config('sendgrid_sender_email', ''),

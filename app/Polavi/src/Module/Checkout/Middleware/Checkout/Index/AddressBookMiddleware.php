@@ -30,7 +30,7 @@ class AddressBookMiddleware extends MiddlewareAbstract
             ->waitToExecute([
                 "query"=>"{customerAddresses(customerId: {$customerId}) {$outPut}}"
             ])
-            ->then(function($result) use ($response) {
+            ->then(function ($result) use ($response) {
                 /**@var \GraphQL\Executor\ExecutionResult $result */
                 if (isset($result->data['customerAddresses'])) {
                     $response->addWidget(

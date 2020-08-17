@@ -34,11 +34,11 @@ class GraphqlQLMiddleware extends MiddlewareAbstract
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
         try {
-            $myErrorFormatter = function(Error $error) {
+            $myErrorFormatter = function (Error $error) {
                 return FormattedError::createFromException($error);
             };
 
-            $myErrorHandler = function(array $errors, callable $formatter) {
+            $myErrorHandler = function (array $errors, callable $formatter) {
                 throw new \Exception($errors[0]->message);
             };
             // GraphQL schema to be passed to query executor:

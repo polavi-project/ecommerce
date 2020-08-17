@@ -50,7 +50,7 @@ EOT;
                 $user,
                 $password
             );
-            $this->getContainer()->set(Configuration::class, function() use($database, $host, $user, $password) {
+            $this->getContainer()->set(Configuration::class, function () use ($database, $host, $user, $password) {
                 return new Configuration(
                     $database,
                     "mysql",

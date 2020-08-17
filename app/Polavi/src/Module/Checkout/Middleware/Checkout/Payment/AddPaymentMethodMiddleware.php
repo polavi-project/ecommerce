@@ -24,7 +24,7 @@ class AddPaymentMethodMiddleware extends MiddlewareAbstract
         $promise = $this->getContainer()->get(Cart::class)
             ->setData('payment_method', $request->request->get('method_code'));
 
-        $promise->then(function($value) use ($response) {
+        $promise->then(function ($value) use ($response) {
             $response->addData('success', 1)->notNewPage();
         }, function ($reason) use ($response) {
             $response->addData('success', 0);

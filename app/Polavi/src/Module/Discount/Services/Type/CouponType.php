@@ -23,7 +23,7 @@ class CouponType extends ObjectType
     {
         $config = [
             'name' => 'Coupon',
-            'fields' => function() use ($container) {
+            'fields' => function () use ($container) {
                 $fields = [
                     'coupon_id' => [
                         'type' => Type::nonNull(Type::id())
@@ -75,7 +75,7 @@ class CouponType extends ObjectType
                     ],
                     'editUrl' => [
                         'type' => Type::string(),
-                        'resolve' => function($coupon, $args, Container $container, ResolveInfo $info) {
+                        'resolve' => function ($coupon, $args, Container $container, ResolveInfo $info) {
                             if ($container->get(Request::class)->isAdmin() == false)
                                 return null;
                             return $container->get(Router::class)->generateUrl('coupon.edit', ["id"=>$coupon['coupon_id']]);
@@ -83,7 +83,7 @@ class CouponType extends ObjectType
                     ],
                     'deleteUrl' => [
                         'type' => Type::string(),
-                        'resolve' => function($coupon, $args, Container $container, ResolveInfo $info) {
+                        'resolve' => function ($coupon, $args, Container $container, ResolveInfo $info) {
                             if ($container->get(Request::class)->isAdmin() == false)
                                 return null;
                             return $container->get(Router::class)->generateUrl('coupon.delete', ["id"=>$coupon['coupon_id']]);
@@ -95,7 +95,7 @@ class CouponType extends ObjectType
 
                 return $fields;
             },
-            'resolveField' => function($value, $args, Container $container, ResolveInfo $info) {
+            'resolveField' => function ($value, $args, Container $container, ResolveInfo $info) {
                 return isset($value[$info->fieldName]) ? $value[$info->fieldName] : null;
             }
         ];

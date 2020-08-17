@@ -25,11 +25,11 @@ class ProductFilterToolType extends ObjectType
     {
         $config = [
             'name' => 'ProductFilterTool',
-            'fields' => function() use ($container){
+            'fields' => function () use ($container){
                 $fields = [
                     'price' => [
                         'type' => $container->get(PriceFilterType::class),
-                        'resolve' => function($value, $args, Container $container, ResolveInfo $info) {
+                        'resolve' => function ($value, $args, Container $container, ResolveInfo $info) {
                             if (!$value)
                                 return [
                                     'minPrice' => 0,
@@ -176,7 +176,7 @@ class ProductFilterToolType extends ObjectType
                     ],
                     'attributes' => [
                         'type' => Type::listOf($container->get(AttributeFilterType::class)),
-                        'resolve' => function($value, $args, Container $container, ResolveInfo $info) {
+                        'resolve' => function ($value, $args, Container $container, ResolveInfo $info) {
 
                             $conn = _mysql();
                             $attributeData = $conn->getTable('attribute')

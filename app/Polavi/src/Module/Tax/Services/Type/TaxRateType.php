@@ -21,7 +21,7 @@ class TaxRateType extends ObjectType
     {
         $config = [
             'name' => 'Tax rate',
-            'fields' => function() use ($container) {
+            'fields' => function () use ($container) {
                 $fields = [
                     'tax_rate_id' => [
                         'type' => Type::nonNull(Type::id())
@@ -62,7 +62,7 @@ class TaxRateType extends ObjectType
 
                 return $fields;
             },
-            'resolveField' => function($value, $args, Container $container, ResolveInfo $info) {
+            'resolveField' => function ($value, $args, Container $container, ResolveInfo $info) {
                 return isset($value[$info->fieldName]) ? $value[$info->fieldName] : null;
             }
         ];

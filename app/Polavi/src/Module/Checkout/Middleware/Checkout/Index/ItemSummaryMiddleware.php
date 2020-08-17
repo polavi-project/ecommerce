@@ -36,7 +36,7 @@ class ItemSummaryMiddleware extends MiddlewareAbstract
                     }
                 }"
             ])
-            ->then(function($result) use ($response) {
+            ->then(function ($result) use ($response) {
                 /**@var \GraphQL\Executor\ExecutionResult $result */
                 if (isset($result->data['items'])) {
                     $response->addWidget(

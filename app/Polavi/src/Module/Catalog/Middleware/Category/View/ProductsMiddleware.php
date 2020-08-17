@@ -63,11 +63,11 @@ QUERY
                 "query"=> $query
             ]);
 
-        $promise->then(function($result) use ($request, $response, $query) {
+        $promise->then(function ($result) use ($request, $response, $query) {
                 /**@var \GraphQL\Executor\ExecutionResult $result */
                 if (isset($result->data['productCollection']['products'])) {
                     $products = $result->data['productCollection']['products'];
-                    $response->addState('productCollectionFilter', (function() use($result) {
+                    $response->addState('productCollectionFilter', (function () use ($result) {
                         $fs = [];
                         $filters = json_decode($result->data['productCollection']['currentFilter'], true);
                         foreach ($filters as $filter) {
@@ -83,7 +83,7 @@ QUERY
                         get_js_file_url("production/catalog/category/view/products.js", false),
                         [
                             "products" => $products,
-                            "currentFilter" => (function() use($result) {
+                            "currentFilter" => (function () use ($result) {
                                 $fs = [];
                                 $filters = json_decode($result->data['productCollection']['currentFilter'], true);
                                 foreach ($filters as $filter) {
@@ -93,8 +93,8 @@ QUERY
                                 return json_encode($fs, JSON_NUMERIC_CHECK);
                             })(),
                             "total" => $result->data['productCollection']['total'],
-                            "limit" => (function() use($result) {
-                                $limit = array_find(json_decode($result->data['productCollection']['currentFilter'], true), function($f) {
+                            "limit" => (function () use ($result) {
+                                $limit = array_find(json_decode($result->data['productCollection']['currentFilter'], true), function ($f) {
                                     if ($f["key"] == "limit")
                                         return $f;
                                     return null;
@@ -104,8 +104,8 @@ QUERY
                                 return $limit["value"];
                             })(),
                             "countPerRow" => get_config("catalog_product_list_number_per_row", 3),
-                            "currentPage" => (function() use($result) {
-                                $page = array_find(json_decode($result->data['productCollection']['currentFilter'], true), function($f) {
+                            "currentPage" => (function () use ($result) {
+                                $page = array_find(json_decode($result->data['productCollection']['currentFilter'], true), function ($f) {
                                     if ($f["key"] == "page")
                                         return $f;
                                     return null;
@@ -119,8 +119,8 @@ QUERY
                             "with_pagination" => create_mutable_var("with_pagination", true),
                             "with_sorting" => create_mutable_var("with_sorting", true),
                             "sorting_options" => create_mutable_var("sorting_options", []),
-                            "currentSortOrder" => (function() use($result) {
-                                $sortOrder = array_find(json_decode($result->data['productCollection']['currentFilter'], true), function($f) {
+                            "currentSortOrder" => (function () use ($result) {
+                                $sortOrder = array_find(json_decode($result->data['productCollection']['currentFilter'], true), function ($f) {
                                     if ($f["key"] == "sort-order")
                                         return $f;
                                     return null;
@@ -130,8 +130,8 @@ QUERY
 
                                 return $sortOrder["value"];
                             })(),
-                            "currentSortBy" => (function() use($result) {
-                                $sortBy = array_find(json_decode($result->data['productCollection']['currentFilter'], true), function($f) {
+                            "currentSortBy" => (function () use ($result) {
+                                $sortBy = array_find(json_decode($result->data['productCollection']['currentFilter'], true), function ($f) {
                                     if ($f["key"] == "sort-by")
                                         return $f;
                                     return null;
@@ -143,7 +143,7 @@ QUERY
                         ]
                     );
                 }
-        }, function($reason) { var_dump($reason);});
+        }, function ($reason) { var_dump($reason);});
 
         return $promise;
     }

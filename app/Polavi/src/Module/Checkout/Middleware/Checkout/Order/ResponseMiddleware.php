@@ -23,11 +23,11 @@ class ResponseMiddleware extends MiddlewareAbstract
         if (!$delegate instanceof Promise)
             return $delegate;
 
-        $delegate->then(function($orderId) use($request, $response) {
+        $delegate->then(function ($orderId) use ($request, $response) {
             if (!$response->isRedirect()) {
                 $response->redirect($this->getContainer()->get(Router::class)->generateUrl('checkout.success'));
             }
-        })->otherwise(function($reason) use ($response) {
+        })->otherwise(function ($reason) use ($response) {
             if (!$response->isRedirect()) {
                 $response->redirect($this->getContainer()->get(Router::class)->generateUrl('checkout.failure'));
             }

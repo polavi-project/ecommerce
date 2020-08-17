@@ -35,7 +35,7 @@ class FeaturedProductWidgetMiddleware extends MiddlewareAbstract
 
         foreach ($widgets as $widget) {
             $setting = json_decode($widget['setting'], true);
-            $products = array_find($setting, function($value, $key) {
+            $products = array_find($setting, function ($value, $key) {
                 if ($value['key'] == 'products')
                     return $value['value'] ?? null;
                 return null;
@@ -69,7 +69,7 @@ class FeaturedProductWidgetMiddleware extends MiddlewareAbstract
                         }
                     }
 QUERY
-                ])->then(function($result) use ($request, $response, $areas, $widget, $setting) {
+                ])->then(function ($result) use ($request, $response, $areas, $widget, $setting) {
                     /**@var \GraphQL\Executor\ExecutionResult $result */
                     //var_dump($result->data['featuredProducts']['products']);
                     if (isset($result->data['featuredProducts'])) {
@@ -81,7 +81,7 @@ QUERY
                                 get_js_file_url("production/catalog/widgets/featured_products.js", false),
                                 [
                                     "title" => $widget['name'],
-                                    "countPerRow" => array_find($setting, function($value, $key) {
+                                    "countPerRow" => array_find($setting, function ($value, $key) {
                                         if ($value['key'] == 'product_number_per_row')
                                             return $value['value'];
                                         return 4;

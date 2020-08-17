@@ -54,7 +54,7 @@ class CustomOptionMiddleware extends MiddlewareAbstract
                         }
 QUERY
                 ])
-                ->then(function($result) use (&$props, $response) {
+                ->then(function ($result) use (&$props, $response) {
                     /**@var \GraphQL\Executor\ExecutionResult $result */
                     if (isset($result->data['customOptions'])) {
                         $props['options'] = $result->data['customOptions']['options'];

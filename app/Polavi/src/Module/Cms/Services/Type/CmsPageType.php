@@ -23,7 +23,7 @@ class CmsPageType extends ObjectType
     {
         $config = [
             'name' => 'CMSPage',
-            'fields' => function() use ($container) {
+            'fields' => function () use ($container) {
                 $fields = [
                     'cms_page_id' => [
                         'type' => Type::nonNull(Type::id())
@@ -54,7 +54,7 @@ class CmsPageType extends ObjectType
                     ],
                     'url' => [
                         'type' => Type::string(),
-                        'resolve' => function($page, $args, Container $container, ResolveInfo $info) {
+                        'resolve' => function ($page, $args, Container $container, ResolveInfo $info) {
                             if (!preg_match('/^[\.a-zA-Z0-9\-_+]+$/', $page['url_key'] ?? ""))
                                 return $container->get(Router::class)->generateUrl('page.view', ["id"=>$page['cms_page_id']]);
                             else
@@ -63,7 +63,7 @@ class CmsPageType extends ObjectType
                     ],
                     'editUrl' => [
                         'type' => Type::string(),
-                        'resolve' => function($page, $args, Container $container, ResolveInfo $info) {
+                        'resolve' => function ($page, $args, Container $container, ResolveInfo $info) {
                             if ($container->get(Request::class)->isAdmin() == false)
                                 return null;
                             return $container->get(Router::class)->generateUrl('page.edit', ["id"=>$page['cms_page_id']]);
@@ -71,7 +71,7 @@ class CmsPageType extends ObjectType
                     ],
                     'deleteUrl' => [
                         'type' => Type::string(),
-                        'resolve' => function($page, $args, Container $container, ResolveInfo $info) {
+                        'resolve' => function ($page, $args, Container $container, ResolveInfo $info) {
                             if ($container->get(Request::class)->isAdmin() == false)
                                 return null;
                             return $container->get(Router::class)->generateUrl('page.delete', ["id"=>$page['cms_page_id']]);
@@ -83,7 +83,7 @@ class CmsPageType extends ObjectType
 
                 return $fields;
             },
-            'resolveField' => function($value, $args, Container $container, ResolveInfo $info) {
+            'resolveField' => function ($value, $args, Container $container, ResolveInfo $info) {
                 return isset($value[$info->fieldName]) ? $value[$info->fieldName] : null;
             }
         ];

@@ -42,7 +42,7 @@ class FormMiddleware extends MiddlewareAbstract
                             meta_keywords
                         }
                     }"
-                ])->then(function($result) use ($request, $response) {
+                ])->then(function ($result) use ($request, $response) {
                     /**@var \GraphQL\Executor\ExecutionResult $result */
                     if (isset($result->data['cmsPage'])) {
                         $response->addWidget(

@@ -40,17 +40,17 @@ $eventDispatcher->addListener(
     0
 );
 
-$eventDispatcher->addListener('register.widget.create.middleware', function(\Polavi\Services\MiddlewareManager $mm) {
+$eventDispatcher->addListener('register.widget.create.middleware', function (\Polavi\Services\MiddlewareManager $mm) {
     $mm->registerMiddleware(\Polavi\Module\Catalog\Middleware\Widget\FeaturedProduct\FormMiddleware::class, 0);
     $mm->registerMiddleware(\Polavi\Module\Catalog\Middleware\Widget\ProductFilter\FormMiddleware::class, 0);
 });
 
-$eventDispatcher->addListener('register.widget.edit.middleware', function(\Polavi\Services\MiddlewareManager $mm) {
+$eventDispatcher->addListener('register.widget.edit.middleware', function (\Polavi\Services\MiddlewareManager $mm) {
     $mm->registerMiddleware(\Polavi\Module\Catalog\Middleware\Widget\FeaturedProduct\FormMiddleware::class, 0);
     $mm->registerMiddleware(\Polavi\Module\Catalog\Middleware\Widget\ProductFilter\FormMiddleware::class, 0);
 });
 
-$eventDispatcher->addListener('register.core.middleware', function(\Polavi\Services\MiddlewareManager $mm) {
+$eventDispatcher->addListener('register.core.middleware', function (\Polavi\Services\MiddlewareManager $mm) {
     $mm->registerMiddleware(\Polavi\Module\Catalog\Middleware\Widget\FeaturedProduct\FeaturedProductWidgetMiddleware::class, 21);
     $mm->registerMiddleware(\Polavi\Module\Catalog\Middleware\Widget\ProductFilter\ProductFilterWidgetMiddleware::class, 21);
 });
@@ -64,7 +64,7 @@ $eventDispatcher->addListener(
             'args' => [
                 'filters' => Type::listOf($container->get(FilterFieldType::class))
             ],
-            'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
+            'resolve' => function ($rootValue, $args, Container $container, ResolveInfo $info) {
                 // Get the root product collection filter
                 $filters = $container->get(Symfony\Component\HttpFoundation\Session\Session::class)->get("productCollectionQuery");
                 $args["filters"] = $args["filters"] ?? $filters;
@@ -79,7 +79,7 @@ $eventDispatcher->addListener(
                     'images' => Type::listOf($container->get(\Polavi\Module\Catalog\Services\Type\ProductImageType::class)),
                     'productName' => Type::string()
                 ],
-                'resolveField' => function($rootValue, $args, Container $container, ResolveInfo $info) {
+                'resolveField' => function ($rootValue, $args, Container $container, ResolveInfo $info) {
                     return isset($rootValue[$info->fieldName]) ? $rootValue[$info->fieldName] : null;
                 }
             ]),
@@ -87,7 +87,7 @@ $eventDispatcher->addListener(
             'args' => [
                 'productId' =>  Type::nonNull(Type::int())
             ],
-            'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
+            'resolve' => function ($rootValue, $args, Container $container, ResolveInfo $info) {
                 $conn = _mysql();
                 $mainImage = $conn->getTable('product')->addFieldToSelect('image')->where('product_id', '=', $args['productId'])->fetchOneAssoc();
                 $result['images'] = [];
@@ -116,7 +116,7 @@ $eventDispatcher->addListener(
                 'productId' =>  Type::nonNull(Type::int()),
                 'qty' =>  Type::int(),
             ],
-            'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
+            'resolve' => function ($rootValue, $args, Container $container, ResolveInfo $info) {
                 $query = _mysql()->getTable('product_price')
                     ->where('product_price_product_id', '=', $args['productId']);
                 $query->andWhere('customer_group_id', '<', 1000);
@@ -146,7 +146,7 @@ $eventDispatcher->addListener(
                 'attributeGroupId' =>  Type::nonNull(Type::int()),
                 'name' => Type::string()
             ],
-            'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
+            'resolve' => function ($rootValue, $args, Container $container, ResolveInfo $info) {
                 if (!$args['name'])
                     return _mysql()->getTable("product")
                         ->leftJoin('product_description')
@@ -222,7 +222,7 @@ $eventDispatcher->addListener(
     0
 );
 
-$eventDispatcher->addListener('before_delete_attribute_group', function($rows) {
+$eventDispatcher->addListener('before_delete_attribute_group', function ($rows) {
    foreach ($rows as $row) {
        if ($row['attribute_group_id'] == 1)
            throw new Exception("Can not delete 'Default' attribute group");
@@ -244,7 +244,7 @@ $eventDispatcher->addListener(
                     'productId' => Type::int()
                 ]
             ]),
-            'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
+            'resolve' => function ($rootValue, $args, Container $container, ResolveInfo $info) {
                 $conn = _mysql();
                 if (
                     $container->get(Request::class)->isAdmin() == false
@@ -265,7 +265,7 @@ $eventDispatcher->addListener(
 
 // Remove product from variant group if attribute option was deleted
 $productIds = [];
-$eventDispatcher->addListener('before_delete_attribute_option',  function($affectedRows) use (&$productIds) {
+$eventDispatcher->addListener('before_delete_attribute_option',  function ($affectedRows) use (&$productIds) {
     foreach ($affectedRows as $row) {
         $stm = _mysql()
                 ->getTable('product_attribute_value_index')
@@ -279,7 +279,7 @@ $eventDispatcher->addListener('before_delete_attribute_option',  function($affec
     }
 });
 
-$eventDispatcher->addListener('after_delete_attribute_option',  function($affectedRows, \Polavi\Services\Db\Processor $processor) use (&$productIds) {
+$eventDispatcher->addListener('after_delete_attribute_option',  function ($affectedRows, \Polavi\Services\Db\Processor $processor) use (&$productIds) {
     foreach ($affectedRows as $row) {
         $groupIds = [];
         $stm = $processor->getTable("variant_group")
@@ -302,7 +302,7 @@ $eventDispatcher->addListener('after_delete_attribute_option',  function($affect
     }
 });
 
-$eventDispatcher->addListener('breadcrumbs_items', function(array $items) {
+$eventDispatcher->addListener('breadcrumbs_items', function (array $items) {
     $container = \Polavi\the_container();
     if (in_array($container->get(Request::class)->get("_matched_route"), ["category.view", "category.view.pretty"])) {
         $category = MiddlewareManager::getDelegate(\Polavi\Module\Catalog\Middleware\Category\View\InitMiddleware::class, null);

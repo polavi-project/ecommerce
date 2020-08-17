@@ -41,14 +41,14 @@ class VariantDetectMiddleware extends MiddlewareAbstract
             $group["attribute_three"],
             $group["attribute_four"],
             $group["attribute_five"],
-        ], function($a) {
+        ], function ($a) {
             return $a != null;
         });
         $attributes = $conn->getTable("attribute")->where("attribute_id", "IN", $attrIds)->fetchAllAssoc();
         $selectedOptions = [];
         $selectedOptionsCode = [];
         foreach ($queries as $key=>$value) {
-            $a = array_find($attributes, function($a) use($key) { return $a["attribute_code"] == $key ? $a : null;});
+            $a = array_find($attributes, function ($a) use ($key) { return $a["attribute_code"] == $key ? $a : null;});
             if ($a && is_numeric($value)) {
                 $selectedOptions[] = [
                     "attribute_id" => $a["attribute_id"],

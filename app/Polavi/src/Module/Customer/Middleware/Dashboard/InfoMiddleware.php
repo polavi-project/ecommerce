@@ -28,7 +28,7 @@ class InfoMiddleware extends MiddlewareAbstract
             ->waitToExecute([
                 "query" => $query
             ])
-            ->then(function($result) use ($request, $response) {
+            ->then(function ($result) use ($request, $response) {
                 /**@var \GraphQL\Executor\ExecutionResult $result */
                 if (isset($result->data['customer'])) {
                     $response->addWidget(
@@ -39,7 +39,7 @@ class InfoMiddleware extends MiddlewareAbstract
                         ['action' => $this->getContainer()->get(Router::class)->generateUrl('customer.update', ['id'=>$request->getCustomer()->getData('customer_id')])]
                     );
                 }
-            })->otherwise(function($reason) use($response) {
+            })->otherwise(function ($reason) use ($response) {
                 // TODO: Log error to system.log
                 $response->addAlert('customer_info_load_error', 'error', 'Something wrong. Please try again');
             });

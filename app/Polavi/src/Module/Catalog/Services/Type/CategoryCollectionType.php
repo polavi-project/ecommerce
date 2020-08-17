@@ -20,7 +20,7 @@ class CategoryCollectionType extends ObjectType
     {
         $config = [
             'name' => 'CategoryCollection',
-            'fields' => function() use ($container){
+            'fields' => function () use ($container){
                 $fields = [
                     'categories' => [
                         'type' => Type::listOf($container->get(CategoryType::class))
@@ -35,7 +35,7 @@ class CategoryCollectionType extends ObjectType
 
                 return $fields;
             },
-            'resolveField' => function($value, $args, Container $container, ResolveInfo $info) {
+            'resolveField' => function ($value, $args, Container $container, ResolveInfo $info) {
                 return isset($value[$info->fieldName]) ? $value[$info->fieldName] : null;
             }
         ];

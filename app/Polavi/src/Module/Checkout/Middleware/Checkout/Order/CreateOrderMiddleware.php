@@ -22,12 +22,12 @@ class CreateOrderMiddleware extends MiddlewareAbstract
     {
         $cart = $this->getContainer()->get(Cart::class);
         $promise = $cart->createOrder();
-        $promise->then(function($orderId) {
+        $promise->then(function ($orderId) {
             $this->getContainer()->get(PromiseWaiter::class)->addPromise('orderCreated', new OrderUpdatePromise($orderId));
         });
-        $promise->then(function($orderId) use ($request) {
+        $promise->then(function ($orderId) use ($request) {
             $request->getSession()->set('orderId', $orderId);
-        } ,function(\Exception $e) use ($response) {
+        } ,function (\Exception $e) use ($response) {
             $response->addAlert('create_order_error', 'error', $e->getMessage())->notNewPage();
         });
 

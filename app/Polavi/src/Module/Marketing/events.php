@@ -12,7 +12,7 @@ use Polavi\Module\Graphql\Services\FilterFieldType;
 use Polavi\Services\Di\Container;
 
 /** @var \Polavi\Services\Event\EventDispatcher $eventDispatcher */
-$eventDispatcher->addListener('register.customer.dashboard.middleware', function(\Polavi\Services\MiddlewareManager $mm) {
+$eventDispatcher->addListener('register.customer.dashboard.middleware', function (\Polavi\Services\MiddlewareManager $mm) {
     $mm->registerMiddlewareBefore(\Polavi\Module\Customer\Middleware\Dashboard\OrderMiddleware::class, \Polavi\Module\Marketing\Middleware\Newsletter\CustomerAccountMiddleware::class);
 });
 
@@ -51,7 +51,7 @@ $eventDispatcher->addListener(
                 'args' => [
                     'filters' =>  Type::listOf($container->get(FilterFieldType::class))
                 ],
-                'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
+                'resolve' => function ($rootValue, $args, Container $container, ResolveInfo $info) {
                     if ($container->get(\Polavi\Services\Http\Request::class)->isAdmin() == false)
                         return [];
                     $collection = new \Polavi\Module\Marketing\Services\SubscriberCollection($container);
@@ -74,11 +74,11 @@ $eventDispatcher->addListener(
 );
 
 
-$eventDispatcher->addListener('register.widget.create.middleware', function(\Polavi\Services\MiddlewareManager $mm) {
+$eventDispatcher->addListener('register.widget.create.middleware', function (\Polavi\Services\MiddlewareManager $mm) {
     $mm->registerMiddleware(\Polavi\Module\Marketing\Middleware\SubscribeFormWidget\FormMiddleware::class, 0);
 });
 
-$eventDispatcher->addListener('register.widget.edit.middleware', function(\Polavi\Services\MiddlewareManager $mm) {
+$eventDispatcher->addListener('register.widget.edit.middleware', function (\Polavi\Services\MiddlewareManager $mm) {
     $mm->registerMiddleware(\Polavi\Module\Marketing\Middleware\SubscribeFormWidget\FormMiddleware::class, 0);
 });
 

@@ -23,7 +23,7 @@ class AddContactInfoMiddleware extends MiddlewareAbstract
         $promise = $this->getContainer()->get(Cart::class)
             ->setData('customer_email', $request->request->get('email'));
 
-        $promise->then(function($value) use ($response) {
+        $promise->then(function ($value) use ($response) {
             $response->addData('success', 1);
             $response->notNewPage();
         }, function ($reason) use ($response) {

@@ -25,7 +25,7 @@ class CustomerType extends ObjectType
     {
         $config = [
             'name' => 'Customer',
-            'fields' => function() use ($container) {
+            'fields' => function () use ($container) {
                 $fields = [
                     'customer_id' => [
                         'type' => Type::nonNull(Type::id())
@@ -44,7 +44,7 @@ class CustomerType extends ObjectType
                     ],
                     'editUrl' => [
                         'type' => Type::string(),
-                        'resolve' => function($page, $args, Container $container, ResolveInfo $info) {
+                        'resolve' => function ($page, $args, Container $container, ResolveInfo $info) {
                             if ($container->get(Request::class)->isAdmin() == false)
                                 return null;
                             return $container->get(Router::class)->generateUrl('customer.edit', ["id"=>$page['customer_id']]);
@@ -52,7 +52,7 @@ class CustomerType extends ObjectType
                     ],
                     'orders' => [
                         'type' => Type::listOf($container->get(OrderType::class)),
-                        'resolve' => function($customer, $args, Container $container, ResolveInfo $info) {
+                        'resolve' => function ($customer, $args, Container $container, ResolveInfo $info) {
                             return _mysql()->getTable('order')
                                 ->where('customer_id', '=', $customer['customer_id'])
                                 ->fetchAllAssoc();
@@ -64,7 +64,7 @@ class CustomerType extends ObjectType
 
                 return $fields;
             },
-            'resolveField' => function($value, $args, Container $container, ResolveInfo $info) {
+            'resolveField' => function ($value, $args, Container $container, ResolveInfo $info) {
                 return isset($value[$info->fieldName]) ? $value[$info->fieldName] : null;
             }
         ];

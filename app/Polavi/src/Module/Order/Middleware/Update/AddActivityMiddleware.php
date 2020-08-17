@@ -26,7 +26,7 @@ class AddActivityMiddleware extends MiddlewareAbstract
         if (!$promise = $this->getContainer()->get(PromiseWaiter::class)->getPromise('orderUpdate'))
             return $delegate;
 
-        $promise->then(function(array $result) use($request) {
+        $promise->then(function (array $result) use ($request) {
             $conn = _mysql();
             $changes = $result['changes'];
             $orderId = $result['orgOrder']['order_id'];

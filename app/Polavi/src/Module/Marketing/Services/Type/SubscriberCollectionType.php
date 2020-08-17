@@ -20,7 +20,7 @@ class SubscriberCollectionType extends ObjectType
     {
         $config = [
             'name' => 'SubscriberCollection',
-            'fields' => function() use ($container){
+            'fields' => function () use ($container){
                 $fields = [
                     'subscribers' => [
                         'type' => Type::listOf($container->get(SubscriberType::class))
@@ -35,7 +35,7 @@ class SubscriberCollectionType extends ObjectType
 
                 return $fields;
             },
-            'resolveField' => function($value, $args, Container $container, ResolveInfo $info) {
+            'resolveField' => function ($value, $args, Container $container, ResolveInfo $info) {
                 return isset($value[$info->fieldName]) ? $value[$info->fieldName] : null;
             }
         ];

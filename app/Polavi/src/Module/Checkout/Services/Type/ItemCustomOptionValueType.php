@@ -21,7 +21,7 @@ class ItemCustomOptionValueType extends ObjectType
     {
         $config = [
             'name' => 'CartItemOptionValue',
-            'fields' => function() use ($container) {
+            'fields' => function () use ($container) {
                 $fields = [
                     'value_id' => [
                         'type' => Type::nonNull(Type::int())
@@ -38,7 +38,7 @@ class ItemCustomOptionValueType extends ObjectType
 
                 return $fields;
             },
-            'resolveField' => function($value, $args, Container $container, ResolveInfo $info) {
+            'resolveField' => function ($value, $args, Container $container, ResolveInfo $info) {
                 return isset($value[$info->fieldName]) ? $value[$info->fieldName] : null;
             }
         ];

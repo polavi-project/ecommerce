@@ -21,7 +21,7 @@ class WidgetInputType extends InputObjectType
     {
         $config = [
             'name'=> 'WidgetInput',
-            'fields' => function() use($container) {
+            'fields' => function () use ($container) {
                 $fields = [
                     'id' => Type::int(),
                     'type' => Type::nonNull(Type::string()),

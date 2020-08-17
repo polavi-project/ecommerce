@@ -33,12 +33,12 @@ class BreadcrumbsWidgetMiddleware extends MiddlewareAbstract
             ->get(GraphqlExecutor::class)
             ->waitToExecute([
                 "query"=>"{breadcrumbsWidgets : widgetCollection (filters : [{key: \"type\" operator : \"=\" value: \"breadcrumbs\"}]) {widgets { cms_widget_id name setting {key value} displaySetting {key value} sort_order }}}"
-            ])->then(function($result) use ($request, $response) {
+            ])->then(function ($result) use ($request, $response) {
                 /**@var \GraphQL\Executor\ExecutionResult $result */
                 if (isset($result->data['breadcrumbsWidgets'])) {
                     $matchedRoute = $request->attributes->get('_matched_route');
-                    $widgets = array_filter($result->data['breadcrumbsWidgets']['widgets'], function($v) use($matchedRoute) {
-                        $layouts = array_find($v['displaySetting'], function($value, $key) {
+                    $widgets = array_filter($result->data['breadcrumbsWidgets']['widgets'], function ($v) use ($matchedRoute) {
+                        $layouts = array_find($v['displaySetting'], function ($value, $key) {
                             if ($value['key'] == 'layout')
                                 return json_decode($value['value'], true);
                             return null;

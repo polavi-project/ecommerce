@@ -41,41 +41,46 @@ class CategoryCollection extends CollectionBuilder
     {
         $isAdmin = $this->container->get(Request::class)->isAdmin();
 
-        $this->addFilter('name', function($args) {
+        $this->addFilter('name', function ($args) {
             $this->collection->andWhere('category_description.name', $args['operator'], $args['value']);
         });
 
-        $this->addFilter('status', function($args) use ($isAdmin) {
-            if ($isAdmin == false)
+        $this->addFilter('status', function ($args) use ($isAdmin) {
+            if ($isAdmin == false) {
                 return;
+            }
             $this->collection->andWhere('category.status', $args['operator'], (int)$args['value']);
         });
 
-        $this->addFilter('include_in_nav', function($args) use ($isAdmin) {
+        $this->addFilter('include_in_nav', function ($args) use ($isAdmin) {
             $this->collection->andWhere('category.include_in_nav', $args['operator'], (int)$args['value']);
         });
 
-        $this->addFilter('page', function($args) use ($isAdmin) {
-            if ($args['operator'] !== "=")
+        $this->addFilter('page', function ($args) use ($isAdmin) {
+            if ($args['operator'] !== "=") {
                 return;
+            }
             $this->setPage((int)$args['value']);
         });
 
-        $this->addFilter('limit', function($args) use ($isAdmin) {
-            if ($args['operator'] !== "=")
+        $this->addFilter('limit', function ($args) use ($isAdmin) {
+            if ($args['operator'] !== "=") {
                 return;
+            }
             $this->setLimit((int)$args['value']);
         });
 
-        $this->addFilter('sortBy', function($args) use ($isAdmin) {
-            if ($args['operator'] !== "=")
+        $this->addFilter('sortBy', function ($args) use ($isAdmin) {
+            if ($args['operator'] !== "=") {
                 return;
+            }
             $this->setSortBy($args['value']);
         });
 
-        $this->addFilter('sortOrder', function($args) use ($isAdmin) {
-            if ($args['operator'] !== "=")
+        $this->addFilter('sortOrder', function ($args) use ($isAdmin) {
+            if ($args['operator'] !== "=") {
                 return;
+            }
             $this->setSortOrder($args['value']);
         });
     }
@@ -83,8 +88,9 @@ class CategoryCollection extends CollectionBuilder
     public function getData($rootValue, $args, Container $container, ResolveInfo $info)
     {
         $filters = $args['filters'] ?? [];
-        foreach ($filters as $key => $arg)
+        foreach ($filters as $key => $arg) {
             $this->applyFilter($arg["key"], $arg);
+        }
 
         return [
             'categories' => $this->load(),
@@ -101,8 +107,9 @@ class CategoryCollection extends CollectionBuilder
     public function getProductIdArray($rootValue, $args, Container $container, ResolveInfo $info)
     {
         $filters = $args['filter'] ?? [];
-        foreach ($filters as $key => $arg)
+        foreach ($filters as $key => $arg) {
             $this->applyFilter($key, $arg);
+        }
 
         $collection = clone $this->collection;
         $ids = [];

@@ -54,7 +54,7 @@ class FormMiddleware extends MiddlewareAbstract
                         }
                     }")
                 ])
-                ->then(function($result) use ($request, $response) {
+                ->then(function ($result) use ($request, $response) {
                     $advancedPrice = [];
                     /**@var \GraphQL\Executor\ExecutionResult $result */
                     if (isset($result->data['coupon'])) {

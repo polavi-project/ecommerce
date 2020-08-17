@@ -20,7 +20,7 @@ class ProductCollectionType extends ObjectType
     {
         $config = [
             'name' => 'ProductCollection',
-            'fields' => function() use ($container){
+            'fields' => function () use ($container){
                 $fields = [
                     'products' => [
                         'type' => Type::listOf($container->get(ProductType::class))
@@ -35,7 +35,7 @@ class ProductCollectionType extends ObjectType
 
                 return $fields;
             },
-            'resolveField' => function($value, $args, Container $container, ResolveInfo $info) {
+            'resolveField' => function ($value, $args, Container $container, ResolveInfo $info) {
                 return isset($value[$info->fieldName]) ? $value[$info->fieldName] : null;
             }
         ];

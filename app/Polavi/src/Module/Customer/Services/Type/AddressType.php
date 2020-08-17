@@ -22,7 +22,7 @@ class AddressType extends ObjectType
     {
         $config = [
             'name' => 'CustomerAddress',
-            'fields' => function() use ($container) {
+            'fields' => function () use ($container) {
                 $fields = [
                     'customer_address_id' => [
                         'type' => Type::id()
@@ -56,7 +56,7 @@ class AddressType extends ObjectType
                     ],
                     'update_url' => [
                         'type' => Type::string(),
-                        'resolve' => function($value, $args, Container $container, ResolveInfo $info) {
+                        'resolve' => function ($value, $args, Container $container, ResolveInfo $info) {
                             if (isset($value['customer_address_id']))
                                 return $container->get(Router::class)->generateUrl('customer.address.update', ['id' => $value['customer_address_id']]);
                             else
@@ -65,7 +65,7 @@ class AddressType extends ObjectType
                     ],
                     'delete_url' => [
                         'type' => Type::string(),
-                        'resolve' => function($value, $args, Container $container, ResolveInfo $info) {
+                        'resolve' => function ($value, $args, Container $container, ResolveInfo $info) {
                             return isset($value['customer_address_id']) ? $container->get(Router::class)->generateUrl('customer.address.delete', ['id' => $value['customer_address_id']]) : null;
                         }
                     ]
@@ -75,7 +75,7 @@ class AddressType extends ObjectType
 
                 return $fields;
             },
-            'resolveField' => function($value, $args, Container $container, ResolveInfo $info) {
+            'resolveField' => function ($value, $args, Container $container, ResolveInfo $info) {
                 return isset($value[$info->fieldName]) ? $value[$info->fieldName] : null;
             }
         ];

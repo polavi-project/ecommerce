@@ -39,7 +39,7 @@ class SaveMiddleware extends MiddlewareAbstract
             }
             $conn->getTable('tax_rate')->where('tax_class_id', '=', $id)->delete();
             $rates = isset($data['tax_rate']) ? $data['tax_rate'] : [];
-            array_walk($rates, function (&$value) use($id) {
+            array_walk($rates, function (&$value) use ($id) {
                $value['tax_class_id'] = $id;
             });
             foreach ($rates as $key=>$value) {

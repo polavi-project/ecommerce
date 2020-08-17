@@ -47,12 +47,12 @@ class Item
         $this->id = uniqid();
         $fields = [
             'cart_item_id' => [
-                'resolver' => function(Item $item) {
+                'resolver' => function (Item $item) {
                     return $item->getData('cart_item_id') ?? $item->getDataSource()['cart_item_id'] ?? null;
                 }
             ],
             'product_id' => [
-                'resolver' => function(Item $item) {
+                'resolver' => function (Item $item) {
                     $conn = _mysql();
                     $product = $conn->getTable('product')
                         ->where("product.status", '=', 1)
@@ -67,13 +67,13 @@ class Item
                 }
             ],
             'product_name' => [
-                'resolver' => function(Item $item) {
+                'resolver' => function (Item $item) {
                     return $item->getData('name') ?? $item->dataSource['product']['name'] ?? null;
                 },
                 'dependencies' => ['product_id']
             ],
             'product_thumbnail' => [
-                'resolver' => function(Item $item) {
+                'resolver' => function (Item $item) {
                     $fileSystem = new Filesystem();
                     if (!isset($item->getDataSource()['product']['image']) or $item->getDataSource()['product']['image'] == null)
                         return null;
@@ -85,13 +85,13 @@ class Item
                 'dependencies' => ['product_id']
             ],
             'product_url_key' => [
-                'resolver' => function(Item $item) {
+                'resolver' => function (Item $item) {
                     return $item->getData('product_url_key') ?? $item->dataSource['product']['seo_key'] ?? null;
                 },
                 'dependencies' => ['product_id']
             ],
             'product_url' => [
-                'resolver' => function(Item $item) {
+                'resolver' => function (Item $item) {
                     if (!preg_match('/^[\.a-zA-Z0-9\-_+]+$/', $item->getData('product_url_key')))
                         return the_container()->get(Router::class)->generateUrl('product.view', ["id"=>$item->getData('product_id')]);
                     else
@@ -100,25 +100,25 @@ class Item
                 'dependencies' => ['product_id', 'product_url_key']
             ],
             'product_sku' => [
-                'resolver' => function(Item $item) {
+                'resolver' => function (Item $item) {
                     return $item->getData('product_sku') ?? $item->getDataSource()['product']['sku'] ?? null;
                 },
                 'dependencies' => ['product_id']
             ],
             'product_weight' => [
-                'resolver' => function(Item $item) {
+                'resolver' => function (Item $item) {
                     return $item->getData('weight') ?? (float)$item->getDataSource()['product']['weight'] ?? null;
                 },
                 'dependencies' => ['product_id']
             ],
             'product_price' => [
-                'resolver' => function(Item $item) {
+                'resolver' => function (Item $item) {
                     return $item->getData('price') ?? $item->getDataSource()['product']['price'] ?? 0;
                 },
                 'dependencies' => ['product_id']
             ],
             'qty' => [
-                'resolver' => function(Item $item) {
+                'resolver' => function (Item $item) {
                     $items = $this->cart->getItems();
                     $addedQty = 0;
                     foreach ($items as $key=>$i)
@@ -139,7 +139,7 @@ class Item
                 'dependencies' => ['product_id']
             ],
             'final_price' => [
-                'resolver' => function(Item $item) {
+                'resolver' => function (Item $item) {
                     $priceHelper = the_container()->get(PriceHelper::class);
                     $selectedOptions = $item->getData('product_custom_options');
                     $extraPrice = 0;
@@ -161,11 +161,11 @@ class Item
                 ]
             ],
             'product_custom_options' => [
-                'resolver' => function(Item $item) {
+                'resolver' => function (Item $item) {
                     $selectedOptions = $item->dataSource['product_custom_options'] ?? [];
                     if (is_string($selectedOptions)) { // this item is loaded from cart_item table
                         $selectedOptions = json_decode($selectedOptions, true); // Custom option is json string in database
-                        $selectedOptions = array_map(function($o) {
+                        $selectedOptions = array_map(function ($o) {
                             return array_keys($o['values'] ?? []);
                         }, $selectedOptions);
                     }
@@ -213,13 +213,13 @@ class Item
                 }
             ],
             'variant_group_id' => [
-                'resolver' => function(Item $item) {
+                'resolver' => function (Item $item) {
                     return $item->getDataSource()['product']['variant_group_id'] ?? null;
                 },
                 'dependencies' => ['product_id']
             ],
             'variant_options' => [
-                'resolver' => function(Item $item) {
+                'resolver' => function (Item $item) {
                     if (!$item->getData("variant_group_id"))
                         return null;
                     $selectedOptions = $item->dataSource['variant_options'] ?? [];
@@ -234,11 +234,11 @@ class Item
                         $group["attribute_three"],
                         $group["attribute_four"],
                         $group["attribute_five"],
-                    ], function($a) {
+                    ], function ($a) {
                         return $a != null;
                     });
                     foreach ($attrIds as $id) {
-                        if (!array_find($selectedOptions, function($a) use($id) {
+                        if (!array_find($selectedOptions, function ($a) use ($id) {
                             if (isset($a["attribute_id"]) && $a["attribute_id"] == $id)
                                 return $id;
                             return false;
@@ -276,7 +276,7 @@ class Item
                 'dependencies' => ['product_id', 'variant_group_id']
             ],
             'total' => [
-                'resolver' => function(Item $item) {
+                'resolver' => function (Item $item) {
                     return $item->getData('final_price')
                         * $item->getData('qty');
                 },
@@ -317,7 +317,7 @@ class Item
         $this->dataSource[$key] = $value;
 
         if (isset($this->fields[$key]) and !empty($this->fields[$key]['dependencies'])) {
-            $promise = new \GuzzleHttp\Promise\Promise(function() use (&$promise, $key, $value) {
+            $promise = new \GuzzleHttp\Promise\Promise(function () use (&$promise, $key, $value) {
                 if ($this->getData($key) == $value) {
                     $promise->resolve($value);
                 } else

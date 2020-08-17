@@ -59,7 +59,7 @@ QUERY;
             ->waitToExecute([
                 "query"=> $query
             ])
-            ->then(function($result) use ($response) {
+            ->then(function ($result) use ($response) {
                 $assignedCategories = [];
                 $categories = [];
                 /**@var \GraphQL\Executor\ExecutionResult $result */

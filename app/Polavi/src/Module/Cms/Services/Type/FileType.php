@@ -21,7 +21,7 @@ class FileType extends ObjectType
     {
         $config = [
             'name' => 'File type',
-            'fields' => function() use ($container) {
+            'fields' => function () use ($container) {
                 $fields = [
                     'name' => [
                         'type' => Type::nonNull(Type::string())
@@ -44,7 +44,7 @@ class FileType extends ObjectType
 
                 return $fields;
             },
-            'resolveField' => function($value, $args, Container $container, ResolveInfo $info) {
+            'resolveField' => function ($value, $args, Container $container, ResolveInfo $info) {
                 return isset($value[$info->fieldName]) ? $value[$info->fieldName] : null;
             }
         ];

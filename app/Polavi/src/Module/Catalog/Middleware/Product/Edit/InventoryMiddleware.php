@@ -41,7 +41,7 @@ class InventoryMiddleware extends MiddlewareAbstract
                             stock_availability
                         }
                     }"
-                ])->then(function($result) use ($response) {
+                ])->then(function ($result) use ($response) {
                     /**@var \GraphQL\Executor\ExecutionResult $result */
                     if (isset($result->data['inventory'])) {
                         $response->addWidget(

@@ -22,17 +22,17 @@ class PaymentTransactionType extends ObjectType
     {
         $config = [
             'name' => 'Payment transaction',
-            'fields' => function() use ($container) {
+            'fields' => function () use ($container) {
                 $fields = [
                     'id' => [
                         'type' => Type::nonNull(Type::id()),
-                        'resolve' => function($value, $args, Container $container, ResolveInfo $info) {
+                        'resolve' => function ($value, $args, Container $container, ResolveInfo $info) {
                             return isset($value['payment_transaction_id']) ? $value['payment_transaction_id'] : null;
                         }
                     ],
                     'order_id' => [
                         'type' => Type::nonNull(Type::int()),
-                        'resolve' => function($value, $args, Container $container, ResolveInfo $info) {
+                        'resolve' => function ($value, $args, Container $container, ResolveInfo $info) {
                             return isset($value['payment_transaction_order_id']) ? $value['payment_transaction_order_id'] : null;
                         }
                     ],
@@ -63,7 +63,7 @@ class PaymentTransactionType extends ObjectType
 
                 return $fields;
             },
-            'resolveField' => function($value, $args, Container $container, ResolveInfo $info) {
+            'resolveField' => function ($value, $args, Container $container, ResolveInfo $info) {
                 return isset($value[$info->fieldName]) ? $value[$info->fieldName] : null;
             }
         ];

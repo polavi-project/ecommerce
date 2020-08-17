@@ -24,7 +24,7 @@ class PaymentMethodType extends ObjectType
     {
         $config = [
             'name' => 'Cart',
-            'fields' => function() use ($container) {
+            'fields' => function () use ($container) {
                 $fields = [
                     'id' => [
                         'type' => Type::nonNull(Type::string())
@@ -82,7 +82,7 @@ class PaymentMethodType extends ObjectType
                     ],
                     'items' => [
                         'type' => Type::listOf($container->get(CartItemType::class)),
-                        'resolve' => function($cart, $args, Container $container, ResolveInfo $info) {
+                        'resolve' => function ($cart, $args, Container $container, ResolveInfo $info) {
                             $items = [];
                             /**@var Item $item */
                             foreach ($container->get(Cart::class)->getItems() as $item)
@@ -93,7 +93,7 @@ class PaymentMethodType extends ObjectType
                     ],
                     'item_count' => [
                         'type' => Type::nonNull(Type::int()),
-                        'resolve' => function($cart, $args, Container $container, ResolveInfo $info) {
+                        'resolve' => function ($cart, $args, Container $container, ResolveInfo $info) {
                             return isset($cart['items']) ? count($cart['items']) : 0;
                         }
                     ]
@@ -103,7 +103,7 @@ class PaymentMethodType extends ObjectType
 
                 return $fields;
             },
-            'resolveField' => function($value, $args, Container $container, ResolveInfo $info) {
+            'resolveField' => function ($value, $args, Container $container, ResolveInfo $info) {
                 return isset($value[$info->fieldName]) ? $value[$info->fieldName] : null;
             }
         ];

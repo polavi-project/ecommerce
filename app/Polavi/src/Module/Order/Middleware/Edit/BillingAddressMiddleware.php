@@ -33,7 +33,7 @@ class BillingAddressMiddleware extends MiddlewareAbstract
                     }
                 }"
             ])
-            ->then(function($result) use ($response) {
+            ->then(function ($result) use ($response) {
                 /**@var \GraphQL\Executor\ExecutionResult $result */
                 if (isset($result->data['billing_address'])) {
                     $response->addWidget(

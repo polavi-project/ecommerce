@@ -28,12 +28,12 @@ class ProductFilterWidgetMiddleware extends MiddlewareAbstract
             ->get(GraphqlExecutor::class)
             ->waitToExecute([
                 "query"=>"{productFilter : widgetCollection (filters : [{key: \"type\" operator : \"=\" value: \"product_filter\"}]) {widgets { cms_widget_id name setting {key value} displaySetting {key value} sort_order }}}"
-            ])->then(function($result) use ($request, $response) {
+            ])->then(function ($result) use ($request, $response) {
                 /**@var \GraphQL\Executor\ExecutionResult $result */
                 if (isset($result->data['productFilter'])) {
                     $matchedRoute = $request->attributes->get('_matched_route');
-                    $widgets = array_filter($result->data['productFilter']['widgets'], function($v) use($matchedRoute) {
-                        $layouts = array_find($v['displaySetting'], function($value, $key) {
+                    $widgets = array_filter($result->data['productFilter']['widgets'], function ($v) use ($matchedRoute) {
+                        $layouts = array_find($v['displaySetting'], function ($value, $key) {
                             if ($value['key'] == 'layout')
                                 return json_decode($value['value'], true);
                             return null;
@@ -50,7 +50,7 @@ class ProductFilterWidgetMiddleware extends MiddlewareAbstract
                     }, ARRAY_FILTER_USE_BOTH);
 
                     foreach ($widgets as $widget) {
-                        $title = array_find($widget['setting'], function($value, $key) {
+                        $title = array_find($widget['setting'], function ($value, $key) {
                             if ($value['key'] == 'title')
                                 return $value['value'];
                             return null;
@@ -78,7 +78,7 @@ class ProductFilterWidgetMiddleware extends MiddlewareAbstract
                             );
                     }
                 }
-            }, function($reason) {var_dump($reason);});
+            }, function ($reason) {var_dump($reason);});
 
         return $delegate;
     }

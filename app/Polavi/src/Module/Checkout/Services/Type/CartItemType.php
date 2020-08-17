@@ -24,7 +24,7 @@ class CartItemType extends ObjectType
     {
         $config = [
             'name' => 'Cart item',
-            'fields' => function() use ($container) {
+            'fields' => function () use ($container) {
                 $fields = [
                     'cart_item_id' => [
                         'type' => Type::nonNull(Type::id())
@@ -79,7 +79,7 @@ class CartItemType extends ObjectType
                     ],
                     'productUrl' => [
                         'type' => Type::nonNull(Type::string()),
-                        'resolve' => function($item, $args, Container $container, ResolveInfo $info) {
+                        'resolve' => function ($item, $args, Container $container, ResolveInfo $info) {
                             $des = _mysql()->getTable('product_description')
                                 ->where('product_description_product_id', '=', $item['product_id'])
                                 ->fetchOneAssoc();
@@ -91,7 +91,7 @@ class CartItemType extends ObjectType
                     ],
                     'removeUrl' => [
                         'type' => Type::nonNull(Type::string()),
-                        'resolve' => function($item, $args, Container $container, ResolveInfo $info) {
+                        'resolve' => function ($item, $args, Container $container, ResolveInfo $info) {
                             return $container->get(Router::class)->generateUrl('cart.remove', ["id"=>$item['cart_item_id']]);                        }
                     ],
                     'error' => [
@@ -102,7 +102,7 @@ class CartItemType extends ObjectType
                                 'message'=> Type::string()
                             ]
                         ])),
-                        'resolve' => function($item, $args, Container $container, ResolveInfo $info) {
+                        'resolve' => function ($item, $args, Container $container, ResolveInfo $info) {
                             $errors = [];
                             if ($item['error'])
                                 foreach ($item['error'] as $key => $val)
@@ -116,7 +116,7 @@ class CartItemType extends ObjectType
 
                 return $fields;
             },
-            'resolveField' => function($value, $args, Container $container, ResolveInfo $info) {
+            'resolveField' => function ($value, $args, Container $container, ResolveInfo $info) {
                 return isset($value[$info->fieldName]) ? $value[$info->fieldName] : null;
             }
         ];

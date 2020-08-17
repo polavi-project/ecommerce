@@ -54,7 +54,7 @@ class AttributeMiddleware extends MiddlewareAbstract
 QUERY
 
             ])
-            ->then(function($result) use ($response) {
+            ->then(function ($result) use ($response) {
                 $props = ['attributeGroups' => []];
                 /**@var \GraphQL\Executor\ExecutionResult $result */
                 if (!$result->errors) {
@@ -89,7 +89,7 @@ QUERY
 QUERY
 
             ])
-            ->then(function($result) use ($response) {
+            ->then(function ($result) use ($response) {
                 /**@var \GraphQL\Executor\ExecutionResult $result */
                 //var_dump($result);
                 if (!$result->errors) {

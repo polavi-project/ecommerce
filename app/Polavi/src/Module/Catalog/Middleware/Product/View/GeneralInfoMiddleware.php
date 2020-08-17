@@ -46,7 +46,7 @@ class GeneralInfoMiddleware extends MiddlewareAbstract
                     }
                 }"
             ])
-            ->then(function($result) use ($response) {
+            ->then(function ($result) use ($response) {
                 /**@var \GraphQL\Executor\ExecutionResult $result */
                 if (isset($result->data['product_view_general_info']) and $result->data['product_view_general_info']) {
                     $response->addWidget(

@@ -35,11 +35,11 @@ class UpdateMiddleware extends MiddlewareAbstract
                 "variables" => $variables
             ]);
 
-        $promise->then(function($result) use ($request, $response) {
+        $promise->then(function ($result) use ($request, $response) {
             $response->addData('addressUpdate', $result->data['updateCustomerAddress']);
         });
 
-        $promise->otherwise(function($reason) use ($request, $response) {
+        $promise->otherwise(function ($reason) use ($request, $response) {
             // TODO: Support development mode and show real message
             $response->addData('addressUpdate', ['status'=> false, 'message'=> $reason[0]->message]);
         });

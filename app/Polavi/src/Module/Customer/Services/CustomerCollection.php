@@ -37,47 +37,47 @@ class CustomerCollection extends CollectionBuilder
     protected function defaultFilters()
     {
         $isAdmin = $this->container->get(Request::class)->isAdmin();
-        $this->addFilter('id', function($args) {
+        $this->addFilter('id', function ($args) {
             $this->collection->andWhere('customer.customer_id', $args['operator'], $args['value']);
         });
 
-        $this->addFilter('name', function($args) {
+        $this->addFilter('name', function ($args) {
             $this->collection->andWhere('customer.full_name', $args['operator'], $args['value']);
         });
 
-        $this->addFilter('email', function($args) {
+        $this->addFilter('email', function ($args) {
             $this->collection->andWhere('customer.email', $args['operator'], $args['value']);
         });
 
-        $this->addFilter('group', function($args) {
+        $this->addFilter('group', function ($args) {
             $this->collection->andWhere('customer.group_id', $args['operator'], $args['value']);
         });
 
-        $this->addFilter('status', function($args) use ($isAdmin) {
+        $this->addFilter('status', function ($args) use ($isAdmin) {
             if ($isAdmin == false)
                 return;
             $this->collection->andWhere('customer.status', $args['operator'], (int)$args['value']);
         });
 
-        $this->addFilter('page', function($args) use ($isAdmin) {
+        $this->addFilter('page', function ($args) use ($isAdmin) {
             if ($args['operator'] !== "=")
                 return;
             $this->setPage((int)$args['value']);
         });
 
-        $this->addFilter('limit', function($args) use ($isAdmin) {
+        $this->addFilter('limit', function ($args) use ($isAdmin) {
             if ($args['operator'] !== "=")
                 return;
             $this->setLimit((int)$args['value']);
         });
 
-        $this->addFilter('sortBy', function($args) use ($isAdmin) {
+        $this->addFilter('sortBy', function ($args) use ($isAdmin) {
             if ($args['operator'] !== "=")
                 return;
             $this->setSortBy($args['value']);
         });
 
-        $this->addFilter('sortOrder', function($args) use ($isAdmin) {
+        $this->addFilter('sortOrder', function ($args) use ($isAdmin) {
             if ($args['operator'] !== "=")
                 return;
             $this->setSortOrder($args['value']);

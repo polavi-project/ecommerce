@@ -32,7 +32,7 @@ class UpdateAccountMiddleware extends MiddlewareAbstract
                 "query" => $query,
                 "variables" => $variables
             ]);
-        $promise->then(function($result) use ($request, $response) {
+        $promise->then(function ($result) use ($request, $response) {
                 if ($result->errors)
                     throw new \Exception($result->errors[0]->message);
 
@@ -40,7 +40,7 @@ class UpdateAccountMiddleware extends MiddlewareAbstract
                     throw new \Exception($result->data['updateCustomer']['message']);
                 $response->addData('customerUpdate', ['status'=> true]);
                 $response->addState('customer', $result->data['updateCustomer']['customer'])->notNewPage();
-            })->otherwise(function($reason) use($request, $response) {
+            })->otherwise(function ($reason) use ($request, $response) {
                 $response->addData('customerUpdate', ['status'=> false, 'message'=> $reason[0]['message']]);
             });
 

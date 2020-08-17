@@ -30,48 +30,48 @@ class CouponCollection extends CollectionBuilder
 
     protected function defaultFilters()
     {
-        $this->addFilter('coupon', function($args) {
+        $this->addFilter('coupon', function ($args) {
             $this->collection->andWhere('coupon.coupon', $args['operator'], $args['value']);
         });
 
-        $this->addFilter('description', function($args) {
+        $this->addFilter('description', function ($args) {
             $this->collection->andWhere('coupon.description', $args['operator'], $args['value']);
         });
 
-        $this->addFilter('free_shipping', function($args) {
+        $this->addFilter('free_shipping', function ($args) {
             $this->collection->andWhere('coupon.free_shipping', $args['operator'], $args['value']);
         });
 
-        $this->addFilter('status', function($args) {
+        $this->addFilter('status', function ($args) {
             $this->collection->andWhere('coupon.status', $args['operator'], (int)$args['value']);
         });
 
-//        $this->addFilter('start_date', function($args) use ($isAdmin) {
+//        $this->addFilter('start_date', function ($args) use ($isAdmin) {
 //            $this->collection->andWhere('coupon.start_date', $args['operator'], (int)$args['value']);
 //        });
 //
-//        $this->addFilter('end_date', function($args) use ($isAdmin) {
+//        $this->addFilter('end_date', function ($args) use ($isAdmin) {
 //            $this->collection->andWhere('coupon.end_date', $args['operator'], (int)$args['value']);
 //        });
-        $this->addFilter('page', function($args) {
+        $this->addFilter('page', function ($args) {
             if ($args['operator'] !== "=")
                 return;
             $this->setPage((int)$args['value']);
         });
 
-        $this->addFilter('limit', function($args) {
+        $this->addFilter('limit', function ($args) {
             if ($args['operator'] !== "=")
                 return;
             $this->setLimit((int)$args['value']);
         });
 
-        $this->addFilter('sortBy', function($args) {
+        $this->addFilter('sortBy', function ($args) {
             if ($args['operator'] !== "=")
                 return;
             $this->setSortBy($args['value']);
         });
 
-        $this->addFilter('sortOrder', function($args) {
+        $this->addFilter('sortOrder', function ($args) {
             if ($args['operator'] !== "=")
                 return;
             $this->setSortOrder($args['value']);

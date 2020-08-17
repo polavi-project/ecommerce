@@ -24,7 +24,7 @@ class LoginMiddleware extends MiddlewareAbstract
         if (!$promise instanceof Promise)
             return $promise;
 
-        $promise->then(function($result) {
+        $promise->then(function ($result) {
             if (isset($result->data['createCustomer']['status']) and $result->data['createCustomer']['status'] == true) {
                 if (isset($result->data['createCustomer']['status']) and $result->data['createCustomer']['status'] == true)
                     $this->getContainer()->get(Request::class)->getCustomer()->forceLogin($result->data['createCustomer']['customer']['email']);

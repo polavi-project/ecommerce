@@ -36,7 +36,7 @@ class GeneralInfoMiddleware extends MiddlewareAbstract
                             text: name
                         }
                     }"
-            ])->then(function($result) use ($response) {
+            ])->then(function ($result) use ($response) {
                 /**@var \GraphQL\Executor\ExecutionResult $result */
                 if (isset($result->data['taxClasses'])) {
                     $response->addWidget(
@@ -68,7 +68,7 @@ class GeneralInfoMiddleware extends MiddlewareAbstract
                             status
                         }
                     }"
-                ])->then(function($result) use ($response) {
+                ])->then(function ($result) use ($response) {
                     /**@var \GraphQL\Executor\ExecutionResult $result */
                     if (isset($result->data['general_info'])) {
                         $response->addWidget(

@@ -48,7 +48,7 @@ class EditFormMiddleware extends MiddlewareAbstract
                     }
                 }")
             ])
-            ->then(function($result) use ($response, $request) {
+            ->then(function ($result) use ($response, $request) {
                 /**@var \GraphQL\Executor\ExecutionResult $result */
                 if (isset($result->data['attribute'])) {
                     $response->addWidget(

@@ -23,7 +23,7 @@ class AddShippingMethodMiddleware extends MiddlewareAbstract
         $promise = $this->getContainer()->get(Cart::class)
             ->setData('shipping_method', $request->request->get('method_code'));
 
-        $promise->then(function($value) use ($response) {
+        $promise->then(function ($value) use ($response) {
             $response->addData('success', 1);
             $response->notNewPage();
         }, function ($reason) use ($response) {

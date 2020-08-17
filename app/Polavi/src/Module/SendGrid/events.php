@@ -27,10 +27,10 @@ $eventDispatcher->addListener(
     0
 );
 
-$eventDispatcher->addListener('register.customer.register.post.middleware', function(\Polavi\Services\MiddlewareManager $mm) {
+$eventDispatcher->addListener('register.customer.register.post.middleware', function (\Polavi\Services\MiddlewareManager $mm) {
     $mm->registerMiddlewareAfter(\Polavi\Module\Customer\Middleware\Create\CreateAccountMiddleware::class, \Polavi\Module\SendGrid\Middleware\Customer\SendWelcomeEmailMiddleware::class);
 });
 
-$eventDispatcher->addListener('register.checkout.order.middleware', function(\Polavi\Services\MiddlewareManager $mm) {
+$eventDispatcher->addListener('register.checkout.order.middleware', function (\Polavi\Services\MiddlewareManager $mm) {
     $mm->registerMiddlewareAfter(\Polavi\Module\Checkout\Middleware\Checkout\Order\CreateOrderMiddleware::class, \Polavi\Module\SendGrid\Middleware\Order\SendConfirmationEmailMiddleware::class);
 });

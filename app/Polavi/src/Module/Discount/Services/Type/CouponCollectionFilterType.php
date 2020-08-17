@@ -20,7 +20,7 @@ class CouponCollectionFilterType extends InputObjectType
     {
         $config = [
             'name'=> 'CouponCollectionFilter',
-            'fields' => function() use($container) {
+            'fields' => function () use ($container) {
                 $fields = [
                     'id' => $container->get(FilterFieldType::class),
                     'coupon' => $container->get(FilterFieldType::class),

@@ -3,7 +3,7 @@
 $version = "1.0.0";
 
 return [
-    "1.0.0" => function(\Polavi\Services\Db\Processor $processor) {
+    "1.0.0" => function (\Polavi\Services\Db\Processor $processor) {
         $processor->executeQuery("CREATE TABLE `newsletter_subscriber` (
               `newsletter_subscriber_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
               `customer_id` int(10) unsigned DEFAULT NULL,

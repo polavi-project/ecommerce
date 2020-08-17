@@ -51,7 +51,7 @@ class CustomerInfoMiddleware extends MiddlewareAbstract
                     }
                 }"
             ])
-            ->then(function($result) use ($request, $response) {
+            ->then(function ($result) use ($request, $response) {
                 /**@var \GraphQL\Executor\ExecutionResult $result */
                 if (isset($result->data['customer'])) {
                     $response->addWidget(

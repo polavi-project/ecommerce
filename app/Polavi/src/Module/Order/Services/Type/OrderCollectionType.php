@@ -20,7 +20,7 @@ class OrderCollectionType extends ObjectType
     {
         $config = [
             'name' => 'OrderCollection',
-            'fields' => function() use ($container){
+            'fields' => function () use ($container){
                 $fields = [
                     'orders' => [
                         'type' => Type::listOf($container->get(OrderType::class))
@@ -35,7 +35,7 @@ class OrderCollectionType extends ObjectType
 
                 return $fields;
             },
-            'resolveField' => function($value, $args, Container $container, ResolveInfo $info) {
+            'resolveField' => function ($value, $args, Container $container, ResolveInfo $info) {
                 return isset($value[$info->fieldName]) ? $value[$info->fieldName] : null;
             }
         ];

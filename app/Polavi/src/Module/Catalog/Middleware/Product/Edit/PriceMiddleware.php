@@ -60,7 +60,7 @@ QUERY;
             ->waitToExecute([
                 "query"=> $query
             ])
-            ->then(function($result) use ($response) {
+            ->then(function ($result) use ($response) {
                 $tierPrice = [];
                 $customerGroups = [['value'=> '999', 'text'=> 'All']];
                 /**@var \GraphQL\Executor\ExecutionResult $result */

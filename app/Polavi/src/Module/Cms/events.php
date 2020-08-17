@@ -28,7 +28,7 @@ $eventDispatcher->addListener(
                     'args' => [
                         'id' => Type::nonNull(Type::id())
                     ],
-                    'resolve' => function($value, $args, \Polavi\Services\Di\Container $container, ResolveInfo $info) {
+                    'resolve' => function ($value, $args, \Polavi\Services\Di\Container $container, ResolveInfo $info) {
                         $cmsWidgetTable = $container->get(\Polavi\Services\Db\Processor::class)
                             ->getTable('cms_page')
                             ->where('cms_page_id', '=', $args['id']);
@@ -47,7 +47,7 @@ $eventDispatcher->addListener(
                     'args' => [
                         'filters' =>  Type::listOf(\Polavi\the_container()->get(FilterFieldType::class))
                     ],
-                    'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
+                    'resolve' => function ($rootValue, $args, Container $container, ResolveInfo $info) {
                         if ($container->get(\Polavi\Services\Http\Request::class)->isAdmin() == false)
                             return [];
                         $collection = new \Polavi\Module\Cms\Services\PageCollection($container);
@@ -64,7 +64,7 @@ $eventDispatcher->addListener(
                     'args' => [
                         'id' => Type::nonNull(Type::id())
                     ],
-                    'resolve' => function($value, $args, \Polavi\Services\Di\Container $container, ResolveInfo $info) {
+                    'resolve' => function ($value, $args, \Polavi\Services\Di\Container $container, ResolveInfo $info) {
                         $cmsWidgetTable = _mysql()
                             ->getTable('cms_widget')
                             ->where('cms_widget_id', '=', $args['id']);
@@ -83,7 +83,7 @@ $eventDispatcher->addListener(
                     'args' => [
                         'filters' =>  Type::listOf(\Polavi\the_container()->get(FilterFieldType::class))
                     ],
-                    'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
+                    'resolve' => function ($rootValue, $args, Container $container, ResolveInfo $info) {
                         $collection = new \Polavi\Module\Cms\Services\WidgetCollection($container);
                         return $collection->getData($rootValue, $args, $container, $info);
                     }
@@ -105,7 +105,7 @@ $eventDispatcher->addListener(
                     'args' => [
                         'root' =>  Type::string()
                     ],
-                    'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
+                    'resolve' => function ($rootValue, $args, Container $container, ResolveInfo $info) {
                         try {
                             $fileSystem = new \Symfony\Component\Filesystem\Filesystem();
                             $uploadPath = MEDIA_PATH . DS . "upload";
@@ -168,7 +168,7 @@ $eventDispatcher->addListener(
                     ]))
                 ]
             ]),
-            'resolve'=> function($value, $args, Container $container, ResolveInfo $info) {
+            'resolve'=> function ($value, $args, Container $container, ResolveInfo $info) {
                 $allowType = ["image/jpeg", "image/png", "image/gif"];
                 $request = $container->get(\Polavi\Services\Http\Request::class);
                 /**@var \Symfony\Component\HttpFoundation\File\UploadedFile[] $files */
@@ -233,7 +233,7 @@ $eventDispatcher->addListener(
                     'path' => Type::string()
                 ]
             ]),
-            'resolve'=> function($value, $args, Container $container, ResolveInfo $info) {
+            'resolve'=> function ($value, $args, Container $container, ResolveInfo $info) {
                 $targetPath = MEDIA_PATH . DS . "upload" . DS . $args['path'];
                 $fileSystem = new \Symfony\Component\Filesystem\Filesystem();
                 if ($fileSystem->exists($targetPath))
@@ -268,7 +268,7 @@ $eventDispatcher->addListener(
                     'message'=> Type::string()
                 ]
             ]),
-            'resolve'=> function($value, $args, Container $container, ResolveInfo $info) {
+            'resolve'=> function ($value, $args, Container $container, ResolveInfo $info) {
                 $targetPath = MEDIA_PATH . DS . "upload" . DS . $args['path'];
                 $fileSystem = new \Symfony\Component\Filesystem\Filesystem();
                 if (!$fileSystem->exists($targetPath))
@@ -309,7 +309,7 @@ $eventDispatcher->addListener(
                     'page' => $container->get(\Polavi\Module\Cms\Services\Type\CmsPageType::class)
                 ]
             ]),
-            'resolve'=> function($value, $args, Container $container, ResolveInfo $info) {
+            'resolve'=> function ($value, $args, Container $container, ResolveInfo $info) {
             //var_dump($args);
                 $conn = _mysql();
                 $data = $args['page'];
@@ -357,7 +357,7 @@ $eventDispatcher->addListener(
                     'widget' => $container->get(\Polavi\Module\Cms\Services\Type\WidgetType::class)
                 ]
             ]),
-            'resolve'=> function($value, $args, Container $container, ResolveInfo $info) {
+            'resolve'=> function ($value, $args, Container $container, ResolveInfo $info) {
                 //var_dump($args);
                 $conn = _mysql();
                 $data = $args['widget'];
@@ -433,21 +433,21 @@ $eventDispatcher->addListener(
     0
 );
 
-$eventDispatcher->addListener('register.widget.create.middleware', function(\Polavi\Services\MiddlewareManager $mm) {
+$eventDispatcher->addListener('register.widget.create.middleware', function (\Polavi\Services\MiddlewareManager $mm) {
     $mm->registerMiddleware(\Polavi\Module\Cms\Middleware\TextWidget\FormMiddleware::class, 0);
     $mm->registerMiddleware(\Polavi\Module\Cms\Middleware\MenuWidget\FormMiddleware::class, 0);
     $mm->registerMiddleware(\Polavi\Module\Cms\Middleware\AreaWidget\FormMiddleware::class, 0);
     $mm->registerMiddleware(\Polavi\Module\Cms\Middleware\BreadcrumbsWidget\FormMiddleware::class, 0);
 });
 
-$eventDispatcher->addListener('register.widget.edit.middleware', function(\Polavi\Services\MiddlewareManager $mm) {
+$eventDispatcher->addListener('register.widget.edit.middleware', function (\Polavi\Services\MiddlewareManager $mm) {
     $mm->registerMiddleware(\Polavi\Module\Cms\Middleware\TextWidget\FormMiddleware::class, 0);
     $mm->registerMiddleware(\Polavi\Module\Cms\Middleware\MenuWidget\FormMiddleware::class, 0);
     $mm->registerMiddleware(\Polavi\Module\Cms\Middleware\AreaWidget\FormMiddleware::class, 0);
     $mm->registerMiddleware(\Polavi\Module\Cms\Middleware\BreadcrumbsWidget\FormMiddleware::class, 0);
 });
 
-$eventDispatcher->addListener('register.admin.graphql.api.middleware', function(\Polavi\Services\MiddlewareManager $mm) {
+$eventDispatcher->addListener('register.admin.graphql.api.middleware', function (\Polavi\Services\MiddlewareManager $mm) {
     $mm->registerMiddleware(\Polavi\Module\Cms\Middleware\Widget\BeforeSaveMiddleware::class, 0);
 });
 
@@ -471,7 +471,7 @@ $eventDispatcher->addListener(
     5
 );
 
-$eventDispatcher->addListener('breadcrumbs_items', function(array $items) {
+$eventDispatcher->addListener('breadcrumbs_items', function (array $items) {
     $container = \Polavi\the_container();
     if (in_array($container->get(Request::class)->get("_matched_route"), ["page.view", "page.view.pretty"])) {
         $page = MiddlewareManager::getDelegate(\Polavi\Module\Cms\Middleware\Page\View\ViewMiddleware::class, null);

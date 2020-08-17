@@ -30,12 +30,12 @@ class AddShippingAddressMiddleware extends MiddlewareAbstract
                 "variables" => $request->get('variables', [])
             ]);
 
-        $promise->then(function($result) use ($request, $response) {
+        $promise->then(function ($result) use ($request, $response) {
             $response->addData('add_checkout_shipping_address', $result->data['addShippingAddress'])
                     ->notNewPage();
         });
 
-        $promise->otherwise(function($reason) use ($request, $response) {
+        $promise->otherwise(function ($reason) use ($request, $response) {
             // TODO: Support development mode and show real message
             $response->addData('add_checkout_shipping_address', ['status'=> false, 'message'=> $reason[0]->message])
                     ->notNewPage();

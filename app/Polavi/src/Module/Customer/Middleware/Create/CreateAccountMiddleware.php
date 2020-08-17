@@ -37,11 +37,11 @@ class CreateAccountMiddleware extends MiddlewareAbstract
                 "variables" => $variables
             ]);
 
-        $promise->then(function($result) use ($request, $response) {
+        $promise->then(function ($result) use ($request, $response) {
             $response->addData('customerCreation', $result->data['createCustomer']);
         });
 
-        $promise->otherwise(function($reason) use ($request, $response) {
+        $promise->otherwise(function ($reason) use ($request, $response) {
             $response->addData('customerCreation', ['status'=> false, 'message'=> "Internal server error"]);
         });
 

@@ -20,7 +20,7 @@ class AttributeGroupCollectionType extends ObjectType
     {
         $config = [
             'name' => 'AttributeGroupCollection',
-            'fields' => function() use ($container){
+            'fields' => function () use ($container){
                 $fields = [
                     'groups' => [
                         'type' => Type::listOf($container->get(AttributeGroupType::class))
@@ -35,7 +35,7 @@ class AttributeGroupCollectionType extends ObjectType
 
                 return $fields;
             },
-            'resolveField' => function($value, $args, Container $container, ResolveInfo $info) {
+            'resolveField' => function ($value, $args, Container $container, ResolveInfo $info) {
                 return isset($value[$info->fieldName]) ? $value[$info->fieldName] : null;
             }
         ];
