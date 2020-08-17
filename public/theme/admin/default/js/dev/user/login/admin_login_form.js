@@ -17,12 +17,14 @@ export default function AdminLoginForm(props) {
                     name="email"
                     formId="admin_login_form"
                     label="Email"
+                    value={"demo@polavi.com"}
                     validation_rules={['email']}
                 />
                 <Password
                     name="password"
                     formId="admin_login_form"
                     label="Password"
+                    value={"demo"}
                     validation_rules={['notEmpty']}
                 />
             </Form>
