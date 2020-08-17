@@ -20,7 +20,7 @@ class WidgetCollectionType extends ObjectType
     {
         $config = [
             'name' => 'widgetCollection',
-            'fields' => function() use ($container){
+            'fields' => function () use ($container){
                 $fields = [
                     'widgets' => [
                         'type' => Type::listOf($container->get(WidgetType::class))
@@ -35,7 +35,7 @@ class WidgetCollectionType extends ObjectType
 
                 return $fields;
             },
-            'resolveField' => function($value, $args, Container $container, ResolveInfo $info) {
+            'resolveField' => function ($value, $args, Container $container, ResolveInfo $info) {
                 return isset($value[$info->fieldName]) ? $value[$info->fieldName] : null;
             }
         ];

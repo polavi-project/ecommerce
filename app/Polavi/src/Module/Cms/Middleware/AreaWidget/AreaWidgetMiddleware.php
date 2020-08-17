@@ -27,12 +27,12 @@ class AreaWidgetMiddleware extends MiddlewareAbstract
             ->get(GraphqlExecutor::class)
             ->waitToExecute([
                 "query"=>"{areaWidgets : widgetCollection (filters : [{key: \"type\" operator : \"=\" value: \"area\"}]) {widgets { cms_widget_id name setting {key value} displaySetting {key value} sort_order }}}"
-            ])->then(function($result) use ($request, $response) {
+            ])->then(function ($result) use ($request, $response) {
                 /**@var \GraphQL\Executor\ExecutionResult $result */
                 if (isset($result->data['areaWidgets'])) {
                     $matchedRoute = $request->attributes->get('_matched_route');
-                    $widgets = array_filter($result->data['areaWidgets']['widgets'], function($v) use($matchedRoute) {
-                        $layouts = array_find($v['displaySetting'], function($value, $key) {
+                    $widgets = array_filter($result->data['areaWidgets']['widgets'], function ($v) use ($matchedRoute) {
+                        $layouts = array_find($v['displaySetting'], function ($value, $key) {
                             if ($value['key'] == 'layout')
                                 return json_decode($value['value'], true);
                             return null;
@@ -48,25 +48,25 @@ class AreaWidgetMiddleware extends MiddlewareAbstract
                         return $match;
                     }, ARRAY_FILTER_USE_BOTH);
                     foreach ($widgets as $widget) {
-                        $areaId = array_find($widget['setting'], function($value, $key) {
+                        $areaId = array_find($widget['setting'], function ($value, $key) {
                             if ($value['key'] == 'id')
                                 return $value['value'];
                             return null;
                         });
 
-                        $template = array_find($widget['setting'], function($value, $key) {
+                        $template = array_find($widget['setting'], function ($value, $key) {
                             if ($value['key'] == 'template')
                                 return $value['value'];
                             return null;
                         });
 
-                        $containerClass = array_find($widget['setting'], function($value, $key) {
+                        $containerClass = array_find($widget['setting'], function ($value, $key) {
                             if ($value['key'] == 'container_class')
                                 return $value['value'];
                             return null;
                         });
 
-                        $columns = array_find($widget['setting'], function($value, $key) {
+                        $columns = array_find($widget['setting'], function ($value, $key) {
                             if ($value['key'] == 'columns') {
                                 try {
                                     $columns = json_decode($value['value'], true);

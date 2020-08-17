@@ -35,37 +35,37 @@ class WidgetCollection extends CollectionBuilder
 
     protected function defaultFilters()
     {
-        $this->addFilter('type', function($args) {
+        $this->addFilter('type', function ($args) {
             $this->collection->andWhere('cms_widget.type', $args['operator'], $args['value']);
         });
 
-        $this->addFilter('name', function($args) {
+        $this->addFilter('name', function ($args) {
             $this->collection->andWhere('cms_widget.name', $args['operator'], $args['value']);
         });
 
-        $this->addFilter('status', function($args) {
+        $this->addFilter('status', function ($args) {
             $this->collection->andWhere('cms_widget.status', $args['operator'], $args['value']);
         });
 
-        $this->addFilter('page', function($args) {
+        $this->addFilter('page', function ($args) {
             if ($args['operator'] !== "=")
                 return;
             $this->setPage((int)$args['value']);
         });
 
-        $this->addFilter('limit', function($args) {
+        $this->addFilter('limit', function ($args) {
             if ($args['operator'] !== "=")
                 return;
             $this->setLimit((int)$args['value']);
         });
 
-        $this->addFilter('sortBy', function($args) {
+        $this->addFilter('sortBy', function ($args) {
             if ($args['operator'] !== "=")
                 return;
             $this->setSortBy($args['value']);
         });
 
-        $this->addFilter('sortOrder', function($args) {
+        $this->addFilter('sortOrder', function ($args) {
             if ($args['operator'] !== "=")
                 return;
             $this->setSortOrder($args['value']);

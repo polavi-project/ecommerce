@@ -66,22 +66,22 @@ class Cart
     {
         $fields = [
             'cart_id' => [
-                'resolver' => function(Cart $cart) {
+                'resolver' => function (Cart $cart) {
                     return $this->dataSource['cart_id'] ?? null;
                 }
             ],
             'currency' => [
-                'resolver' => function(Cart $cart) {
+                'resolver' => function (Cart $cart) {
                     return get_config('general_currency', 'USD');
                 }
             ],
             'customer_id' => [
-                'resolver' => function(Cart $cart) {
+                'resolver' => function (Cart $cart) {
                     return $cart->request->getCustomer()->getData('customer_id');
                 }
             ],
             'customer_group_id' => [
-                'resolver' => function(Cart $cart) {
+                'resolver' => function (Cart $cart) {
                     if ($cart->request->getCustomer()->isLoggedIn())
                         return $cart->request->getCustomer()->getData('group_id') ?? 1;
                     else
@@ -90,7 +90,7 @@ class Cart
                 'dependencies' => ['customer_id']
             ],
             'customer_email' => [
-                'resolver' => function(Cart $cart) {
+                'resolver' => function (Cart $cart) {
                     if ($cart->request->getCustomer()->isLoggedIn())
                         $email = $cart->request->getCustomer()->getData('email');
                     else
@@ -103,7 +103,7 @@ class Cart
                 'dependencies' => ['customer_id']
             ],
             'customer_full_name' => [
-                'resolver' => function(Cart $cart) {
+                'resolver' => function (Cart $cart) {
                     if ($cart->getData("customer_id"))
                         $name = $cart->request->getCustomer()->getData('full_name');
                     else
@@ -116,22 +116,22 @@ class Cart
                 'dependencies' => ['customer_id']
             ],
             'user_ip' => [
-                'resolver' => function(Cart $cart) {
+                'resolver' => function (Cart $cart) {
                     return $cart->request->getClientIp();
                 }
             ],
             'user_agent' => [
-                'resolver' => function(Cart $cart) {
+                'resolver' => function (Cart $cart) {
                     return $cart->request->headers->get('user-agent');
                 }
             ],
             'status' => [
-                'resolver' => function(Cart $cart) {
+                'resolver' => function (Cart $cart) {
                     return  $this->dataSource['status'] ?? $cart->getData('status') ?? 1;
                 }
             ],
             'total_qty' => [
-                'resolver' => function(Cart $cart) {
+                'resolver' => function (Cart $cart) {
                     $count = 0;
                     foreach ($cart->getItems() as $item)
                         $count = $count + (int)$item->getData('qty');
@@ -141,7 +141,7 @@ class Cart
                 'dependencies' => ['items']
             ],
             'total_weight' => [
-                'resolver' => function(Cart $cart) {
+                'resolver' => function (Cart $cart) {
                     $weight = 0;
                     foreach ($cart->getItems() as $item)
                         $weight += $item->getData('product_weight') * $item->getData('qty');
@@ -151,13 +151,13 @@ class Cart
                 'dependencies' => ['items']
             ],
             'shipping_fee_excl_tax' => [
-                'resolver' => function(Cart $cart) {
+                'resolver' => function (Cart $cart) {
                     return (float)create_mutable_var('shipping_fee_excl_tax', null, [$this]);
                 },
                 'dependencies' => ['shipping_method', 'total_weight']
             ],
             'sub_total' => [
-                'resolver' => function(Cart $cart) {
+                'resolver' => function (Cart $cart) {
                     $total = 0;
                     foreach ($cart->getItems() as $item)
                         $total += $item->getData('final_price') * $item->getData('qty');
@@ -167,13 +167,13 @@ class Cart
                 'dependencies' => ['items']
             ],
             'grand_total' => [
-                'resolver' => function(Cart $cart) {
+                'resolver' => function (Cart $cart) {
                     return $cart->getData('sub_total') + $cart->getData('shipping_fee_excl_tax');
                 },
                 'dependencies' => ['sub_total', 'payment_method']
             ],
             'shipping_address_id' => [
-                'resolver' => function(Cart $cart) {
+                'resolver' => function (Cart $cart) {
                     $id = $this->dataSource['shipping_address_id'] ?? null;
                     $conn = _mysql();
                     if (!$id || !$conn->getTable('cart_address')->load($id))
@@ -183,7 +183,7 @@ class Cart
                 }
             ],
             'shipping_method' => [
-                'resolver' => function(Cart $cart) {
+                'resolver' => function (Cart $cart) {
                     $method = create_mutable_var("shipping_method", null, [$this]);
                     if (!$method)
                         $this->error = "Shipping method can not be empty";
@@ -193,17 +193,17 @@ class Cart
                 'dependencies' => ['sub_total', 'shipping_address_id']
             ],
             'shipping_method_name' => [
-                'resolver' => function(Cart $cart) {
+                'resolver' => function (Cart $cart) {
                     return $this->dataSource['shipping_method_name'] ?? $this->dataSource['shipping_method_name'] ?? null;
                 }
             ],
             'shipping_note' => [
-                'resolver' => function(Cart $cart) {
+                'resolver' => function (Cart $cart) {
                     return $this->dataSource['shipping_note'] ?? $this->dataSource['shipping_note'] ?? null;
                 }
             ],
             'billing_address_id' => [
-                'resolver' => function(Cart $cart) {
+                'resolver' => function (Cart $cart) {
                     $id = $this->dataSource['billing_address_id'] ?? null;
                     $conn = _mysql();
                     if (!$id || !$conn->getTable('cart_address')->load($id))
@@ -212,7 +212,7 @@ class Cart
                 }
             ],
             'payment_method' => [
-                'resolver' => function(Cart $cart) {
+                'resolver' => function (Cart $cart) {
                     $method = create_mutable_var("payment_method", null, [$this]);
                     if (!$method)
                         $this->error = "Payment method can not be empty";
@@ -222,12 +222,12 @@ class Cart
                 'dependencies' => ['sub_total']
             ],
             'payment_method_name' => [
-                'resolver' => function(Cart $cart) {
+                'resolver' => function (Cart $cart) {
                     return $this->dataSource['payment_method_name'] ?? $this->dataSource['payment_method_name'] ?? null;
                 }
             ],
             'items' => [
-                'resolver' => function(Cart $cart) {
+                'resolver' => function (Cart $cart) {
                     $items = [];
                     if (isset($this->dataSource['items'])) {
                         foreach ($this->dataSource['items'] as $item) {
@@ -357,7 +357,7 @@ class Cart
 
         if (isset($this->fields[$key]) and !empty($this->fields[$key]['dependencies'])) {
             $this->dataSource[$key] = $value;
-            $promise = new \GuzzleHttp\Promise\Promise(function() use (&$promise, $key, $value) {
+            $promise = new \GuzzleHttp\Promise\Promise(function () use (&$promise, $key, $value) {
                 if ($this->getData($key) == $value) {
                     $promise->resolve($value);
                 } else
@@ -530,7 +530,7 @@ class Cart
             return new FulfilledPromise($this->isOrdered);
         }
 
-        $promise = new \GuzzleHttp\Promise\Promise(function() use (&$promise) {
+        $promise = new \GuzzleHttp\Promise\Promise(function () use (&$promise) {
             $orderId = $this->createOrderSync();
             $promise->resolve($orderId);
         });

@@ -23,7 +23,7 @@ class AttributeType extends ObjectType
     {
         $config = [
             'name' => 'ProductAttribute',
-            'fields' => function() use ($container) {
+            'fields' => function () use ($container) {
                 $fields = [
                     'attribute_id' => [
                         'type' => Type::nonNull(Type::id())
@@ -52,7 +52,7 @@ class AttributeType extends ObjectType
                     'options' => [
                         'type'=> Type::listOf($container->get(AttributeOptionType::class)),
                         'description' => 'List option value for dropdown attribute',
-                        'resolve' => function($attribute, $args, Container $container, ResolveInfo $info) {
+                        'resolve' => function ($attribute, $args, Container $container, ResolveInfo $info) {
                             if (!in_array($attribute['type'], ['select', 'multiselect']))
                                 return [];
                             return $container->get(Processor::class)
@@ -63,14 +63,14 @@ class AttributeType extends ObjectType
                     ],
                     'editUrl' => [
                         'type' => Type::string(),
-                        'resolve' => function($attribute, $args, Container $container, ResolveInfo $info) {
+                        'resolve' => function ($attribute, $args, Container $container, ResolveInfo $info) {
                             if ($container->get(Request::class)->isAdmin() == false)
                                 return null;
                             return $container->get(Router::class)->generateUrl('attribute.edit', ["id"=>$attribute['attribute_id']]);                        }
                     ],
                     'deleteUrl' => [
                         'type' => Type::string(),
-                        'resolve' => function($attribute, $args, Container $container, ResolveInfo $info) {
+                        'resolve' => function ($attribute, $args, Container $container, ResolveInfo $info) {
                             if ($container->get(Request::class)->isAdmin() == false)
                                 return null;
                             return $container->get(Router::class)->generateUrl('attribute.delete', ["id"=>$attribute['attribute_id']]);                        }
@@ -80,7 +80,7 @@ class AttributeType extends ObjectType
                 dispatch_event('filter.attribute.type', [&$fields]);
                 return $fields;
             },
-            'resolveField' => function($value, $args, Container $container, ResolveInfo $info) {
+            'resolveField' => function ($value, $args, Container $container, ResolveInfo $info) {
                 return isset($value[$info->fieldName]) ? $value[$info->fieldName] : null;
             }
         ];

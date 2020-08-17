@@ -27,7 +27,7 @@ class CustomerAccountMiddleware extends MiddlewareAbstract
             20,
             get_js_file_url("production/marketing/newsletter/account/newsletter.js", false),
             [
-                "status" => (function() use ($request) {
+                "status" => (function () use ($request) {
                     $n = _mysql()->getTable("newsletter_subscriber")
                         ->where("email", "=", $request->getCustomer()->getData("email"))
                         ->andWhere("customer_id", "=", $request->getCustomer()->getData("customer_id"))

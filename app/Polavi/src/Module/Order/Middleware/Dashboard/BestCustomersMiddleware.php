@@ -33,7 +33,7 @@ class BestCustomersMiddleware extends MiddlewareAbstract
         LIMIT 0, 10
         ")->fetchAll(\PDO::FETCH_ASSOC);
 
-        array_walk($customers, function(&$c) {
+        array_walk($customers, function (&$c) {
             $c["editUrl"] = generate_url("customer.edit", ["id"=> $c['customer_id']]);
         });
 

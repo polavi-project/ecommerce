@@ -5,7 +5,7 @@ $description = "This is CMS module. Polavi core";
 $author = "Polavi team";
 
 return [
-    "1.0.0" => function(\Polavi\Services\Db\Processor $conn) {
+    "1.0.0" => function (\Polavi\Services\Db\Processor $conn) {
         $pageTable = $conn->executeQuery("SELECT TABLE_NAME FROM information_schema.tables WHERE table_schema = :dbName AND TABLE_NAME = \"cms_page\" LIMIT 0,1", ['dbName'=> $conn->getConfiguration()->getDb()])->fetch(\PDO::FETCH_ASSOC);
         if ($pageTable !== false)
             return;
@@ -49,7 +49,7 @@ return [
               PRIMARY KEY (`cms_widget_id`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT 'Cms widget'");
     },
-    "1.0.1" => function(\Polavi\Services\Db\Processor $processor) {
+    "1.0.1" => function (\Polavi\Services\Db\Processor $processor) {
         // Let's leave multi language later
         $processor->executeQuery("SET FOREIGN_KEY_CHECKS=0");
 

@@ -38,7 +38,7 @@ class Calculator
 
     protected function defaultDiscountCalculator()
     {
-        $this->addDiscountCalculator('percentage_discount_to_entire_order', function(array $coupon, Cart $cart) {
+        $this->addDiscountCalculator('percentage_discount_to_entire_order', function (array $coupon, Cart $cart) {
             if ($coupon['discount_type'] != "percentage_discount_to_entire_order")
                 return false;
 
@@ -74,7 +74,7 @@ class Calculator
             return true;
         });
 
-        $this->addDiscountCalculator('fixed_discount_to_entire_order', function(array $coupon, Cart $cart) {
+        $this->addDiscountCalculator('fixed_discount_to_entire_order', function (array $coupon, Cart $cart) {
             if ($coupon['discount_type'] != "fixed_discount_to_entire_order")
                 return false;
 
@@ -109,7 +109,7 @@ class Calculator
             return true;
         });
 
-        $this->addDiscountCalculator('discount_to_specific_products', function(array $coupon, Cart $cart) {
+        $this->addDiscountCalculator('discount_to_specific_products', function (array $coupon, Cart $cart) {
             if (!in_array($coupon['discount_type'], ["fixed_discount_to_specific_products", "percentage_discount_to_specific_products"]))
                 return true;
 
@@ -148,7 +148,7 @@ class Calculator
             return true;
         });
 
-        $this->addDiscountCalculator('buy_x_get_y', function(array $coupon, Cart $cart) {
+        $this->addDiscountCalculator('buy_x_get_y', function (array $coupon, Cart $cart) {
             if ($coupon['discount_type'] != "buy_x_get_y")
                 return true;
 

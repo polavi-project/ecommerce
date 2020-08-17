@@ -20,7 +20,7 @@ class CustomerInputType extends InputObjectType
     {
         $config = [
             'name'=> 'CustomerInput',
-            'fields' => function() use($container) {
+            'fields' => function () use ($container) {
                 $fields = [
                     'customer_id' => Type::int(),
                     'full_name' => Type::nonNull(Type::string()),

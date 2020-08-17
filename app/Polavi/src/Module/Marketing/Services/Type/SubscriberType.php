@@ -23,7 +23,7 @@ class SubscriberType extends ObjectType
     {
         $config = [
             'name' => 'Subscriber',
-            'fields' => function() use ($container) {
+            'fields' => function () use ($container) {
                 $fields = [
                     'newsletter_subscriber_id' => [
                         'type' => Type::nonNull(Type::id())
@@ -42,7 +42,7 @@ class SubscriberType extends ObjectType
                     ],
                     'customerEditUrl' => [
                         'type' => Type::string(),
-                        'resolve' => function($subscriber, $args, Container $container, ResolveInfo $info) {
+                        'resolve' => function ($subscriber, $args, Container $container, ResolveInfo $info) {
                             if ($container->get(Request::class)->isAdmin() == false || !$subscriber["customer_id"])
                                 return null;
                             return $container->get(Router::class)->generateUrl('customer.edit', ["id"=>$subscriber['customer_id']]);
@@ -50,7 +50,7 @@ class SubscriberType extends ObjectType
                     ],
                     'subscribeUrl' => [
                         'type' => Type::string(),
-                        'resolve' => function($subscriber, $args, Container $container, ResolveInfo $info) {
+                        'resolve' => function ($subscriber, $args, Container $container, ResolveInfo $info) {
                             if ($container->get(Request::class)->isAdmin() == false)
                                 return null;
                             return $container->get(Router::class)->generateUrl('newsletter.subscribe');
@@ -58,7 +58,7 @@ class SubscriberType extends ObjectType
                     ],
                     'unsubscribeUrl' => [
                         'type' => Type::string(),
-                        'resolve' => function($subscriber, $args, Container $container, ResolveInfo $info) {
+                        'resolve' => function ($subscriber, $args, Container $container, ResolveInfo $info) {
                             if ($container->get(Request::class)->isAdmin() == false)
                                 return null;
                             return $container->get(Router::class)->generateUrl('admin.newsletter.unsubscribe');
@@ -70,7 +70,7 @@ class SubscriberType extends ObjectType
 
                 return $fields;
             },
-            'resolveField' => function($value, $args, Container $container, ResolveInfo $info) {
+            'resolveField' => function ($value, $args, Container $container, ResolveInfo $info) {
                 return isset($value[$info->fieldName]) ? $value[$info->fieldName] : null;
             }
         ];

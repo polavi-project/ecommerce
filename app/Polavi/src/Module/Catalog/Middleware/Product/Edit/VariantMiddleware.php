@@ -56,7 +56,7 @@ class VariantMiddleware extends MiddlewareAbstract
                             editUrl
                         }
                     }}"
-                ])->then(function($result) use (&$fields, $response) {
+                ])->then(function ($result) use (&$fields, $response) {
                     /**@var \GraphQL\Executor\ExecutionResult $result */
                     if (isset($result->data['variants']) and $result->data['variants']) {
                         $conn = _mysql();
@@ -78,7 +78,7 @@ class VariantMiddleware extends MiddlewareAbstract
                                     "id" => "product_edit_variant",
                                     "variant_group_id" => $group["variant_group_id"],
                                     "attributes" => array_map(function ($a) { return $a["attribute_id"];}, $attributes),
-                                    "variants" => array_map(function($v) use($result) {
+                                    "variants" => array_map(function ($v) use ($result) {
                                         if ($v["sku"] == $result->data["variants"]["sku"])
                                             $v["current"] = true;
 
@@ -108,7 +108,7 @@ class VariantMiddleware extends MiddlewareAbstract
                             ]
                         );
                     }
-                }, function($reason) { var_dump($reason);});
+                }, function ($reason) { var_dump($reason);});
 
         } else
             $response->addWidget(

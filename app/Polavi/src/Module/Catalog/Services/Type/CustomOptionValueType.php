@@ -21,7 +21,7 @@ class CustomOptionValueType extends ObjectType
     {
         $config = [
             'name' => 'Product custom option value',
-            'fields' => function() use ($container) {
+            'fields' => function () use ($container) {
                 $fields = [
                     'product_custom_option_value_id' => [
                         'type' => Type::nonNull(Type::id())
@@ -44,7 +44,7 @@ class CustomOptionValueType extends ObjectType
 
                 return $fields;
             },
-            'resolveField' => function($value, $args, Container $container, ResolveInfo $info) {
+            'resolveField' => function ($value, $args, Container $container, ResolveInfo $info) {
                 return isset($value[$info->fieldName]) ? $value[$info->fieldName] : null;
             }
         ];

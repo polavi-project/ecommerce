@@ -71,7 +71,7 @@ $eventDispatcher->addListener(
             'args' => [
                 'id' => Type::nonNull(Type::id())
             ],
-            'resolve' => function($value, $args, Container $container, ResolveInfo $info) {
+            'resolve' => function ($value, $args, Container $container, ResolveInfo $info) {
                 if ($container->get(Request::class)->isAdmin() == false)
                     return false;
 
@@ -87,7 +87,7 @@ $eventDispatcher->addListener(
                     'type' => $container->get(CouponCollectionFilterType::class)
                 ]
             ],
-            'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
+            'resolve' => function ($rootValue, $args, Container $container, ResolveInfo $info) {
                 if ($container->get(Request::class)->isAdmin() == false)
                     return [];
                 else
@@ -98,10 +98,10 @@ $eventDispatcher->addListener(
     5
 );
 
-$eventDispatcher->addListener("register_cart_field", function(&$fields) {
+$eventDispatcher->addListener("register_cart_field", function (&$fields) {
     // Register discount to cart
     $fields["coupon"] = [
-        "resolver" => function(Cart $cart) {
+        "resolver" => function (Cart $cart) {
             $coupon = $cart->getDataSource()['coupon'] ?? $cart->getData("coupon") ?? null;
             return \Polavi\the_container()->get(\Polavi\Module\Discount\Services\CouponHelper::class)->applyCoupon($coupon, $cart);
         },
@@ -109,7 +109,7 @@ $eventDispatcher->addListener("register_cart_field", function(&$fields) {
     ];
 
     $fields["discount_amount"] = [
-        "resolver" => function(Cart $cart) {
+        "resolver" => function (Cart $cart) {
             $items = $cart->getItems();
             $discount = 0;
             foreach ($items as $item)
@@ -121,22 +121,22 @@ $eventDispatcher->addListener("register_cart_field", function(&$fields) {
     ];
 
     $fields["grand_total"] = [
-        "resolver" => function(Cart $cart) use ($fields){
+        "resolver" => function (Cart $cart) use ($fields){
             return $fields["grand_total"]["resolver"]($cart) - $cart->getData('discount_amount');
         },
         "dependencies" => array_merge($fields["grand_total"]["dependencies"], ["discount_amount"])
     ];
 });
 
-$eventDispatcher->addListener("register_cart_item_field", function(array &$fields) {
+$eventDispatcher->addListener("register_cart_item_field", function (array &$fields) {
     $fields["discount_amount"] = [
-        "resolver" => function(Item $item) {
+        "resolver" => function (Item $item) {
             return $item->getDataSource()['discount_amount'] ?? 0;
         }
     ];
 
     $fields["total"] = [
-        "resolver" => function(Item $item) use ($fields){
+        "resolver" => function (Item $item) use ($fields){
             return $fields["total"]["resolver"]($item) - $item->getData('discount_amount');
         },
         "dependencies" => array_merge($fields["total"]["dependencies"], ["discount_amount"])

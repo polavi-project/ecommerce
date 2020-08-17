@@ -20,7 +20,7 @@ class CouponCollectionType extends ObjectType
     {
         $config = [
             'name' => 'CouponCollection',
-            'fields' => function() use ($container){
+            'fields' => function () use ($container){
                 $fields = [
                     'coupons' => [
                         'type' => Type::listOf($container->get(CouponType::class))
@@ -35,7 +35,7 @@ class CouponCollectionType extends ObjectType
 
                 return $fields;
             },
-            'resolveField' => function($value, $args, Container $container, ResolveInfo $info) {
+            'resolveField' => function ($value, $args, Container $container, ResolveInfo $info) {
                 return isset($value[$info->fieldName]) ? $value[$info->fieldName] : null;
             }
         ];

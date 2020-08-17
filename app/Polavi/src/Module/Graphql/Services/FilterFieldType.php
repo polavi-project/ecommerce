@@ -20,7 +20,7 @@ class FilterFieldType extends InputObjectType
     {
         $config = [
             'name'=> 'FilterFieldType',
-            'fields' => function() use($container) {
+            'fields' => function () use ($container) {
                 $fields = [
                     'key' => Type::string(),
                     'operator' => Type::nonNull(Type::string()),

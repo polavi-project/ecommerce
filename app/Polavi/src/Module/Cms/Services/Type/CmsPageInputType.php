@@ -20,7 +20,7 @@ class CmsPageInputType extends InputObjectType
     {
         $config = [
             'name'=> 'CmsPageInput',
-            'fields' => function() use($container) {
+            'fields' => function () use ($container) {
                 $fields = [
                     'id' => Type::int(),
                     'name' => Type::nonNull(Type::string()),

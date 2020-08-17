@@ -21,7 +21,7 @@ class ItemVariantOptionType extends ObjectType
     {
         $config = [
             'name' => 'CartItemVariantOption',
-            'fields' => function() use ($container) {
+            'fields' => function () use ($container) {
                 $fields = [
                     'attribute_id' => [
                         'type' => Type::nonNull(Type::id())
@@ -44,7 +44,7 @@ class ItemVariantOptionType extends ObjectType
 
                 return $fields;
             },
-            'resolveField' => function($value, $args, Container $container, ResolveInfo $info) {
+            'resolveField' => function ($value, $args, Container $container, ResolveInfo $info) {
                 return isset($value[$info->fieldName]) ? $value[$info->fieldName] : null;
             }
         ];

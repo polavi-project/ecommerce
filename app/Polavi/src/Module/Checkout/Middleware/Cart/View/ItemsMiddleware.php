@@ -64,7 +64,7 @@ class ItemsMiddleware extends MiddlewareAbstract
                     }
                 }"
             ])
-            ->then(function($result) use ($response) {
+            ->then(function ($result) use ($response) {
                 /**@var \GraphQL\Executor\ExecutionResult $result */
                 if (isset($result->data['items'])) {
                     $response->addWidget(
@@ -77,7 +77,7 @@ class ItemsMiddleware extends MiddlewareAbstract
                         ]
                     );
                 }
-            }, function($reason) { var_dump($reason);});
+            }, function ($reason) { var_dump($reason);});
 
         return $delegate;
     }

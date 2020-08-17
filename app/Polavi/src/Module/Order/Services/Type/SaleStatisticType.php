@@ -25,7 +25,7 @@ class SaleStatisticType extends ObjectType
     {
         $config = [
             'name' => 'SaleStatistic',
-            'fields' => function() use ($container) {
+            'fields' => function () use ($container) {
                 $fields = [
                     'category' => [
                         'type' => Type::nonNull(Type::id())
@@ -110,7 +110,7 @@ class SaleStatisticType extends ObjectType
                     ],
                     'items' => [
                         'type' => Type::listOf($container->get(OrderItemType::class)),
-                        'resolve' => function($order, $args, Container $container, ResolveInfo $info) {
+                        'resolve' => function ($order, $args, Container $container, ResolveInfo $info) {
                             return _mysql()
                                 ->getTable('order_item')
                                 ->where('order_item_order_id', '=', $order['order_id'])
@@ -119,7 +119,7 @@ class SaleStatisticType extends ObjectType
                     ],
                     'activities' => [
                         'type' => Type::listOf($container->get(OrderActivityType::class)),
-                        'resolve' => function($order, $args, Container $container, ResolveInfo $info) {
+                        'resolve' => function ($order, $args, Container $container, ResolveInfo $info) {
                             $activities = _mysql()
                                 ->getTable('order_activity')
                                 ->where('order_activity_order_id', '=', $order['order_id']);
@@ -132,7 +132,7 @@ class SaleStatisticType extends ObjectType
                     ],
                     'editUrl' => [
                         'type' => Type::string(),
-                        'resolve' => function($order, $args, Container $container, ResolveInfo $info) {
+                        'resolve' => function ($order, $args, Container $container, ResolveInfo $info) {
                             if ($container->get(Request::class)->isAdmin() == false)
                                 return null;
                             return $container->get(Router::class)->generateUrl('order.edit', ["id"=>$order['order_id']]);
@@ -144,7 +144,7 @@ class SaleStatisticType extends ObjectType
 
                 return $fields;
             },
-            'resolveField' => function($value, $args, Container $container, ResolveInfo $info) {
+            'resolveField' => function ($value, $args, Container $container, ResolveInfo $info) {
                 return isset($value[$info->fieldName]) ? $value[$info->fieldName] : null;
             }
         ];

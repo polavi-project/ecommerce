@@ -40,8 +40,9 @@ class CategoryMutator
     public function updateCategory(int $id, array $data)
     {
         $category = $this->processor->getTable('category')->load($id);
-        if ($category == false)
+        if ($category == false) {
             throw new \RuntimeException('Requested category does not exist');
+        }
         $this->processor->startTransaction();
         try {
             $this->processor->getTable('category')->where('category_id', '=', $id)->update($data);

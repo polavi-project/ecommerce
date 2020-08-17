@@ -42,7 +42,7 @@ class AttributeMiddleware extends MiddlewareAbstract
                 }"
             ]);
 
-        $promise->then(function($result) use ($response) {
+        $promise->then(function ($result) use ($response) {
                 /**@var \GraphQL\Executor\ExecutionResult $result */
                 if (isset($result->data['productAttributeIndex']) and $result->data['productAttributeIndex']) {
                     $response->addWidget(

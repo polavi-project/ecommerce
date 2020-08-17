@@ -34,7 +34,7 @@ class SeoMiddleware extends MiddlewareAbstract
             ->waitToExecute([
                 "query"=>"{generalInfo: category(id: {$request->get('id')}){seo_key meta_title meta_description meta_keywords}}"
             ])
-            ->then(function($result) use ($response) {
+            ->then(function ($result) use ($response) {
                 /**@var \GraphQL\Executor\ExecutionResult $result */
                 if (isset($result->data['generalInfo'])) {
                     $response->addWidget(

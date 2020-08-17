@@ -26,7 +26,7 @@ class OrderType extends ObjectType
     {
         $config = [
             'name' => 'Order',
-            'fields' => function() use ($container) {
+            'fields' => function () use ($container) {
                 $fields = [
                     'order_id' => [
                         'type' => Type::nonNull(Type::id())
@@ -93,7 +93,7 @@ class OrderType extends ObjectType
                     ],
                     'shipping_address' => [
                         'type' => $container->get(AddressType::class),
-                        'resolve' => function($order, $args, Container $container, ResolveInfo $info) {
+                        'resolve' => function ($order, $args, Container $container, ResolveInfo $info) {
                             return _mysql()
                                 ->getTable('order_address')
                                 ->load($order['shipping_address_id']);
@@ -110,7 +110,7 @@ class OrderType extends ObjectType
                     ],
                     'billing_address' => [
                         'type' => $container->get(AddressType::class),
-                        'resolve' => function($order, $args, Container $container, ResolveInfo $info) {
+                        'resolve' => function ($order, $args, Container $container, ResolveInfo $info) {
                             return _mysql()
                                 ->getTable('order_address')
                                 ->load($order['billing_address_id']);
@@ -139,7 +139,7 @@ class OrderType extends ObjectType
                     ],
                     'items' => [
                         'type' => Type::listOf($container->get(OrderItemType::class)),
-                        'resolve' => function($order, $args, Container $container, ResolveInfo $info) {
+                        'resolve' => function ($order, $args, Container $container, ResolveInfo $info) {
                             return _mysql()
                                 ->getTable('order_item')
                                 ->where('order_item_order_id', '=', $order['order_id'])
@@ -148,7 +148,7 @@ class OrderType extends ObjectType
                     ],
                     'activities' => [
                         'type' => Type::listOf($container->get(OrderActivityType::class)),
-                        'resolve' => function($order, $args, Container $container, ResolveInfo $info) {
+                        'resolve' => function ($order, $args, Container $container, ResolveInfo $info) {
                             $activities = _mysql()
                                 ->getTable('order_activity')
                                 ->where('order_activity_order_id', '=', $order['order_id']);
@@ -161,7 +161,7 @@ class OrderType extends ObjectType
                     ],
                     'payment_transactions' => [
                         'type' => Type::listOf($container->get(PaymentTransactionType::class)),
-                        'resolve' => function($order, $args, Container $container, ResolveInfo $info) {
+                        'resolve' => function ($order, $args, Container $container, ResolveInfo $info) {
                             return _mysql()
                                 ->getTable('payment_transaction')
                                 ->where('payment_transaction_order_id', '=', $order['order_id'])
@@ -170,7 +170,7 @@ class OrderType extends ObjectType
                     ],
                     'editUrl' => [
                         'type' => Type::string(),
-                        'resolve' => function($order, $args, Container $container, ResolveInfo $info) {
+                        'resolve' => function ($order, $args, Container $container, ResolveInfo $info) {
                             if ($container->get(Request::class)->isAdmin() == false)
                                 return null;
                             return $container->get(Router::class)->generateUrl('order.edit', ["id"=>$order['order_id']]);
@@ -182,7 +182,7 @@ class OrderType extends ObjectType
 
                 return $fields;
             },
-            'resolveField' => function($value, $args, Container $container, ResolveInfo $info) {
+            'resolveField' => function ($value, $args, Container $container, ResolveInfo $info) {
                 return isset($value[$info->fieldName]) ? $value[$info->fieldName] : null;
             }
         ];

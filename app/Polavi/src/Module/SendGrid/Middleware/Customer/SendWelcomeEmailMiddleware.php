@@ -23,7 +23,7 @@ class SendWelcomeEmailMiddleware extends MiddlewareAbstract
         if (!$promise instanceof Promise)
             return $promise;
 
-        $promise->then(function($result) {
+        $promise->then(function ($result) {
             if (isset($result->data['createCustomer']['status']) and $result->data['createCustomer']['status'] == true) {
                 $templateId = get_config('sendgrid_customer_welcome_email');
                 $this->getContainer()->get(SendGrid::class)->sendEmail(

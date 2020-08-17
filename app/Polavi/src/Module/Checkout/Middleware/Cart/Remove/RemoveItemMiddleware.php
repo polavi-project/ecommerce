@@ -28,7 +28,7 @@ class RemoveItemMiddleware extends MiddlewareAbstract
         $promise = $this->getContainer()->get(Cart::class)->removeItem(
             (int) $request->attributes->get('id')
         );
-        $promise->then(function(Item $item) use ($response) {
+        $promise->then(function (Item $item) use ($response) {
             if (!$item instanceof Item)
                 $response->addAlert('cart_add_error', 'error', "Something wrong, please try again");
             else {
@@ -36,7 +36,7 @@ class RemoveItemMiddleware extends MiddlewareAbstract
                 $response->redirect($this->getContainer()->get(Router::class)->generateUrl('checkout.cart'));
             }
         });
-        $promise->otherwise(function($reason) use ($response) {
+        $promise->otherwise(function ($reason) use ($response) {
             $response->addAlert('cart_add_error', 'error', $reason)->notNewPage();
         });
 

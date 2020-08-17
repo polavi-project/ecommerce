@@ -21,17 +21,17 @@ class OrderActivityType extends ObjectType
     {
         $config = [
             'name' => 'Order activity',
-            'fields' => function() use ($container) {
+            'fields' => function () use ($container) {
                 $fields = [
                     'id' => [
                         'type' => Type::nonNull(Type::id()),
-                        'resolve' => function($value, $args, Container $container, ResolveInfo $info) {
+                        'resolve' => function ($value, $args, Container $container, ResolveInfo $info) {
                             return isset($value['order_activity_id']) ? $value['order_activity_id'] : null;
                         }
                     ],
                     'order_id' => [
                         'type' => Type::nonNull(Type::int()),
-                        'resolve' => function($value, $args, Container $container, ResolveInfo $info) {
+                        'resolve' => function ($value, $args, Container $container, ResolveInfo $info) {
                             return isset($value['order_activity_order_id']) ? $value['order_activity_order_id'] : null;
                         }
                     ],
@@ -50,7 +50,7 @@ class OrderActivityType extends ObjectType
 
                 return $fields;
             },
-            'resolveField' => function($value, $args, Container $container, ResolveInfo $info) {
+            'resolveField' => function ($value, $args, Container $container, ResolveInfo $info) {
                 return isset($value[$info->fieldName]) ? $value[$info->fieldName] : null;
             }
         ];

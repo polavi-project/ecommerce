@@ -20,7 +20,7 @@ class CategoryFilterType extends ObjectType
     {
         $config = [
             'name' => 'CategoryFilterType',
-            'fields' => function() use ($container){
+            'fields' => function () use ($container){
                 return [
                     'id' => [
                         'type' => Type::nonNull(Type::int())
@@ -36,7 +36,7 @@ class CategoryFilterType extends ObjectType
                     ]
                 ];
             },
-            'resolveField' => function($value, $args, Container $container, ResolveInfo $info) {
+            'resolveField' => function ($value, $args, Container $container, ResolveInfo $info) {
                 return isset($value[$info->fieldName]) ? $value[$info->fieldName] : null;
             }
         ];

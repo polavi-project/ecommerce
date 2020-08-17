@@ -42,7 +42,7 @@ class EditFormMiddleware extends MiddlewareAbstract
                     }
                 }")
             ])
-            ->then(function($result) use ($response, $request) {
+            ->then(function ($result) use ($response, $request) {
                 /**@var \GraphQL\Executor\ExecutionResult $result */
                 if (isset($result->data['attributeGroup'])) {
                     $response->addWidget(
@@ -87,7 +87,7 @@ class EditFormMiddleware extends MiddlewareAbstract
                     }
 QUERY
             ])
-            ->then(function($result) use ($response) {
+            ->then(function ($result) use ($response) {
                 /**@var \GraphQL\Executor\ExecutionResult $result */
                 if (isset($result->data['attributeCollection'])) {
                     $widget = $response->getWidget("attribute_group_edit", "content");

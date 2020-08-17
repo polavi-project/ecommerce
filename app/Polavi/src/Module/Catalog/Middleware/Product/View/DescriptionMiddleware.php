@@ -41,7 +41,7 @@ class DescriptionMiddleware extends MiddlewareAbstract
                     }
                 }"
             ])
-            ->then(function($result) use ($response) {
+            ->then(function ($result) use ($response) {
                 /**@var \GraphQL\Executor\ExecutionResult $result */
                 if (isset($result->data['description']) and $result->data['description']) {
                     $response->addWidget(

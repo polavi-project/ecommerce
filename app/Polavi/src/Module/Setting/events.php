@@ -60,7 +60,7 @@ $eventDispatcher->addListener(
 );
 
 function createConfigCache(\Polavi\Services\Di\Container $container) {
-    $promise = new GuzzleHttp\Promise\Promise(function() use(&$promise){
+    $promise = new GuzzleHttp\Promise\Promise(function () use (&$promise){
         try {
             $cacheTemplate = <<< 'EOT'
 <?php
@@ -98,12 +98,12 @@ EOT;
     $container->get(\Polavi\Services\PromiseWaiter::class)->addPromise('saveSettingToCache', $promise);
 }
 
-$eventDispatcher->addListener('after_insert_setting', function() {
+$eventDispatcher->addListener('after_insert_setting', function () {
     createConfigCache(\Polavi\the_container());
 });
-$eventDispatcher->addListener('after_update_setting',  function() {
+$eventDispatcher->addListener('after_update_setting',  function () {
     createConfigCache(\Polavi\the_container());
 });
-$eventDispatcher->addListener('after_insert_on_update_setting',  function() {
+$eventDispatcher->addListener('after_insert_on_update_setting',  function () {
     createConfigCache(\Polavi\the_container());
 });

@@ -34,7 +34,7 @@ class GeneralInfoMiddleware extends MiddlewareAbstract
             ->waitToExecute([
                 "query"=>"{generalInfo: category(id: {$request->get('id')}){name status description include_in_nav position}}"
             ])
-            ->then(function($result) use ($response) {
+            ->then(function ($result) use ($response) {
                 /**@var \GraphQL\Executor\ExecutionResult $result */
                 if (isset($result->data['generalInfo'])) {
                     $response->addWidget(

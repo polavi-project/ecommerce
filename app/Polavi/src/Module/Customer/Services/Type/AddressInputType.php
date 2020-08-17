@@ -20,7 +20,7 @@ class AddressInputType extends InputObjectType
     {
         $config = [
             'name'=> 'AddressInput',
-            'fields' => function() use($container) {
+            'fields' => function () use ($container) {
                 $fields = [
                     'full_name' => Type::nonNull(Type::string()),
                     'telephone' => Type::nonNull(Type::string()),

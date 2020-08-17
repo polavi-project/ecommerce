@@ -24,7 +24,7 @@ $eventDispatcher->addListener(
     5
 );
 
-$eventDispatcher->addListener('register.checkout.index.middleware', function(\Polavi\Services\MiddlewareManager $mm) {
+$eventDispatcher->addListener('register.checkout.index.middleware', function (\Polavi\Services\MiddlewareManager $mm) {
     $mm->registerMiddleware(\Polavi\Module\Customer\Middleware\Checkout\AccountMiddleware::class, 1);
 });
 
@@ -38,7 +38,7 @@ $eventDispatcher->addListener(
                 'args' => [
                     'filters' =>  Type::listOf($container->get(FilterFieldType::class))
                 ],
-                'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
+                'resolve' => function ($rootValue, $args, Container $container, ResolveInfo $info) {
                     if ($container->get(\Polavi\Services\Http\Request::class)->isAdmin() == false)
                         return [];
                     $collection = new \Polavi\Module\Customer\Services\CustomerCollection($container);
@@ -50,7 +50,7 @@ $eventDispatcher->addListener(
         $fields['customerGroups'] = [
             'type' => Type::listOf($container->get(\Polavi\Module\Customer\Services\Type\CustomerGroupType::class)),
             'description' => "Return list of customer group",
-            'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
+            'resolve' => function ($rootValue, $args, Container $container, ResolveInfo $info) {
                 // Authentication example
                 if ($container->get(Request::class)->isAdmin() == false)
                     return [];
@@ -65,7 +65,7 @@ $eventDispatcher->addListener(
             'args' => [
                 'id' => Type::nonNull(Type::int())
             ],
-            'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
+            'resolve' => function ($rootValue, $args, Container $container, ResolveInfo $info) {
                 // Authentication example
                 if (
                     $container->get(Request::class)->isAdmin() == false &&
@@ -88,7 +88,7 @@ $eventDispatcher->addListener(
             'args' => [
                 'customerId' => Type::nonNull(Type::int())
             ],
-            'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
+            'resolve' => function ($rootValue, $args, Container $container, ResolveInfo $info) {
                 // Authentication example
                 if (
                     $container->get(Request::class)->isAdmin() == false &&
@@ -120,7 +120,7 @@ $eventDispatcher->addListener(
                     'address' => $container->get(\Polavi\Module\Customer\Services\Type\AddressType::class)
                 ]
             ]),
-            'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
+            'resolve' => function ($rootValue, $args, Container $container, ResolveInfo $info) {
                 $conn = _mysql();
                 $data = $args['address'];
                 if (
@@ -163,7 +163,7 @@ $eventDispatcher->addListener(
                     'address' => $container->get(\Polavi\Module\Customer\Services\Type\AddressType::class)
                 ]
             ]),
-            'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
+            'resolve' => function ($rootValue, $args, Container $container, ResolveInfo $info) {
                 $conn = _mysql();
                 $address = $conn->getTable('customer_address')->load($args['id']);
                 if (!$address)
@@ -192,7 +192,7 @@ $eventDispatcher->addListener(
                     'addressId' => Type::nonNull(Type::int())
                 ]
             ]),
-            'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
+            'resolve' => function ($rootValue, $args, Container $container, ResolveInfo $info) {
                 $conn = _mysql();
                 $address = $conn->getTable('customer_address')->load($args['id']);
                 if (!$address)
@@ -234,7 +234,7 @@ $eventDispatcher->addListener(
     0
 );
 
-$eventDispatcher->addListener('breadcrumbs_items', function(array $items) {
+$eventDispatcher->addListener('breadcrumbs_items', function (array $items) {
     $container = \Polavi\the_container();
     if ($container->get(Request::class)->get("_matched_route") == "customer.register") {
         $items[] = ["sort_order"=> 1, "title"=> "Register account", "link"=> null];

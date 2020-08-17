@@ -28,11 +28,11 @@ class AddCouponMiddleware extends MiddlewareAbstract
             $promise = $cart->setData('coupon', $coupon);
         }
 
-        $promise->then(function($coupon) use ($request, $response) {
+        $promise->then(function ($coupon) use ($request, $response) {
             $response->redirect($this->getContainer()->get(Router::class)->generateUrl('checkout.cart'));
         });
 
-        $promise->otherwise(function($reason) use ($response) {
+        $promise->otherwise(function ($reason) use ($response) {
             $response->addAlert('coupon_apply_error', 'error', "Invalid coupon")->notNewPage();
         });
     }

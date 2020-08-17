@@ -22,7 +22,7 @@ class TaxClassType extends ObjectType
     {
         $config = [
             'name' => 'Tax class',
-            'fields' => function() use ($container) {
+            'fields' => function () use ($container) {
                 $fields = [
                     'tax_class_id' => [
                         'type' => Type::nonNull(Type::id())
@@ -38,7 +38,7 @@ class TaxClassType extends ObjectType
                     ],
                     'rates' => [
                         'type' => Type::listOf($container->get(TaxRateType::class)),
-                        'resolve' => function($value, $args, Container $container, ResolveInfo $info) {
+                        'resolve' => function ($value, $args, Container $container, ResolveInfo $info) {
                             return _mysql()->getTable('tax_rate')->where('tax_class_id', '=', $value['tax_class_id'])->fetchAllAssoc();
                         }
                     ]
@@ -48,7 +48,7 @@ class TaxClassType extends ObjectType
 
                 return $fields;
             },
-            'resolveField' => function($value, $args, Container $container, ResolveInfo $info) {
+            'resolveField' => function ($value, $args, Container $container, ResolveInfo $info) {
                 return isset($value[$info->fieldName]) ? $value[$info->fieldName] : null;
             }
         ];

@@ -40,11 +40,11 @@ class GraphqlExecutor extends Promise
     {
         $this->schema = $schema;
         $this->container = $container;
-        parent::__construct(function() {
+        parent::__construct(function () {
             $this->execute();
             $promise = settle($this->promises);
             $promise->wait();
-            $promise->then(function($result) {
+            $promise->then(function ($result) {
                 $this->resolve($result);
             });
         });
@@ -62,7 +62,7 @@ class GraphqlExecutor extends Promise
     {
         $this->operationParams[] = OperationParams::create($operationParams);
         $id = count($this->operationParams) - 1;
-        $promise = new Promise(function() use (&$promise, $id) {
+        $promise = new Promise(function () use (&$promise, $id) {
             $result = $this->results[$id];
             if (!$result->errors)
                 $promise->resolve($result);
@@ -80,10 +80,10 @@ class GraphqlExecutor extends Promise
             ->setSchema($this->schema)
             ->setContext($this->container)
             ->setQueryBatching(true)
-            ->setErrorFormatter(function(array $errors, callable $formatter) {
+            ->setErrorFormatter(function (array $errors, callable $formatter) {
                 return array_map($formatter, $errors);
             })
-            ->setErrorsHandler(function(Error $error) {
+            ->setErrorsHandler(function (Error $error) {
                 return new \Exception($error->getMessage());
             })
             ->setDebug(true);

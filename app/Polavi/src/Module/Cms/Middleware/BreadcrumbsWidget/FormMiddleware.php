@@ -46,7 +46,7 @@ class FormMiddleware extends MiddlewareAbstract
                                 sort_order
                             }
                         }"
-                ])->then(function($result) use (&$fields, $response) {
+                ])->then(function ($result) use (&$fields, $response) {
                     /**@var \GraphQL\Executor\ExecutionResult $result */
                     if (isset($result->data['cmsWidget'])) {
                         $response->addWidget(

@@ -33,7 +33,7 @@ class SeoMiddleware extends MiddlewareAbstract
                 ->get(GraphqlExecutor::class)
                 ->waitToExecute([
                     "query"=>"{seoInfo: product(id: {$request->get('id')}){seo_key meta_title meta_description meta_keywords}}"
-                ])->then(function($result) use (&$fields, $response) {
+                ])->then(function ($result) use (&$fields, $response) {
                     /**@var \GraphQL\Executor\ExecutionResult $result */
                     if (isset($result->data['seoInfo'])) {
                         $response->addWidget(

@@ -20,14 +20,14 @@ class ProductTierPriceType extends ObjectType
     {
         $config = [
             'name' => 'ProductTierPrice',
-            'fields' => function() use ($container){
+            'fields' => function () use ($container){
                 $fields = [
                     'product_price_id' => [
                         'type' => Type::nonNull(Type::id())
                     ],
                     'product_id' => [
                         'type' => Type::nonNull(Type::id()),
-                        'resolve' => function($value, $args, Container $container, ResolveInfo $info) {
+                        'resolve' => function ($value, $args, Container $container, ResolveInfo $info) {
                             return isset($value['product_price_product_id']) ? $value['product_price_product_id'] : null;
                         }
                     ],
@@ -52,7 +52,7 @@ class ProductTierPriceType extends ObjectType
 
                 return $fields;
             },
-            'resolveField' => function($value, $args, Container $container, ResolveInfo $info) {
+            'resolveField' => function ($value, $args, Container $container, ResolveInfo $info) {
                 return isset($value[$info->fieldName]) ? $value[$info->fieldName] : null;
             }
         ];

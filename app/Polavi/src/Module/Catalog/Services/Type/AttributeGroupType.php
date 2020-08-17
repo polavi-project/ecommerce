@@ -23,7 +23,7 @@ class AttributeGroupType extends ObjectType
     {
         $config = [
             'name' => 'AttributeGroup',
-            'fields' => function() use ($container) {
+            'fields' => function () use ($container) {
                 $fields = [
                     'attribute_group_id' => [
                         'type' => Type::nonNull(Type::id())
@@ -40,20 +40,20 @@ class AttributeGroupType extends ObjectType
                     'attributes' => [
                         'type' => Type::listOf($container->get(AttributeType::class)),
                         'description' => 'List of attribute in the group',
-                        'resolve' => function($group, $args, Container $container, ResolveInfo $info) {
+                        'resolve' => function ($group, $args, Container $container, ResolveInfo $info) {
                             return _mysql()->getTable('attribute')->leftJoin('attribute_group_link')->where('attribute_group_link.group_id', '=', $group['attribute_group_id'])->fetchAllAssoc();
                         }
                     ],
                     'editUrl' => [
                         'type' => Type::string(),
-                        'resolve' => function($group, $args, Container $container, ResolveInfo $info) {
+                        'resolve' => function ($group, $args, Container $container, ResolveInfo $info) {
                             if ($container->get(Request::class)->isAdmin() == false)
                                 return null;
                             return $container->get(Router::class)->generateUrl('attribute.group.edit', ["id"=>$group['attribute_group_id']]);                        }
                     ],
                     'deleteUrl' => [
                         'type' => Type::string(),
-                        'resolve' => function($group, $args, Container $container, ResolveInfo $info) {
+                        'resolve' => function ($group, $args, Container $container, ResolveInfo $info) {
                             if ($container->get(Request::class)->isAdmin() == false)
                                 return null;
                             return $container->get(Router::class)->generateUrl('attribute.group.delete', ["id"=>$group['attribute_group_id']]);                        }
@@ -64,7 +64,7 @@ class AttributeGroupType extends ObjectType
 
                 return $fields;
             },
-            'resolveField' => function($value, $args, Container $container, ResolveInfo $info) {
+            'resolveField' => function ($value, $args, Container $container, ResolveInfo $info) {
                 return isset($value[$info->fieldName]) ? $value[$info->fieldName] : null;
             }
         ];

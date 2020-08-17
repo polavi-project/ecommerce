@@ -36,7 +36,7 @@ class OrderCollection extends CollectionBuilder
     {
         $isAdmin = $this->container->get(Request::class)->isAdmin();
 
-        $this->addFilter('id', function($args) use ($isAdmin) {
+        $this->addFilter('id', function ($args) use ($isAdmin) {
             if ($isAdmin == false)
                 return;
             if ($args['operator'] == "BETWEEN") {
@@ -51,7 +51,7 @@ class OrderCollection extends CollectionBuilder
             }
         });
 
-        $this->addFilter('order_number', function($args) use ($isAdmin) {
+        $this->addFilter('order_number', function ($args) use ($isAdmin) {
             if ($isAdmin == false)
                 return;
             if ($args['operator'] == "BETWEEN") {
@@ -66,7 +66,7 @@ class OrderCollection extends CollectionBuilder
             }
         });
 
-        $this->addFilter('grand_total', function($args) use ($isAdmin) {
+        $this->addFilter('grand_total', function ($args) use ($isAdmin) {
             if ($isAdmin == false)
                 return;
             if ($args['operator'] == "BETWEEN") {
@@ -81,19 +81,19 @@ class OrderCollection extends CollectionBuilder
             }
         });
 
-        $this->addFilter('payment_status', function($args) use ($isAdmin) {
+        $this->addFilter('payment_status', function ($args) use ($isAdmin) {
             if ($isAdmin == false)
                 return;
             $this->collection->andWhere('order.payment_status', $args['operator'], $args['value']);
         });
 
-        $this->addFilter('shipment_status', function($args) use ($isAdmin) {
+        $this->addFilter('shipment_status', function ($args) use ($isAdmin) {
             if ($isAdmin == false)
                 return;
             $this->collection->andWhere('order.shipment_status', $args['operator'], $args['value']);
         });
 
-        $this->addFilter('created_at', function($args) use ($isAdmin) {
+        $this->addFilter('created_at', function ($args) use ($isAdmin) {
             if ($isAdmin == false)
                 return;
             if ($args['operator'] == "BETWEEN") {
@@ -108,25 +108,25 @@ class OrderCollection extends CollectionBuilder
             }
         });
 
-        $this->addFilter('page', function($args) use ($isAdmin) {
+        $this->addFilter('page', function ($args) use ($isAdmin) {
             if ($args['operator'] !== "=")
                 return;
             $this->setPage((int)$args['value']);
         });
 
-        $this->addFilter('limit', function($args) use ($isAdmin) {
+        $this->addFilter('limit', function ($args) use ($isAdmin) {
             if ($args['operator'] !== "=")
                 return;
             $this->setLimit((int)$args['value']);
         });
 
-        $this->addFilter('sortBy', function($args) use ($isAdmin) {
+        $this->addFilter('sortBy', function ($args) use ($isAdmin) {
             if ($args['operator'] !== "=")
                 return;
             $this->setSortBy($args['value']);
         });
 
-        $this->addFilter('sortOrder', function($args) use ($isAdmin) {
+        $this->addFilter('sortOrder', function ($args) use ($isAdmin) {
             if ($args['operator'] !== "=")
                 return;
             $this->setSortOrder($args['value']);

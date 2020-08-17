@@ -34,11 +34,11 @@ class DeleteMiddleware extends MiddlewareAbstract
                 "variables" => $variables
             ]);
 
-        $promise->then(function($result) use ($request, $response) {
+        $promise->then(function ($result) use ($request, $response) {
             $response->addData('addressDelete', $result->data['deleteCustomerAddress']);
         });
 
-        $promise->otherwise(function($reason) use ($request, $response) {
+        $promise->otherwise(function ($reason) use ($request, $response) {
             // TODO: Support development mode and show real message
             $response->addData('addressDelete', ['status'=> false, 'message'=> $reason[0]->message]);
         });

@@ -21,7 +21,7 @@ class CustomerGroupType extends ObjectType
     {
         $config = [
             'name' => 'Customer group',
-            'fields' => function() use ($container) {
+            'fields' => function () use ($container) {
                 $fields = [
                     'customer_group_id' => [
                         'type' => Type::nonNull(Type::id())
@@ -35,7 +35,7 @@ class CustomerGroupType extends ObjectType
 
                 return $fields;
             },
-            'resolveField' => function($value, $args, Container $container, ResolveInfo $info) {
+            'resolveField' => function ($value, $args, Container $container, ResolveInfo $info) {
                 return isset($value[$info->fieldName]) ? $value[$info->fieldName] : null;
             }
         ];

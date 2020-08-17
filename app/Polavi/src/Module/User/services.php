@@ -8,6 +8,6 @@ declare(strict_types=1);
 
 /**@var \Polavi\Services\Di\Container $container */
 
-$container[\Polavi\Module\User\Services\Authenticator::class] = function() use ($container) {
+$container[\Polavi\Module\User\Services\Authenticator::class] = function () use ($container) {
     return new \Polavi\Module\User\Services\Authenticator($container[\Polavi\Services\Http\Request::class]);
 };

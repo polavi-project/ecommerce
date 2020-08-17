@@ -28,12 +28,12 @@ class NewsletterFormWidgetMiddleware extends MiddlewareAbstract
             ->get(GraphqlExecutor::class)
             ->waitToExecute([
                 "query"=>"{newsletterFormWidgets : widgetCollection (filters : [{key: \"type\" operator : \"=\" value: \"newsletter_form\"}]) {widgets { cms_widget_id name setting {key value} displaySetting {key value} sort_order }}}"
-            ])->then(function($result) use ($request, $response) {
+            ])->then(function ($result) use ($request, $response) {
                 /**@var \GraphQL\Executor\ExecutionResult $result */
                 if (isset($result->data['newsletterFormWidgets'])) {
                     $matchedRoute = $request->attributes->get('_matched_route');
-                    $widgets = array_filter($result->data['newsletterFormWidgets']['widgets'], function($v) use($matchedRoute) {
-                        $layouts = array_find($v['displaySetting'], function($value, $key) {
+                    $widgets = array_filter($result->data['newsletterFormWidgets']['widgets'], function ($v) use ($matchedRoute) {
+                        $layouts = array_find($v['displaySetting'], function ($value, $key) {
                             if ($value['key'] == 'layout')
                                 return json_decode($value['value'], true);
                             return null;
@@ -50,19 +50,19 @@ class NewsletterFormWidgetMiddleware extends MiddlewareAbstract
                         return $match;
                     }, ARRAY_FILTER_USE_BOTH);
                     foreach ($widgets as $widget) {
-                        $title = array_find($widget['setting'], function($value, $key) {
+                        $title = array_find($widget['setting'], function ($value, $key) {
                             if ($value['key'] == 'title')
                                 return $value['value'];
                             return null;
                         });
 
-                        $htmlBefore = array_find($widget['setting'], function($value, $key) {
+                        $htmlBefore = array_find($widget['setting'], function ($value, $key) {
                             if ($value['key'] == 'html_before')
                                 return $value['value'];
                             return null;
                         });
 
-                        $htmlAfter = array_find($widget['setting'], function($value, $key) {
+                        $htmlAfter = array_find($widget['setting'], function ($value, $key) {
                             if ($value['key'] == 'html_after')
                                 return $value['value'];
                             return null;

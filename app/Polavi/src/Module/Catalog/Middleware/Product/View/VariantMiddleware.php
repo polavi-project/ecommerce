@@ -76,7 +76,7 @@ class VariantMiddleware extends MiddlewareAbstract
                 }"
                 ]);
 
-            $promise->then(function($result) use ($response) {
+            $promise->then(function ($result) use ($response) {
                 /**@var \GraphQL\Executor\ExecutionResult $result */
                 if (isset($result->data['variants']) and $result->data['variants']) {
                     $conn = _mysql();
@@ -87,7 +87,7 @@ class VariantMiddleware extends MiddlewareAbstract
                         $group["attribute_three"],
                         $group["attribute_four"],
                         $group["attribute_five"],
-                    ], function($a) {
+                    ], function ($a) {
                         return $a != null;
                     });
                     $attributes = $conn->getTable("attribute")->where("attribute_id", "IN", $attrIds)->fetchAllAssoc();

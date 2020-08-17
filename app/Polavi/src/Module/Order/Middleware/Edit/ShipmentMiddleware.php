@@ -43,7 +43,7 @@ class ShipmentMiddleware extends MiddlewareAbstract
                     }
                 }")
             ])
-            ->then(function($result) use ($request, $response) {
+            ->then(function ($result) use ($request, $response) {
                 /**@var \GraphQL\Executor\ExecutionResult $result */
                 if (isset($result->data['shipment'])) {
                     $response->addWidget(

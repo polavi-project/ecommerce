@@ -3,7 +3,7 @@
 $version = "1.0.1";
 
 return [
-    "1.0.0" => function(\Polavi\Services\Db\Processor $conn) {
+    "1.0.0" => function (\Polavi\Services\Db\Processor $conn) {
         $settingTable = $conn->executeQuery("SELECT TABLE_NAME FROM information_schema.tables WHERE table_schema = :dbName AND TABLE_NAME = \"setting\" LIMIT 0,1", ['dbName'=> $conn->getConfiguration()->getDb()])->fetch(\PDO::FETCH_ASSOC);
         if ($settingTable !== false)
             return;
@@ -41,7 +41,7 @@ return [
                     ]);
         }
     },
-    "1.0.1" => function(\Polavi\Services\Db\Processor $processor) {
+    "1.0.1" => function (\Polavi\Services\Db\Processor $processor) {
         // Let's leave multi language later
         $processor->executeQuery("ALTER TABLE setting DROP COLUMN language_id");
     }

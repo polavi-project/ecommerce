@@ -20,7 +20,7 @@ class OrderCollectionFilterType extends InputObjectType
     {
         $config = [
             'name'=> 'OrderCollectionFilter',
-            'fields' => function() use($container) {
+            'fields' => function () use ($container) {
                 $fields = [
                     'id' => $container->get(FilterFieldType::class),
                     'order_number' => $container->get(FilterFieldType::class),

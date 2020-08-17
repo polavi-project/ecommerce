@@ -50,12 +50,12 @@ class Address
     {
         $this->fields = [
             'address_id' => [
-                'resolver' => function($dataSource) {
+                'resolver' => function ($dataSource) {
                     return $this->getData('address_id') ?? $dataSource['address_id'] ?? null;
                 }
             ],
             'address_type' => [
-                'resolver' => function($dataSource) {
+                'resolver' => function ($dataSource) {
                     $type = $this->getData('address_type') ?? $dataSource['address_type'] ?? null;
                     if (!in_array($type, ['shipping', 'billing']))
                         $this->error = "Wrong address type";
@@ -64,7 +64,7 @@ class Address
                 }
             ],
             'country' => [
-                'resolver' => function($dataSource) {
+                'resolver' => function ($dataSource) {
                     $country =  $dataSource['country'] ?? null;
                     if (!$country)
                         $this->error = "{$this->data['address_type']} country could not be empty";
@@ -72,7 +72,7 @@ class Address
                 }
             ],
             'province' => [
-                'resolver' => function($dataSource) {
+                'resolver' => function ($dataSource) {
                     $province =  $dataSource['province'] ?? null;
 //                    if (!$province)
 //                        $this->error = "{$this->data['address_type']} province could not be empty";
@@ -81,12 +81,12 @@ class Address
                 'dependencies' => ['country']
             ],
             'city' => [
-                'resolver' => function($dataSource) {
+                'resolver' => function ($dataSource) {
                     return $dataSource['city'] ?? null;
                 }
             ],
             'postcode' => [
-                'resolver' => function($dataSource) {
+                'resolver' => function ($dataSource) {
                     $postcode =  $dataSource['postcode'] ?? null;
                     if (!$postcode)
                         $this->error = "{$this->data['address_type']} postcode could not be empty";
@@ -95,7 +95,7 @@ class Address
                 'dependencies' => ['country']
             ],
             'address1' => [
-                'resolver' => function($dataSource) {
+                'resolver' => function ($dataSource) {
                     $address1 =  $dataSource['address1'] ?? null;
                     if (!$address1)
                         $this->error = "{$this->data['address_type']} address1 could not be empty";
@@ -103,12 +103,12 @@ class Address
                 }
             ],
             'address2' => [
-                'resolver' => function($dataSource) {
+                'resolver' => function ($dataSource) {
                     return $dataSource['address2'] ?? null;
                 }
             ],
             'telephone' => [
-                'resolver' => function($dataSource) {
+                'resolver' => function ($dataSource) {
                     $telephone =  $dataSource['telephone'] ?? null;
                     if (!$telephone)
                         $this->error = "{$this->data['address_type']} telephone could not be empty";
@@ -116,7 +116,7 @@ class Address
                 }
             ],
             'full_name' => [
-                'resolver' => function($dataSource) {
+                'resolver' => function ($dataSource) {
                     $fullName =  $dataSource['full_name'] ?? null;
                     if (!$fullName)
                         $this->error = "{$this->data['address_type']} name could not be empty";
@@ -124,7 +124,7 @@ class Address
                 }
             ],
             'prefix' => [
-                'resolver' => function($dataSource) {
+                'resolver' => function ($dataSource) {
                     return $dataSource['prefix'] ?? null;
                 }
             ]

@@ -20,7 +20,7 @@ class KeyValuePairFieldTypeInput extends InputObjectType
     {
         $config = [
             'name'=> 'KeyValuePairFieldTypeInput',
-            'fields' => function() use($container) {
+            'fields' => function () use ($container) {
                 $fields = [
                     'key' => Type::nonNull(Type::string()),
                     'value' => Type::string()

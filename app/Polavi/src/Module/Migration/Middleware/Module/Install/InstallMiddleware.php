@@ -27,7 +27,7 @@ class InstallMiddleware extends MiddlewareAbstract
             $module = $request->attributes->get("module");
             $path = file_exists(MODULE_PATH . DS . $module) ? MODULE_PATH . DS . $module : COMMUNITY_MODULE_PATH . DS . $module;
             $this->getContainer()->set("moduleLoading", true);
-            (function() use($path, $module, &$conn) {
+            (function () use ($path, $module, &$conn) {
                 if (!file_exists($path . DS . "migration.php"))
                     throw new \Exception("migration.php file was not found");
                 $migrations = require_once $path . DS . "migration.php";
@@ -66,11 +66,11 @@ class InstallMiddleware extends MiddlewareAbstract
     protected function runMigration(array $migrations, Processor $conn)
     {
         // Each of element must have valid version number (example: 1.0.1)
-        $migrations = array_filter($migrations, function($v, $k) {
+        $migrations = array_filter($migrations, function ($v, $k) {
             return preg_match("/^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)/", $k);
         }, ARRAY_FILTER_USE_BOTH);
 
-        uksort($migrations, function($a, $b) {
+        uksort($migrations, function ($a, $b) {
             return version_compare($a, $b) >= 0;
         });
 

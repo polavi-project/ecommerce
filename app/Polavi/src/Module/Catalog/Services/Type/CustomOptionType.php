@@ -22,7 +22,7 @@ class CustomOptionType extends ObjectType
     {
         $config = [
             'name' => 'Product custom option',
-            'fields' => function() use ($container) {
+            'fields' => function () use ($container) {
                 $fields = [
                     'product_custom_option_id' => [
                         'type' => Type::nonNull(Type::id())
@@ -45,7 +45,7 @@ class CustomOptionType extends ObjectType
                     'values' => [
                         'type' => Type::listOf($container->get(CustomOptionValueType::class)),
                         'description' => 'Product custom option value',
-                        'resolve' => function($option, $args, Container $container, ResolveInfo $info) {
+                        'resolve' => function ($option, $args, Container $container, ResolveInfo $info) {
                             return $container->get(Processor::class)
                                 ->getTable('product_custom_option_value')
                                 ->where('option_id', '=', $option['product_custom_option_id'])
@@ -58,7 +58,7 @@ class CustomOptionType extends ObjectType
 
                 return $fields;
             },
-            'resolveField' => function($value, $args, Container $container, ResolveInfo $info) {
+            'resolveField' => function ($value, $args, Container $container, ResolveInfo $info) {
                 return isset($value[$info->fieldName]) ? $value[$info->fieldName] : null;
             }
         ];

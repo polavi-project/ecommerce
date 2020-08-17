@@ -22,18 +22,18 @@ class ProductImageType extends ObjectType
     {
         $config = [
             'name' => 'ProductImage',
-            'fields' => function() use ($container) {
+            'fields' => function () use ($container) {
                 $fileSystem = new Filesystem();
                 $fields = [
                     'path' => [
                         'type' => Type::string(),
-                        'resolve' => function($image, $args, Container $container, ResolveInfo $info) use ($fileSystem) {
+                        'resolve' => function ($image, $args, Container $container, ResolveInfo $info) use ($fileSystem) {
                             return $image['path'] ?? null;
                         }
                     ],
                     'image' => [
                         'type' => Type::string(),
-                        'resolve' => function($image, $args, Container $container, ResolveInfo $info) use ($fileSystem) {
+                        'resolve' => function ($image, $args, Container $container, ResolveInfo $info) use ($fileSystem) {
                             if (!isset($image['path']) or $image['path'] == null)
                                 return null;
                             if (!$fileSystem->exists(MEDIA_PATH . DS . $image['path']))
@@ -44,7 +44,7 @@ class ProductImageType extends ObjectType
                     ],
                     'thumb' => [
                         'type' => Type::string(),
-                        'resolve' => function($image, $args, Container $container, ResolveInfo $info) use ($fileSystem) {
+                        'resolve' => function ($image, $args, Container $container, ResolveInfo $info) use ($fileSystem) {
                             if (!isset($image['path']) or $image['path'] == null)
                                 return null;
                             if ($fileSystem->exists(MEDIA_PATH . DS . str_replace_last('.', '_thumb.', $image['path'])))
@@ -55,7 +55,7 @@ class ProductImageType extends ObjectType
                     ],
                     'list' => [
                         'type' => Type::string(),
-                        'resolve' => function($image, $args, Container $container, ResolveInfo $info) use ($fileSystem) {
+                        'resolve' => function ($image, $args, Container $container, ResolveInfo $info) use ($fileSystem) {
                             if (!isset($image['path']) or $image['path'] == null)
                                 return null;
                             if ($fileSystem->exists(MEDIA_PATH . DS . str_replace_last('.', '_list.', $image['path'])))
@@ -66,7 +66,7 @@ class ProductImageType extends ObjectType
                     ],
                     'main' => [
                         'type' => Type::string(),
-                        'resolve' => function($image, $args, Container $container, ResolveInfo $info) use ($fileSystem) {
+                        'resolve' => function ($image, $args, Container $container, ResolveInfo $info) use ($fileSystem) {
                             if (!isset($image['path']) or $image['path'] == null)
                                 return null;
                             if ($fileSystem->exists(MEDIA_PATH . DS . str_replace_last('.', '_main.', $image['path'])))
@@ -77,7 +77,7 @@ class ProductImageType extends ObjectType
                     ],
                     'isMain' => [
                         'type' => Type::boolean(),
-                        'resolve' => function($image, $args, Container $container, ResolveInfo $info) use ($fileSystem) {
+                        'resolve' => function ($image, $args, Container $container, ResolveInfo $info) use ($fileSystem) {
                             return $image['isMain'] ?? false;
                         }
                     ]

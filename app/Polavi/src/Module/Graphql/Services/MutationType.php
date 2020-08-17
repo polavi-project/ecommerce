@@ -26,7 +26,7 @@ class MutationType extends ObjectType
     {
         $config = [
         'name' => 'Mutation',
-        'fields' => function() use ($container) {
+        'fields' => function () use ($container) {
             $fields = [
                 'createCustomerGroup' => [
                     'args'=> [
@@ -39,7 +39,7 @@ class MutationType extends ObjectType
                             'group' => $container->get(CustomerGroupType::class)
                         ]
                     ]),
-                    'resolve'=> function($value, $args, Container $container, ResolveInfo $info) {
+                    'resolve'=> function ($value, $args, Container $container, ResolveInfo $info) {
                         if (!$container->get(Request::class)->isAdmin())
                             return ['status' => false, 'group'=> null];
                         else {
@@ -68,7 +68,7 @@ class MutationType extends ObjectType
                             'group' => $container->get(CustomerGroupType::class)
                         ]
                     ]),
-                    'resolve'=> function($value, $args, Container $container, ResolveInfo $info) {
+                    'resolve'=> function ($value, $args, Container $container, ResolveInfo $info) {
                         if (!$container->get(Request::class)->isAdmin())
                             return ['status' => false, 'group'=> null];
                         else {
@@ -92,7 +92,7 @@ class MutationType extends ObjectType
                             'message' => Type::string()
                         ]
                     ]),
-                    'resolve'=> function($value, $args, Container $container, ResolveInfo $info) {
+                    'resolve'=> function ($value, $args, Container $container, ResolveInfo $info) {
                         if (in_array((int)$args['id'], [1, 999, 1000]))
                             return ['status' => false];
                         if (!$container->get(Request::class)->isAdmin())
@@ -122,7 +122,7 @@ class MutationType extends ObjectType
                             'customer' => $container->get(CustomerType::class)
                         ]
                     ]),
-                    'resolve'=> function($value, $args, Container $container, ResolveInfo $info) {
+                    'resolve'=> function ($value, $args, Container $container, ResolveInfo $info) {
                         $conn = _mysql();
                         $data = $args['customer'];
                         if ($conn->getTable('customer')->loadByField('email', $data['email']))
@@ -149,7 +149,7 @@ class MutationType extends ObjectType
                             'customer' => $container->get(CustomerType::class)
                         ]
                     ]),
-                    'resolve'=> function($value, $args, Container $container, ResolveInfo $info) {
+                    'resolve'=> function ($value, $args, Container $container, ResolveInfo $info) {
                         $conn = _mysql();
                         $data = $args['customer'];
                         if (

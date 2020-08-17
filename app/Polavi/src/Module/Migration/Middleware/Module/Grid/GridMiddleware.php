@@ -38,7 +38,7 @@ class GridMiddleware extends MiddlewareAbstract
             if (!file_exists(COMMUNITY_MODULE_PATH . DS . $directory . DS . "migration.php"))
                 continue;
             $v = $des = $aut = $autUrl = null;
-            (function() use (&$v, &$des, &$aut, &$autUrl, $directory) {
+            (function () use (&$v, &$des, &$aut, &$autUrl, $directory) {
                 include COMMUNITY_MODULE_PATH . DS . $directory . DS . "migration.php";
                 $v = $version ?? null;
                 $des = $description ?? null;
@@ -59,7 +59,7 @@ class GridMiddleware extends MiddlewareAbstract
         }
 
         $conn = _mysql();
-        array_walk($extensions, function(&$e) use($conn) {
+        array_walk($extensions, function (&$e) use ($conn) {
             $ext = $conn->getTable("migration")->loadByField("module", $e["name"]);
             if (!$ext)
                 $e["status"] = null;

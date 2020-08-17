@@ -25,7 +25,7 @@ class OrderItemType extends ObjectType
     {
         $config = [
             'name' => 'Order item',
-            'fields' => function() use ($container) {
+            'fields' => function () use ($container) {
                 $fields = [
                     'order_item_id' => [
                         'type' => Type::nonNull(Type::id())
@@ -71,7 +71,7 @@ class OrderItemType extends ObjectType
                     ],
                     'options' => [
                         'type' => Type::listOf($container->get(ItemCustomOptionType::class)),
-                        'resolve' => function($item, $args, Container $container, ResolveInfo $info) {
+                        'resolve' => function ($item, $args, Container $container, ResolveInfo $info) {
                             if ($item['product_custom_options'])
                                 return json_decode($item['product_custom_options'], true);
                             else
@@ -83,7 +83,7 @@ class OrderItemType extends ObjectType
                     ],
                     'product_url' => [
                         'type' => Type::string(),
-                        'resolve' => function($item, $args, Container $container, ResolveInfo $info) {
+                        'resolve' => function ($item, $args, Container $container, ResolveInfo $info) {
                             $productSeo = _mysql()->getTable('product_description')->where('product_description_product_id', '=', $item['product_id']);
                             if (!$productSeo or !preg_match('/^[\.a-zA-Z0-9\-_+]+$/', $productSeo['seo_key']))
                                 return $container->get(Router::class)->generateUrl('product.view', ["id"=>$item['product_id']]);
@@ -97,7 +97,7 @@ class OrderItemType extends ObjectType
 
                 return $fields;
             },
-            'resolveField' => function($value, $args, Container $container, ResolveInfo $info) {
+            'resolveField' => function ($value, $args, Container $container, ResolveInfo $info) {
                 return isset($value[$info->fieldName]) ? $value[$info->fieldName] : null;
             }
         ];

@@ -20,7 +20,7 @@ class ProductAttributeIndex extends ObjectType
     {
         $config = [
             'name' => 'ProductAttributeIndex',
-            'fields' => function() use ($container) {
+            'fields' => function () use ($container) {
                 $fields = [
                     'product_attribute_value_index_id' => [
                         'type' => Type::nonNull(Type::id())
@@ -49,7 +49,7 @@ class ProductAttributeIndex extends ObjectType
 
                 return $fields;
             },
-            'resolveField' => function($value, $args, Container $container, ResolveInfo $info) {
+            'resolveField' => function ($value, $args, Container $container, ResolveInfo $info) {
                 return isset($value[$info->fieldName]) ? $value[$info->fieldName] : null;
             }
         ];

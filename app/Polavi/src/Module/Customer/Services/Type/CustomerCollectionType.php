@@ -20,7 +20,7 @@ class CustomerCollectionType extends ObjectType
     {
         $config = [
             'name' => 'CustomerCollection',
-            'fields' => function() use ($container){
+            'fields' => function () use ($container){
                 $fields = [
                     'customers' => [
                         'type' => Type::listOf($container->get(CustomerType::class))
@@ -35,7 +35,7 @@ class CustomerCollectionType extends ObjectType
 
                 return $fields;
             },
-            'resolveField' => function($value, $args, Container $container, ResolveInfo $info) {
+            'resolveField' => function ($value, $args, Container $container, ResolveInfo $info) {
                 return isset($value[$info->fieldName]) ? $value[$info->fieldName] : null;
             }
         ];

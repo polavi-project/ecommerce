@@ -20,7 +20,7 @@ class AttributeFilterType extends ObjectType
     {
         $config = [
             'name' => 'AttributeFilterType',
-            'fields' => function() use ($container){
+            'fields' => function () use ($container){
                 return [
                     'attribute_id' => [
                         'type' => Type::nonNull(Type::int())
@@ -34,7 +34,7 @@ class AttributeFilterType extends ObjectType
                     'options' => [
                         'type' => Type::listOf(new ObjectType([
                             'name' => "AttributeOptionFilter",
-                            'fields' => function() {
+                            'fields' => function () {
                                 return [
                                     'option_id' => [
                                         'type' => Type::nonNull(Type::int())
@@ -50,7 +50,7 @@ class AttributeFilterType extends ObjectType
                     ]
                 ];
             },
-            'resolveField' => function($value, $args, Container $container, ResolveInfo $info) {
+            'resolveField' => function ($value, $args, Container $container, ResolveInfo $info) {
                 return isset($value[$info->fieldName]) ? $value[$info->fieldName] : null;
             }
         ];

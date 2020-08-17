@@ -62,7 +62,7 @@ $eventDispatcher->addListener(
                     'address' => $container->get(\Polavi\Module\Customer\Services\Type\AddressType::class)
                 ]
             ]),
-            'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
+            'resolve' => function ($rootValue, $args, Container $container, ResolveInfo $info) {
                 $conn = _mysql();
                 $address = $args['address'];
                 $provinces = \Polavi\Services\Locale\Province::listStateV3();
@@ -111,7 +111,7 @@ $eventDispatcher->addListener(
                     'address' => $container->get(\Polavi\Module\Customer\Services\Type\AddressType::class)
                 ]
             ]),
-            'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
+            'resolve' => function ($rootValue, $args, Container $container, ResolveInfo $info) {
                 $conn = _mysql();
                 $address = $args['address'];
                 $provinces = \Polavi\Services\Locale\Province::listStateV3();
@@ -153,7 +153,7 @@ $eventDispatcher->addListener(
     5
 );
 
-$eventDispatcher->addListener('breadcrumbs_items', function(array $items) {
+$eventDispatcher->addListener('breadcrumbs_items', function (array $items) {
     $container = \Polavi\the_container();
     if (in_array($container->get(Request::class)->get("_matched_route"), ["checkout.cart"])) {
         $items[] = ["sort_order"=> 1, "title"=> "Shopping cart", "link"=> null];

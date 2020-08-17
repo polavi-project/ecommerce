@@ -49,7 +49,7 @@ class FormMiddleware extends MiddlewareAbstract
                     }
                 }"
             ])
-            ->then(function($result) use ($request, $response) {
+            ->then(function ($result) use ($request, $response) {
                 /**@var \GraphQL\Executor\ExecutionResult $result */
                 $options = [];
                 if (isset($result->data['custom_options']) and $result->data['custom_options']) {

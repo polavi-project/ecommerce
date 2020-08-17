@@ -27,12 +27,12 @@ class TextWidgetMiddleware extends MiddlewareAbstract
             ->get(GraphqlExecutor::class)
             ->waitToExecute([
                 "query"=>"{textWidgets : widgetCollection (filters : [{key: \"type\" operator : \"=\" value: \"text\"}]) {widgets { cms_widget_id name setting {key value} displaySetting {key value} sort_order }}}"
-            ])->then(function($result) use ($request, $response) {
+            ])->then(function ($result) use ($request, $response) {
                 /**@var \GraphQL\Executor\ExecutionResult $result */
                 if (isset($result->data['textWidgets'])) {
                     $matchedRoute = $request->attributes->get('_matched_route');
-                    $widgets = array_filter($result->data['textWidgets']['widgets'], function($v) use($matchedRoute) {
-                        $layouts = array_find($v['displaySetting'], function($value, $key) {
+                    $widgets = array_filter($result->data['textWidgets']['widgets'], function ($v) use ($matchedRoute) {
+                        $layouts = array_find($v['displaySetting'], function ($value, $key) {
                             if ($value['key'] == 'layout')
                                 return json_decode($value['value'], true);
                             return null;
@@ -48,13 +48,13 @@ class TextWidgetMiddleware extends MiddlewareAbstract
                         return $match;
                     }, ARRAY_FILTER_USE_BOTH);
                     foreach ($widgets as $widget) {
-                        $content = array_find($widget['setting'], function($value, $key) {
+                        $content = array_find($widget['setting'], function ($value, $key) {
                             if ($value['key'] == 'content')
                                 return $value['value'];
                             return null;
                         });
 
-                        $containerClass = array_find($widget['setting'], function($value, $key) {
+                        $containerClass = array_find($widget['setting'], function ($value, $key) {
                             if ($value['key'] == 'container_class')
                                 return $value['value'];
                             return null;

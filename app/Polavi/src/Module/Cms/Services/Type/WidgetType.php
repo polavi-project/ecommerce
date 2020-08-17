@@ -24,7 +24,7 @@ class WidgetType extends ObjectType
     {
         $config = [
             'name' => 'CMSWidget',
-            'fields' => function() use ($container) {
+            'fields' => function () use ($container) {
                 $fields = [
                     'cms_widget_id' => [
                         'type' => Type::nonNull(Type::id())
@@ -40,13 +40,13 @@ class WidgetType extends ObjectType
                     ],
                     'setting' => [
                         'type' => Type::listOf($container->get(KeyValuePairFieldType::class)),
-                        'resolve' => function($widget, $args, Container $container, ResolveInfo $info) {
+                        'resolve' => function ($widget, $args, Container $container, ResolveInfo $info) {
                             return isset($widget['setting']) ? json_decode($widget['setting'], true) :  [];
                         }
                     ],
                     'displaySetting' => [
                         'type' => Type::listOf($container->get(KeyValuePairFieldType::class)),
-                        'resolve' => function($widget, $args, Container $container, ResolveInfo $info) {
+                        'resolve' => function ($widget, $args, Container $container, ResolveInfo $info) {
                             return isset($widget['display_setting']) ? json_decode($widget['display_setting'], true) :  [];
                         }
                     ],
@@ -55,7 +55,7 @@ class WidgetType extends ObjectType
                     ],
                     'editUrl' => [
                         'type' => Type::string(),
-                        'resolve' => function($widget, $args, Container $container, ResolveInfo $info) {
+                        'resolve' => function ($widget, $args, Container $container, ResolveInfo $info) {
                             if ($container->get(Request::class)->isAdmin() == false)
                                 return null;
                             return $container->get(Router::class)->generateUrl('widget.edit', ["type"=>$widget['type'], 'id'=> $widget['cms_widget_id']]);
@@ -63,7 +63,7 @@ class WidgetType extends ObjectType
                     ],
                     'deleteUrl' => [
                         'type' => Type::string(),
-                        'resolve' => function($widget, $args, Container $container, ResolveInfo $info) {
+                        'resolve' => function ($widget, $args, Container $container, ResolveInfo $info) {
                             if ($container->get(Request::class)->isAdmin() == false)
                                 return null;
                             return $container->get(Router::class)->generateUrl('widget.delete', ['id'=> $widget['cms_widget_id']]);
@@ -75,7 +75,7 @@ class WidgetType extends ObjectType
 
                 return $fields;
             },
-            'resolveField' => function($value, $args, Container $container, ResolveInfo $info) {
+            'resolveField' => function ($value, $args, Container $container, ResolveInfo $info) {
                 return isset($value[$info->fieldName]) ? $value[$info->fieldName] : null;
             }
         ];

@@ -24,14 +24,14 @@ class SendConfirmationEmailMiddleware extends MiddlewareAbstract
         if (!$delegate instanceof Promise)
             return $delegate;
 
-        $delegate->then(function($orderId) use($request, $response) {
+        $delegate->then(function ($orderId) use ($request, $response) {
             $templateId = get_config('sendgrid_order_confirmation_email');
             $conn = _mysql();
             $order = $conn->getTable('order')->load($orderId);
             $languageCode = get_config('general_default_language', "en");
             $fmt = new \NumberFormatter( $languageCode, \NumberFormatter::CURRENCY );
 
-            array_walk($order, function(&$field, $key) use($fmt, $order) {
+            array_walk($order, function (&$field, $key) use ($fmt, $order) {
                if (in_array($key, [
                    'shipping_fee_excl_tax',
                    'shipping_fee_incl_tax',
@@ -44,7 +44,7 @@ class SendConfirmationEmailMiddleware extends MiddlewareAbstract
             });
             $items = $conn->getTable('order_item')->where('order_item_order_id', '=', $orderId)->fetchAllAssoc();
             foreach ($items as $key=> $val)
-                array_walk($items[$key], function(&$field, $k) use($fmt, $order) {
+                array_walk($items[$key], function (&$field, $k) use ($fmt, $order) {
                     if (in_array($k, [
                         'product_price',
                         'product_price_incl_tax',

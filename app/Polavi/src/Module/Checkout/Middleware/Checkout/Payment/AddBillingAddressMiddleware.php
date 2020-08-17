@@ -35,12 +35,12 @@ class AddBillingAddressMiddleware extends MiddlewareAbstract
                 "variables" => $variables
             ]);
 
-        $promise->then(function($result) use ($request, $response) {
+        $promise->then(function ($result) use ($request, $response) {
             $response->addData('add_checkout_billing_address', $result->data['addBillingAddress'])
                     ->notNewPage();
         });
 
-        $promise->otherwise(function($reason) use ($request, $response) {
+        $promise->otherwise(function ($reason) use ($request, $response) {
             // TODO: Support development mode and show real message
             $response->addData('add_checkout_billing_address', ['status'=> false, 'message'=> $reason[0]->message])
                     ->notNewPage();

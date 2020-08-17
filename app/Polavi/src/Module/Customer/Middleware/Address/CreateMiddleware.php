@@ -32,11 +32,11 @@ class CreateMiddleware extends MiddlewareAbstract
                 "variables" => $variables
             ]);
 
-        $promise->then(function($result) use ($request, $response) {
+        $promise->then(function ($result) use ($request, $response) {
             $response->addData('addressCreation', $result->data['createCustomerAddress']);
         });
 
-        $promise->otherwise(function($reason) use ($request, $response) {
+        $promise->otherwise(function ($reason) use ($request, $response) {
             // TODO: Support development mode and show real message
             $response->addData('addressCreation', ['status'=> false, 'message'=> $reason[0]->message]);
         });

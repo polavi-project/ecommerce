@@ -20,7 +20,7 @@ class  PriceFilterType extends ObjectType
     {
         $config = [
             'name' => 'PriceFilterType',
-            'fields' => function() use ($container){
+            'fields' => function () use ($container){
                 $fields = [
                     'maxPrice' => [
                         'type' => Type::nonNull(Type::float())
@@ -32,7 +32,7 @@ class  PriceFilterType extends ObjectType
 
                 return $fields;
             },
-            'resolveField' => function($value, $args, Container $container, ResolveInfo $info) {
+            'resolveField' => function ($value, $args, Container $container, ResolveInfo $info) {
                 return isset($value[$info->fieldName]) ? $value[$info->fieldName] : null;
             }
         ];

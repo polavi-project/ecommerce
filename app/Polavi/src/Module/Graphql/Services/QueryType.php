@@ -39,7 +39,7 @@ class QueryType extends ObjectType
     {
         $config = [
         'name' => 'Query',
-        'fields' => function() use ($container) {
+        'fields' => function () use ($container) {
             $fields = [
                 'product' => [
                     'type' => $container->get(ProductType::class),
@@ -47,7 +47,7 @@ class QueryType extends ObjectType
                     'args' => [
                         'id' => Type::nonNull(Type::id())
                     ],
-                    'resolve' => function($product, $args, Container $container, ResolveInfo $info)  {
+                    'resolve' => function ($product, $args, Container $container, ResolveInfo $info)  {
                         $productTable = _mysql()->getTable('product');
                         $productTable->leftJoin('product_description');
                         $productTable->where('product.product_id', '=', $args['id']);
@@ -63,7 +63,7 @@ class QueryType extends ObjectType
                     'args' => [
                         'filters' =>  Type::listOf($container->get(FilterFieldType::class))
                     ],
-                    'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
+                    'resolve' => function ($rootValue, $args, Container $container, ResolveInfo $info) {
                         return $container->get(ProductCollection::class)->getData($rootValue, $args, $container, $info);
                     }
                 ],
@@ -73,7 +73,7 @@ class QueryType extends ObjectType
                     'args' => [
                         'id' => Type::nonNull(Type::id())
                     ],
-                    'resolve' => function($value, $args, Container $container, ResolveInfo $info) {
+                    'resolve' => function ($value, $args, Container $container, ResolveInfo $info) {
                         $categoryTable = _mysql()->getTable('category');
                         $categoryTable->leftJoin('category_description');
                         return $categoryTable->where('category.category_id', '=', $args['id'])->fetchOneAssoc();
@@ -85,7 +85,7 @@ class QueryType extends ObjectType
                     'args' => [
                         'filters' =>  Type::listOf($container->get(FilterFieldType::class))
                     ],
-                    'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
+                    'resolve' => function ($rootValue, $args, Container $container, ResolveInfo $info) {
                         return $container->get(CategoryCollection::class)->getData($rootValue, $args, $container, $info);
                     }
                 ],
@@ -95,7 +95,7 @@ class QueryType extends ObjectType
                     'args' => [
                         'id' => Type::nonNull(Type::id())
                     ],
-                    'resolve' => function($value, $args, Container $container, ResolveInfo $info) {
+                    'resolve' => function ($value, $args, Container $container, ResolveInfo $info) {
                         return _mysql()->getTable('attribute')->where('attribute_id', '=', $args['id'])->fetchOneAssoc();
                     }
                 ],
@@ -105,7 +105,7 @@ class QueryType extends ObjectType
                     'args' => [
                         'filters' =>  Type::listOf($container->get(FilterFieldType::class))
                     ],
-                    'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
+                    'resolve' => function ($rootValue, $args, Container $container, ResolveInfo $info) {
                         return $container->get(AttributeCollection::class)->getData($rootValue, $args, $container, $info);
                     }
                 ],
@@ -115,7 +115,7 @@ class QueryType extends ObjectType
                     'args' => [
                         'id' => Type::nonNull(Type::id())
                     ],
-                    'resolve' => function($value, $args, Container $container, ResolveInfo $info) {
+                    'resolve' => function ($value, $args, Container $container, ResolveInfo $info) {
                         return _mysql()->getTable('attribute_group')->where('attribute_group_id', '=', $args['id'])->fetchOneAssoc();
                     }
                 ],
@@ -125,7 +125,7 @@ class QueryType extends ObjectType
                     'args' => [
                         'filters' =>  Type::listOf($container->get(FilterFieldType::class))
                     ],
-                    'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
+                    'resolve' => function ($rootValue, $args, Container $container, ResolveInfo $info) {
                         return $container->get(AttributeGroupCollection::class)->getData($rootValue, $args, $container, $info);
                     }
                 ],
@@ -135,7 +135,7 @@ class QueryType extends ObjectType
                     'args' => [
                         'product_id' => Type::nonNull(Type::id())
                     ],
-                    'resolve' => function($value, $args, Container $container, ResolveInfo $info) {
+                    'resolve' => function ($value, $args, Container $container, ResolveInfo $info) {
                         return $container->get(Processor::class)->getTable('product_attribute_value_index')
                             ->leftJoin('attribute')
                             ->where('product_id', '=', $args['product_id'])
@@ -145,7 +145,7 @@ class QueryType extends ObjectType
                 'cart' => [
                     'type'=> $container->get(CartType::class),
                     'description' => 'Return shopping cart',
-                    'resolve' => function($value, $args, Container $container, ResolveInfo $info) {
+                    'resolve' => function ($value, $args, Container $container, ResolveInfo $info) {
                         return $container->get(Cart::class)->toArray();
                     }
                 ],
@@ -155,7 +155,7 @@ class QueryType extends ObjectType
                     'args' => [
                         'id' =>  Type::nonNull(Type::int())
                     ],
-                    'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
+                    'resolve' => function ($rootValue, $args, Container $container, ResolveInfo $info) {
                         // Authentication example
                         if ($container->get(Request::class)->isAdmin() == false)
                             return null;
@@ -166,7 +166,7 @@ class QueryType extends ObjectType
                 'taxClasses' => [
                     'type' => Type::listOf($container->get(TaxClassType::class)),
                     'description' => "Return all tax class",
-                    'resolve' => function($rootValue, $args, Container $container, ResolveInfo $info) {
+                    'resolve' => function ($rootValue, $args, Container $container, ResolveInfo $info) {
                         // Authentication example
                         if ($container->get(Request::class)->isAdmin() == false)
                             return [];
@@ -180,7 +180,7 @@ class QueryType extends ObjectType
 
             return $fields;
         },
-        'resolveField' => function($value, $args, Container $container, ResolveInfo $info) {
+        'resolveField' => function ($value, $args, Container $container, ResolveInfo $info) {
             return isset($value[$info->fieldName]) ? $value[$info->fieldName] : null;
         }
     ];
