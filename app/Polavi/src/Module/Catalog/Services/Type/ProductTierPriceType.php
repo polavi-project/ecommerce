@@ -27,8 +27,9 @@ class ProductTierPriceType extends ObjectType
                     ],
                     'product_id' => [
                         'type' => Type::nonNull(Type::id()),
-                        'resolve' => function ($value, $args, Container $container, ResolveInfo $info) {
-                            return isset($value['product_price_product_id']) ? $value['product_price_product_id'] : null;
+                        'resolve' => function ($value) {
+                            return isset($value['product_price_product_id'])
+                                ? $value['product_price_product_id'] : null;
                         }
                     ],
                     'customer_group_id' => [

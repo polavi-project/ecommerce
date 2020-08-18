@@ -30,18 +30,25 @@ class ProductFilterToolType extends ObjectType
                     'price' => [
                         'type' => $container->get(PriceFilterType::class),
                         'resolve' => function ($value, $args, Container $container, ResolveInfo $info) {
-                            if (!$value)
+                            if (!$value) {
                                 return [
                                     'minPrice' => 0,
                                     'maxPrice' => 0
                                 ];
-                            if ($container->get(Request::class)->getCustomer()->isLoggedIn())
-                                $customerGroupId = $container->get(Request::class)->getCustomer()->getData('group_id') ?? 1;
-                            else
+                            }
+                            if ($container->get(Request::class)->getCustomer()->isLoggedIn()) {
+                                $customerGroupId = $container->get(Request::class)
+                                        ->getCustomer()
+                                        ->getData('group_id') ?? 1;
+                            } else {
                                 $customerGroupId = 999;
+                            }
                             $conn = _mysql();
                             $priceData = $conn->getTable('product')
-                                ->setFieldToSelect("LEAST(product.`price`, IF(ppone.`tier_price` IS NULL, 1000000000, ppone.`tier_price`) , IF(pptwo.`tier_price` IS NULL, 1000000000, pptwo.`tier_price`))", "sale_price")
+                                ->setFieldToSelect(
+                                    "LEAST(product.`price`, IF(ppone.`tier_price` IS NULL, 1000000000, ppone.`tier_price`) , IF(pptwo.`tier_price` IS NULL, 1000000000, pptwo.`tier_price`))",
+                                    "sale_price"
+                                )
                                 ->leftJoin('product_price', 'ppone', [
                                     [
                                         'column'      => "ppone.qty",
@@ -195,13 +202,14 @@ class ProductFilterToolType extends ObjectType
                                 ->groupBy('product_attribute_value_index.option_id')
                                 ->fetchAllAssoc();
                             $result = [];
-                            foreach ($attributeData as $key=>$attr) {
-                                if (!isset($result[$attr['attribute_id']]))
+                            foreach ($attributeData as $key => $attr) {
+                                if (!isset($result[$attr['attribute_id']])) {
                                     $result[$attr['attribute_id']] = [
                                         'attribute_name' => $attr['attribute_name'],
                                         'attribute_id' => $attr['attribute_id'],
                                         'attribute_code' => $attr['attribute_code']
                                     ];
+                                }
                                 $result[$attr['attribute_id']]['options'][] = [
                                     'option_id' => $attr['option_id'],
                                     'option_text' => $attr['option_text'],
