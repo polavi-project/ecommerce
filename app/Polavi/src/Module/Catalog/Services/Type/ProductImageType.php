@@ -27,57 +27,65 @@ class ProductImageType extends ObjectType
                 $fields = [
                     'path' => [
                         'type' => Type::string(),
-                        'resolve' => function ($image, $args, Container $container, ResolveInfo $info) use ($fileSystem) {
+                        'resolve' => function ($image) use ($fileSystem) {
                             return $image['path'] ?? null;
                         }
                     ],
                     'image' => [
                         'type' => Type::string(),
-                        'resolve' => function ($image, $args, Container $container, ResolveInfo $info) use ($fileSystem) {
-                            if (!isset($image['path']) or $image['path'] == null)
+                        'resolve' => function ($image) use ($fileSystem) {
+                            if (!isset($image['path']) or $image['path'] == null) {
                                 return null;
-                            if (!$fileSystem->exists(MEDIA_PATH . DS . $image['path']))
+                            }
+                            if (!$fileSystem->exists(MEDIA_PATH . DS . $image['path'])) {
                                 return null;
+                            }
 
                             return get_base_url_scheme_less(false) . "/public/media/" . $image['path'];
                         }
                     ],
                     'thumb' => [
                         'type' => Type::string(),
-                        'resolve' => function ($image, $args, Container $container, ResolveInfo $info) use ($fileSystem) {
-                            if (!isset($image['path']) or $image['path'] == null)
+                        'resolve' => function ($image) use ($fileSystem) {
+                            if (!isset($image['path']) or $image['path'] == null) {
                                 return null;
-                            if ($fileSystem->exists(MEDIA_PATH . DS . str_replace_last('.', '_thumb.', $image['path'])))
+                            }
+                            if ($fileSystem->exists(MEDIA_PATH . DS . str_replace_last('.', '_thumb.', $image['path']))) {
                                 return get_base_url_scheme_less(false) . "/public/media/" . str_replace_last('.', '_thumb.', $image['path']);
-                            else
+                            } else {
                                 return null;
+                            }
                         }
                     ],
                     'list' => [
                         'type' => Type::string(),
-                        'resolve' => function ($image, $args, Container $container, ResolveInfo $info) use ($fileSystem) {
-                            if (!isset($image['path']) or $image['path'] == null)
+                        'resolve' => function ($image) use ($fileSystem) {
+                            if (!isset($image['path']) or $image['path'] == null) {
                                 return null;
-                            if ($fileSystem->exists(MEDIA_PATH . DS . str_replace_last('.', '_list.', $image['path'])))
+                            }
+                            if ($fileSystem->exists(MEDIA_PATH . DS . str_replace_last('.', '_list.', $image['path']))) {
                                 return get_base_url_scheme_less(false) . "/public/media/" . str_replace_last('.', '_list.', $image['path']);
-                            else
+                            } else {
                                 return null;
+                            }
                         }
                     ],
                     'main' => [
                         'type' => Type::string(),
-                        'resolve' => function ($image, $args, Container $container, ResolveInfo $info) use ($fileSystem) {
-                            if (!isset($image['path']) or $image['path'] == null)
+                        'resolve' => function ($image) use ($fileSystem) {
+                            if (!isset($image['path']) or $image['path'] == null) {
                                 return null;
-                            if ($fileSystem->exists(MEDIA_PATH . DS . str_replace_last('.', '_main.', $image['path'])))
+                            }
+                            if ($fileSystem->exists(MEDIA_PATH . DS . str_replace_last('.', '_main.', $image['path']))) {
                                 return get_base_url_scheme_less(false) . "/public/media/" . str_replace_last('.', '_main.', $image['path']);
-                            else
+                            } else {
                                 return null;
+                            }
                         }
                     ],
                     'isMain' => [
                         'type' => Type::boolean(),
-                        'resolve' => function ($image, $args, Container $container, ResolveInfo $info) use ($fileSystem) {
+                        'resolve' => function ($image) use ($fileSystem) {
                             return $image['isMain'] ?? false;
                         }
                     ]

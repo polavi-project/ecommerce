@@ -20,7 +20,7 @@ class AttributeGroupCollectionType extends ObjectType
     {
         $config = [
             'name' => 'AttributeGroupCollection',
-            'fields' => function () use ($container){
+            'fields' => function () use ($container) {
                 $fields = [
                     'groups' => [
                         'type' => Type::listOf($container->get(AttributeGroupType::class))

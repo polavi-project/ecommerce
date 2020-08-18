@@ -26,7 +26,7 @@ class ProductType extends ObjectType
     {
         $config = [
             'name' => 'Product',
-            'fields' => function () use ($container){
+            'fields' => function () use ($container) {
                 $fields = [
                     'product_id' => [
                         'type' => Type::nonNull(Type::id())
@@ -45,9 +45,10 @@ class ProductType extends ObjectType
                     ],
                     'salePrice' => [
                         'type' => Type::nonNull(Type::float()),
-                        'resolve' => function ($product, $args, Container $container, ResolveInfo $info) {
-                            if (isset($product['sale_price']))
+                        'resolve' => function ($product) {
+                            if (isset($product['sale_price'])) {
                                 return $product['sale_price'];
+                            }
                             return $product['price'];
                         }
                     ],
@@ -64,15 +65,18 @@ class ProductType extends ObjectType
                         'resolve' => function ($product, $args, Container $container, ResolveInfo $info) {
                             $categoryIds = [];
                             $conn = _mysql();
-                            $stmt = $conn->getTable('product_category')->where('product_id', '=', (int)$product['product_id']);
+                            $stmt = $conn->getTable('product_category')
+                                ->where('product_id', '=', (int)$product['product_id']);
                             while ($row = $stmt->fetch()) {
                                 $categoryIds[] = $row['category_id'];
                             }
-                            if (!$categoryIds)
+                            if (!$categoryIds) {
                                 return null;
+                            }
                              //Problem is here, DataLoader?
                             $categoryTable = new Table('category', $container->get(Processor::class));
                             $categoryTable->leftJoin('category_description');
+
                             return $categoryTable->where('category.category_id', 'IN', $categoryIds)->fetchAllAssoc();
                         }
                     ],
@@ -82,16 +86,18 @@ class ProductType extends ObjectType
                     'qty' => [
                         'type' => Type::int(),
                         'resolve' => function ($product, $args, Container $container, ResolveInfo $info) {
-                            if ($container->get(Request::class)->isAdmin() == false)
+                            if ($container->get(Request::class)->isAdmin() == false) {
                                 return null;
+                            }
                             return $product['qty'];
                         }
                     ],
                     'manage_stock' => [
                         'type' => Type::int(),
                         'resolve' => function ($product, $args, Container $container, ResolveInfo $info) {
-                            if ($container->get(Request::class)->isAdmin() == false)
+                            if ($container->get(Request::class)->isAdmin() == false) {
                                 return null;
+                            }
                             return $product['manage_stock'];
                         }
                     ],
@@ -106,8 +112,10 @@ class ProductType extends ObjectType
                     ],
                     'image' => [
                         'type' => $container->get(ProductImageType::class),
-                        'resolve' => function ($product, $args, Container $container, ResolveInfo $info) {
-                            return $product['image'] ? ['path' => $product['image'], 'isMain'=> true] : ['path'=> 'upload/placeholder.png', 'isMain'=> true];
+                        'resolve' => function ($product) {
+                            return $product['image']
+                                ? ['path' => $product['image'], 'isMain'=> true]
+                                : ['path'=> 'upload/placeholder.png', 'isMain'=> true];
                         }
                     ],
                     'name' => [
@@ -125,25 +133,34 @@ class ProductType extends ObjectType
                     'url' => [
                         'type' => Type::string(),
                         'resolve' => function ($product, $args, Container $container, ResolveInfo $info) {
-                            if (!preg_match('/^[\.a-zA-Z0-9\-_+]+$/', $product['seo_key']))
-                                return $container->get(Router::class)->generateUrl('product.view', ["id"=>$product['product_id']]);
-                            else
-                                return $container->get(Router::class)->generateUrl('product.view.pretty', ["slug"=>$product['seo_key']]);
+                            if (!preg_match('/^[\.a-zA-Z0-9\-_+]+$/', $product['seo_key'])) {
+                                return $container->get(Router::class)
+                                    ->generateUrl('product.view', ["id"=>$product['product_id']]);
+                            } else {
+                                return $container->get(Router::class)
+                                    ->generateUrl('product.view.pretty', ["slug"=>$product['seo_key']]);
+                            }
                         }
                     ],
                     'editUrl' => [
                         'type' => Type::string(),
                         'resolve' => function ($product, $args, Container $container, ResolveInfo $info) {
-                            if ($container->get(Request::class)->isAdmin() == false)
+                            if ($container->get(Request::class)->isAdmin() == false) {
                                 return null;
-                            return $container->get(Router::class)->generateUrl('product.edit', ["id"=>$product['product_id']]);                        }
+                            }
+                            return $container->get(Router::class)
+                                ->generateUrl('product.edit', ["id"=>$product['product_id']]);
+                        }
                     ],
                     'deleteUrl' => [
                         'type' => Type::string(),
                         'resolve' => function ($product, $args, Container $container, ResolveInfo $info) {
-                            if ($container->get(Request::class)->isAdmin() == false)
+                            if ($container->get(Request::class)->isAdmin() == false) {
                                 return null;
-                            return $container->get(Router::class)->generateUrl('product.delete', ["id"=>$product['product_id']]);                        }
+                            }
+                            return $container->get(Router::class)
+                                ->generateUrl('product.delete', ["id"=>$product['product_id']]);
+                        }
                     ],
                     'meta_title' => [
                         'type' => Type::string()
@@ -182,11 +199,15 @@ class ProductType extends ObjectType
                         'resolve' => function ($product, $args, Container $container, ResolveInfo $info) {
                             $conn = _mysql();
                             $group = $conn->getTable("variant_group")->load($product["variant_group_id"]);
-                            if (!$group)
+                            if (!$group) {
                                 return [];
+                            }
 
                             $productCollection = new ProductCollection($container);
-                            $productCollection->getCollection()->where("variant_group_id", "=", $group["variant_group_id"]);
+                            $productCollection
+                                ->getCollection()
+                                ->where("variant_group_id", "=", $group["variant_group_id"]);
+
                             return $productCollection->getCollection()->fetchAllAssoc();
                         }
                     ],
@@ -209,5 +230,4 @@ class ProductType extends ObjectType
 
         parent::__construct($config);
     }
-
 }
