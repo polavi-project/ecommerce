@@ -27,11 +27,11 @@ class EditFormMiddleware extends MiddlewareAbstract
     public function __invoke(Request $request, Response $response, $delegate = null)
     {
         // Loading data by using GraphQL
-        if ($request->attributes->get('_matched_route') == 'attribute.edit')
+        if ($request->attributes->get('_matched_route') == 'attribute.edit') {
             $this->getContainer()
-            ->get(GraphqlExecutor::class)
-            ->waitToExecute([
-                "query"=> create_mutable_var("attribute_edit_query", "{attribute(id: {$request->attributes->get('id')})
+                ->get(GraphqlExecutor::class)
+                ->waitToExecute([
+                    "query"=> create_mutable_var("attribute_edit_query", "{attribute(id: {$request->attributes->get('id')})
                     {
                         attribute_id
                         attribute_code
@@ -47,25 +47,33 @@ class EditFormMiddleware extends MiddlewareAbstract
                         }
                     }
                 }")
-            ])
-            ->then(function ($result) use ($response, $request) {
-                /**@var \GraphQL\Executor\ExecutionResult $result */
-                if (isset($result->data['attribute'])) {
-                    $response->addWidget(
-                        'attribute_edit',
-                        'content',
-                        10,
-                        get_js_file_url("production/catalog/attribute/edit/attribute_edit_form.js", true),
-                        [
-                            "attribute" => $result->data['attribute'],
-                            "action" => generate_url('attribute.save', ['id'=>$request->attributes->getInt('id', null)]),
-                            "listUrl" => generate_url('attribute.grid'),
-                            "cancelUrl" => $request->attributes->get('id') ? generate_url('attribute.edit', ['id' => $request->attributes->get('id')]) : generate_url('attribute.create')
-                        ]
-                    );
-                }
-            });
-        else
+                ])
+                ->then(function ($result) use ($response, $request) {
+                    /**@var \GraphQL\Executor\ExecutionResult $result */
+                    if (isset($result->data['attribute'])) {
+                        $response->addWidget(
+                            'attribute_edit',
+                            'content',
+                            10,
+                            get_js_file_url("production/catalog/attribute/edit/attribute_edit_form.js", true),
+                            [
+                                "attribute" => $result->data['attribute'],
+                                "action" => generate_url(
+                                    'attribute.save',
+                                    ['id'=>$request->attributes->getInt('id', null)]
+                                ),
+                                "listUrl" => generate_url('attribute.grid'),
+                                "cancelUrl" => $request->attributes->get('id')
+                                    ? generate_url(
+                                        'attribute.edit',
+                                        ['id' => $request->attributes->get('id')]
+                                    )
+                                    : generate_url('attribute.create')
+                            ]
+                        );
+                    }
+                });
+        } else {
             $response->addWidget(
                 'attribute_create',
                 'content',
@@ -74,9 +82,15 @@ class EditFormMiddleware extends MiddlewareAbstract
                 [
                     "action" => generate_url('attribute.save'),
                     "listUrl" => generate_url('attribute.grid'),
-                    "cancelUrl" => $request->attributes->get('id') ? generate_url('attribute.edit', ['id' => $request->attributes->get('id')]) : generate_url('attribute.create')
+                    "cancelUrl" => $request->attributes->get('id')
+                        ? generate_url(
+                            'attribute.edit',
+                            ['id' => $request->attributes->get('id')]
+                        )
+                        : generate_url('attribute.create')
                 ]
             );
+        }
         return $delegate;
     }
 }
